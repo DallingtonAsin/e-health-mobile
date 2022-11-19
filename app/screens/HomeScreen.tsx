@@ -12,16 +12,16 @@ import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
-const iconSize = 50;
+const iconSize = 48;
 
 const HomeScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
 
             <StatusBar
-                backgroundColor={colors.default.primary}
+                backgroundColor={colors.default.pink}
             />
-            <Text style={styles.title}>Welcome to Vastel Medical Services</Text>
+            <Text style={styles.title}>Vastel Medical Services</Text>
 
             <ScrollView
                 style={styles.scroll}
@@ -29,7 +29,7 @@ const HomeScreen = () => {
             >
                 <View style={styles.cardContainer}>
                     <View style={styles.card}>
-                        <Icon name="rocket" size={iconSize} color={colors.default.pink} />
+                        <Icon name="users" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Specialists</Text>
                     </View>
 
@@ -110,9 +110,11 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
+        fontSize: 30,
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginTop: 60,
+        textTransform: 'capitalize'
     },
 
     subtitle: {
