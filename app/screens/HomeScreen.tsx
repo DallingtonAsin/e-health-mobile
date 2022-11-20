@@ -5,6 +5,7 @@ import {
     StatusBar,
     StyleSheet,
     Text,
+    Image,
     useColorScheme,
     View,
 } from 'react-native';
@@ -22,11 +23,19 @@ const HomeScreen = () => {
                 backgroundColor={colors.default.pink}
             />
             <Text style={styles.title}>Vastel Medical Services</Text>
-
+          
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainerStyle}
             >
+
+<View style={styles.imageContainer}>
+            <Image
+              style={styles.tinyLogo}
+              source={require('../assets/home_icon.png')}
+             />
+            </View>
+
                 <View style={styles.cardContainer}>
                     <View style={styles.card}>
                         <Icon name="users" size={iconSize} color={colors.default.pink} />
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
     scrollContainerStyle: {
         flexGrow: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
 
     },
 
@@ -113,12 +122,22 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         fontWeight: 'bold',
-        marginTop: 60,
+        marginTop: 20,
         textTransform: 'capitalize'
     },
 
     subtitle: {
         fontSize: 16,
         fontWeight: 'bold',
+    },
+
+    tinyLogo:{
+        width: 320,
+        height: 200,
+        resizeMode: 'stretch',
+    },
+
+    imageContainer:{
+        margin:20
     }
 })
