@@ -8,10 +8,16 @@ import * as colors from '../../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { COMPANY_NAME } from '@env'
+import Toast from 'react-native-simple-toast';
 
 const Stack = createNativeStackNavigator();
 
 const AppRootStack = () => {
+
+    const gotoNotifications = () => {
+        Toast.show(`Notifications coming soon...`, Toast.LONG);
+    }
+ 
  return(
      <Stack.Navigator>
         <Stack.Screen 
@@ -33,7 +39,9 @@ const AppRootStack = () => {
               ),
 
               headerRight: () => (
-                <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
+                <TouchableOpacity 
+                onPress={() => gotoNotifications()}
+                style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
                 <Icon5 name="bell" size={27} color={colors.default.primary} />
                </TouchableOpacity>
                 )
