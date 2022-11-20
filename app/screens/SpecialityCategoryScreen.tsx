@@ -3,14 +3,17 @@ import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, Touch
 import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-
+import { Title, Paragraph, Searchbar } from 'react-native-paper';
 
 interface SpecialityCategory {
     id?: number | null,
     name?: string | null,
 }
 
-const SpecialityCategoryScreen = ({navigation}): JSX.Element => {
+const SpecialityCategoryScreen = ({ navigation }): JSX.Element => {
+
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const onChangeSearch = (query: string) => setSearchQuery(query);
 
     const specialities = [
         { id: 1, name: 'Cardic Surgery' },
@@ -28,12 +31,10 @@ const SpecialityCategoryScreen = ({navigation}): JSX.Element => {
     ]
 
     const Item = ({ name }: SpecialityCategory) => (
-        <View elevation={5} style={styles.itemView}>
             <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
                 <Text style={styles.itemTitle}>{name}</Text>
                 <Icon5 name="angle-right" size={20} color={colors.default.primary} style={styles.arrow} />
             </TouchableOpacity>
-        </View>
     );
 
     const renderItem = ({ item }) => (
@@ -44,12 +45,20 @@ const SpecialityCategoryScreen = ({navigation}): JSX.Element => {
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Find your consultation</Text>
             <View style={styles.subcontainer}>
+                <Searchbar
+                    placeholder="Search for doctor"
+                    onChangeText={onChangeSearch}
+                    value={searchQuery}
+                    style={styles.searchbar}
+                />
                 <FlatList
                     data={specialities}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
+                    scrollEnabled={true}
+                    style={{ top: 20, bottom: 40 }}
                 />
             </View>
 
@@ -76,14 +85,16 @@ const styles = StyleSheet.create({
         color: colors.default.dark,
         fontWeight: 'bold',
         marginVertical: 10,
+        opacity:0.8
     },
 
     subcontainer: {
         flex: 1,
         marginHorizontal: 10,
+        top:15,
     },
-    
-    itemView: {
+
+    item: {
         shadowColor: colors.default.black,
         shadowOffset: {
             width: 0,
@@ -93,20 +104,25 @@ const styles = StyleSheet.create({
         shadowOpacity: 1.0,
         marginVertical: 5,
         marginHorizontal: 16,
-        borderRadius: 10,
+        borderRadius: 5,
         backgroundColor: colors.default.white,
-
-    },
-
-    item: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: colors.default.white,
         padding: 20,
+        elevation:5,
     },
 
+
+    searchbar:{
+        marginHorizontal: 16,
+        paddingVertical: 3,
+    },
+
+  
     itemTitle: {
-        color: '#000'
+        color: '#000',
+        fontSize:15,
+        
     },
 
     arrow: {

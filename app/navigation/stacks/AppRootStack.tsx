@@ -6,6 +6,7 @@ import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import * as colors from '../../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { COMPANY_NAME } from '@env'
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ const AppRootStack = () => {
                   backgroundColor: colors.default.white,
               },
               headerTintColor: colors.default.primary,
-              headerTitle: `Vastel`,
+              headerTitle: COMPANY_NAME,
               headerBackVisible: true,
               headerShown: true,
               

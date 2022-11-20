@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 import * as colors from '../../configs/colors';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
+import { COMPANY_NAME } from '@env'
 
 const HomeStack = () => {
     return (
@@ -21,7 +21,7 @@ const HomeStack = () => {
                         backgroundColor: colors.default.primary,
                     },
                     headerTintColor: colors.default.primary,
-                    headerTitle: `Vastel`,
+                    headerTitle: COMPANY_NAME,
                     headerBackVisible: true,
                     headerShown: false,
                     
