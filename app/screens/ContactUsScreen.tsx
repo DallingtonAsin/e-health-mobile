@@ -59,7 +59,7 @@ const ContactUsScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Kindly reach out to use for help</Text>
+            <Text style={styles.title}>Need help? Please contact us.</Text>
             <View style={styles.subcontainer}>
                 <FlatList
                     data={contacts}
