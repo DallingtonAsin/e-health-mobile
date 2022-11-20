@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -18,12 +18,14 @@ import Toast from 'react-native-simple-toast';
 import { NavigationProp } from '@react-navigation/native';
 
 
-const iconSize = 48;
+const iconSize = 45;
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
+
+    const [user, setUser] = useState(`Dallington`);
 
     const comingSoon = () => {
-         Toast.show(`Coming soon...`, Toast.LONG);
+        Toast.show(`Coming soon...`, Toast.LONG);
     }
 
     return (
@@ -32,19 +34,21 @@ const HomeScreen = ({navigation}) => {
             <StatusBar
                 backgroundColor={colors.default.primary}
             />
-            <Text style={styles.title}>Vastel Medical Services</Text>
-          
+            <Text style={styles.greeting}>Welcome, Dallington!</Text>
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainerStyle}
             >
 
-<View style={styles.imageContainer}>
-            <Image
-              style={styles.tinyLogo}
-              source={require('../assets/home_icon.png')}
-             />
-            </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../assets/home_icon.png')}
+                    />
+                </View>
+
+                <Text style={styles.title}>Our Services</Text>
+
 
                 <View style={styles.cardContainer}>
                     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
@@ -54,7 +58,7 @@ const HomeScreen = ({navigation}) => {
 
                     <TouchableOpacity style={styles.card}>
                         <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Appointments</Text>
+                        <Text style={styles.subtitle}>My Appointments</Text>
                     </TouchableOpacity>
 
                 </View>
@@ -67,7 +71,7 @@ const HomeScreen = ({navigation}) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.primary} />
+                        <Icon5 name="video" size={iconSize * 0.92} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Meeting</Text>
                     </TouchableOpacity>
 
@@ -118,13 +122,15 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         borderRadius: 100 / 20,
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: 'gray',
-        marginHorizontal: 10,
-        marginVertical: 10,
-        padding: 10,
+        marginHorizontal: 5,
+        marginVertical: 5,
+        paddingVertical: 22,
+        paddingHorizontal: 5,
         alignItems: 'center',
         textShadowColor: 'gray',
+        backgroundColor: colors.default.white,
         shadowOffset: {
             height: 4,
             width: 4
@@ -132,26 +138,42 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 30,
+        fontSize: 18,
         textAlign: 'center',
         fontWeight: 'bold',
         fontStyle: 'normal',
         marginTop: 20,
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        color: colors.default.dark,
+        opacity: 0.7,
+    },
+
+    greeting: {
+        fontSize: 24,
+        textAlign: 'left',
+        fontWeight: 'bold',
+        fontStyle: 'normal',
+        marginTop: 20,
+        textTransform: 'capitalize',
+        color: colors.default.dark,
+        opacity: 0.8,
+        left:40,
+        marginVertical:10,
     },
 
     subtitle: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 'bold',
+        top: 5
     },
 
-    tinyLogo:{
-        width: 320,
+    tinyLogo: {
+        width: 220,
         height: 200,
         resizeMode: 'stretch',
     },
 
-    imageContainer:{
-        margin:20
+    imageContainer: {
+        marginVertical: 10,
     }
 })

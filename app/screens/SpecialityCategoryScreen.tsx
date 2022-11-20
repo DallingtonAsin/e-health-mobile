@@ -4,7 +4,13 @@ import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
-const SpecialityCategoryScreen = ({navigation}) => {
+
+interface SpecialityCategory {
+    id?: number | null,
+    name?: string | null,
+}
+
+const SpecialityCategoryScreen = ({navigation}): JSX.Element => {
 
     const specialities = [
         { id: 1, name: 'Cardic Surgery' },
@@ -21,17 +27,17 @@ const SpecialityCategoryScreen = ({navigation}) => {
         { id: 12, name: 'Clinic Nutrietion' },
     ]
 
-    const Item = ({ title }) => (
+    const Item = ({ name }: SpecialityCategory) => (
         <View elevation={5} style={styles.itemView}>
             <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
-                <Text style={styles.itemTitle}>{title}</Text>
+                <Text style={styles.itemTitle}>{name}</Text>
                 <Icon5 name="angle-right" size={20} color={colors.default.primary} style={styles.arrow} />
             </TouchableOpacity>
         </View>
     );
 
     const renderItem = ({ item }) => (
-        <Item title={item.name} />
+        <Item name={item.name} />
     );
 
     return (

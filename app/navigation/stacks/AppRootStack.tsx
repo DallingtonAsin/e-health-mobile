@@ -20,12 +20,12 @@ const AppRootStack = () => {
                   backgroundColor: colors.default.white,
               },
               headerTintColor: colors.default.primary,
-              headerTitle: ``,
+              headerTitle: `Vastel`,
               headerBackVisible: true,
               headerShown: true,
               
               headerLeft: () => (
-                  <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 0 }}>
+                  <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
                       <Icon name="bars" size={35} color={colors.default.primary} />
                   </TouchableOpacity>
               ),
