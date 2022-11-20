@@ -13,10 +13,16 @@ import {
 import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import Toast from 'react-native-simple-toast';
 
 const iconSize = 48;
 
 const HomeScreen = () => {
+
+    const comingSoon = () => {
+         Toast.show(`Coming soon...`, Toast.LONG);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
 
@@ -38,19 +44,19 @@ const HomeScreen = () => {
             </View>
 
                 <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon name="users" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Specialists</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon5 name="video" size={iconSize*0.92} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Meeting</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon5 name="check-circle" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>My Approvals</Text>
                     </TouchableOpacity>
@@ -62,12 +68,12 @@ const HomeScreen = () => {
                 </View>
 
                 <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon name="wrench" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Services</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon5 name="info-circle" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Help</Text>
                     </TouchableOpacity>
@@ -123,6 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         fontWeight: 'bold',
+        fontStyle: 'normal',
         marginTop: 20,
         textTransform: 'capitalize'
     },

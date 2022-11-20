@@ -21,10 +21,11 @@ const HomeStack = ({ }) => {
                     },
                     headerTintColor: colors.default.white,
                     headerTitle: `Vastel`,
+                    headerBackVisible: true,
+                    
                     headerLeft: () => (
-                        <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 16 }}
-                        >
-                            <Icon name="bars" size={28} color={colors.default.white} />
+                        <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
+                            <Icon name="bars" size={28} color={colors.default.pink} />
                         </TouchableOpacity>
                     ),
                 }}
