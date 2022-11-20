@@ -17,11 +17,12 @@ const HomeStack = ({ }) => {
                 component={HomeScreen}
                 options={{
                     headerStyle: {
-                        backgroundColor: colors.default.primary,
+                        backgroundColor: colors.default.pink,
                     },
-                    headerTintColor: colors.default.white,
+                    headerTintColor: colors.default.pink,
                     headerTitle: `Vastel`,
                     headerBackVisible: true,
+                    headerShown: false,
                     
                     headerLeft: () => (
                         <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
