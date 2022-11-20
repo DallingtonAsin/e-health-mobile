@@ -31,7 +31,19 @@ const AppRootStack = () => {
               ),
             }}
         />
-         <Stack.Screen name="SpecialityCategories" component={SpecialityCategoryScreen} />
+         <Stack.Screen
+          name="SpecialityCategories"
+          component={SpecialityCategoryScreen}
+          options={{
+            headerStyle: {
+                backgroundColor: colors.default.white,
+            },
+            headerTintColor: colors.default.primary,
+            headerTitle: `Specialist Categories`,
+            headerBackVisible: true,
+            headerShown: true,
+          }}
+          />
          <Stack.Screen 
          name="SpecialitiesList"
          options={{
