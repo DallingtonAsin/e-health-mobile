@@ -34,7 +34,7 @@ const HomeScreen = () => {
                     </View>
 
                     <View style={styles.card}>
-                        <Icon5 name="video" size={iconSize} color={colors.default.pink} />
+                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Meeting</Text>
                     </View>
                 </View>
@@ -53,7 +53,7 @@ const HomeScreen = () => {
 
                 <View style={styles.cardContainer}>
                     <View style={styles.card}>
-                        <Icon5 name="wrench" size={iconSize} color={colors.default.pink} />
+                        <Icon name="wrench" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Services</Text>
                     </View>
 
