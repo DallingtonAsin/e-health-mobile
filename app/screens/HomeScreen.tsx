@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
     },
 
     imageContainer: {
-        marginVertical: 10,
+        marginVertical: 0,
     }
 })

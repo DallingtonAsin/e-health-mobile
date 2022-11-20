@@ -9,17 +9,17 @@ const SpecialityListScreen = () => {
 
     const specialities = [
         { id: 1, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 2, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 3, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 4, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 5, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 6, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 7, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 8, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 9, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 10, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 11, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
-        { id: 12, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda` },
+        { id: 2, name: 'Dr. Grace Kaisa', course: 'MBBS, DNB', title: 'Nutrionist', experience: `3 Yrs`, languages: `English, Luganda` },
+        { id: 3, name: 'Dr. Herman Keid', course: 'MBBS, DNB', title: 'Nutrionist', experience: `1 Yr`, languages: `English, Luo, Luganda` },
+        { id: 4, name: 'Dr. Dallington Lisa', course: 'MBBS, DNB', title: 'Nutrionist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda` },
+        { id: 5, name: 'Dr. John Peterson', course: 'MBBS, DNB', title: 'Nutrionist', experience: `10 Yrs`, languages: `English, Luganda` },
+        { id: 6, name: 'Dr. Chelsea Finn', course: 'MBBS, DNB', title: 'Nutrionist', experience: `2 Yrs`, languages: `English, Swahili` },
+        { id: 7, name: 'Dr. Moses Alfred', course: 'MBBS, DNB', title: 'Nutrionist', experience: `3 Yrs`, languages: `Swahili, Luganda` },
+        { id: 8, name: 'Dr. Peterson Lkein', course: 'MBBS, DNB', title: 'Nutrionist', experience: `6 Yrs`, languages: `English, German, Luganda` },
+        { id: 9, name: 'Dr. Ivan Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `2 Yrs`, languages: `English, Spanish, Swahili` },
+        { id: 10, name: 'Dr. Isaac Newton', course: 'MBBS, DNB', title: 'Nutrionist', experience: `7 Yrs`, languages: `English` },
+        { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Nutrionist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda` },
+        { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Nutrionist', experience: `2 Yrs`, languages: `English, Runyankore` },
     ]
 
 
@@ -146,11 +146,13 @@ const styles = StyleSheet.create({
     },
 
     bookBtn: {
-        padding: 15,
-        borderRadius: 20,
+        padding: 8,
+        borderRadius: 50,
         borderWidth: 1,
         backgroundColor: colors.default.primary,
         borderColor: colors.default.primary,
+        width:100,
+        alignItems: 'center',
     },
 
     btnTxt: {
