@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </View>
 
-                <Text style={styles.title}>Our Services</Text>
+                <Text style={styles.title}>Quick Actions</Text>
 
 
                 <View style={styles.cardContainer}>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 18,
+        fontSize: 17,
         textAlign: 'center',
         fontWeight: 'bold',
         fontStyle: 'normal',
