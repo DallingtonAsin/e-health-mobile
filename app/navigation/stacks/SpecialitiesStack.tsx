@@ -2,20 +2,19 @@ import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../../screens/HomeScreen';
-import SpecialitiesScreen from '../../screens/SpecialitiesScreen'
+import SpecialitiesScreen from '../../screens/SpecialitiesScreen';
 const Stack = createNativeStackNavigator();
 import * as colors from '../../configs/colors';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 
-const HomeStack = () => {
+const SpecialitiesStack = ({ }) => {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name={"Home"}
-                component={HomeScreen}
+                name={"Specialities"}
+                component={SpecialitiesScreen}
                 options={{
                     headerStyle: {
                         backgroundColor: colors.default.pink,
@@ -32,9 +31,9 @@ const HomeStack = () => {
                     ),
                 }}
             />
-            <Stack.Screen name="Specialities" component={SpecialitiesScreen} />
+            {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
         </Stack.Navigator>
     );
 };
 
-export default HomeStack;
+export default SpecialitiesStack;

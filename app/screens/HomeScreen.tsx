@@ -15,9 +15,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 
+import { NavigationProp } from '@react-navigation/native';
+
+
 const iconSize = 48;
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 
     const comingSoon = () => {
          Toast.show(`Coming soon...`, Toast.LONG);
@@ -44,7 +47,7 @@ const HomeScreen = () => {
             </View>
 
                 <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Specialities')}>
                         <Icon name="users" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Specialists</Text>
                     </TouchableOpacity>
