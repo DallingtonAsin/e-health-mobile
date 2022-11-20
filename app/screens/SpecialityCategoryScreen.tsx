@@ -4,7 +4,7 @@ import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
-const SpecialitiesScreen = () => {
+const SpecialityCategoryScreen = ({navigation}) => {
 
     const specialities = [
         { id: 1, name: 'Cardic Surgery' },
@@ -23,9 +23,9 @@ const SpecialitiesScreen = () => {
 
     const Item = ({ title }) => (
         <View elevation={5} style={styles.itemView}>
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
                 <Text style={styles.itemTitle}>{title}</Text>
-                <Icon5 name="angle-right" size={20} color={colors.default.pink} style={styles.arrow} />
+                <Icon5 name="angle-right" size={20} color={colors.default.primary} style={styles.arrow} />
             </TouchableOpacity>
         </View>
     );
@@ -51,7 +51,7 @@ const SpecialitiesScreen = () => {
     )
 }
 
-export default SpecialitiesScreen;
+export default SpecialityCategoryScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         textAlign: 'center',
-        color: colors.default.pink,
+        color: colors.default.primary,
         fontWeight: 'bold',
         marginVertical: 10,
     },

@@ -30,7 +30,7 @@ const HomeScreen = ({navigation}) => {
         <SafeAreaView style={styles.container}>
 
             <StatusBar
-                backgroundColor={colors.default.pink}
+                backgroundColor={colors.default.primary}
             />
             <Text style={styles.title}>Vastel Medical Services</Text>
           
@@ -47,13 +47,13 @@ const HomeScreen = ({navigation}) => {
             </View>
 
                 <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Specialities')}>
-                        <Icon name="users" size={iconSize} color={colors.default.pink} />
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
+                        <Icon name="users" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Specialists</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.pink} />
+                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Meeting</Text>
                     </TouchableOpacity>
                 </View>
@@ -61,12 +61,12 @@ const HomeScreen = ({navigation}) => {
                 <View style={styles.cardContainer}>
 
                 <TouchableOpacity style={styles.card}>
-                        <Icon5 name="calendar-alt" size={iconSize} color={colors.default.pink} />
+                        <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Appointments</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="check-circle" size={iconSize} color={colors.default.pink} />
+                        <Icon5 name="check-circle" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>My Approvals</Text>
                     </TouchableOpacity>
 
@@ -75,12 +75,12 @@ const HomeScreen = ({navigation}) => {
 
                 <View style={styles.cardContainer}>
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon name="wrench" size={iconSize} color={colors.default.pink} />
+                        <Icon name="wrench" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Services</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="info-circle" size={iconSize} color={colors.default.pink} />
+                        <Icon5 name="info-circle" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Help</Text>
                     </TouchableOpacity>
                 </View>

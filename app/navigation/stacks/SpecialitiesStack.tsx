@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SpecialitiesScreen from '../../screens/SpecialitiesScreen';
+import SpecialitiesScreen from '../../screens/SpecialityCategoryScreen';
 const Stack = createNativeStackNavigator();
 import * as colors from '../../configs/colors';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -17,16 +17,16 @@ const SpecialitiesStack = ({ }) => {
                 component={SpecialitiesScreen}
                 options={{
                     headerStyle: {
-                        backgroundColor: colors.default.pink,
+                        backgroundColor: colors.default.primary,
                     },
-                    headerTintColor: colors.default.pink,
+                    headerTintColor: colors.default.primary,
                     headerTitle: `Vastel`,
                     headerBackVisible: true,
                     headerShown: false,
                     
                     headerLeft: () => (
                         <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
-                            <Icon name="bars" size={28} color={colors.default.pink} />
+                            <Icon name="bars" size={28} color={colors.default.primary} />
                         </TouchableOpacity>
                     ),
                 }}
