@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from "../../screens/HomeScreen";
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
+import ContactUsScreen from "../../screens/ContactUsScreen";
 import * as colors from '../../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
@@ -72,6 +73,20 @@ const AppRootStack = () => {
             headerShown: true,
           }}
           component={SpecialityListScreen} />
+
+
+<Stack.Screen 
+         name="ContactUs"
+         options={{
+            headerStyle: {
+                backgroundColor: colors.default.white,
+            },
+            headerTintColor: colors.default.primary,
+            headerTitle: `Contact Us`,
+            headerBackVisible: true,
+            headerShown: true,
+          }}
+          component={ContactUsScreen} />
 
      </Stack.Navigator>
  )

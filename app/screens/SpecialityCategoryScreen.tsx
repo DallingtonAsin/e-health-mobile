@@ -1,16 +1,15 @@
 import React from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as colors from '../configs/colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { Title, Paragraph, Searchbar } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 
 interface SpecialityCategory {
     id?: number | null,
     name?: string | null,
 }
 
-const SpecialityCategoryScreen = ({ navigation }): JSX.Element => {
+const SpecialityCategoryScreen = ({ navigation }) => {
 
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = (query: string) => setSearchQuery(query);

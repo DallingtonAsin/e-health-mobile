@@ -6,7 +6,6 @@ import {
     StyleSheet,
     Text,
     Image,
-    useColorScheme,
     View,
     TouchableOpacity,
 } from 'react-native';
@@ -14,9 +13,6 @@ import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
-
-import { NavigationProp } from '@react-navigation/native';
-
 
 const iconSize = 45;
 
@@ -34,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
             <StatusBar
                 backgroundColor={colors.default.primary}
             />
-            <Text style={styles.greeting}>Welcome, Dallington!</Text>
+            <Text style={styles.greeting}>Welcome, {user}!</Text>
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainerStyle}
@@ -83,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
                         <Text style={styles.subtitle}>Services</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
                         <Icon5 name="info-circle" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Help</Text>
                     </TouchableOpacity>
