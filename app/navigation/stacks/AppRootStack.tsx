@@ -5,7 +5,8 @@ import HomeScreen from "../../screens/HomeScreen";
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import * as colors from '../../configs/colors';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { COMPANY_NAME } from '@env'
 
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,12 @@ const AppRootStack = () => {
                       <Icon name="bars" size={35} color={colors.default.primary} />
                   </TouchableOpacity>
               ),
+
+              headerRight: () => (
+                <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
+                <Icon5 name="bell" size={27} color={colors.default.primary} />
+               </TouchableOpacity>
+                )
             }}
         />
          <Stack.Screen
