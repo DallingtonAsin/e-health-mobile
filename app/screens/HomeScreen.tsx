@@ -52,25 +52,25 @@ const HomeScreen = ({navigation}) => {
                         <Text style={styles.subtitle}>Specialists</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Meeting</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.cardContainer}>
-
-                <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Appointments</Text>
                     </TouchableOpacity>
+
+                </View>
+
+                <View style={styles.cardContainer}>
 
                     <TouchableOpacity style={styles.card} onPress={comingSoon}>
                         <Icon5 name="check-circle" size={iconSize} color={colors.default.primary} />
                         <Text style={styles.subtitle}>My Approvals</Text>
                     </TouchableOpacity>
 
-              
+                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                        <Icon5 name="video" size={iconSize*0.92} color={colors.default.primary} />
+                        <Text style={styles.subtitle}>Meeting</Text>
+                    </TouchableOpacity>
+
                 </View>
 
                 <View style={styles.cardContainer}>
