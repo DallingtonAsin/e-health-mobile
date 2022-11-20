@@ -8,6 +8,7 @@ import {
     Image,
     useColorScheme,
     View,
+    TouchableOpacity,
 } from 'react-native';
 import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -37,39 +38,39 @@ const HomeScreen = () => {
             </View>
 
                 <View style={styles.cardContainer}>
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon name="users" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Specialists</Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon5 name="video" size={iconSize*0.92} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Meeting</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardContainer}>
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon5 name="check-circle" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>My Approvals</Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon5 name="info-circle" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Help</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardContainer}>
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon name="wrench" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Services</Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <Icon5 name="info-circle" size={iconSize} color={colors.default.pink} />
                         <Text style={styles.subtitle}>Help</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
 
