@@ -88,6 +88,8 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 16,
         borderRadius: 10,
+        backgroundColor: colors.default.white,
+
     },
 
     item: {
