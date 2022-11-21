@@ -1,9 +1,8 @@
 import React from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import * as colors from '../configs/colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar } from 'react-native-paper';
+import * as RootNavigation from '../navigation/RootNavigation';
 
 const SpecialityListScreen = () => {
 
@@ -21,6 +20,11 @@ const SpecialityListScreen = () => {
         { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Endocrinologist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda`, src: require('../assets/specialists/11.png'), fee: 115 },
         { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src: require('../assets/specialists/12.jpg'), fee: 175 },
     ]
+
+
+    const bookSpecialist = (item) => {
+        RootNavigation.navigate('AppointmentConfirmation',  item);
+    }
 
 
     const renderItem = ({ item }) => (
@@ -53,7 +57,10 @@ const SpecialityListScreen = () => {
                     <Text style={styles.fees}>Fee :  <Text style={styles.amount}>${item.fee}</Text></Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={styles.bookBtn}>
+                    <TouchableOpacity 
+                    style={styles.bookBtn}
+                    onPress={() => bookSpecialist(item)}
+                    >
                         <Text style={styles.btnTxt}>Book</Text>
                     </TouchableOpacity>
                 </View>

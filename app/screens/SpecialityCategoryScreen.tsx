@@ -16,11 +16,11 @@ const SpecialityCategoryScreen = ({ navigation }) => {
 
     const specialities = [
         { id: 1, name: 'Cardic Surgery' },
-        { id: 2, name: 'Cardiology' },
+        { id: 2, name: 'Eye Specialist' },
         { id: 3, name: 'Clinic Nutrietion' },
         { id: 4, name: 'Cardic Doctor' },
-        { id: 5, name: 'Cardiology Nurse' },
-        { id: 6, name: 'Clinic Tetanus' },
+        { id: 5, name: 'Child Specialist' },
+        { id: 6, name: 'Ear Nose Throat' },
         { id: 7, name: 'Cardic Surgery' },
         { id: 8, name: 'Cardiology' },
         { id: 9, name: 'Clinic Nutrietion' },

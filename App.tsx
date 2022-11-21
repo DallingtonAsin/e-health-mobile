@@ -30,6 +30,7 @@ import HomeScreen from './app/screens/HomeScreen';
 import HomeStack from './app/navigation/stacks/HomeStack'
 import { NavigationContainer } from '@react-navigation/native';
 import AppRootStack from './app/navigation/stacks/AppRootStack';
+import { navigationRef } from './app/navigation/RootNavigation';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -69,7 +70,7 @@ const App = () => {
   };
 
   return (
-   <NavigationContainer>
+   <NavigationContainer ref={navigationRef}>
      <AppRootStack/>
    </NavigationContainer>
   );

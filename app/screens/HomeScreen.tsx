@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
             <StatusBar
                 backgroundColor={colors.default.primary}
             />
+            
             <Text style={styles.greeting}>Welcome, {user}!</Text>
             <ScrollView
                 style={styles.scroll}
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
 
     scrollContainerStyle: {
         flexGrow: 1,
-        alignItems: 'center',
-        // justifyContent: 'center',
+        // alignItems: 'center',
+        justifyContent: 'center',
 
     },
 
@@ -171,5 +172,6 @@ const styles = StyleSheet.create({
 
     imageContainer: {
         marginVertical: 0,
+        alignSelf:'center'
     }
 })

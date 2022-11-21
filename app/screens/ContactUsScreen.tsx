@@ -6,9 +6,10 @@ import Communications from 'react-native-communications';
 
 
 interface Contact {
-    id?: number | null,
-    text?: string | null,
-    icon?: string
+    id: number | null,
+    text: string | null,
+    value:string,
+    icon: string
     method?: any,
 }
 
@@ -41,7 +42,7 @@ const ContactUsScreen = () => {
     ]
 
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: {item: Contact}) => (
         <TouchableOpacity style={styles.item} onPress={() => item.method(item.value)}>
             <View style={{ flexDirection: 'row' }}>
                 <Icon5 name={item.icon} size={40} color={colors.default.primary} style={styles.arrow} />
