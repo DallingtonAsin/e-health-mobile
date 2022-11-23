@@ -23,7 +23,7 @@ const SpecialityListScreen = () => {
 
 
     const bookSpecialist = (item) => {
-        RootNavigation.navigate('AppointmentConfirmation',  item);
+        RootNavigation.navigate('ScheduleAppointment',  item);
     }
 
 

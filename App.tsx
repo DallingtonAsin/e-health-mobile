@@ -16,8 +16,10 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
+  View, LogBox
 } from 'react-native';
+
+
 
 import {
   Colors,
@@ -31,6 +33,9 @@ import HomeStack from './app/navigation/stacks/HomeStack'
 import { NavigationContainer } from '@react-navigation/native';
 import AppRootStack from './app/navigation/stacks/AppRootStack';
 import { navigationRef } from './app/navigation/RootNavigation';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Section: React.FC<
   PropsWithChildren<{

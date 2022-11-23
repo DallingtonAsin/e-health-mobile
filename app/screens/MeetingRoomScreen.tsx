@@ -119,7 +119,6 @@ export default MeetingRoomScreen;
 const styles =  StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'gray',
     },
     viewContainer: {
         flex:1,

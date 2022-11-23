@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'rea
 import * as colors from '../configs/colors';
 import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { navigate } from '../navigation/RootNavigation';
 
 const AppointmentConfirmationScreen = ({ route, navigation }) => {
 
@@ -97,16 +96,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
 
+  personalInfo: {
+    paddingHorizontal: 10,
+    top: 5
+  },
+
   infoTitle: {
     color: colors.default.black,
     fontSize: 16,
     opacity: 0.6
   },
 
-  personalInfo: {
-    paddingHorizontal: 10,
-    top: 5
-  },
+
 
   date: {
     color: colors.default.white,
