@@ -107,9 +107,16 @@ const MeetingRoomScreen = () => {
       ) : (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewContainer}>
-               <TouchableOpacity style={styles.joinButton}  onPress={() => setVideoCall(true)}>
+
+              <View style={styles.body}>
+               <Text>Information about the meeting will go here...</Text>
+              </View>
+             
+             <View style={styles.footer}>
+             <TouchableOpacity style={styles.joinButton}  onPress={() => setVideoCall(true)}>
                 <Text style={styles.meetingText}>Join Meeting</Text>
                </TouchableOpacity>
+             </View>
             </View>
         </SafeAreaView>
     )
@@ -120,20 +127,33 @@ const styles =  StyleSheet.create({
     container: {
         flex: 1,
     },
+
     viewContainer: {
         flex:1,
         justifyContent: 'center'
     },
+
     joinButton: {
-        paddingHorizontal: 10,
-        paddingVertical:10,
-        marginHorizontal:25,
         backgroundColor: colors.default.primary,
-        alignItems: 'center',
-        borderRadius: 3,
+        bottom: 50,
+        position: 'absolute',
+        paddingHorizontal: 120,
+        paddingVertical: 18,
+        borderRadius: 5,
     },
+
     meetingText: {
       color: colors.default.white,
       fontSize: 16,
-    }
+    },
+
+    body: {
+          flex: 1,
+    },
+
+    footer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
 })
