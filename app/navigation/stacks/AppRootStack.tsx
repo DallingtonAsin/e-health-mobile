@@ -9,6 +9,8 @@ import * as colors from '../../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
+import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
+
 import { COMPANY_NAME } from '@env'
 import Toast from 'react-native-simple-toast';
 
@@ -92,8 +94,14 @@ const AppRootStack = () => {
 
                 <Stack.Screen
                     name="AppointmentConfirmation"
-                    options={{headerShown: false}}
+                    options={{ headerShown: false }}
                     component={AppointmentConfirmationScreen}
+                />
+
+                <Stack.Screen
+                    name="MeetingRoom"
+                    options={{ headerShown: false }}
+                    component={MeetingRoomScreen}
                 />
 
             </Stack.Navigator>

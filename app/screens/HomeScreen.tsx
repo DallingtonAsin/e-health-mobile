@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
                         <Text style={styles.subtitle}>My Approvals</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
                         <Icon5 name="video" size={iconSize * 0.92} color={colors.default.primary} />
                         <Text style={styles.subtitle}>Meeting</Text>
                     </TouchableOpacity>

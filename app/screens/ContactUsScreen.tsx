@@ -45,7 +45,7 @@ const ContactUsScreen = () => {
     const renderItem = ({ item }: {item: Contact}) => (
         <TouchableOpacity style={styles.item} onPress={() => item.method(item.value)}>
             <View style={{ flexDirection: 'row' }}>
-                <Icon5 name={item.icon} size={40} color={colors.default.primary} style={styles.arrow} />
+                <Icon5 name={item.icon} size={30} color={colors.default.primary} style={styles.arrow} />
                 <View style={styles.verticleLine}></View>
                 <View style={{ paddingHorizontal: 20 }}>
                     <Text style={styles.contactTitle}>{item.text}</Text>
@@ -65,7 +65,7 @@ const ContactUsScreen = () => {
                 <FlatList
                     data={contacts}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item: Contact) => item.id}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
