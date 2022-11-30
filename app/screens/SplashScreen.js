@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Pressable,  StatusBar, } from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity,  StatusBar, } from 'react-native'
 import * as colors from '../configs/colors';
 import { Avatar } from 'react-native-paper';
 
@@ -13,9 +13,9 @@ const SplashScreen = ({navigation}) => {
             <Avatar.Image style={styles.logo} size={150} source={{ uri: 'https://cdn4.iconfinder.com/data/icons/professions-1-2/151/3-512.png' }} />
             </View>
             <View style={styles.footer}>
-            <Pressable style={styles.nextBtn} onPress={() => {navigation.navigate('Home')}}>
+            <TouchableOpacity style={styles.nextBtn} onPress={() => {navigation.navigate('Home')}}>
                 <Text style={styles.nextText}>Next</Text>
-             </Pressable>
+             </TouchableOpacity>
             </View>
         </View>
     )

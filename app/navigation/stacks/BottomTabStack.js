@@ -57,7 +57,7 @@ const BottomTabStack = () => {
           </BottomTabBarWrapper>
         )}
         tabBarOptions={{
-          activeTintColor: colors.activeTabColor,
+          activeTintColor: customColors.default.dark || colors.activeTabColor,
           inactiveTintColor: customColors.default.primary,
           style: {
             backgroundColor: customColors.default.white,
