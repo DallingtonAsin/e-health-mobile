@@ -71,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
 
                     <View style={styles.cardContainer}>
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
-                            <Icon name="users" size={iconSize} color={colors.default.primary} />
+                            <Icon5 name="user-md" size={iconSize} color={colors.default.primary} />
                             <Text style={styles.subtitle}>Doctors</Text>
                         </TouchableOpacity>
 

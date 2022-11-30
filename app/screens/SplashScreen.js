@@ -11,6 +11,7 @@ const SplashScreen = ({navigation}) => {
             />
             <View style={styles.header}>
             <Avatar.Image style={styles.logo} size={150} source={{ uri: 'https://cdn4.iconfinder.com/data/icons/professions-1-2/151/3-512.png' }} />
+            <Text style={styles.drText}>Doctor Anywhere</Text>
             </View>
             <View style={styles.footer}>
             <TouchableOpacity style={styles.nextBtn} onPress={() => {navigation.navigate('Home')}}>
@@ -62,8 +63,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    logo: {
-        
+    drText: {
+        fontSize:24,
+        color: colors.default.white,
+        textTransform: 'uppercase',
+        paddingVertical: 15,
+        fontWeight: 'bold'
     }
 
 })
