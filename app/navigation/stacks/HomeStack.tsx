@@ -6,7 +6,6 @@ import HomeScreen from '../../screens/HomeScreen';
 import SpecialitiesScreen from '../../screens/SpecialityCategoryScreen'
 const Stack = createNativeStackNavigator();
 import * as colors from '../../configs/colors';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COMPANY_NAME } from '@env'
 

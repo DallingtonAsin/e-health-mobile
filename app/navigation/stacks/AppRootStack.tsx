@@ -36,7 +36,7 @@ const AppRootStack = () => {
                         headerTintColor: colors.default.primary,
                         headerTitle: COMPANY_NAME,
                         headerBackVisible: true,
-                        headerShown: true,
+                        headerShown: false,
 
                         headerLeft: () => (
                             <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 5 }}>

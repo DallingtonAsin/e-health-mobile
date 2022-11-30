@@ -7,18 +7,18 @@ import * as RootNavigation from '../navigation/RootNavigation';
 const SpecialityListScreen = () => {
 
     const specialities = [
-        { id: 1, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda`, src: require('../assets/specialists/1.png'), fee: 800},
-        { id: 2, name: 'Dr. Grace Kaisa', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src: require('../assets/specialists/2.jpg'), fee: 330 },
-        { id: 3, name: 'Dr. Herman Keid', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src: require('../assets/specialists/3.jpg'), fee: 450 },
-        { id: 4, name: 'Dr. Dallington Lisa', course: 'MBBS, DNB', title: 'Psychiatrist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda`, src: require('../assets/specialists/4.jpg'), fee: 500 },
-        { id: 5, name: 'Dr. John Peterson', course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src: require('../assets/specialists/5.png'), fee: 800 },
-        { id: 6, name: 'Dr. Chelsea Finn', course: 'MBBS, DNB', title: 'Orthopedic', experience: `2 Yrs`, languages: `English, Swahili`, src: require('../assets/specialists/6.jpg'), fee: 650 },
-        { id: 7, name: 'Dr. Moses Alfred', course: 'MBBS, DNB', title: 'Neurology', experience: `3 Yrs`, languages: `Swahili, Luganda`, src: require('../assets/specialists/7.jpg'), fee: 250 },
-        { id: 8, name: 'Dr. Peterson Lkein', course: 'MBBS, DNB', title: 'Pediatrician', experience: `6 Yrs`, languages: `English, German, Luganda`, src: require('../assets/specialists/8.jpeg'), fee: 150 },
-        { id: 9, name: 'Dr. Ivan Luna', course: 'MBBS, DNB', title: 'Anesthesiologist', experience: `2 Yrs`, languages: `English, Spanish, Swahili`, src: require('../assets/specialists/9.png'), fee: 980 },
-        { id: 10, name: 'Dr. Isaac Newton', course: 'MBBS, DNB', title: 'Oncology', experience: `7 Yrs`, languages: `English`, src: require('../assets/specialists/10.jpg'), fee: 160 },
-        { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Endocrinologist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda`, src: require('../assets/specialists/11.png'), fee: 115 },
-        { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src: require('../assets/specialists/12.jpg'), fee: 175 },
+        { id: 1, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda`, src: 'https://familydoctor.org/wp-content/uploads/2018/02/41808433_l.jpg', fee: 800},
+        { id: 2, name: 'Dr. Grace Kaisa', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src:'https://thumbs.dreamstime.com/b/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg', fee: 330 },
+        { id: 3, name: 'Dr. Herman Keid', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src:'https://t4.ftcdn.net/jpg/03/16/76/11/360_F_316761139_yVmLRT0AVwpZwOTgpmfrdIKrtFfg0bop.jpg', fee: 450 },
+        { id: 4, name: 'Dr. Dallington Lisa', course: 'MBBS, DNB', title: 'Psychiatrist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda`, src:'https://thumbs.dreamstime.com/b/portrait-positive-black-doctor-holding-medical-chart-male-over-white-background-178499631.jpg', fee: 500 },
+        { id: 5, name: 'Dr. John Peterson', course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src:'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', fee: 800 },
+        { id: 6, name: 'Dr. Chelsea Finn', course: 'MBBS, DNB', title: 'Orthopedic', experience: `2 Yrs`, languages: `English, Swahili`, src:'https://static2.bigstockphoto.com/4/7/3/large1500/374246794.jpg', fee: 650 },
+        { id: 7, name: 'Dr. Moses Alfred', course: 'MBBS, DNB', title: 'Neurology', experience: `3 Yrs`, languages: `Swahili, Luganda`, src:'https://www.shape.com/thmb/3BaNRJiYmLa4HCkvORgFpj7c1Xo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/black-female-doctor-6d6a6c2ec3ae48ceaeeae61f78b7038e.jpg', fee: 250 },
+        { id: 8, name: 'Dr. Peterson Lkein', course: 'MBBS, DNB', title: 'Pediatrician', experience: `6 Yrs`, languages: `English, German, Luganda`, src:'https://purepng.com/public/uploads/large/purepng.com-doctorsdoctorsdoctors-and-nursesa-qualified-practitioner-of-medicine-aclinicianmedical-practitionermale-doctor-1421526856715fcree.png', fee: 150 },
+        { id: 9, name: 'Dr. Ivan Luna', course: 'MBBS, DNB', title: 'Anesthesiologist', experience: `2 Yrs`, languages: `English, Spanish, Swahili`, src:'https://www.pngfind.com/pngs/m/53-531148_black-doctor-png-black-medical-doctor-png-transparent.png', fee: 980 },
+        { id: 10, name: 'Dr. Isaac Newton', course: 'MBBS, DNB', title: 'Oncology', experience: `7 Yrs`, languages: `English`, src:'https://www.seekpng.com/png/full/13-132502_alligator-black-male-doctor-png.png', fee: 160 },
+        { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Endocrinologist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda`, src:'https://pngimg.com/uploads/doctor/doctor_PNG15957.png', fee: 115 },
+        { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src:'https://i.pinimg.com/originals/5b/a1/a3/5ba1a398ac0aa7fe01480166fd2b818f.png', fee: 175 },
     ]
 
 
@@ -32,7 +32,7 @@ const SpecialityListScreen = () => {
         <View elevation={5} style={styles.item}>
             <View style={styles.header}>
                 <View>
-                    <Avatar.Image size={80} source={item.src} />
+                    <Avatar.Image size={80} source={{uri: item.src}} />
                 </View>
                 <View>
                     <Text style={styles.name}>{item.name}</Text>
@@ -56,7 +56,13 @@ const SpecialityListScreen = () => {
                 <View>
                     <Text style={styles.fees}>Fee :  <Text style={styles.amount}>${item.fee}</Text></Text>
                 </View>
-                <View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    {/* <TouchableOpacity 
+                    style={styles.bookBtn}
+                    onPress={() => bookSpecialist(item)}
+                    >
+                        <Text style={styles.btnTxt}>Call</Text>
+                    </TouchableOpacity> */}
                     <TouchableOpacity 
                     style={styles.bookBtn}
                     onPress={() => bookSpecialist(item)}
@@ -96,7 +102,6 @@ const styles = StyleSheet.create({
 
     scrollContainerStyle: {
         flexGrow: 1,
-        // alignItems: 'center',
     },
 
     title: {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -13,16 +13,24 @@ import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
+import { Avatar } from 'react-native-paper';
 
 const iconSize = 45;
 
 const HomeScreen = ({ navigation }) => {
-
-    const [user, setUser] = useState(`Dallington`);
+    const initialUser = {
+        firstName: 'Dallington',
+        lastName: 'Asingwire'
+    }
+    const [user, setUser] = useState(initialUser);
 
     const comingSoon = () => {
         Toast.show(`Coming soon...`, Toast.LONG);
     }
+
+    useEffect(() => {
+        // setUser({firstname: 'Dallington', lastname: 'Asingwire'})
+    })
 
     return (
         <SafeAreaView style={styles.container}>
@@ -30,61 +38,77 @@ const HomeScreen = ({ navigation }) => {
             <StatusBar
                 backgroundColor={colors.default.primary}
             />
-            
-            <Text style={styles.greeting}>Welcome, {user}!</Text>
+
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainerStyle}
             >
 
-                <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.tinyLogo}
-                        source={require('../assets/home_icon.png')}
-                    />
-                </View>
+                <View style={styles.header}>
 
-                <Text style={styles.title}>Quick Actions</Text>
+               <View style={styles.notificationView}>
+                  <Icon name="bell" size={25} color={colors.default.white} style={styles.notificationIcon} />
+               </View>
 
+                    <View style={{ flexDirection: 'row',  alignItems: 'flex-end', top:30 }}>
+                        <View style={{ left:20 }}>
+                            <Text style={styles.greeting}>Hi {user.firstName} {user.lastName}</Text>
+                            <Text style={styles.amazing}>Today is amazing!</Text>
+                        </View>
 
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
-                        <Icon name="users" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Specialists</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.card}>
-                        <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>My Appointments</Text>
-                    </TouchableOpacity>
+                        <View style={{right: 10, top: -5, position:'absolute'}}>
+                            <Avatar.Image size={80} source={{ uri: 'https://www.shutterstock.com/shutterstock/photos/406022083/display_1500/stock-vector-beautiful-african-american-woman-avatar-profile-flat-illustration-406022083.jpg' }} />
+                        </View>
+                    </View>
 
                 </View>
 
-                <View style={styles.cardContainer}>
 
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon5 name="check-circle" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>My Approvals</Text>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
-                        <Icon5 name="video" size={iconSize * 0.92} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Meeting</Text>
-                    </TouchableOpacity>
+                <View style={styles.body}>
+                    <Text style={styles.title}>Quick Actions</Text>
 
+
+                    <View style={styles.cardContainer}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
+                            <Icon name="users" size={iconSize} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>Specialists</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.card}>
+                            <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>My Appointments</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                    <View style={styles.cardContainer}>
+
+                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                            <Icon5 name="check-circle" size={iconSize} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>My Approvals</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
+                            <Icon5 name="video" size={iconSize * 0.92} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>Meeting</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                    <View style={styles.cardContainer}>
+                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                            <Icon name="wrench" size={iconSize} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>Services</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
+                            <Icon5 name="info-circle" size={iconSize} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>Help</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                        <Icon name="wrench" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Services</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
-                        <Icon5 name="info-circle" size={iconSize} color={colors.default.primary} />
-                        <Text style={styles.subtitle}>Help</Text>
-                    </TouchableOpacity>
-                </View>
 
 
             </ScrollView>
@@ -105,9 +129,17 @@ const styles = StyleSheet.create({
 
     scrollContainerStyle: {
         flexGrow: 1,
-        // alignItems: 'center',
         justifyContent: 'center',
+    },
 
+    header: {
+        backgroundColor: colors.default.primary,
+        flex: 2,
+    },
+
+    body: {
+        backgroundColor: colors.default.white,
+        flex: 4,
     },
 
     cardContainer: {
@@ -150,12 +182,15 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontWeight: 'bold',
         fontStyle: 'normal',
-        marginTop: 20,
         textTransform: 'capitalize',
-        color: colors.default.dark,
-        opacity: 0.8,
-        left:40,
-        marginVertical:10,
+        color: colors.default.white,
+        opacity: 0.8
+    },
+
+    amazing: {
+        fontSize: 18,
+        color: colors.default.white,
+        fontWeight: '300',
     },
 
     subtitle: {
@@ -172,6 +207,16 @@ const styles = StyleSheet.create({
 
     imageContainer: {
         marginVertical: 0,
-        alignSelf:'center'
+        alignSelf: 'center'
+    },
+    notificationView:{
+        alignItems: 'flex-end',
+        marginVertical:5
+
+    },
+
+    notificationIcon: {
+        right: 10,
+        marginTop: 5,
     }
 })
