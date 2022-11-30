@@ -75,9 +75,7 @@ const App = () => {
   };
 
   return (
-   <NavigationContainer ref={navigationRef}>
      <AppRootStack/>
-   </NavigationContainer>
   );
 };
 

@@ -5,9 +5,10 @@ import {
     StatusBar,
     StyleSheet,
     Text,
-    Image,
     View,
     TouchableOpacity,
+    Pressable,
+    Alert
 } from 'react-native';
 import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,7 +16,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 
-const iconSize = 45;
+const iconSize = 40;
 
 const HomeScreen = ({ navigation }) => {
     const initialUser = {
@@ -46,9 +47,9 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={styles.header}>
 
-               <View style={styles.notificationView}>
+               <Pressable style={styles.notificationView} onPress={() => Toast.show(`Notifications coming soon...`, Toast.LONG)}>
                   <Icon name="bell" size={25} color={colors.default.white} style={styles.notificationIcon} />
-               </View>
+               </Pressable>
 
                     <View style={{ flexDirection: 'row',  alignItems: 'flex-end', top:30 }}>
                         <View style={{ left:20 }}>

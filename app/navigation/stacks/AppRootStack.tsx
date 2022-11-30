@@ -1,6 +1,7 @@
 import React from "react"
 import { TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from "../../screens/HomeScreen";
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
@@ -11,11 +12,15 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
-
-import { COMPANY_NAME } from '@env'
+import { MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
 import Toast from 'react-native-simple-toast';
+import { COMPANY_NAME } from '@env'
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabStack from "./BottomTabStack";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
 
 const AppRootStack = () => {
 
@@ -25,34 +30,18 @@ const AppRootStack = () => {
 
     return (
         <>
+
+        <NavigationContainer>
             <Stack.Navigator>
+           
                 <Stack.Screen
-                    name={"Home"}
-                    component={HomeScreen}
-                    options={{
-                        headerStyle: {
-                            backgroundColor: colors.default.white,
-                        },
-                        headerTintColor: colors.default.primary,
-                        headerTitle: COMPANY_NAME,
-                        headerBackVisible: true,
-                        headerShown: false,
-
-                        headerLeft: () => (
-                            <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
-                                <Icon name="bars" size={35} color={colors.default.primary} />
-                            </TouchableOpacity>
-                        ),
-
-                        headerRight: () => (
-                            <TouchableOpacity
-                                onPress={() => gotoNotifications()}
-                                style={{ paddingVertical: 12, paddingHorizontal: 5 }}>
-                                <Icon5 name="bell" size={27} color={colors.default.primary} />
-                            </TouchableOpacity>
-                        )
-                    }}
+                name="Home"
+                component={BottomTabStack}
+                options={{
+                    headerShown: false,
+                }}
                 />
+                  
                 <Stack.Screen
                     name="SpecialityCategories"
                     component={SpecialityCategoryScreen}
@@ -120,7 +109,7 @@ const AppRootStack = () => {
 
             </Stack.Navigator>
 
-
+            </NavigationContainer>
 
         </>
     )
