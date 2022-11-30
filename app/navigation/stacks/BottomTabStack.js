@@ -126,7 +126,7 @@ const BottomTabStack = () => {
           options={{
             tabBarIcon: ({color, size}) => (
               <Icon
-                name="user"
+                name="user-circle"
                 style={{
                   fontSize: tabIconFontSize,
                   color: color,

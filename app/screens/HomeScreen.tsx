@@ -7,8 +7,7 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Pressable,
-    Alert
+    Pressable
 } from 'react-native';
 import * as colors from '../configs/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -73,7 +72,7 @@ const HomeScreen = ({ navigation }) => {
                     <View style={styles.cardContainer}>
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
                             <Icon name="users" size={iconSize} color={colors.default.primary} />
-                            <Text style={styles.subtitle}>Specialists</Text>
+                            <Text style={styles.subtitle}>Doctors</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card}>
@@ -91,8 +90,8 @@ const HomeScreen = ({ navigation }) => {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
-                            <Icon5 name="video" size={iconSize * 0.92} color={colors.default.primary} />
-                            <Text style={styles.subtitle}>Meeting</Text>
+                            <Icon5 name="history" size={iconSize * 0.92} color={colors.default.primary} />
+                            <Text style={styles.subtitle}>Medical Records</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -108,9 +107,8 @@ const HomeScreen = ({ navigation }) => {
                             <Text style={styles.subtitle}>Help</Text>
                         </TouchableOpacity>
                     </View>
+
                 </View>
-
-
 
             </ScrollView>
         </SafeAreaView>
