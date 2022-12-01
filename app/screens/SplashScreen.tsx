@@ -13,7 +13,7 @@ const SplashScreen = ({navigation}) => {
             <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
             </View>
             <View style={styles.footer}>
-            <TouchableOpacity style={styles.nextBtn} onPress={() => {navigation.navigate('Signin')}}>
+            <TouchableOpacity style={configs.styles.secondaryBtn} onPress={() => {navigation.navigate('Signin')}}>
                 <Text style={styles.btnText}>Next</Text>
              </TouchableOpacity>
             </View>
@@ -41,18 +41,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
 
-    },
-
-    nextBtn: {
-        backgroundColor: configs.colors.white,
-        borderColor: configs.colors.white,
-        paddingVertical: 15,
-        paddingHorizontal:'40%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
-        position: 'absolute',
-        bottom: 40,
     },
 
     btnText: {
