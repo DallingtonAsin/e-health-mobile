@@ -1,27 +1,26 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SplashScreen from "../../screens/SplashScreen";
 import SigninScreen from "../../screens/SigninScreen";
+import OtpScreen from "../../screens/OtpScreen";
 import * as configs from '../../configs';
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabStack from "./BottomTabStack";
+import CustomStackHeader from "../../components/customStackHeader";
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 
 const AppRootStack = () => {
 
     return (
         <>
-
             <NavigationContainer>
                 <Stack.Navigator>
 
@@ -38,6 +37,26 @@ const AppRootStack = () => {
                         component={SigninScreen}
                         options={{
                             headerShown: false,
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="OTP"
+                        component={OtpScreen}
+                        options={
+                            
+                            {
+                            
+                            headerStyle: {
+                                backgroundColor: configs.colors.white,
+                                
+                            },
+                            headerTintColor: configs.colors.primary,
+                            headerTitle: `Enter verification code`,
+                            headerBackVisible: true,
+                            headerShown: true,
+                            header: (props) => (<CustomStackHeader title="Enter verification code"/>)
+                        
                         }}
                     />
 
@@ -62,6 +81,7 @@ const AppRootStack = () => {
                             headerShown: true,
                         }}
                     />
+                    
                     <Stack.Screen
                         name="SpecialitiesList"
                         options={{
