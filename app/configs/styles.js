@@ -5,15 +5,17 @@ const window = Dimensions.get('window');
 const screen = Dimensions.get('screen');
 
 export const styles = {
+    
   primaryBtn: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     borderWidth: 2,
     paddingVertical: 15,
-    paddingHorizontal: window.width * 0.35,
+    width: window.width*0.90,
     borderRadius: 5,
     position: 'absolute',
     bottom: 40,
+    alignItems: 'center',
   },
 
   secondaryBtn: {
@@ -21,10 +23,11 @@ export const styles = {
     borderColor: colors.primary,
     borderWidth: 2,
     paddingVertical: 15,
-    paddingHorizontal: window.width * 0.35,
+    width: window.width*0.90,
     borderRadius: 8,
     position: 'absolute',
     bottom: 40,
+    alignItems: 'center',
   },
 
   btnText: {

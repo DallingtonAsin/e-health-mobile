@@ -1,24 +1,24 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Dimensions } from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity,  StatusBar, Dimensions} from 'react-native'
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 
 const window = Dimensions.get("window");
 
 
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({navigation}) => {
     return (
-        <View style={styles.container}>
-            <StatusBar
+        <View style={styles.container}> 
+        <StatusBar
                 backgroundColor={configs.colors.primary}
             />
             <View style={styles.header}>
-                <Avatar.Image size={150} source={{ uri: configs.urls.logo }} />
-                <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
+            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} />
+            <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
             </View>
             <View style={styles.footer}>
-                <TouchableOpacity style={[configs.styles.secondaryBtn, { paddingHorizontal: window.width * 0.40, borderColor: configs.colors.white }]} onPress={() => { navigation.navigate('Signin') }}>
-                    <Text style={configs.styles.btnText}>Next</Text>
-                </TouchableOpacity>
+            <TouchableOpacity style={[configs.styles.secondaryBtn, { borderColor: configs.colors.white}]} onPress={() => {navigation.navigate('Signin')}}>
+                <Text style={configs.styles.btnText}>Next</Text>
+             </TouchableOpacity>
             </View>
         </View>
     )
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     },
 
     drText: {
-        fontSize: 20,
+        fontSize:20,
         color: configs.colors.white,
         textTransform: 'capitalize',
         paddingVertical: 15,

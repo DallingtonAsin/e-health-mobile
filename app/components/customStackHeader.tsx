@@ -7,7 +7,7 @@ import { navigateBack } from '../navigation/RootNavigation';
 const CustomStackHeader = ({title}: {title: string}) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={navigateBack()}>
+            <TouchableOpacity onPress={() => navigateBack()}>
             <Icon5 name="arrow-left" size={25} color={configs.colors.primary} style={styles.arrowIcon}/>
             </TouchableOpacity>
             <Text style={styles.verifyTxt}>{title}</Text>

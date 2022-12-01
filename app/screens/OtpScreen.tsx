@@ -7,6 +7,7 @@ import { Avatar } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const window = Dimensions.get('window');
+const otpLength = 4;
 
 const OtpScreen = ({ navigation }) => {
 
@@ -36,11 +37,16 @@ const OtpScreen = ({ navigation }) => {
         }
     }
 
-    const onChangePhoneNumber = (text: string) => {
-        setValue(text);
-        // const isValid = phoneInput.current?.isValidNumber(value);
-        const isValid = text.length >= 9 ? true : false;
+    const validateCode = (code: string) => {
+        console.log(`Otp entered is`, code);
+        const isValid = code.length >= otpLength ? true : false;
         setValid(isValid);
+    }
+
+    const verifyOtp = (code: string) => {
+        if(code){
+            navigation.navigate(`Home`);
+        }
     }
 
 
@@ -66,27 +72,28 @@ const OtpScreen = ({ navigation }) => {
         };
     }, []);
     return (
-        <View style={styles.container}
-            // behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <View style={styles.container}>
 
             <View style={styles.header}>
                <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={require('../assets/images/otp.webp')} />
-               <Text style={styles.ephoneTxt}>Enter OTP that has been sent to your phone number</Text>
+               <Text style={styles.otpTxt}>Enter OTP that has been sent to your phone number</Text>
             </View>
 
             <View style={styles.body}>
 
                 <OTPInputView
                     style={{ width: '80%', height:200 }}
-                    pinCount={4}
+                    pinCount={otpLength}
                     // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
                     // onCodeChanged = {code => { this.setState({code})}}
-                    // autoFocusOnLoad
+                    autoFocusOnLoad
                     codeInputFieldStyle={styles.underlineStyleBase}
                     codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                    onCodeChanged={(code) =>{
+                        validateCode(code);
+                    }}
                     onCodeFilled={(code => {
-                        console.log(`Code is ${code}, you are good to go!`)
+                        verifyOtp(code);
                     })}
                 />
             </View>
@@ -95,8 +102,7 @@ const OtpScreen = ({ navigation }) => {
                 <TouchableOpacity
                     disabled={!valid}
                     style={valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn}
-                    onPress={() => Signin()}
-                >
+                    onPress={() => Signin()}>
                     <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Verify OTP</Text>
                 </TouchableOpacity>
             </View>
@@ -139,7 +145,7 @@ const styles = StyleSheet.create({
         left: 20,
     },
 
-    ephoneTxt: {
+    otpTxt: {
         fontSize: 18,
         top: 15,
         color: configs.colors.dark,
@@ -162,7 +168,6 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         borderWidth: 1,
-        // borderBottomWidth: 1,
     },
 
     underlineStyleHighLighted: {
