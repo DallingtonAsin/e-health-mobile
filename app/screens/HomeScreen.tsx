@@ -57,7 +57,9 @@ const HomeScreen = ({ navigation }) => {
                         </View>
 
                         <View style={{right: 10, top: -5, position:'absolute'}}>
-                            <Avatar.Image size={80} source={{ uri: 'https://www.shutterstock.com/shutterstock/photos/406022083/display_1500/stock-vector-beautiful-african-american-woman-avatar-profile-flat-illustration-406022083.jpg' }} />
+                            <Avatar.Image size={80} source={{ uri: 'https://www.shutterstock.com/shutterstock/photos/406022083/display_1500/stock-vector-beautiful-african-american-woman-avatar-profile-flat-illustration-406022083.jpg' }}>
+                            <Icon name="wrench" size={iconSize} color={colors.default.primary} />
+                            </Avatar.Image>
                         </View>
                     </View>
 

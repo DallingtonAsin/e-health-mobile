@@ -5,11 +5,11 @@ import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SplashScreen from "../../screens/SplashScreen";
+import SigninScreen from "../../screens/SigninScreen";
 import * as colors from '../../configs/colors';
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
-import Toast from 'react-native-simple-toast';
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabStack from "./BottomTabStack";
 
@@ -28,6 +28,14 @@ const AppRootStack = () => {
                     <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="Signin"
+                        component={SigninScreen}
                         options={{
                             headerShown: false,
                         }}

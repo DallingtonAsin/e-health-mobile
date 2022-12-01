@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity,  StatusBar, } from 'react-native'
 import * as colors from '../configs/colors';
 import { Avatar } from 'react-native-paper';
-
+// import * as Animatable from 'react-native-animatable';
 
 const SplashScreen = ({navigation}) => {
     return (
@@ -10,12 +10,12 @@ const SplashScreen = ({navigation}) => {
                 backgroundColor={colors.default.primary}
             />
             <View style={styles.header}>
-            <Avatar.Image style={styles.logo} size={150} source={{ uri: 'https://cdn4.iconfinder.com/data/icons/professions-1-2/151/3-512.png' }} />
+            <Avatar.Image size={150} source={{ uri: 'https://cdn4.iconfinder.com/data/icons/professions-1-2/151/3-512.png' }} />
             <Text style={styles.drText}>Doctor Anywhere</Text>
             </View>
             <View style={styles.footer}>
-            <TouchableOpacity style={styles.nextBtn} onPress={() => {navigation.navigate('Home')}}>
-                <Text style={styles.nextText}>Next</Text>
+            <TouchableOpacity style={styles.nextBtn} onPress={() => {navigation.navigate('Signin')}}>
+                <Text style={styles.btnText}>Next</Text>
              </TouchableOpacity>
             </View>
         </View>
@@ -38,15 +38,15 @@ const styles = StyleSheet.create({
 
     footer: {
         flex: 1,
-        backgroundColor: colors.default.white,
+        backgroundColor: colors.default.primary,
         justifyContent: 'center',
         alignItems: 'center'
 
     },
 
     nextBtn: {
-        backgroundColor: colors.default.primary,
-        borderColor: colors.default.primary,
+        backgroundColor: colors.default.white,
+        borderColor: colors.default.white,
         paddingVertical: 15,
         paddingHorizontal:'40%',
         justifyContent: 'center',
@@ -54,11 +54,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         position: 'absolute',
         bottom: 40,
-
     },
 
-    nextText: {
-        color: colors.default.white,
+    btnText: {
+        color: colors.default.primary,
         fontSize: 20,
         fontWeight: 'bold',
     },
