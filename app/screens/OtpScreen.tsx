@@ -11,46 +11,25 @@ const otpLength = 4;
 
 const OtpScreen = ({ navigation }) => {
 
-    const [value, setValue] = useState("");
-    const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
+    const [otp, setOTP] = useState("");
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
-    const phoneInput = useRef<PhoneInput>(null);
 
-    const Signin = () => {
 
-        console.log(`Is keyboard open`, isKeyboardVisible);
-
-        const checkValid = phoneInput.current?.isValidNumber(value);
-        setShowMessage(true);
-        setValid(checkValid ? checkValid : false);
-        if (checkValid) {
-            const countryIsoCode = phoneInput.current?.getCountryCode();
-            const countryCode = phoneInput.current?.getCallingCode();
-
-            console.log(`Selected phone number ${value} and formatted value ${formattedValue}`);
-            console.log(`countryIsoCode: ${countryIsoCode} and countryCode: ${countryCode}`);
-            navigation.navigate('Home');
-        } else {
-            Toast.showWithGravity(`Please enter a valid phone number`, Toast.LONG, Toast.TOP);
-        }
-    }
-
-    const validateCode = (code: string) => {
+    const onChangeOTP = (code: string) => {
         console.log(`Otp entered is`, code);
+        setOTP(code);
         const isValid = code.length >= otpLength ? true : false;
         setValid(isValid);
     }
 
     const verifyOtp = (code: string) => {
-        if(code){
+        if (code.length == otpLength) {
             navigation.navigate(`Home`);
+        }else{
+            console.log(`Wrong otp length is`, code.length);
         }
     }
-
-
-
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
@@ -75,22 +54,22 @@ const OtpScreen = ({ navigation }) => {
         <View style={styles.container}>
 
             <View style={styles.header}>
-               <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={require('../assets/images/otp.webp')} />
-               <Text style={styles.otpTxt}>Enter OTP that has been sent to your phone number</Text>
+                <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={require('../assets/images/otp.webp')} />
+                <Text style={styles.otpTxt}>Enter OTP that has been sent to your phone number</Text>
             </View>
 
             <View style={styles.body}>
 
                 <OTPInputView
-                    style={{ width: '80%', height:200 }}
+                    style={{ width: '80%', height: 200 }}
                     pinCount={otpLength}
                     // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
                     // onCodeChanged = {code => { this.setState({code})}}
                     autoFocusOnLoad
                     codeInputFieldStyle={styles.underlineStyleBase}
                     codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                    onCodeChanged={(code) =>{
-                        validateCode(code);
+                    onCodeChanged={(code) => {
+                        onChangeOTP(code);
                     }}
                     onCodeFilled={(code => {
                         verifyOtp(code);
@@ -102,7 +81,7 @@ const OtpScreen = ({ navigation }) => {
                 <TouchableOpacity
                     disabled={!valid}
                     style={valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn}
-                    onPress={() => Signin()}>
+                    onPress={() => verifyOtp()}>
                     <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Verify OTP</Text>
                 </TouchableOpacity>
             </View>
