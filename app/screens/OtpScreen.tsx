@@ -17,17 +17,16 @@ const OtpScreen = ({ navigation }) => {
 
 
     const onChangeOTP = (code: string) => {
-        console.log(`Otp entered is`, code);
         setOTP(code);
         const isValid = code.length >= otpLength ? true : false;
         setValid(isValid);
     }
 
     const verifyOtp = (code: string) => {
-        if (code.length == otpLength) {
-            navigation.navigate(`Home`);
+        if (code && code.length == otpLength) {
+            navigation.navigate(`Register`);
         }else{
-            console.log(`Wrong otp length is`, code.length);
+           Toast.show(`Please fill in a ${otpLength} otp`);
         }
     }
 

@@ -23,11 +23,10 @@ const SigninScreen = ({ navigation }) => {
         setShowMessage(true);
         setValid(checkValid ? checkValid : false);
         if (checkValid) {
-            const countryIsoCode = phoneInput.current?.getCountryCode();
-            const countryCode = phoneInput.current?.getCallingCode();
-
-            console.log(`Selected phone number ${value} and formatted value ${formattedValue}`);
-            console.log(`countryIsoCode: ${countryIsoCode} and countryCode: ${countryCode}`);
+            // const countryIsoCode = phoneInput.current?.getCountryCode();
+            // const countryCode = phoneInput.current?.getCallingCode();
+            // console.log(`Selected phone number ${value} and formatted value ${formattedValue}`);
+            // console.log(`countryIsoCode: ${countryIsoCode} and countryCode: ${countryCode}`);
             navigation.navigate('OTP');
         } else {
             Toast.showWithGravity(`Please enter a valid phone number`, Toast.LONG, Toast.TOP);
@@ -37,7 +36,7 @@ const SigninScreen = ({ navigation }) => {
     const onChangePhoneNumber = (text: string) => {
         setValue(text);
         // const isValid = phoneInput.current?.isValidNumber(value);
-        const isValid = text.length >= 9 ? true : false;
+        const isValid = text && text.length >= 9 ? true : false;
         setValid(isValid);
     }
 
@@ -92,7 +91,7 @@ const SigninScreen = ({ navigation }) => {
             <View style={styles.footer}>
                 <TouchableOpacity
                     disabled={false} // {!valid}
-                    style={valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn}
+                    style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, configs.styles.bottomizedBtn]}
                     onPress={() => Signin()}
                 >
                     <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Continue</Text>

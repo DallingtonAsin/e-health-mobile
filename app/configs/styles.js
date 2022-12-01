@@ -13,8 +13,6 @@ export const styles = {
     paddingVertical: 15,
     width: window.width*0.90,
     borderRadius: 5,
-    position: 'absolute',
-    bottom: 40,
     alignItems: 'center',
   },
 
@@ -25,9 +23,12 @@ export const styles = {
     paddingVertical: 15,
     width: window.width*0.90,
     borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  bottomizedBtn: {
     position: 'absolute',
     bottom: 40,
-    alignItems: 'center',
   },
 
   btnText: {
