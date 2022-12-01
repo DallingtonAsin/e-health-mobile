@@ -16,8 +16,10 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
+  View, LogBox
 } from 'react-native';
+
+
 
 import {
   Colors,
@@ -26,6 +28,14 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import HomeScreen from './app/screens/HomeScreen';
+import HomeStack from './app/navigation/stacks/HomeStack'
+import { NavigationContainer } from '@react-navigation/native';
+import AppRootStack from './app/navigation/stacks/AppRootStack';
+import { navigationRef } from './app/navigation/RootNavigation';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -65,36 +75,7 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+     <AppRootStack/>
   );
 };
 
