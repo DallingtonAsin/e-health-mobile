@@ -25,6 +25,7 @@ const OtpScreen = ({ navigation }) => {
     const verifyOtp = (code: string) => {
         if (code && code.length == otpLength) {
             navigation.navigate(`Register`);
+            setOTP('');
         }else{
            Toast.show(`Please fill in a ${otpLength} otp`);
         }
@@ -62,8 +63,8 @@ const OtpScreen = ({ navigation }) => {
                 <OTPInputView
                     style={{ width: '80%', height: 200 }}
                     pinCount={otpLength}
-                    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-                    // onCodeChanged = {code => { this.setState({code})}}
+                    code={otp} 
+                    onCodeChanged = {code => { setOTP(code)}}
                     autoFocusOnLoad
                     codeInputFieldStyle={styles.underlineStyleBase}
                     codeInputHighlightStyle={styles.underlineStyleHighLighted}

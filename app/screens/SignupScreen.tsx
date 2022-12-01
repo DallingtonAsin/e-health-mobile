@@ -179,11 +179,15 @@ const styles = StyleSheet.create({
     title: {
         marginVertical: 10,
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 20,
         color: configs.colors.dark,
         fontFamily: 'Times New Roman',
         paddingLeft: 30,
         paddingRight: 30,
+        fontWeight: '900',
+        opacity: 0.7,
+        // letterSpacing:15,
+        // lineHeight:8,
     },
 
     back2Login: {
