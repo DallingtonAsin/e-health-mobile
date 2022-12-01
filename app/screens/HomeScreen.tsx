@@ -99,14 +99,15 @@ const HomeScreen = ({ navigation }) => {
                     </View>
 
                     <View style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                            <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Services</Text>
+                    
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
+                            <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>Help</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
-                            <Icon5 name="info-circle" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Help</Text>
+                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                            <Icon name="gear" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>Settings</Text>
                         </TouchableOpacity>
                     </View>
 
