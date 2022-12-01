@@ -68,6 +68,7 @@ const OtpScreen = ({ navigation }) => {
                     autoFocusOnLoad
                     codeInputFieldStyle={styles.underlineStyleBase}
                     codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                    keyboardAppearance={"light"}
                     onCodeChanged={(code) => {
                         onChangeOTP(code);
                     }}
@@ -147,6 +148,8 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         borderWidth: 1,
+        fontSize: 20,
+        color: configs.colors.dark
     },
 
     underlineStyleHighLighted: {

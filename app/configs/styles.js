@@ -34,4 +34,10 @@ export const styles = {
     color: colors.primary,
     fontSize: 20,
   },
+
+  logo: {
+    borderColor: colors.white,
+    borderWidth: 0,
+    overflow: "hidden",
+  }
 };

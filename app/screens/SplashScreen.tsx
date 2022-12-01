@@ -12,7 +12,7 @@ const SplashScreen = ({navigation}) => {
                 backgroundColor={configs.colors.primary}
             />
             <View style={styles.header}>
-            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} />
+            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} style={configs.styles.logo} />
             <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
             </View>
             <View style={styles.footer}>
