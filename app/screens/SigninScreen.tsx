@@ -45,13 +45,13 @@ const SigninScreen = ({ navigation }) => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
-                setKeyboardVisible(true); // or some other action
+                setKeyboardVisible(true);
             }
         );
         const keyboardDidHideListener = Keyboard.addListener(
             'keyboardDidHide',
             () => {
-                setKeyboardVisible(false); // or some other action
+                setKeyboardVisible(false); 
             }
         );
 
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: configs.colors.white,
-
     },
 
     textSignin: {

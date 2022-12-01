@@ -9,7 +9,7 @@ export const styles = {
     primaryBtn: {
         backgroundColor: colors.primary,
         borderColor: colors.primary,
-        borderWidth: 1,
+        borderWidth: 2,
         paddingVertical: 15,
         paddingHorizontal: window.width*0.35,
         borderRadius: 5,
@@ -23,7 +23,7 @@ export const styles = {
     borderWidth: 2,
     paddingVertical: 15,
     paddingHorizontal: window.width*0.35,
-    borderRadius: 5,
+    borderRadius: 8,
     position: 'absolute',
     bottom: 40,
 },
