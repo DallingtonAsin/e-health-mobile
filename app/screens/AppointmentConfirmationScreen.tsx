@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
-import * as colors from '../configs/colors';
+import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -20,7 +20,7 @@ const AppointmentConfirmationScreen = ({ route, navigation }) => {
       >
 
         <View style={styles.body}>
-          <Icon5 name="check-circle" size={90} color={colors.default.white} />
+          <Icon5 name="check-circle" size={90} color={configs.colors.white} />
           <Text style={styles.bookedTitle}>Appointment booked!</Text>
           <Text style={styles.info}>You have an appointment with</Text>
           <View style={styles.details}>
@@ -32,7 +32,7 @@ const AppointmentConfirmationScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-          <Text style={styles.date}> <Icon5 name="calendar-alt" size={15} color={colors.default.white} /> on Mon, 21 December - 10:00 am</Text>
+          <Text style={styles.date}> <Icon5 name="calendar-alt" size={15} color={configs.colors.white} /> on Mon, 21 December - 10:00 am</Text>
       
         <Pressable style={styles.button} onPress={() => navigateToHome()}>
           <Text style={styles.okayText}>Okay</Text>
@@ -48,7 +48,7 @@ export default AppointmentConfirmationScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.default.primary
+    backgroundColor: configs.colors.primary
   },
 
   scroll: {
@@ -70,19 +70,19 @@ const styles = StyleSheet.create({
   bookedTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.default.white,
+    color: configs.colors.white,
     marginVertical: 15,
   },
 
   info: {
-    color: colors.default.white,
+    color: configs.colors.white,
     opacity: 0.8,
     marginVertical: 10,
   },
 
   details: {
     flexDirection: 'row',
-    backgroundColor: colors.default.white,
+    backgroundColor: configs.colors.white,
     paddingHorizontal: 35,
     paddingVertical: 10,
     width: '90%',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    color: colors.default.black,
+    color: configs.colors.black,
     fontSize: 18,
     fontWeight: 'bold'
   },
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 
   infoTitle: {
-    color: colors.default.black,
+    color: configs.colors.black,
     fontSize: 16,
     opacity: 0.6
   },
@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
 
 
   date: {
-    color: colors.default.white,
+    color: configs.colors.white,
     fontSize: 16,
     opacity: 0.7
   },
 
   button: {
-    backgroundColor: colors.default.white,
+    backgroundColor: configs.colors.white,
     paddingHorizontal: 148,
     paddingVertical: 18,
     borderRadius: 5,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
 
   okayText: {
     fontSize: 15,
-    color: colors.default.primary,
+    color: configs.colors.primary,
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },

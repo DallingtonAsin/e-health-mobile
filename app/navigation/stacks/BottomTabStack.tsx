@@ -7,8 +7,8 @@ import {MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeStack from './HomeStack';
 import {useTheme} from 'react-native-paper';
-import * as customColors from '../../configs/colors'
-import HomeScreen from '../../screens/HomeScreen';
+import * as configs from '../../configs'
+import HomeScreen from '../../screens/HomeScreen';8
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 18;
@@ -57,10 +57,10 @@ const BottomTabStack = () => {
           </BottomTabBarWrapper>
         )}
         tabBarOptions={{
-          activeTintColor: customColors.default.primary,
-          inactiveTintColor: customColors.default.dark,
+          activeTintColor: configs.colors.primary,
+          inactiveTintColor: configs.colors.dark,
           style: {
-            backgroundColor: customColors.default.white,
+            backgroundColor: configs.colors.white,
           },
           labelStyle: {
             fontSize: 14,

@@ -23,7 +23,7 @@ import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AgoraUIKit from 'agora-rn-uikit';
 import {AGORA_APP_ID, AGORA_CHANNEL_NAME, AGORA_TEMP_TOKEN} from '@env';
-import * as colors from '../configs/colors';
+import * as configs from '../configs';
 
 
 const appId = AGORA_APP_ID;
@@ -134,7 +134,7 @@ const styles =  StyleSheet.create({
     },
 
     joinButton: {
-        backgroundColor: colors.default.primary,
+        backgroundColor: configs.colors.primary,
         bottom: 50,
         position: 'absolute',
         paddingHorizontal: 120,
@@ -143,7 +143,7 @@ const styles =  StyleSheet.create({
     },
 
     meetingText: {
-      color: colors.default.white,
+      color: configs.colors.white,
       fontSize: 16,
     },
 

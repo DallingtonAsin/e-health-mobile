@@ -3,19 +3,19 @@ import {
     SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions
 } from 'react-native'
 import { Avatar } from 'react-native-paper';
-import * as colors from '../configs/colors';
+import * as configs from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 
 // #673ab7, '#ff4081'
 
 const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: colors.default.white  }}>
+    <View style={{ flex: 1, backgroundColor: configs.colors.white  }}>
         <Text>Appointment info will go here...</Text>
     </View>
 );
 
 const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: colors.default.white }}>
+    <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
         <Text>Doctor's information will go here...</Text>
     </View>
 );
@@ -36,8 +36,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }) => {
     const renderTabBar = (props) => (
         <TabBar
           {...props}
-          indicatorStyle={{ backgroundColor: colors.default.primary }}
-          style={{ backgroundColor: colors.default.white }}
+          indicatorStyle={{ backgroundColor: configs.colors.primary }}
+          style={{ backgroundColor: configs.colors.white }}
           renderLabel={({ route, focused, color }) => (
             <Text style={{ color: '#000', margin: 8, fontSize:17, fontWeight: '400', opacity:0.8 }}>
               {route.title}
@@ -103,14 +103,14 @@ const styles = StyleSheet.create({
 
     scrollContainer: {
         flexGrow: 1,
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
 
     },
 
     header: {
         // flex:1,
         flexDirection: 'row',
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
         paddingHorizontal: 25,
         paddingVertical: 10,
         borderRadius: 5,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 
 
     name: {
-        color: colors.default.black,
+        color: configs.colors.black,
         fontSize: 18,
         fontWeight: 'bold'
     },
@@ -142,14 +142,14 @@ const styles = StyleSheet.create({
     },
 
     infoTitle: {
-        color: colors.default.black,
+        color: configs.colors.black,
         fontSize: 16,
         opacity: 0.6
     },
 
 
     button: {
-        backgroundColor: colors.default.primary,
+        backgroundColor: configs.colors.primary,
         bottom: 50,
         position: 'absolute',
         paddingHorizontal: 80,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 
     okayText: {
         fontSize: 18,
-        color: colors.default.white,
+        color: configs.colors.white,
         fontWeight: 'bold',
         textTransform: 'capitalize',
     },

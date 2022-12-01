@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import * as colors from '../configs/colors';
-import * as configs from '../configs/styles';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
+import * as configs from '../configs';
 import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
+import { Avatar } from 'react-native-paper';
 
 
 const SigninScreen = ({ navigation }) => {
@@ -32,13 +32,17 @@ const SigninScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+
             <View style={styles.header}>
-                <Text style={styles.textSignin}>Welcome!</Text>
+            <Avatar.Image size={200} source={{ uri: configs.urls.logo }} />
+            <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
             </View>
+
             <View style={styles.body}>
-                <Text style={styles.ephoneTxt}>Enter your phone number</Text>
-                <View style={styles.enterPhoneView}>
+             
                 <PhoneInput
                     ref={phoneInput}
                     defaultValue={value}
@@ -50,11 +54,10 @@ const SigninScreen = ({ navigation }) => {
                     onChangeFormattedText={(text) => {
                         setFormattedValue(text);
                     }}
-                    withDarkTheme
+                    withDarkTheme={false}
                     withShadow
                     autoFocus
                 />
-                </View>
                
             </View>
 
@@ -65,7 +68,7 @@ const SigninScreen = ({ navigation }) => {
                     <Text style={configs.styles.btnText}>Continue</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -74,48 +77,46 @@ export default SigninScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.default.primary,
+        backgroundColor: configs.colors.white 
     },
 
     header: {
-        flex: 1,
-        backgroundColor: colors.default.primary,
-        alignItems: 'flex-start',
+        flex: 2,
+        backgroundColor: configs.colors.white,
+        alignItems: 'center',
         justifyContent: 'center',
     },
 
     body: {
-        flex: 2,
-        backgroundColor: colors.default.white,
+        flex: 1,
+        backgroundColor: configs.colors.white,
         alignItems: 'center',
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
+        marginVertical: 15,
         justifyContent: 'center',
     },
 
     footer: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: colors.default.white,
+      backgroundColor: configs.colors.white,
      
     },
 
     textSignin: {
         fontSize: 28,
-        color: colors.default.white,
+        color: configs.colors.white,
         fontWeight: 'bold',
         left: 20,
     },
 
     ephoneTxt: {
         fontSize: 18,
-        top: 20,
-        color: colors.default.dark,
+        top: 15,
+        color: configs.colors.dark,
         opacity: 0.7,
-        textTransform: 'capitalize',
+        textTransform: 'none',
+        textAlign: 'center',
+        marginHorizontal: 20
     },
 
-    enterPhoneView: {
-        paddingVertical: 80,
-    }
 })

@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     Pressable
 } from 'react-native';
-import * as colors from '../configs/colors';
+import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
 
             <StatusBar
-                backgroundColor={colors.default.primary}
+                backgroundColor={configs.colors.primary}
             />
 
             <ScrollView
@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.header}>
 
                <Pressable style={styles.notificationView} onPress={() => Toast.show(`Notifications coming soon...`, Toast.LONG)}>
-                  <Icon name="bell" size={25} color={colors.default.white} style={styles.notificationIcon} />
+                  <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                </Pressable>
 
                     <View style={{ flexDirection: 'row',  alignItems: 'flex-end', top:30 }}>
@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
 
                         <View style={{right: 10, top: -5, position:'absolute'}}>
                             <Avatar.Image size={80} source={{ uri: 'https://www.shutterstock.com/shutterstock/photos/406022083/display_1500/stock-vector-beautiful-african-american-woman-avatar-profile-flat-illustration-406022083.jpg' }}>
-                            <Icon name="wrench" size={iconSize} color={colors.default.primary} />
+                            <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
                             </Avatar.Image>
                         </View>
                     </View>
@@ -73,12 +73,12 @@ const HomeScreen = ({ navigation }) => {
 
                     <View style={styles.cardContainer}>
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
-                            <Icon5 name="user-md" size={iconSize} color={colors.default.primary} />
+                            <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Doctors</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card}>
-                            <Icon5 name="calendar-alt" size={iconSize} color={colors.default.primary} />
+                            <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
 
@@ -87,12 +87,12 @@ const HomeScreen = ({ navigation }) => {
                     <View style={styles.cardContainer}>
 
                         <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                            <Icon5 name="check-circle" size={iconSize} color={colors.default.primary} />
+                            <Icon5 name="check-circle" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Approvals</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
-                            <Icon5 name="history" size={iconSize * 0.92} color={colors.default.primary} />
+                            <Icon5 name="history" size={iconSize * 0.92} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Medical Records</Text>
                         </TouchableOpacity>
 
@@ -100,12 +100,12 @@ const HomeScreen = ({ navigation }) => {
 
                     <View style={styles.cardContainer}>
                         <TouchableOpacity style={styles.card} onPress={comingSoon}>
-                            <Icon name="wrench" size={iconSize} color={colors.default.primary} />
+                            <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Services</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
-                            <Icon5 name="info-circle" size={iconSize} color={colors.default.primary} />
+                            <Icon5 name="info-circle" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Help</Text>
                         </TouchableOpacity>
                     </View>
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        backgroundColor: colors.default.primary,
+        backgroundColor: configs.colors.primary,
         flex: 2,
     },
 
     body: {
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
         flex: 4,
     },
 
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         alignItems: 'center',
         textShadowColor: 'gray',
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
         shadowOffset: {
             height: 4,
             width: 4
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         marginTop: 20,
         textTransform: 'capitalize',
-        color: colors.default.dark,
+        color: configs.colors.dark,
         opacity: 0.7,
     },
 
@@ -184,13 +184,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontStyle: 'normal',
         textTransform: 'capitalize',
-        color: colors.default.white,
+        color: configs.colors.white,
         opacity: 0.8
     },
 
     amazing: {
         fontSize: 18,
-        color: colors.default.white,
+        color: configs.colors.white,
         fontWeight: '300',
     },
 

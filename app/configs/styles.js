@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native';
-import * as colors from './colors';
+import {colors} from './colors';
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
@@ -7,8 +7,8 @@ const screen = Dimensions.get("screen");
 export const styles = {
 
     primaryBtn: {
-        backgroundColor: colors.default.white,
-        borderColor: colors.default.white,
+        backgroundColor: colors.white,
+        borderColor: colors.white,
         borderWidth: 1,
         paddingVertical: 15,
         paddingHorizontal: window.width*0.35,
@@ -20,8 +20,8 @@ export const styles = {
    },
 
    secondaryBtn: {
-    backgroundColor: colors.default.white,
-    borderColor: colors.default.primary,
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
     borderWidth: 2,
     paddingVertical: 15,
     paddingHorizontal: window.width*0.35,
@@ -31,7 +31,7 @@ export const styles = {
 },
 
     btnText: {
-        color: colors.default.primary,
+        color: colors.primary,
         fontSize: 20,
     },
 }

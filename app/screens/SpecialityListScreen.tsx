@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
-import * as colors from '../configs/colors';
+import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import * as RootNavigation from '../navigation/RootNavigation';
 
@@ -97,7 +97,7 @@ export default SpecialityListScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
     },
 
     scrollContainerStyle: {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         textAlign: 'center',
-        color: colors.default.dark,
+        color: configs.colors.dark,
         fontWeight: 'bold',
         marginVertical: 10,
     },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     },
 
     item: {
-        shadowColor: colors.default.black,
+        shadowColor: configs.colors.black,
         shadowOffset: {
             width: 0,
             height: 3
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 16,
         borderRadius: 10,
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
         padding: 30,
 
 
@@ -162,25 +162,25 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 50,
         borderWidth: 1,
-        backgroundColor: colors.default.primary,
-        borderColor: colors.default.primary,
+        backgroundColor: configs.colors.primary,
+        borderColor: configs.colors.primary,
         width:100,
         alignItems: 'center',
     },
 
     btnTxt: {
-        color: colors.default.white
+        color: configs.colors.white
     },
 
     name: {
-        color: colors.default.black,
+        color: configs.colors.black,
         fontSize:18,
         fontWeight: 'bold'
     },
 
     userTitle: {
         fontSize:16,
-        color: colors.default.primary,
+        color: configs.colors.primary,
     },
 
     titles: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
 
     values: {
         fontWeight: 'bold',
-        color: colors.default.black,
+        color: configs.colors.black,
         opacity: 0.6,
         fontSize:14,
     },
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     },
 
     amount: {
-        color: colors.default.primary,
+        color: configs.colors.primary,
         fontWeight: 'bold',
     }
 

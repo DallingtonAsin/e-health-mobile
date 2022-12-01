@@ -6,7 +6,7 @@ import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SplashScreen from "../../screens/SplashScreen";
 import SigninScreen from "../../screens/SigninScreen";
-import * as colors from '../../configs/colors';
+import * as configs from '../../configs';
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
@@ -54,9 +54,9 @@ const AppRootStack = () => {
                         component={SpecialityCategoryScreen}
                         options={{
                             headerStyle: {
-                                backgroundColor: colors.default.white,
+                                backgroundColor: configs.colors.white,
                             },
-                            headerTintColor: colors.default.primary,
+                            headerTintColor: configs.colors.primary,
                             headerTitle: `Specialist Categories`,
                             headerBackVisible: true,
                             headerShown: true,
@@ -66,9 +66,9 @@ const AppRootStack = () => {
                         name="SpecialitiesList"
                         options={{
                             headerStyle: {
-                                backgroundColor: colors.default.white,
+                                backgroundColor: configs.colors.white,
                             },
-                            headerTintColor: colors.default.primary,
+                            headerTintColor: configs.colors.primary,
                             headerTitle: `List of specialists`,
                             headerBackVisible: true,
                             headerShown: true,
@@ -80,9 +80,9 @@ const AppRootStack = () => {
                         name="ContactUs"
                         options={{
                             headerStyle: {
-                                backgroundColor: colors.default.white,
+                                backgroundColor: configs.colors.white,
                             },
-                            headerTintColor: colors.default.primary,
+                            headerTintColor: configs.colors.primary,
                             headerTitle: `Contact Us`,
                             headerBackVisible: true,
                             headerShown: true,
@@ -105,9 +105,9 @@ const AppRootStack = () => {
                         name="ScheduleAppointment"
                         options={{
                             headerStyle: {
-                                backgroundColor: colors.default.white,
+                                backgroundColor: configs.colors.white,
                             },
-                            headerTintColor: colors.default.primary,
+                            headerTintColor: configs.colors.primary,
                             headerTitle: `Schedule Appointment`,
                             headerBackVisible: true,
                             headerShown: true,

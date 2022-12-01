@@ -5,7 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../../screens/HomeScreen';
 import SpecialitiesScreen from '../../screens/SpecialityCategoryScreen'
 const Stack = createNativeStackNavigator();
-import * as colors from '../../configs/colors';
+import * as configs from '../../configs'
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COMPANY_NAME } from '@env'
 
@@ -17,16 +18,16 @@ const HomeStack = () => {
                 component={HomeScreen}
                 options={{
                     headerStyle: {
-                        backgroundColor: colors.default.primary,
+                        backgroundColor: configs.colors.primary,
                     },
-                    headerTintColor: colors.default.primary,
+                    headerTintColor: configs.colors.primary,
                     headerTitle: COMPANY_NAME,
                     headerBackVisible: true,
                     headerShown: false,
                     
                     headerLeft: () => (
                         <TouchableOpacity style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
-                            <Icon name="bars" size={28} color={colors.default.primary} />
+                            <Icon name="bars" size={28} color={configs.colors.primary} />
                         </TouchableOpacity>
                     ),
                 }}

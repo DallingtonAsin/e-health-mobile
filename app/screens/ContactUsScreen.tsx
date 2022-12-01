@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, Linking } from "react-native";
-import * as colors from '../configs/colors';
+import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Communications from 'react-native-communications';
 
@@ -45,7 +45,7 @@ const ContactUsScreen = () => {
     const renderItem = ({ item }: {item: Contact}) => (
         <TouchableOpacity style={styles.item} onPress={() => item.method(item.value)}>
             <View style={{ flexDirection: 'row' }}>
-                <Icon5 name={item.icon} size={30} color={colors.default.primary} style={styles.arrow} />
+                <Icon5 name={item.icon} size={30} color={configs.colors.primary} style={styles.arrow} />
                 <View style={styles.verticleLine}></View>
                 <View style={{ paddingHorizontal: 20 }}>
                     <Text style={styles.contactTitle}>{item.text}</Text>
@@ -53,7 +53,7 @@ const ContactUsScreen = () => {
                 </View>
             </View>
 
-            <Icon5 name="angle-right" size={20} color={colors.default.primary} style={styles.arrow} />
+            <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
 
         </TouchableOpacity>
     );
@@ -82,7 +82,7 @@ export default ContactUsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
     },
 
     scrollContainerStyle: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         textAlign: 'center',
-        color: colors.default.dark,
+        color: configs.colors.dark,
         fontWeight: 'bold',
         marginVertical: 10,
         opacity: 0.8
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
 
     item: {
-        shadowColor: colors.default.black,
+        shadowColor: configs.colors.black,
         shadowOffset: {
             width: 0,
             height: 3
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 16,
         borderRadius: 5,
-        backgroundColor: colors.default.white,
+        backgroundColor: configs.colors.white,
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 20,
