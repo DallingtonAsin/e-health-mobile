@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as configs from '../configs'
-import { TextInput, Menu, Button, Divider } from 'react-native-paper';
-
+import { TextInput } from 'react-native-paper';
+import AppLoader from '../components/AppLoader';
 
 interface IUser {
     firstName: string,
@@ -14,23 +14,35 @@ interface IUser {
     address: string,
     phoneNumber: string,
 }
+
 const numberOfLines = 2;
 
-const SignupScreen = ({navigation}) => {
+const SignupScreen = ({ navigation }) => {
 
     const [user, setUser] = useState<IUser>();
     const [isSection1Filled, setSection1Filled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const completeRegistration = () => {
-        setSection1Filled(true);
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            setSection1Filled(true);
+        }, 4000);
+
     }
 
     const submitDetails = () => {
-        navigation.navigate('Home');
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            navigation.navigate('Home');
+        }, 8000);
     }
 
-     const Section1 = () => {
+    const Section1 = () => {
         return (
+            <>
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
                     <Text style={styles.title}>Register for Medical Services</Text>
@@ -45,8 +57,8 @@ const SignupScreen = ({navigation}) => {
                             numberOfLines={numberOfLines}
                         />
                     </View>
-    
-    
+
+
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Last Name<Text style={styles.required}>*</Text></Text>
                         <TextInput
@@ -56,7 +68,7 @@ const SignupScreen = ({navigation}) => {
                             activeOutlineColor={configs.colors.primary}
                         />
                     </View>
-    
+
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Email address</Text>
                         <TextInput
@@ -66,7 +78,7 @@ const SignupScreen = ({navigation}) => {
                             activeOutlineColor={configs.colors.primary}
                         />
                     </View>
-    
+
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Date of Bith<Text style={styles.required}>*</Text></Text>
                         <TextInput
@@ -76,7 +88,7 @@ const SignupScreen = ({navigation}) => {
                             activeOutlineColor={configs.colors.primary}
                         />
                     </View>
-    
+
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
                         <TextInput
@@ -86,33 +98,35 @@ const SignupScreen = ({navigation}) => {
                             activeOutlineColor={configs.colors.primary}
                         />
                     </View>
-    
-                
-    
+
+
+
                     <View style={styles.viewContainer}>
                         <TouchableOpacity style={configs.styles.secondaryBtn}
-                        onPress={() => completeRegistration()}>
+                            onPress={() => completeRegistration()}>
                             <Text style={configs.styles.btnText}>Next</Text>
                         </TouchableOpacity>
                     </View>
-    
+
                     <View style={styles.viewContainer}>
                         <TouchableOpacity style={styles.back2Login} onPress={() => navigation.navigate('Signin')}>
                             <Text style={styles.back2LoginTxt}>Back to login</Text>
                         </TouchableOpacity>
                     </View>
-    
+
                 </ScrollView>
             </SafeAreaView>
+            { isLoading && <AppLoader /> }
+            </>
         )
-     }
+    }
 
-     const Section2 = () => {
+    const Section2 = () => {
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
                     <Text style={styles.title}>Complete Registration</Text>
-                
+
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Language<Text style={styles.required}>*</Text></Text>
                         <TextInput
@@ -135,20 +149,20 @@ const SignupScreen = ({navigation}) => {
 
                     <View style={[styles.viewContainer, configs.styles.bottomizedBtn]}>
                         <TouchableOpacity style={[configs.styles.secondaryBtn]}
-                         onPress={() => submitDetails()}>
+                            onPress={() => submitDetails()}>
                             <Text style={configs.styles.btnText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
-    
+
                 </ScrollView>
             </SafeAreaView>
         )
-     }
+    }
 
-        return (
-           !isSection1Filled ?  <Section1/> : <Section2/>
-        )
-     }
+    return (
+        !isSection1Filled ? <Section1 /> : <Section2 />
+    )
+}
 
 
 
@@ -192,7 +206,7 @@ const styles = StyleSheet.create({
 
     back2Login: {
         alignItems: 'center',
-        paddingBottom:20,
+        paddingBottom: 20,
     },
 
     back2LoginTxt: {
