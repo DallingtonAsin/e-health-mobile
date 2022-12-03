@@ -1,16 +1,46 @@
 import React from 'react';
 import {
-    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
+       SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
 } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
+import { ExpandableCalendar, Calendar, CalendarList, Agenda, AgendaList, CalendarProvider, WeekCalendar } from 'react-native-calendars';
 
 const FirstRoute = () => (
     <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
-        <Text>Appointment info will go here...</Text>
+        <View>
+            <Text style={styles.pickDate}>Pick a day</Text>
+            <ExpandableCalendar
+                //   initialDate={'2012-03-01'}
+                //   minDate={'2012-05-10'}
+                //   maxDate={'2012-05-30'}
+                onDayPress={day => {
+                    console.log('selected day', day);
+                }}
+                onDayLongPress={day => {
+                    console.log('selected day', day);
+                }}
+                monthFormat={'yyyy MM'}
+                onMonthChange={month => {
+                    console.log('month changed', month);
+                }}
+                hideArrows={false}
+                hideExtraDays={true}
+                disableMonthChange={false}
+                firstDay={1}
+                hideDayNames={false}
+                showWeekNumbers={true}
+                onPressArrowLeft={subtractMonth => subtractMonth()}
+                onPressArrowRight={addMonth => addMonth()}
+                disableArrowLeft={false}
+                disableArrowRight={false}
+                disableAllTouchEventsForDisabledDays={true}
+                enableSwipeMonths={true}
+            />
+        </View>
     </View>
 );
 
@@ -160,7 +190,7 @@ const styles = StyleSheet.create({
     personalInfo: {
         paddingHorizontal: 10,
         top: 3,
-        marginLeft:5,
+        marginLeft: 5,
     },
 
     infoTitle: {
@@ -210,6 +240,12 @@ const styles = StyleSheet.create({
     sms: {
         left: 10,
         marginLeft: 10,
+    },
+
+    pickDate: {
+        fontSize:18,
+        paddingVertical:15,
+        marginLeft:15,
     }
 
 })

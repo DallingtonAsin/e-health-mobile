@@ -63,7 +63,7 @@ const OtpScreen = ({ navigation }: {navigation: any}) => {
             <KeyboardAvoidingView style={styles.container}>
 
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={require('../assets/images/otp.webp')} />
+                    <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={configs.images.otpImage} />
                     <Text style={styles.otpTxt}>Enter OTP that has been sent to your phone number</Text>
                 </View>
 
