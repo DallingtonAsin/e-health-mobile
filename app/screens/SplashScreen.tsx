@@ -5,18 +5,18 @@ import { Avatar } from 'react-native-paper';
 const window = Dimensions.get("window");
 
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({navigation}: {navigation: any}) => {
     return (
         <View style={styles.container}> 
         <StatusBar
                 backgroundColor={configs.colors.primary}
             />
             <View style={styles.header}>
-            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} />
+            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} style={configs.styles.logo} />
             <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
             </View>
             <View style={styles.footer}>
-            <TouchableOpacity style={[configs.styles.secondaryBtn, { borderColor: configs.colors.white}]} onPress={() => {navigation.navigate('Signin')}}>
+            <TouchableOpacity style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn, { borderColor: configs.colors.white}]} onPress={() => {navigation.navigate('Signin')}}>
                 <Text style={configs.styles.btnText}>Next</Text>
              </TouchableOpacity>
             </View>

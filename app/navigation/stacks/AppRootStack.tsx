@@ -13,6 +13,7 @@ import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabStack from "./BottomTabStack";
 import CustomStackHeader from "../../components/customStackHeader";
+import SignupScreen from "../../screens/SignupScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,23 +42,31 @@ const AppRootStack = () => {
                     />
 
                     <Stack.Screen
+                        name="Register"
+                        component={SignupScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+
+                    <Stack.Screen
                         name="OTP"
                         component={OtpScreen}
                         options={
-                            
+
                             {
-                            
-                            headerStyle: {
-                                backgroundColor: configs.colors.white,
-                                
-                            },
-                            headerTintColor: configs.colors.primary,
-                            headerTitle: `Enter verification code`,
-                            headerBackVisible: true,
-                            headerShown: true,
-                            header: (props) => (<CustomStackHeader title="Enter verification code"/>)
-                        
-                        }}
+
+                                headerStyle: {
+                                    backgroundColor: configs.colors.white,
+
+                                },
+                                headerTintColor: configs.colors.primary,
+                                headerTitle: `Enter verification code`,
+                                headerBackVisible: true,
+                                headerShown: true,
+                                header: (props) => (<CustomStackHeader title="Enter verification code" />)
+
+                            }}
                     />
 
                     <Stack.Screen
@@ -81,7 +90,7 @@ const AppRootStack = () => {
                             headerShown: true,
                         }}
                     />
-                    
+
                     <Stack.Screen
                         name="SpecialitiesList"
                         options={{
