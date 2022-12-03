@@ -11,6 +11,7 @@ import HomeScreen from '../../screens/HomeScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
 import SpecialityListScreen from '../../screens/SpecialityListScreen';
 import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
+import SplashScreen from '../../screens/SplashScreen';
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 22;
@@ -144,6 +145,8 @@ const BottomTabStack = () => {
             title: 'Profile',
           }}
         />
+
+
       </BottomTab.Navigator>
     </MultiBarProvider>
   );

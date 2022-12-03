@@ -4,35 +4,46 @@ import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import * as RootNavigation from '../navigation/RootNavigation';
 
-const SpecialityListScreen = () => {
+interface SpecialityDetail {
+    id: number,
+    name: string,
+    course: string,
+    title: string,
+    experience: string,
+    languages: string,
+    src: string,
+    fee: number,
+}
+
+const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
 
     const specialities = [
-        { id: 1, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda`, src: 'https://familydoctor.org/wp-content/uploads/2018/02/41808433_l.jpg', fee: 800},
-        { id: 2, name: 'Dr. Grace Kaisa', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src:'https://thumbs.dreamstime.com/b/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg', fee: 330 },
-        { id: 3, name: 'Dr. Herman Keid', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src:'https://t4.ftcdn.net/jpg/03/16/76/11/360_F_316761139_yVmLRT0AVwpZwOTgpmfrdIKrtFfg0bop.jpg', fee: 450 },
-        { id: 4, name: 'Dr. Dallington Lisa', course: 'MBBS, DNB', title: 'Psychiatrist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda`, src:'https://thumbs.dreamstime.com/b/portrait-positive-black-doctor-holding-medical-chart-male-over-white-background-178499631.jpg', fee: 500 },
-        { id: 5, name: 'Dr. John Peterson', course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src:'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', fee: 800 },
-        { id: 6, name: 'Dr. Chelsea Finn', course: 'MBBS, DNB', title: 'Orthopedic', experience: `2 Yrs`, languages: `English, Swahili`, src:'https://static2.bigstockphoto.com/4/7/3/large1500/374246794.jpg', fee: 650 },
-        { id: 7, name: 'Dr. Moses Alfred', course: 'MBBS, DNB', title: 'Neurology', experience: `3 Yrs`, languages: `Swahili, Luganda`, src:'https://www.shape.com/thmb/3BaNRJiYmLa4HCkvORgFpj7c1Xo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/black-female-doctor-6d6a6c2ec3ae48ceaeeae61f78b7038e.jpg', fee: 250 },
-        { id: 8, name: 'Dr. Peterson Lkein', course: 'MBBS, DNB', title: 'Pediatrician', experience: `6 Yrs`, languages: `English, German, Luganda`, src:'https://purepng.com/public/uploads/large/purepng.com-doctorsdoctorsdoctors-and-nursesa-qualified-practitioner-of-medicine-aclinicianmedical-practitionermale-doctor-1421526856715fcree.png', fee: 150 },
-        { id: 9, name: 'Dr. Ivan Luna', course: 'MBBS, DNB', title: 'Anesthesiologist', experience: `2 Yrs`, languages: `English, Spanish, Swahili`, src:'https://www.pngfind.com/pngs/m/53-531148_black-doctor-png-black-medical-doctor-png-transparent.png', fee: 980 },
-        { id: 10, name: 'Dr. Isaac Newton', course: 'MBBS, DNB', title: 'Oncology', experience: `7 Yrs`, languages: `English`, src:'https://www.seekpng.com/png/full/13-132502_alligator-black-male-doctor-png.png', fee: 160 },
-        { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Endocrinologist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda`, src:'https://pngimg.com/uploads/doctor/doctor_PNG15957.png', fee: 115 },
-        { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src:'https://i.pinimg.com/originals/5b/a1/a3/5ba1a398ac0aa7fe01480166fd2b818f.png', fee: 175 },
+        { id: 1, name: 'Dr. Anthony Luna', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda`, src: 'https://familydoctor.org/wp-content/uploads/2018/02/41808433_l.jpg', fee: 800 },
+        { id: 2, name: 'Dr. Grace Kaisa', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src: 'https://thumbs.dreamstime.com/b/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg', fee: 330 },
+        { id: 3, name: 'Dr. Herman Keid', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src: 'https://t4.ftcdn.net/jpg/03/16/76/11/360_F_316761139_yVmLRT0AVwpZwOTgpmfrdIKrtFfg0bop.jpg', fee: 450 },
+        { id: 4, name: 'Dr. Dallington Lisa', course: 'MBBS, DNB', title: 'Psychiatrist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda`, src: 'https://thumbs.dreamstime.com/b/portrait-positive-black-doctor-holding-medical-chart-male-over-white-background-178499631.jpg', fee: 500 },
+        { id: 5, name: 'Dr. John Peterson', course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src: 'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', fee: 800 },
+        { id: 6, name: 'Dr. Chelsea Finn', course: 'MBBS, DNB', title: 'Orthopedic', experience: `2 Yrs`, languages: `English, Swahili`, src: 'https://static2.bigstockphoto.com/4/7/3/large1500/374246794.jpg', fee: 650 },
+        { id: 7, name: 'Dr. Moses Alfred', course: 'MBBS, DNB', title: 'Neurology', experience: `3 Yrs`, languages: `Swahili, Luganda`, src: 'https://www.shape.com/thmb/3BaNRJiYmLa4HCkvORgFpj7c1Xo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/black-female-doctor-6d6a6c2ec3ae48ceaeeae61f78b7038e.jpg', fee: 250 },
+        { id: 8, name: 'Dr. Peterson Lkein', course: 'MBBS, DNB', title: 'Pediatrician', experience: `6 Yrs`, languages: `English, German, Luganda`, src: 'https://purepng.com/public/uploads/large/purepng.com-doctorsdoctorsdoctors-and-nursesa-qualified-practitioner-of-medicine-aclinicianmedical-practitionermale-doctor-1421526856715fcree.png', fee: 150 },
+        { id: 9, name: 'Dr. Ivan Luna', course: 'MBBS, DNB', title: 'Anesthesiologist', experience: `2 Yrs`, languages: `English, Spanish, Swahili`, src: 'https://www.pngfind.com/pngs/m/53-531148_black-doctor-png-black-medical-doctor-png-transparent.png', fee: 980 },
+        { id: 10, name: 'Dr. Isaac Newton', course: 'MBBS, DNB', title: 'Oncology', experience: `7 Yrs`, languages: `English`, src: 'https://www.seekpng.com/png/full/13-132502_alligator-black-male-doctor-png.png', fee: 160 },
+        { id: 11, name: 'Dr. Hamson Wilson', course: 'MBBS, DNB', title: 'Endocrinologist', experience: `8 Yrs`, languages: `Spanish, Luo, Luganda`, src: 'https://pngimg.com/uploads/doctor/doctor_PNG15957.png', fee: 115 },
+        { id: 12, name: 'Dr. Allen Kemi', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src: 'https://i.pinimg.com/originals/5b/a1/a3/5ba1a398ac0aa7fe01480166fd2b818f.png', fee: 175 },
     ]
 
 
-    const bookSpecialist = (item) => {
-        RootNavigation.navigate('ScheduleAppointment',  item);
+    const bookSpecialist = (item: SpecialityDetail) => {
+        RootNavigation.navigate('ScheduleAppointment', item);
     }
 
 
-    const renderItem = ({ item }) => (
-        
-        <View elevation={5} style={styles.item}>
+    const renderItem = ({ item }: { item: SpecialityDetail }) => (
+
+        <View style={styles.item}>
             <View style={styles.header}>
                 <View>
-                    <Avatar.Image size={80} source={{uri: item.src}} />
+                    <Avatar.Image size={80} source={{ uri: item.src }} />
                 </View>
                 <View>
                     <Text style={styles.name}>{item.name}</Text>
@@ -56,16 +67,10 @@ const SpecialityListScreen = () => {
                 <View>
                     <Text style={styles.fees}>Fee :  <Text style={styles.amount}>${item.fee}</Text></Text>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    {/* <TouchableOpacity 
-                    style={styles.bookBtn}
-                    onPress={() => bookSpecialist(item)}
-                    >
-                        <Text style={styles.btnTxt}>Call</Text>
-                    </TouchableOpacity> */}
-                    <TouchableOpacity 
-                    style={styles.bookBtn}
-                    onPress={() => bookSpecialist(item)}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TouchableOpacity
+                        style={styles.bookBtn}
+                        onPress={() => bookSpecialist(item)}
                     >
                         <Text style={styles.btnTxt}>Book</Text>
                     </TouchableOpacity>
@@ -82,7 +87,7 @@ const SpecialityListScreen = () => {
                 <FlatList
                     data={specialities}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item:SpecialityDetail, index: number ) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 />
@@ -130,8 +135,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: configs.colors.white,
         padding: 30,
-
-
+        elevation: 5
     },
 
     itemTitle: {
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: configs.colors.primary,
         borderColor: configs.colors.primary,
-        width:100,
+        width: 100,
         alignItems: 'center',
     },
 
@@ -174,29 +178,29 @@ const styles = StyleSheet.create({
 
     name: {
         color: configs.colors.black,
-        fontSize:18,
+        fontSize: 18,
         fontWeight: 'bold'
     },
 
     userTitle: {
-        fontSize:16,
+        fontSize: 16,
         color: configs.colors.primary,
     },
 
     titles: {
-        opacity:0.8,
-        fontSize:16,
+        opacity: 0.8,
+        fontSize: 16,
     },
 
     values: {
         fontWeight: 'bold',
         color: configs.colors.black,
         opacity: 0.6,
-        fontSize:14,
+        fontSize: 14,
     },
 
     fees: {
-      top:10,
+        top: 10,
     },
 
     amount: {

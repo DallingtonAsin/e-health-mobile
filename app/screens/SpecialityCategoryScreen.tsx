@@ -1,15 +1,15 @@
 import React from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, ListRenderItemInfo } from "react-native";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
 
 interface SpecialityCategory {
-    id?: number | null,
-    name?: string | null,
+    id: number,
+    name: string,
 }
 
-const SpecialityCategoryScreen = ({ navigation }) => {
+const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
 
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = (query: string) => setSearchQuery(query);
@@ -29,15 +29,15 @@ const SpecialityCategoryScreen = ({ navigation }) => {
         { id: 12, name: 'Clinic Nutrietion' },
     ]
 
-    const Item = ({ name }: SpecialityCategory) => (
-            <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
-                <Text style={styles.itemTitle}>{name}</Text>
-                <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
-            </TouchableOpacity>
+    const Item = ({ item }: {item: SpecialityCategory}) => (
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
+            <Text style={styles.itemTitle}>{item.name}</Text>
+            <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
+        </TouchableOpacity>
     );
 
-    const renderItem = ({ item }) => (
-        <Item name={item.name} />
+    const renderItem = ({ item }: { item: SpecialityCategory }) => (
+        <Item item={item} />
     );
 
     return (
@@ -53,7 +53,7 @@ const SpecialityCategoryScreen = ({ navigation }) => {
                 <FlatList
                     data={specialities}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item: SpecialityCategory, index:number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
@@ -84,13 +84,13 @@ const styles = StyleSheet.create({
         color: configs.colors.dark,
         fontWeight: 'bold',
         marginVertical: 10,
-        opacity:0.8
+        opacity: 0.8
     },
 
     subcontainer: {
         flex: 1,
         marginHorizontal: 10,
-        top:15,
+        top: 15,
     },
 
     item: {
@@ -108,20 +108,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 20,
-        elevation:5,
+        elevation: 5,
     },
 
 
-    searchbar:{
+    searchbar: {
         marginHorizontal: 16,
         paddingVertical: 3,
     },
 
-  
+
     itemTitle: {
         color: '#000',
-        fontSize:15,
-        
+        fontSize: 15,
+
     },
 
     arrow: {

@@ -20,7 +20,7 @@ const SecondRoute = () => (
     </View>
 );
 
-const ScheduleAppointmentScreen = ({ route, navigation }) => {
+const ScheduleAppointmentScreen = ({ route, navigation } : {route: any, navigation: any}) => {
 
     let item = route.params;
     const { src, name, title } = item;
@@ -33,7 +33,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }) => {
         { key: 'about', title: 'About' },
     ]);
 
-    const renderTabBar = (props) => (
+    const renderTabBar = (props: any) => (
         <TabBar
           {...props}
           indicatorStyle={{ backgroundColor: configs.colors.primary }}
