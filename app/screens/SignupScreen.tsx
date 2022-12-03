@@ -37,7 +37,7 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
         setTimeout(() => {
             setIsLoading(false);
             navigation.navigate('Home');
-        }, 8000);
+        }, 4000);
     }
 
     const Section1 = () => {
@@ -123,6 +123,7 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
 
     const Section2 = () => {
         return (
+            <>
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
                     <Text style={styles.title}>Complete Registration</Text>
@@ -156,6 +157,8 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
 
                 </ScrollView>
             </SafeAreaView>
+            { isLoading && <AppLoader /> }
+            </>
         )
     }
 
