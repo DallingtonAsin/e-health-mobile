@@ -6,7 +6,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
 const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navigation: any}) => {
 
-  const { src, name, title } = route.params
+  const { src, name, phoneNumber, title } = route.params
 
   const navigateToHome = () => {
       navigation.navigate(`Home`);
@@ -24,7 +24,7 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navig
           <Text style={styles.bookedTitle}>Appointment booked!</Text>
           <Text style={styles.info}>You have an appointment with</Text>
           <View style={styles.details}>
-            <Avatar.Image size={60} source={src} />
+            <Avatar.Image size={60} source={{uri: src}} />
             <View style={styles.personalInfo}>
               <Text style={styles.name}>{name}</Text>
               <Text style={styles.infoTitle}>{title}</Text>
@@ -32,7 +32,9 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navig
           </View>
         </View>
 
-          <Text style={styles.date}> <Icon5 name="calendar-alt" size={15} color={configs.colors.white} /> on Mon, 21 December - 10:00 am</Text>
+          <Text style={styles.date}>
+             <Icon5 name="calendar-alt" 
+          size={15} color={configs.colors.white} /> on Mon, 21 December - 10:00 am</Text>
       
         <Pressable style={styles.button} onPress={() => navigateToHome()}>
           <Text style={styles.okayText}>Okay</Text>

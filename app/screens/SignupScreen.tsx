@@ -28,7 +28,7 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
         setTimeout(() => {
             setIsLoading(false);
             setSection1Filled(true);
-        }, 4000);
+        }, 2000);
 
     }
 
@@ -37,7 +37,7 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
         setTimeout(() => {
             setIsLoading(false);
             navigation.navigate('Home');
-        }, 4000);
+        }, 2000);
     }
 
     const Section1 = () => {

@@ -32,7 +32,7 @@ const OtpScreen = ({ navigation }: {navigation: any}) => {
                 setIsLoading(false);
                 setOTP('');
                 navigation.navigate('Register');
-            }, 4000);
+            }, 2000);
         } else {
             Toast.show(`Please fill in a ${otpLength} otp`);
         }

@@ -2,13 +2,12 @@ import React from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, Linking } from "react-native";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import Communications from 'react-native-communications';
-
+import * as contact from '../components/common/communications';
 
 interface Contact {
-    id: number | null,
-    text: string | null,
-    value:string,
+    id: number,
+    text: string,
+    value: string,
     icon: string
     method?: any,
 }
@@ -17,32 +16,14 @@ const ContactUsScreen = () => {
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = (query: string) => setSearchQuery(query);
 
-
-    const callHelpLine = (phoneNumber: string) => {
-        Communications.phonecall(phoneNumber, true);
-    };
-
-    const SendSms = (telephone_number: string) => {
-        Communications.text(telephone_number, '');
-    }
-
-    const inboxFromWhatsapp = (whatsappNumber: string) => {
-        Linking.openURL(`whatsapp://send?text=&phone=${whatsappNumber}`);
-    }
-
-    const SendEmail = (email: string) => {
-        Linking.openURL(`mailto:${email}?subject=Message`);
-    };
-
     const contacts = [
-        { id: 1, text: 'Telephone', value: `+256772409074`, icon: 'phone-alt', method: callHelpLine },
-        { id: 2, text: 'SMS', value: `+256704709074`, icon: 'sms', method: SendSms },
-        { id: 3, text: 'Whatsap', value: `+256772409074`, icon: 'whatsapp', method: inboxFromWhatsapp },
-        { id: 4, text: 'Email', value: `info@vastel.com`, icon: 'envelope', method: SendEmail }
+        { id: 1, text: 'Telephone', value: `+256772409074`, icon: 'phone-alt', method: contact.callPhoneNumber },
+        { id: 2, text: 'SMS', value: `+256704709074`, icon: 'sms', method: contact.SendSms },
+        { id: 3, text: 'Whatsap', value: `+256704709074`, icon: 'whatsapp', method: contact.inboxWhatsappNumber },
+        { id: 4, text: 'Email', value: `info@vastel.com`, icon: 'envelope', method: contact.SendEmail }
     ]
 
-
-    const renderItem = ({ item }: {item: Contact}) => (
+    const renderItem = ({ item }: { item: Contact }) => (
         <TouchableOpacity style={styles.item} onPress={() => item.method(item.value)}>
             <View style={{ flexDirection: 'row' }}>
                 <Icon5 name={item.icon} size={30} color={configs.colors.primary} style={styles.arrow} />
@@ -65,7 +46,7 @@ const ContactUsScreen = () => {
                 <FlatList
                     data={contacts}
                     renderItem={renderItem}
-                    keyExtractor={(item: Contact) => item.id}
+                    keyExtractor={(item: Contact, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
@@ -143,6 +124,6 @@ const styles = StyleSheet.create({
         width: 1,
         backgroundColor: 'silver',
         left: 8
-      }
+    }
 })
 

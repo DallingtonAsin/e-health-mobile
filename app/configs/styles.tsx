@@ -29,7 +29,7 @@ export const styles = {
 
   bottomizedBtn: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 35,
   },
 
   btnText: {

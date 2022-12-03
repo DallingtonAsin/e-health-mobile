@@ -1,15 +1,15 @@
 import React from 'react';
 import {
-    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions
+    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
 } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-
-// #673ab7, '#ff4081'
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import * as contact from '../components/common/communications';
 
 const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: configs.colors.white  }}>
+    <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
         <Text>Appointment info will go here...</Text>
     </View>
 );
@@ -20,10 +20,10 @@ const SecondRoute = () => (
     </View>
 );
 
-const ScheduleAppointmentScreen = ({ route, navigation } : {route: any, navigation: any}) => {
+const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     let item = route.params;
-    const { src, name, title } = item;
+    const { src, name, phoneNumber, title } = item;
 
     const layout = useWindowDimensions();
 
@@ -35,16 +35,16 @@ const ScheduleAppointmentScreen = ({ route, navigation } : {route: any, navigati
 
     const renderTabBar = (props: any) => (
         <TabBar
-          {...props}
-          indicatorStyle={{ backgroundColor: configs.colors.primary }}
-          style={{ backgroundColor: configs.colors.white }}
-          renderLabel={({ route, focused, color }) => (
-            <Text style={{ color: '#000', margin: 8, fontSize:17, fontWeight: '400', opacity:0.8 }}>
-              {route.title}
-            </Text>
-          )}
+            {...props}
+            indicatorStyle={{ backgroundColor: configs.colors.primary }}
+            style={{ backgroundColor: configs.colors.white }}
+            renderLabel={({ route, focused, color }) => (
+                <Text style={styles.tabText}>
+                    {route.title}
+                </Text>
+            )}
         />
-      );
+    );
 
     const renderScene = SceneMap({
         appointment: FirstRoute,
@@ -55,14 +55,33 @@ const ScheduleAppointmentScreen = ({ route, navigation } : {route: any, navigati
         navigation.navigate(`AppointmentConfirmation`, item);
     }
 
+    const callDoctor = (number: string) => {
+        contact.callPhoneNumber(number);
+    }
+
+    const smsDoctor = (number: string) => {
+        contact.SendSms(number);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.header}>
-                    <Avatar.Image size={60} source={src} />
-                    <View style={styles.personalInfo}>
-                        <Text style={styles.name}>{name}</Text>
-                        <Text style={styles.infoTitle}>{title}</Text>
+                    <View style={styles.doctorInfo}>
+                        <Avatar.Image size={60} source={{ uri: src }} />
+                        <View style={styles.personalInfo}>
+                            <Text style={styles.name}>{name}</Text>
+                            <Text style={styles.infoTitle}>{title}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.contacts}>
+                        <TouchableOpacity onPress={() => smsDoctor(phoneNumber)} style={styles.sms}>
+                            <Icon5 name="sms" size={22} style={styles.callBtn} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => callDoctor(phoneNumber)} style={styles.sms}>
+                            <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -79,8 +98,8 @@ const ScheduleAppointmentScreen = ({ route, navigation } : {route: any, navigati
 
 
                 <View style={styles.footer}>
-                    <Pressable style={styles.button} onPress={() => confirmAppointment()}>
-                        <Text style={styles.okayText}>confirm appointment</Text>
+                    <Pressable style={[configs.styles.primaryBtn, configs.styles.bottomizedBtn]} onPress={() => confirmAppointment()}>
+                        <Text style={styles.okayText}>book appointment</Text>
                     </Pressable>
                 </View>
 
@@ -108,23 +127,21 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        // flex:1,
         flexDirection: 'row',
         backgroundColor: configs.colors.white,
         paddingHorizontal: 25,
         paddingVertical: 10,
         borderRadius: 5,
-        // marginVertical: 5,
-        // marginHorizontal: 15,
+        justifyContent: 'space-between',
     },
 
     body: {
-        flex: 1,
+        flex: 4,
         marginHorizontal: 5
     },
 
     footer: {
-        // flex: 3,
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -136,9 +153,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
+    doctorInfo: {
+        flexDirection: 'row',
+    },
+
     personalInfo: {
         paddingHorizontal: 10,
-        top: 5
+        top: 3,
+        marginLeft:5,
     },
 
     infoTitle: {
@@ -165,5 +187,29 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
     },
 
+    callBtn: {
+        color: configs.colors.white,
+        backgroundColor: configs.colors.primary,
+        padding: 8,
+        borderRadius: 3,
+    },
+
+    tabText: {
+        color: '#000',
+        margin: 8,
+        fontSize: 16,
+        fontWeight: 'bold',
+        opacity: 0.6
+    },
+
+    contacts: {
+        flexDirection: 'row',
+        alignItems: 'stretch'
+    },
+
+    sms: {
+        left: 10,
+        marginLeft: 10,
+    }
 
 })

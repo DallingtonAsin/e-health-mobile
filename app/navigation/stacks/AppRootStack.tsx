@@ -12,7 +12,7 @@ import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
 import { NavigationContainer } from '@react-navigation/native';
 import BottomTabStack from "./BottomTabStack";
-import CustomStackHeader from "../../components/customStackHeader";
+import CustomStackHeader from "../../components/CustomStackHeader";
 import SignupScreen from "../../screens/SignupScreen";
 
 const Stack = createNativeStackNavigator();

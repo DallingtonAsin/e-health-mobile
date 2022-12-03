@@ -30,7 +30,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
             setTimeout(() => {
                 setIsLoading(false);
                 navigation.navigate('OTP');
-            }, 4000);
+            }, 2000);
 
 
             // const countryIsoCode = phoneInput.current?.getCountryCode();
