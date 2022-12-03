@@ -5,8 +5,8 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
 
 interface SpecialityCategory {
-    id?: number,
-    name?: string,
+    id: number,
+    name: string,
 }
 
 const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
@@ -29,15 +29,15 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
         { id: 12, name: 'Clinic Nutrietion' },
     ]
 
-    const Item = ({ name }: SpecialityCategory) => (
+    const Item = ({ item }: {item: SpecialityCategory}) => (
         <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
-            <Text style={styles.itemTitle}>{name}</Text>
+            <Text style={styles.itemTitle}>{item.name}</Text>
             <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
         </TouchableOpacity>
     );
 
-    const RenderItem = ({ item }: { item: SpecialityCategory }) => (
-        <Item name={item.name} />
+    const renderItem = ({ item }: { item: SpecialityCategory }) => (
+        <Item item={item} />
     );
 
     return (
@@ -52,10 +52,8 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                 />
                 <FlatList
                     data={specialities}
-                    renderItem={({ item }: ListRenderItemInfo<SpecialityCategory>) => (
-                        <RenderItem item={item} />
-                    )}
-                    keyExtractor={(item: SpecialityCategory) => item.id}
+                    renderItem={renderItem}
+                    keyExtractor={(item: SpecialityCategory, index:number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}

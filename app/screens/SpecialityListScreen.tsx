@@ -38,7 +38,7 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
     }
 
 
-    const renderItem = ({ item }: {item: SpecialityDetail}) => (
+    const renderItem = ({ item }: { item: SpecialityDetail }) => (
 
         <View style={styles.item}>
             <View style={styles.header}>
@@ -68,12 +68,6 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
                     <Text style={styles.fees}>Fee :  <Text style={styles.amount}>${item.fee}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    {/* <TouchableOpacity 
-                    style={styles.bookBtn}
-                    onPress={() => bookSpecialist(item)}
-                    >
-                        <Text style={styles.btnTxt}>Call</Text>
-                    </TouchableOpacity> */}
                     <TouchableOpacity
                         style={styles.bookBtn}
                         onPress={() => bookSpecialist(item)}
@@ -93,7 +87,7 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
                 <FlatList
                     data={specialities}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item:SpecialityDetail, index: number ) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 />
