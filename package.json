@@ -50,6 +50,7 @@
     "@types/react-native": "^0.70.6",
     "@types/react-native-communications": "^2.2.1",
     "@types/react-native-dotenv": "^0.2.0",
+    "@types/react-native-indicators": "^0.16.2",
     "@types/react-native-vector-icons": "^6.4.12",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",

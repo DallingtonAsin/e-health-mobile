@@ -17,7 +17,7 @@ import { Avatar } from 'react-native-paper';
 
 const iconSize = 40;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }: {navigation: any}) => {
     const initialUser = {
         firstName: 'Dallington',
         lastName: 'Asingwire'

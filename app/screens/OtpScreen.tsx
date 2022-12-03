@@ -10,7 +10,7 @@ import AppLoader from '../components/AppLoader';
 const window = Dimensions.get('window');
 const otpLength = 4;
 
-const OtpScreen = ({ navigation }) => {
+const OtpScreen = ({ navigation }: {navigation: any}) => {
 
     const [valid, setValid] = useState(false);
     const [otp, setOTP] = useState("");
@@ -73,14 +73,11 @@ const OtpScreen = ({ navigation }) => {
                         style={{ width: '80%', height: 200 }}
                         pinCount={otpLength}
                         code={otp}
-                        onCodeChanged={code => { setOTP(code) }}
+                        onCodeChanged={code => { setOTP(code), onChangeOTP(code) }}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
                         codeInputHighlightStyle={styles.underlineStyleHighLighted}
                         keyboardAppearance={"light"}
-                        onCodeChanged={(code) => {
-                            onChangeOTP(code);
-                        }}
                         onCodeFilled={(code => {
                             verifyOtp(code);
                         })}
@@ -91,7 +88,7 @@ const OtpScreen = ({ navigation }) => {
                     <TouchableOpacity
                         disabled={!valid}
                         style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, , configs.styles.bottomizedBtn]}
-                        onPress={() => verifyOtp()}>
+                        onPress={() => verifyOtp(otp)}>
                         <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Verify OTP</Text>
                     </TouchableOpacity>
                 </View>

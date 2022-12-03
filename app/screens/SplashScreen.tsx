@@ -5,7 +5,7 @@ import { Avatar } from 'react-native-paper';
 const window = Dimensions.get("window");
 
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({navigation}: {navigation: any}) => {
     return (
         <View style={styles.container}> 
         <StatusBar

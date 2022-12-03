@@ -17,7 +17,7 @@ interface IUser {
 
 const numberOfLines = 2;
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation }: {navigation: any}) => {
 
     const [user, setUser] = useState<IUser>();
     const [isSection1Filled, setSection1Filled] = useState(false);

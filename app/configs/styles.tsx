@@ -1,3 +1,4 @@
+import React, { CSSProperties } from 'react';
 import {Dimensions} from 'react-native';
 import {colors} from './colors';
 
@@ -39,6 +40,6 @@ export const styles = {
   logo: {
     borderColor: colors.white,
     borderWidth: 0,
-    overflow: "hidden",
   }
-};
+  
+} as const;

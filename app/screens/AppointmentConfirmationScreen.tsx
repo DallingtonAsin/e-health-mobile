@@ -4,7 +4,7 @@ import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
-const AppointmentConfirmationScreen = ({ route, navigation }) => {
+const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navigation: any}) => {
 
   const { src, name, title } = route.params
 

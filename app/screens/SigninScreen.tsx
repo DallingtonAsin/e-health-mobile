@@ -6,7 +6,7 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 
-const SigninScreen = ({ navigation }) => {
+const SigninScreen = ({ navigation }: {navigation: any}) => {
 
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
@@ -75,7 +75,8 @@ const SigninScreen = ({ navigation }) => {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={{ uri: configs.urls.logo }} style={configs.styles.logo} />
+                    <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={{ uri: configs.urls.logo }}
+                     style={configs.styles.logo} />
                     <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
                 </View>
 
