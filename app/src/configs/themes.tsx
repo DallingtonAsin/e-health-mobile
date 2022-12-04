@@ -10,11 +10,11 @@ export function getCalendarTheme() {
   return {
 
     // arrows
-    arrowColor: 'black',
+    arrowColor: config.colors.primary,
     arrowStyle: {padding: 0},
 
     // knob
-    expandableKnobColor: themeColor,
+    // expandableKnobColor: themeColor,
 
     // month
     monthTextColor: 'black',
@@ -29,16 +29,16 @@ export function getCalendarTheme() {
     textDayHeaderFontWeight: 'normal' as 'normal',
 
     // dates
-    dayTextColor: themeColor,
-    todayTextColor: '#af0078',
+    dayTextColor: 'black', //  themeColor,
+    // todayTextColor: '#af0078',
     textDayFontSize: 18,
     textDayFontFamily: 'HelveticaNeue',
     textDayFontWeight: '500' as '500',
     textDayStyle: {marginTop: Platform.OS === 'android' ? 2 : 4},
 
     // selected date
-    selectedDayBackgroundColor: themeColor,
-    selectedDayTextColor: 'white',
+    selectedDayBackgroundColor: config.colors.gray, // themeColor,
+    selectedDayTextColor: config.colors.white,
 
     // disabled date
     textDisabledColor: disabledColor,
@@ -47,6 +47,7 @@ export function getCalendarTheme() {
     dotColor: themeColor,
     selectedDotColor: 'white',
     disabledDotColor: disabledColor,
-    dotStyle: {marginTop: -2}
+    dotStyle: {marginTop: -2},
+    textSectionTitleDisabledColor: '#d9e1e8'
   };
 }

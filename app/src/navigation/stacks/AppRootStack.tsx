@@ -23,9 +23,9 @@ const AppRootStack = () => {
     return (
         <>
             <NavigationContainer>
-                <Stack.Navigator>
+                <Stack.Navigator>-
 
-                    {/* <Stack.Screen
+                    <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -75,7 +75,7 @@ const AppRootStack = () => {
                         options={{
                             headerShown: false,
                         }}
-                    /> */}
+                    />
 
                     <Stack.Screen
                         name="SpecialityCategories"

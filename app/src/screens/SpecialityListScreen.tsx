@@ -23,7 +23,7 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
         { id: 2, name: 'Dr. Grace Kaisa', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src: 'https://thumbs.dreamstime.com/b/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg', fee: 330 },
         { id: 3, name: 'Dr. Herman Keid', phoneNumber: '0774014727', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src: 'https://t4.ftcdn.net/jpg/03/16/76/11/360_F_316761139_yVmLRT0AVwpZwOTgpmfrdIKrtFfg0bop.jpg', fee: 450 },
         { id: 4, name: 'Dr. Dallington Lisa', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Psychiatrist', experience: `4 Yrs`, languages: `English, Runyankore, Luganda`, src: 'https://thumbs.dreamstime.com/b/portrait-positive-black-doctor-holding-medical-chart-male-over-white-background-178499631.jpg', fee: 500 },
-        { id: 5, name: 'Dr. John Peterson', phoneNumber: '0700477421',  course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src: 'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', fee: 800 },
+        { id: 5, name: 'Dr. John Peterson', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Pediatric', experience: `10 Yrs`, languages: `English, Luganda`, src: 'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', fee: 800 },
         { id: 6, name: 'Dr. Chelsea Finn', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Orthopedic', experience: `2 Yrs`, languages: `English, Swahili`, src: 'https://static2.bigstockphoto.com/4/7/3/large1500/374246794.jpg', fee: 650 },
         { id: 7, name: 'Dr. Moses Alfred', phoneNumber: '0774014727', course: 'MBBS, DNB', title: 'Neurology', experience: `3 Yrs`, languages: `Swahili, Luganda`, src: 'https://www.shape.com/thmb/3BaNRJiYmLa4HCkvORgFpj7c1Xo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/black-female-doctor-6d6a6c2ec3ae48ceaeeae61f78b7038e.jpg', fee: 250 },
         { id: 8, name: 'Dr. Peterson Lkein', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Pediatrician', experience: `6 Yrs`, languages: `English, German, Luganda`, src: 'https://purepng.com/public/uploads/large/purepng.com-doctorsdoctorsdoctors-and-nursesa-qualified-practitioner-of-medicine-aclinicianmedical-practitionermale-doctor-1421526856715fcree.png', fee: 150 },
@@ -35,7 +35,14 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
 
 
     const bookSpecialist = (item: SpecialityDetail) => {
-       navigation.navigate('ScheduleAppointment', item);
+        
+        let doctor = {
+            src: item.src,
+            name: item.name,
+            phoneNumber: item.phoneNumber,
+            title: item.title
+        }
+        navigation.navigate('ScheduleAppointment', doctor);
     }
 
 
@@ -88,7 +95,7 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
                 <FlatList
                     data={specialities}
                     renderItem={renderItem}
-                    keyExtractor={(item:SpecialityDetail, index: number ) => item.id.toString()}
+                    keyExtractor={(item: SpecialityDetail, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 />
