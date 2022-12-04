@@ -18,13 +18,13 @@ export function getCalendarTheme() {
 
     // month
     monthTextColor: 'black',
-    textMonthFontSize: 16,
+    textMonthFontSize: 18,
     textMonthFontFamily: 'HelveticaNeue',
     textMonthFontWeight: 'bold' as 'bold',
 
     // day names
     textSectionTitleColor: 'black',
-    textDayHeaderFontSize: 12,
+    textDayHeaderFontSize: 14,
     textDayHeaderFontFamily: 'HelveticaNeue',
     textDayHeaderFontWeight: 'normal' as 'normal',
 

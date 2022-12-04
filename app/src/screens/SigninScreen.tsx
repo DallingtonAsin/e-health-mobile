@@ -18,7 +18,6 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
 
     const Signin = () => {
 
-        setIsLoading(true);
         Keyboard.dismiss();
 
         const checkValid = phoneInput.current?.isValidNumber(value);
@@ -26,6 +25,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
         setValid(checkValid ? checkValid : false);
 
         if (checkValid) {
+            setIsLoading(true);
 
             setTimeout(() => {
                 setIsLoading(false);

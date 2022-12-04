@@ -1,160 +1,139 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
-    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
+    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, TouchableOpacity, FlatList
 } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
-import { ExpandableCalendar, Calendar, CalendarList, Agenda, AgendaList, CalendarProvider, WeekCalendar } from 'react-native-calendars';
+import { ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
 import Toast from 'react-native-simple-toast';
-import { getCalendarTheme, themeColor, lightThemeColor } from '../configs/themes';
+import { getCalendarTheme } from '../configs/themes';
+import RadioButtonRN from 'radio-buttons-react-native';
 
-// const ITEMS: any[] = agendaItems;a
-
-interface Props {
-    weekView?: boolean;
-}
-
-interface DoctorSchedule {
-    string: any
-}
 
 const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     let item = route.params;
     const { src, name, phoneNumber, title } = item;
 
-    const layout = useWindowDimensions();
-    const [index, setIndex] = React.useState(0);
+
     const calendarTheme = useRef(getCalendarTheme());
     const [appointmentDate, setAppointmentDate] = React.useState('');
+    const [appointmentHour, setAppointmentHour] = React.useState('');
+    const [appointmentType, setAppointmentType] = useState('');
 
-    const [markedDates, setMarkedDates] = React.useState<DoctorSchedule>();
+    const [markedDates, setMarkedDates] = React.useState();
+    const hours = ['08:00', '10:00', '12:00', '14:00', '15:00', '18:00', '10:30', '12:30', '14:30', '15:30', '19:30'];
+    const symptoms = ['cold', 'cough', 'Influenza (flue)', 'Nasal congestion', 'Sore throat', 'Allergies', 'Rash', 'Other'];
 
 
-    const [routes] = React.useState([
-        { key: 'appointment', title: 'Appointment' },
-        { key: 'about', title: 'About' },
-    ]);
+    const data = [{ label: 'In person' }, { label: 'Audio Call' }, { label: 'Video Session' }];
+    const doctorDates = {
+        '2022-12-05': { selected: true, marked: false, selectedColor: configs.colors.primary },
+        '2022-12-06': { selected: true, marked: false, selectedColor: configs.colors.primary },
+        '2022-12-08': { selected: true, marked: false, selectedColor: configs.colors.primary, activeOpacity: 0 },
+        '2022-12-10': { selected: true, marked: false, selectedColor: configs.colors.primary, disabled: true, disableTouchEvent: true }
+    }
+
+    useEffect(() => {
+        setMarkedDates(doctorDates);
+    }, []);
+
 
     const setPatientAppointmentDate = (day: any) => {
         (day && day.dateString) && setAppointmentDate(day.dateString)
     }
 
-    // const renderItem = useCallback(({item}: any) => {
-    //     return <AgendaItem item={item}/>;
-    //   }, []);
-
-    useEffect(() => {
-        const markedDates = {
-            '2022-12-05': { selected: true, marked: false, selectedColor: configs.colors.primary },
-            '2022-12-06': { selected: true, marked: false, selectedColor: configs.colors.primary },
-            '2022-12-08': { selected: true, marked: false, selectedColor: configs.colors.primary, activeOpacity: 0 },
-            '2022-12-10': { selected: true, marked: false, selectedColor: configs.colors.primary, disabled: true, disableTouchEvent: true }
-        }
-        setMarkedDates(markedDates);
-
-    }, [])
-
-    const FirstRoute = () => (
+    const AppointmentScreen = () => (
         <SafeAreaView style={styles.fcontainer}>
             <ScrollView style={styles.fscroll} contentContainerStyle={styles.fscrollcontainer}>
+
+            <View>
+                    <Text style={styles.pickDate}>Symptoms</Text>
+                    <View style={{ margin: 0, flexDirection: 'row' }}>
+                        <ScrollView
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            contentContainerStyle={{ margin: 5, flexDirection: 'row', paddingRight: 10 }}>
+                            {
+                                symptoms.map((symptom) => {
+                                    return (
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            style={[styles.symptoms, appointmentHour == symptom ? { backgroundColor: configs.colors.primary, borderColor: configs.colors.primary } : { backgroundColor: configs.colors.white, borderColor: configs.colors.silver }]}
+                                            onPress={() => setAppointmentHour(symptom)}
+                                            key={symptom}>
+                                            <Text style={[styles.hrText, appointmentHour == symptom ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{symptom}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </ScrollView>
+                    </View>
+                </View>
+
                 <View>
                     <Text style={styles.pickDate}>Pick a day</Text>
-                    <CalendarProvider 
-                 date={'2022-12-04'}
-                 showTodayButton>
-                    <ExpandableCalendar
-                        onDayPress={day => {
-                            console.log('selected day', day);
-                            setPatientAppointmentDate(day);
-                        }}
-                        firstDay={1}
-                        leftArrowImageSource={configs.images.previous}
-                        rightArrowImageSource={configs.images.next}
-                        theme={calendarTheme.current}
-                        hideDayNames={false}
-                        disablePan={true}
-                        hideKnob={true}
-                        markedDates={markedDates}
-                    />
-                </CalendarProvider>
-                    {/* <Calendar
-                        initialDate={'2022-12-01'}
-                        minDate={'2022-01-10'}
-                        maxDate={'2022-12-30'}
-                        onDayPress={day => {
-                            console.log('selected day', day);
-                            setPatientAppointmentDate(day);
-                        }}
-                        onDayLongPress={day => {
-                            console.log('selected day', day);
-                        }}
-                        monthFormat={'MMMM yyyy'}
-                        onMonthChange={month => {
-                            console.log('month changed', month);
-                        }}
-                        hideArrows={false}
-                        hideExtraDays={true}
-                        disableMonthChange={true}
-                        firstDay={1}
-                        hideDayNames={false}
-                        showWeekNumbers={true}
-                        onPressArrowLeft={subtractMonth => subtractMonth()}
-                        onPressArrowRight={addMonth => addMonth()}
-                        disableArrowLeft={false}
-                        disableArrowRight={false}
-                        disableAllTouchEventsForDisabledDays={true}
-                        enableSwipeMonths={true}
-                        leftArrowImageSource={configs.images.previous}
-                        rightArrowImageSource={configs.images.next}
-                        theme={calendarTheme.current}
-                        markedDates={markedDates}
-                    /> */}
+                    <CalendarProvider
+                        date={'2022-12-04'}
+                        showTodayButton>
+                        <ExpandableCalendar
+                            onDayPress={day => {
+                                setPatientAppointmentDate(day);
+                            }}
+                            firstDay={1}
+                            leftArrowImageSource={configs.images.previous}
+                            rightArrowImageSource={configs.images.next}
+                            theme={calendarTheme.current}
+                            hideDayNames={false}
+                            disablePan={true}
+                            hideKnob={true}
+                            markedDates={markedDates}
+                        />
+                    </CalendarProvider>
                 </View>
 
                 <View>
                     <Text style={styles.pickDate}>Pick time</Text>
-
+                    <View style={{ margin: 0, flexDirection: 'row' }}>
+                        <ScrollView
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            contentContainerStyle={{ margin: 10, flexDirection: 'row', paddingRight: 10 }}>
+                            {
+                                hours.map((hour) => {
+                                    return (
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            style={[styles.types, appointmentHour == hour ? { backgroundColor: configs.colors.primary, borderColor: configs.colors.primary } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
+                                            onPress={() => setAppointmentHour(hour)}
+                                            key={hour}>
+                                            <Text style={[styles.hrText, appointmentHour == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </ScrollView>
+                    </View>
                 </View>
 
-
-
-
+                <View>
+                    <Text style={styles.pickDate}>Type</Text>
+                    <RadioButtonRN
+                        data={data}
+                        selectedBtn={(e: any) => {
+                            setAppointmentType(e?.label)
+                        }}
+                        box={false}
+                        textStyle={{ fontSize: 18 }}
+                        activeColor={configs.colors.primary}
+                    />
+                </View>
 
             </ScrollView>
         </SafeAreaView>
     );
-
-    const SecondRoute = () => (
-        <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
-            <Text>Doctor's information will go here...</Text>
-        </View>
-    );
-
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            indicatorStyle={{ backgroundColor: configs.colors.primary }}
-            style={{ backgroundColor: configs.colors.white }}
-            renderLabel={({ route, focused, color }) => (
-                <Text style={styles.tabText}>
-                    {route.title}
-                </Text>
-            )}
-        />
-    );
-
-    const renderScene = SceneMap({
-        appointment: FirstRoute,
-        about: SecondRoute,
-    });
-
-    const confirmAppointment = () => {
-        navigation.navigate(`AppointmentConfirmation`, item);
-    }
 
     const callDoctor = (number: string) => {
         contact.callPhoneNumber(number);
@@ -165,7 +144,12 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const bookAppointment = () => {
-        Toast.show(`Appointment date is ${appointmentDate}`);
+        !appointmentDate && Toast.show(`Please select appointment date`);
+        !appointmentHour && Toast.show(`Please select appointment hour`);
+        !appointmentType && Toast.show(`Please select appointment type`);
+        if (appointmentDate && appointmentHour && appointmentType) {
+            Toast.show(`Your appointment details are ${appointmentDate}, ${appointmentHour} and type ${appointmentType}`)
+        }
     }
 
     return (
@@ -179,6 +163,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             <Text style={styles.infoTitle}>{title}</Text>
                         </View>
                     </View>
+
                     <View style={styles.contacts}>
                         <TouchableOpacity onPress={() => smsDoctor(phoneNumber)} style={styles.sms}>
                             <Icon5 name="sms" size={22} style={styles.callBtn} />
@@ -191,22 +176,13 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 </View>
 
                 <View style={styles.body}>
-                    {/* <TabView
-                        navigationState={{ index, routes }}
-                        renderScene={renderScene}
-                        onIndexChange={setIndex}
-                        initialLayout={{ width: layout.width }}
-                        renderTabBar={renderTabBar}
-                    /> */}
-                    <FirstRoute/>
+                    <AppointmentScreen />
                 </View>
 
-
-
                 <View style={styles.footer}>
-                    <Pressable style={[configs.styles.primaryBtn, configs.styles.bottomizedBtn]}
+                    <Pressable style={[configs.styles.primaryBtn]}
                         onPress={() => bookAppointment()}>
-                        <Text style={styles.okayText}>book appointment</Text>
+                        <Text style={styles.okayText}>confirm</Text>
                     </Pressable>
                 </View>
 
@@ -251,6 +227,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        marginVertical:20,
     },
 
 
@@ -337,6 +314,29 @@ const styles = StyleSheet.create({
 
     fscrollcontainer: {
         flexGrow: 1,
+    },
+
+    types: {
+        marginHorizontal: 5,
+        borderWidth: 1,
+        borderColor: '#bbb',
+        padding: 10,
+        borderRadius: 3,
+        backgroundColor: configs.colors.white
+    },
+
+    symptoms: {
+        marginHorizontal: 5,
+        borderWidth: 1,
+        borderColor: '#bbb',
+        padding: 15,
+        borderRadius: 5,
+        backgroundColor: configs.colors.white
+    },
+
+    hrText: {
+        fontSize: 16,
+        fontWeight: '400',
     }
 
 })
