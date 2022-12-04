@@ -25,7 +25,7 @@ const AppRootStack = () => {
             <NavigationContainer>
                 <Stack.Navigator>
 
-                    {/* <Stack.Screen
+                    <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -67,17 +67,17 @@ const AppRootStack = () => {
                                 header: (props) => (<CustomStackHeader title="Enter verification code" />)
 
                             }}
-                    /> */}
-{/* 
+                    />
+
                     <Stack.Screen
                         name="Home"
                         component={BottomTabStack}
                         options={{
                             headerShown: false,
                         }}
-                    /> */}
+                    />
 
-                    {/* <Stack.Screen
+                    <Stack.Screen
                         name="SpecialityCategories"
                         component={SpecialityCategoryScreen}
                         options={{
@@ -89,7 +89,7 @@ const AppRootStack = () => {
                             headerBackVisible: true,
                             headerShown: true,
                         }}
-                    /> */}
+                    />
 
                     <Stack.Screen
                         name="SpecialitiesList"
