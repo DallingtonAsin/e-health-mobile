@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
-       SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
+    SafeAreaView, ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions, TouchableOpacity
 } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
@@ -8,47 +8,18 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { ExpandableCalendar, Calendar, CalendarList, Agenda, AgendaList, CalendarProvider, WeekCalendar } from 'react-native-calendars';
+import Toast from 'react-native-simple-toast';
+import { getCalendarTheme, themeColor, lightThemeColor } from '../configs/themes';
 
-const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
-        <View>
-            <Text style={styles.pickDate}>Pick a day</Text>
-            <ExpandableCalendar
-                //   initialDate={'2012-03-01'}
-                //   minDate={'2012-05-10'}
-                //   maxDate={'2012-05-30'}
-                onDayPress={day => {
-                    console.log('selected day', day);
-                }}
-                onDayLongPress={day => {
-                    console.log('selected day', day);
-                }}
-                monthFormat={'yyyy MM'}
-                onMonthChange={month => {
-                    console.log('month changed', month);
-                }}
-                hideArrows={false}
-                hideExtraDays={true}
-                disableMonthChange={false}
-                firstDay={1}
-                hideDayNames={false}
-                showWeekNumbers={true}
-                onPressArrowLeft={subtractMonth => subtractMonth()}
-                onPressArrowRight={addMonth => addMonth()}
-                disableArrowLeft={false}
-                disableArrowRight={false}
-                disableAllTouchEventsForDisabledDays={true}
-                enableSwipeMonths={true}
-            />
-        </View>
-    </View>
-);
+// const ITEMS: any[] = agendaItems;a
 
-const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
-        <Text>Doctor's information will go here...</Text>
-    </View>
-);
+interface Props {
+    weekView?: boolean;
+}
+
+interface DoctorSchedule {
+    string: any
+}
 
 const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -56,12 +27,112 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const { src, name, phoneNumber, title } = item;
 
     const layout = useWindowDimensions();
-
     const [index, setIndex] = React.useState(0);
+    const calendarTheme = useRef(getCalendarTheme());
+    const [appointmentDate, setAppointmentDate] = React.useState('');
+
+    const [markedDates, setMarkedDates] = React.useState<DoctorSchedule>();
+
+
     const [routes] = React.useState([
         { key: 'appointment', title: 'Appointment' },
         { key: 'about', title: 'About' },
     ]);
+
+    const setPatientAppointmentDate = (day: any) => {
+        (day && day.dateString) && setAppointmentDate(day.dateString)
+    }
+
+    // const renderItem = useCallback(({item}: any) => {
+    //     return <AgendaItem item={item}/>;
+    //   }, []);
+
+    useEffect(() => {
+        const markedDates = {
+            '2022-12-05': { selected: true, marked: false, selectedColor: configs.colors.primary },
+            '2022-12-06': { selected: true, marked: false, selectedColor: configs.colors.primary },
+            '2022-12-08': { selected: true, marked: false, selectedColor: configs.colors.primary, activeOpacity: 0 },
+            '2022-12-10': { selected: true, marked: false, selectedColor: configs.colors.primary, disabled: true, disableTouchEvent: true }
+        }
+        setMarkedDates(markedDates);
+
+    }, [])
+
+    const FirstRoute = () => (
+        <SafeAreaView style={styles.fcontainer}>
+            <ScrollView style={styles.fscroll} contentContainerStyle={styles.fscrollcontainer}>
+                <View>
+                    <Text style={styles.pickDate}>Pick a day</Text>
+                    <CalendarProvider 
+                 date={'2022-12-04'}
+                 showTodayButton>
+                    <ExpandableCalendar
+                        onDayPress={day => {
+                            console.log('selected day', day);
+                            setPatientAppointmentDate(day);
+                        }}
+                        firstDay={1}
+                        leftArrowImageSource={configs.images.previous}
+                        rightArrowImageSource={configs.images.next}
+                        theme={calendarTheme.current}
+                        hideDayNames={false}
+                        disablePan={true}
+                        hideKnob={true}
+                        markedDates={markedDates}
+                    />
+                </CalendarProvider>
+                    {/* <Calendar
+                        initialDate={'2022-12-01'}
+                        minDate={'2022-01-10'}
+                        maxDate={'2022-12-30'}
+                        onDayPress={day => {
+                            console.log('selected day', day);
+                            setPatientAppointmentDate(day);
+                        }}
+                        onDayLongPress={day => {
+                            console.log('selected day', day);
+                        }}
+                        monthFormat={'MMMM yyyy'}
+                        onMonthChange={month => {
+                            console.log('month changed', month);
+                        }}
+                        hideArrows={false}
+                        hideExtraDays={true}
+                        disableMonthChange={true}
+                        firstDay={1}
+                        hideDayNames={false}
+                        showWeekNumbers={true}
+                        onPressArrowLeft={subtractMonth => subtractMonth()}
+                        onPressArrowRight={addMonth => addMonth()}
+                        disableArrowLeft={false}
+                        disableArrowRight={false}
+                        disableAllTouchEventsForDisabledDays={true}
+                        enableSwipeMonths={true}
+                        leftArrowImageSource={configs.images.previous}
+                        rightArrowImageSource={configs.images.next}
+                        theme={calendarTheme.current}
+                        markedDates={markedDates}
+                    /> */}
+                </View>
+
+                <View>
+                    <Text style={styles.pickDate}>Pick time</Text>
+
+                </View>
+
+
+
+
+
+            </ScrollView>
+        </SafeAreaView>
+    );
+
+    const SecondRoute = () => (
+        <View style={{ flex: 1, backgroundColor: configs.colors.white }}>
+            <Text>Doctor's information will go here...</Text>
+        </View>
+    );
 
     const renderTabBar = (props: any) => (
         <TabBar
@@ -93,6 +164,10 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         contact.SendSms(number);
     }
 
+    const bookAppointment = () => {
+        Toast.show(`Appointment date is ${appointmentDate}`);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
@@ -116,19 +191,21 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 </View>
 
                 <View style={styles.body}>
-                    <TabView
+                    {/* <TabView
                         navigationState={{ index, routes }}
                         renderScene={renderScene}
                         onIndexChange={setIndex}
                         initialLayout={{ width: layout.width }}
                         renderTabBar={renderTabBar}
-                    />
+                    /> */}
+                    <FirstRoute/>
                 </View>
 
 
 
                 <View style={styles.footer}>
-                    <Pressable style={[configs.styles.primaryBtn, configs.styles.bottomizedBtn]} onPress={() => confirmAppointment()}>
+                    <Pressable style={[configs.styles.primaryBtn, configs.styles.bottomizedBtn]}
+                        onPress={() => bookAppointment()}>
                         <Text style={styles.okayText}>book appointment</Text>
                     </Pressable>
                 </View>
@@ -243,9 +320,23 @@ const styles = StyleSheet.create({
     },
 
     pickDate: {
-        fontSize:18,
-        paddingVertical:15,
-        marginLeft:15,
+        fontSize: 18,
+        paddingVertical: 15,
+        marginLeft: 15,
+    },
+
+    fcontainer: {
+        flex: 1,
+        backgroundColor: configs.colors.white,
+        justifyContent: 'space-between'
+    },
+
+    fscroll: {
+        flex: 1,
+    },
+
+    fscrollcontainer: {
+        flexGrow: 1,
     }
 
 })
