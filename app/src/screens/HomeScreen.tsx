@@ -48,7 +48,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={styles.headerImageSection}>
                         <View style={styles.image}>
-                            <Avatar.Image size={80} source={{ uri: 'https://www.shutterstock.com/shutterstock/photos/406022083/display_1500/stock-vector-beautiful-african-american-woman-avatar-profile-flat-illustration-406022083.jpg' }}>
+                            <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}>
                                 <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
                             </Avatar.Image>
                         </View>
