@@ -45,7 +45,7 @@ const ProfileScreen = () => {
 
             setTimeout(() => {
                 setIsLoading(false);
-                Toast.show(`Updating your info...`);
+                Toast.show(`Updating your information...`);
                 setIsDisabled(!isDisabled);
             }, 3000);
 
@@ -56,22 +56,21 @@ const ProfileScreen = () => {
 
     return (
         <>
-        <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container}>
 
-            <View style={styles.header}>
+                <View style={styles.header}>
 
-                <Avatar.Image size={100} source={{ uri: config.images.profileImage }}>
-                </Avatar.Image>
+                    <Avatar.Image size={100} source={{ uri: config.images.profileImage }}>
+                    </Avatar.Image>
 
-                <Text style={[styles.usernameText]}>{user.firstName} {user.lastName}</Text>
-                <Text style={[styles.headerText]}>
-                    <Icon5 name="map-marker-alt" size={20} color={config.colors.white} />
-                    <Text> {user.address} </Text>
-                </Text>
+                    <Text style={[styles.usernameText]}>{user.firstName} {user.lastName}</Text>
+                    <Text style={[styles.headerText]}>
+                        <Icon5 name="map-marker-alt" size={20} color={config.colors.white} />
+                        <Text> {user.address} </Text>
+                    </Text>
 
-            </View>
+                </View>
 
-            <SafeAreaView style={styles.body}>
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContainer}
@@ -176,7 +175,7 @@ const ProfileScreen = () => {
                         />
                     </View>
 
-                    <View>
+                    <View style={styles.buttonView}>
                         <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => updateProfile()}>
                             <Text style={config.styles.btnText}>
                                 {isDisabled ? 'Edit Profile' : 'Submit'}
@@ -185,9 +184,9 @@ const ProfileScreen = () => {
                     </View>
 
                 </ScrollView>
+
             </SafeAreaView>
-        </SafeAreaView>
-        {isLoading && <AppLoader /> }
+            {isLoading && <AppLoader />}
         </>
     )
 
@@ -201,25 +200,22 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 1,
+        flex: 0.35,
         backgroundColor: config.colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
     },
 
-    body: {
-        flex: 3,
-        backgroundColor: config.colors.white,
-        paddingHorizontal: 20,
-        paddingBottom: 80,
-    },
 
     scrollContainer: {
-        flexGrow: 2,
+        flexGrow: 1,
+        paddingBottom: 50,
     },
 
     scrollView: {
         flex: 1,
+        backgroundColor: config.colors.white,
+        paddingHorizontal: 20,
     },
 
     profileTxt: {
@@ -251,5 +247,9 @@ const styles = StyleSheet.create({
 
     enabledInput: {
         backgroundColor: config.colors.white,
+    },
+
+    buttonView: {
+        paddingVertical: 10,
     }
 })

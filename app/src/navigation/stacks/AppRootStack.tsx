@@ -114,8 +114,8 @@ const AppRootStack = () => {
                             },
                             headerTintColor: configs.colors.primary,
                             headerTitle: `Profile`,
-                            headerBackVisible: true,
-                            headerShown: true,
+                            headerBackVisible: false,
+                            headerShown: false,
                         }}
                     />
 

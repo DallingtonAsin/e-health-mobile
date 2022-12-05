@@ -47,13 +47,13 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                 <View style={styles.header}>
 
                     <View style={styles.headerImageSection}>
-                        <View style={styles.image}>
+                        <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
                             <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}>
                                 <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
                             </Avatar.Image>
-                        </View>
+                        </TouchableOpacity>
 
-                        <Pressable style={styles.notificationView} onPress={() => Toast.show(`Notifications coming soon...`, Toast.LONG)}>
+                        <Pressable style={styles.notificationView} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                         </Pressable>
                     </View>
@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             <Text style={styles.subtitle}>Doctors</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card}>
+                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
@@ -92,11 +92,11 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                     <View style={styles.cardContainer}>
 
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Profile')}>
-                            <Icon5 name="check-circle" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>My Approvals</Text>
+                            <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>Prescriptions</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MeetingRoom')}>
+                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon5 name="history" size={iconSize * 0.92} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Medical Records</Text>
                         </TouchableOpacity>
@@ -110,7 +110,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             <Text style={styles.subtitle}>Help</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon name="gear" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Settings</Text>
                         </TouchableOpacity>
