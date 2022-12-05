@@ -14,6 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import BottomTabStack from "./BottomTabStack";
 import CustomStackHeader from "../../components/CustomStackHeader";
 import SignupScreen from "../../screens/SignupScreen";
+import ProfileScreen from "../../screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -104,6 +105,19 @@ const AppRootStack = () => {
                         }}
                         component={SpecialityListScreen} />
 
+                    <Stack.Screen
+                        name="Profile"
+                        component={ProfileScreen}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: configs.colors.white,
+                            },
+                            headerTintColor: configs.colors.primary,
+                            headerTitle: `Profile`,
+                            headerBackVisible: true,
+                            headerShown: true,
+                        }}
+                    />
 
                     <Stack.Screen
                         name="ContactUs"

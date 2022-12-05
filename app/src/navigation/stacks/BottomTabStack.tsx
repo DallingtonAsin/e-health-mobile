@@ -12,6 +12,7 @@ import ContactUsScreen from '../../screens/ContactUsScreen';
 import SpecialityListScreen from '../../screens/SpecialityListScreen';
 import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
 import SplashScreen from '../../screens/SplashScreen';
+import ProfileScreen from '../../screens/ProfileScreen';
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 22;
@@ -130,7 +131,7 @@ const BottomTabStack = () => {
 
         <BottomTab.Screen
           name="ProfileTabScreen"
-          component={MeetingRoomScreen}
+          component={ProfileScreen}
           options={{
             tabBarIcon: ({color, size}) => (
               <Icon

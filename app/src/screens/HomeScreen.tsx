@@ -91,7 +91,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={styles.cardContainer}>
 
-                        <TouchableOpacity style={styles.card} onPress={comingSoon}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Profile')}>
                             <Icon5 name="check-circle" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Approvals</Text>
                         </TouchableOpacity>
