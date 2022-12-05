@@ -97,7 +97,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
-                            <Icon5 name="history" size={iconSize * 0.92} color={configs.colors.primary} />
+                            <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Medical Records</Text>
                         </TouchableOpacity>
 
