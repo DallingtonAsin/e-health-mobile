@@ -8,11 +8,9 @@ const window = Dimensions.get("window");
 const SplashScreen = ({navigation}: {navigation: any}) => {
     return (
         <View style={styles.container}> 
-        <StatusBar
-                backgroundColor={configs.colors.primary}
-            />
+        <StatusBar backgroundColor={configs.colors.primary}/>
             <View style={styles.header}>
-            <Avatar.Image size={150} source={{ uri: configs.urls.logo }} style={configs.styles.logo} />
+            <Avatar.Image size={150} source={configs.images.logo} style={configs.styles.logo} />
             <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
             </View>
             <View style={styles.footer}>

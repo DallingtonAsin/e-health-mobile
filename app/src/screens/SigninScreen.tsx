@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as configs from '../configs';
 import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
+import { removeLeadingZeros } from '../components/common/SharedHelper';
 
 const SigninScreen = ({ navigation }: {navigation: any}) => {
 
@@ -25,13 +26,24 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
         setValid(checkValid ? checkValid : false);
 
         if (checkValid) {
-            setIsLoading(true);
 
-            setTimeout(() => {
-                setIsLoading(false);
-                navigation.navigate('OTP');
-            }, 2000);
+            const phoneObj: any = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+            let number = phoneObj.number;
+            const startsWithZero = number.startsWith("0");
+            if(startsWithZero){
+                number = removeLeadingZeros(number);
+            }
 
+            const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`
+            Alert.alert(
+                '', 
+                `We will be verifying the phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
+                [
+                    {text: 'Edit', onPress: () => console.log('Edit Pressed')},
+                    {text: 'OK', onPress: async() => sendOTP() },
+                ],
+                { cancelable: false }
+                );
 
             // const countryIsoCode = phoneInput.current?.getCountryCode();
             // const countryCode = phoneInput.current?.getCallingCode();
@@ -41,6 +53,14 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
         } else {
             Toast.showWithGravity(`Please enter a valid phone number`, Toast.LONG, Toast.TOP);
         }
+    }
+
+    const sendOTP = (phone: object = {}) => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            navigation.navigate('OTP');
+        }, 2000);
     }
 
     const onChangePhoneNumber = (text: string) => {
@@ -75,7 +95,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={{ uri: configs.urls.logo }}
+                    <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={configs.images.logo}
                      style={configs.styles.logo} />
                     <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
                 </View>

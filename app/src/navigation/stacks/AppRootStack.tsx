@@ -23,7 +23,7 @@ const AppRootStack = () => {
     return (
         <>
             <NavigationContainer>
-                <Stack.Navigator>-
+                <Stack.Navigator>
 
                     <Stack.Screen
                         name="SplashScreen"
