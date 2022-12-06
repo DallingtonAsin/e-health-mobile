@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import * as configs from '../configs'
-import { TextInput, Provider } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { PaperSelect } from 'react-native-paper-select';
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 interface IUser {
     firstName: string,
@@ -21,8 +21,20 @@ const numberOfLines = 5;
 
 const SignupScreen = ({ navigation }: { navigation: any }) => {
 
-    const [user, setUser] = useState<IUser>();
+    const InitialUser = {
+        firstName: '',
+        lastName:  '',
+        email:  '',
+        dob:  '',
+        gender:  '',
+        language:  '',
+        address:  '',
+        phoneNumber:  '',
+    }
+
+    const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const [colors, setColors] = useState({
         value: '',
@@ -54,6 +66,32 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
         }, 2000);
     }
 
+    const selectValidator = (value: any) => {
+        if (!value || value.length <= 0) {
+            return 'Please select a value.';
+        }
+        return '';
+    };
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date: Date) => {
+       
+        let dob = date.toDateString();
+        setUser({
+            ...user,
+            dob: dob
+        });
+        console.warn("A date has been picked: ", dob);
+        hideDatePicker();
+    };
+
     const RegistrationScreen = () => {
         return (
             <>
@@ -66,7 +104,6 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
                         <Text style={styles.title}>Register for Vastel Medical Services</Text>
 
-                        {/* <View style={[styles.viewContainer, {flex: 1, flexDirection: 'row', justifyContent:'space-between'}]}> */}
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
                             <TextInput
@@ -94,7 +131,6 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 textColor={configs.colors.dark}
                             />
                         </View>
-                        {/* </View> */}
 
                         <View style={styles.viewContainer}>
                             <Text style={styles.labelTxt}>Email address</Text>
@@ -156,9 +192,9 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                     checkboxColor={configs.colors.primary}
                                     activeOutlineColor={configs.colors.primary}
                                     hideSearchBox={true}
-                                    containerStyle={{height:10}}
-                                    dialogButtonLabelStyle={{color: configs.colors.primary}}
-                                    
+                                    containerStyle={{ height: 10 }}
+                                    dialogButtonLabelStyle={{ color: configs.colors.primary }}
+
                                 />
                             </View>
 
@@ -171,6 +207,14 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                     activeOutlineColor={configs.colors.primary}
                                     style={styles.textInput}
                                     textColor={configs.colors.dark}
+                                    onFocus={showDatePicker}
+                                    showSoftInputOnFocus={false}
+                                />
+                                <DateTimePickerModal
+                                    isVisible={isDatePickerVisible}
+                                    mode="date"
+                                    onConfirm={handleConfirm}
+                                    onCancel={hideDatePicker}
                                 />
                             </View>
                         </View>

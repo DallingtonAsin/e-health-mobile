@@ -26,7 +26,7 @@ const AppRootStack = () => {
         <PaperProvider>
             <NavigationContainer>
                 <Stack.Navigator>
-{/* 
+
                     <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
@@ -41,7 +41,7 @@ const AppRootStack = () => {
                         options={{
                             headerShown: false,
                         }}
-                    /> */}
+                    />
 
                     <Stack.Screen
                         name="Register"

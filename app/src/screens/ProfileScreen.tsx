@@ -81,7 +81,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>First Name</Text>
                         <TextInput
-                            label="First Name"
+                            // label="First Name"
                             mode='outlined'
                             value={user?.firstName}
                             disabled={isDisabled}
@@ -93,7 +93,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Last Name</Text>
                         <TextInput
-                            label="Last Name"
+                            // label="Last Name"
                             mode='outlined'
                             value={user?.lastName}
                             disabled={isDisabled}
@@ -104,9 +104,9 @@ const ProfileScreen = () => {
 
 
                     <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Telephone Number</Text>
+                        <Text style={styles.infoText}>Contact Number</Text>
                         <TextInput
-                            label="First Name"
+                            // label="First Name"
                             mode='outlined'
                             value={user?.phoneNumber}
                             disabled={isDisabled}
@@ -118,7 +118,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Address</Text>
                         <TextInput
-                            label="Address"
+                            // label="Address"
                             mode='outlined'
                             value={user?.address}
                             disabled={isDisabled}
@@ -130,7 +130,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Email</Text>
                         <TextInput
-                            label="Email"
+                            // label="Email"
                             mode='outlined'
                             value={user?.email}
                             disabled={isDisabled}
@@ -142,7 +142,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Gender</Text>
                         <TextInput
-                            label="Gender"
+                            // label="Gender"
                             mode='outlined'
                             value={user?.gender}
                             disabled={isDisabled}
@@ -154,7 +154,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Language</Text>
                         <TextInput
-                            label="Language"
+                            // label="Language"
                             mode='outlined'
                             value={user?.language}
                             disabled={isDisabled}
@@ -166,7 +166,7 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Date of Birth</Text>
                         <TextInput
-                            label="Date of Birth"
+                            // label="Date of Birth"
                             mode='outlined'
                             value={user?.dob}
                             disabled={isDisabled}
@@ -225,6 +225,8 @@ const styles = StyleSheet.create({
 
     infoText: {
         fontSize: 18,
+        color: config.colors.dark,
+        opacity: 0.9
     },
 
     detailView: {
