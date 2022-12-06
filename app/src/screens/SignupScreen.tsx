@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import * as configs from '../configs'
-import { TextInput } from 'react-native-paper';
+import { TextInput, Provider } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
+import { PaperSelect } from 'react-native-paper-select';
+
 
 interface IUser {
     firstName: string,
@@ -15,22 +17,34 @@ interface IUser {
     phoneNumber: string,
 }
 
-const numberOfLines = 2;
+const numberOfLines = 5;
 
-const SignupScreen = ({ navigation }: {navigation: any}) => {
+const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const [user, setUser] = useState<IUser>();
-    const [isSection1Filled, setSection1Filled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const completeRegistration = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            setSection1Filled(true);
-        }, 2000);
+    const [colors, setColors] = useState({
+        value: '',
+        list: [
+            { _id: '1', value: 'BLUE' },
+            { _id: '2', value: 'RED' },
+            { _id: '3', value: 'GREEN' },
+        ],
+        selectedList: [],
+        error: '',
+    });
 
-    }
+    const [gender, setGender] = useState({
+        value: '',
+        list: [
+            { _id: '1', value: 'Male' },
+            { _id: '2', value: 'Female' },
+        ],
+        selectedList: [],
+        error: '',
+    });
+
 
     const submitDetails = () => {
         setIsLoading(true);
@@ -40,133 +54,145 @@ const SignupScreen = ({ navigation }: {navigation: any}) => {
         }, 2000);
     }
 
-    const Section1 = () => {
+    const RegistrationScreen = () => {
         return (
             <>
-            <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
-                    <Text style={styles.title}>Register for Medical Services</Text>
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="First Name"
-                            value={user?.firstName}
-                            mode="outlined"
-                            dense={false}
-                            activeOutlineColor={configs.colors.primary}
-                            numberOfLines={numberOfLines}
-                        />
-                    </View>
+                <SafeAreaView style={styles.container}>
+
+                    <StatusBar
+                        backgroundColor={configs.colors.primary}
+                    />
+
+                    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
+                        <Text style={styles.title}>Register for Vastel Medical Services</Text>
+
+                        {/* <View style={[styles.viewContainer, {flex: 1, flexDirection: 'row', justifyContent:'space-between'}]}> */}
+                        <View style={styles.inputWrap}>
+                            <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
+                            <TextInput
+                                label="First Name"
+                                value={user?.firstName}
+                                mode="outlined"
+                                dense={false}
+                                activeOutlineColor={configs.colors.primary}
+                                numberOfLines={numberOfLines}
+                                error={false}
+                                style={styles.textInput}
+                                textColor={configs.colors.dark}
+                            />
+                        </View>
 
 
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Last Name<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="Last Name"
-                            value={user?.lastName}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
+                        <View style={styles.inputWrap}>
+                            <Text style={styles.labelTxt}>Last Name<Text style={styles.required}>*</Text></Text>
+                            <TextInput
+                                label="Last Name"
+                                value={user?.lastName}
+                                mode="outlined"
+                                activeOutlineColor={configs.colors.primary}
+                                style={styles.textInput}
+                                textColor={configs.colors.dark}
+                            />
+                        </View>
+                        {/* </View> */}
 
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Email address</Text>
-                        <TextInput
-                            label="Email address"
-                            value={user?.email}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
-
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Date of Bith<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="Date of Birth"
-                            value={user?.dob}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
-
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="Gender"
-                            value={user?.gender}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
+                        <View style={styles.viewContainer}>
+                            <Text style={styles.labelTxt}>Email address</Text>
+                            <TextInput
+                                label="Email address"
+                                value={user?.email}
+                                mode="outlined"
+                                activeOutlineColor={configs.colors.primary}
+                                style={styles.textInput}
+                                textColor={configs.colors.dark}
+                            />
+                        </View>
 
 
+                        <View style={styles.viewContainer}>
+                            <Text style={styles.labelTxt}>Contact Number<Text style={styles.required}>*</Text></Text>
+                            <TextInput
+                                label="Phone Number"
+                                value={user?.phoneNumber}
+                                mode="outlined"
+                                activeOutlineColor={configs.colors.primary}
+                                style={styles.textInput}
+                                textColor={configs.colors.dark}
+                            />
+                        </View>
 
-                    <View style={styles.viewContainer}>
-                        <TouchableOpacity style={configs.styles.secondaryBtn}
-                            onPress={() => completeRegistration()}>
-                            <Text style={configs.styles.btnText}>Next</Text>
-                        </TouchableOpacity>
-                    </View>
+                        <View style={styles.viewContainer}>
+                            <Text style={styles.labelTxt}>Address<Text style={styles.required}>*</Text></Text>
+                            <TextInput
+                                label="Address"
+                                value={user?.address}
+                                mode="outlined"
+                                activeOutlineColor={configs.colors.primary}
+                                style={styles.textInput}
+                                textColor={configs.colors.dark}
+                            />
+                        </View>
 
-                    <View style={styles.viewContainer}>
-                        <TouchableOpacity style={styles.back2Login} onPress={() => navigation.navigate('Signin')}>
-                            <Text style={styles.back2LoginTxt}>Back to login</Text>
-                        </TouchableOpacity>
-                    </View>
+                        <View style={[styles.viewContainer, { flex: 1, flexDirection: 'row', justifyContent: 'space-between' }]}>
+                            <View style={styles.inputWrap}>
+                                <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
+                                <PaperSelect
+                                    label="Select Gender"
+                                    value={gender.value}
+                                    onSelection={(value: any) => {
+                                        setGender({
+                                            ...gender,
+                                            value: value.text,
+                                            selectedList: value.selectedList,
+                                            error: '',
+                                        });
+                                    }}
+                                    arrayList={[...gender.list]}
+                                    selectedArrayList={gender.selectedList}
+                                    errorText={gender.error}
+                                    multiEnable={false}
+                                    textInputMode="outlined"
+                                    searchStyle={{ iconColor: configs.colors.primary }}
+                                    checkboxColor={configs.colors.primary}
+                                    activeOutlineColor={configs.colors.primary}
+                                    hideSearchBox={true}
+                                    containerStyle={{height:10}}
+                                    dialogButtonLabelStyle={{color: configs.colors.primary}}
+                                    
+                                />
+                            </View>
 
-                </ScrollView>
-            </SafeAreaView>
-            { isLoading && <AppLoader /> }
-            </>
-        )
-    }
+                            <View style={styles.inputWrap}>
+                                <Text style={styles.labelTxt}>Date of Bith<Text style={styles.required}>*</Text></Text>
+                                <TextInput
+                                    label="Date of Birth"
+                                    value={user?.dob}
+                                    mode="outlined"
+                                    activeOutlineColor={configs.colors.primary}
+                                    style={styles.textInput}
+                                    textColor={configs.colors.dark}
+                                />
+                            </View>
+                        </View>
 
-    const Section2 = () => {
-        return (
-            <>
-            <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
-                    <Text style={styles.title}>Complete Registration</Text>
+                        <View style={styles.viewContainer}>
+                            <TouchableOpacity style={configs.styles.secondaryBtn}
+                                onPress={() => submitDetails()}>
+                                <Text style={[configs.styles.btnText]}>Continue</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Language<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="Language"
-                            value={user?.language}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
-
-                    <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Location<Text style={styles.required}>*</Text></Text>
-                        <TextInput
-                            label="Location"
-                            value={user?.address}
-                            mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
-
-                    <View style={[styles.viewContainer, configs.styles.bottomizedBtn]}>
-                        <TouchableOpacity style={[configs.styles.secondaryBtn]}
-                            onPress={() => submitDetails()}>
-                            <Text style={configs.styles.btnText}>Submit</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                </ScrollView>
-            </SafeAreaView>
-            { isLoading && <AppLoader /> }
+                    </ScrollView>
+                </SafeAreaView>
+                {isLoading && <AppLoader />}
             </>
         )
     }
 
     return (
-        !isSection1Filled ? <Section1 /> : <Section2 />
+        <RegistrationScreen />
     )
 }
-
 
 
 export default SignupScreen;
@@ -174,6 +200,7 @@ export default SignupScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: configs.colors.white,
     },
 
     scrollView: {
@@ -185,12 +212,18 @@ const styles = StyleSheet.create({
         margin: 15,
     },
 
+    inputWrap: {
+        flex: 1,
+        paddingHorizontal: 5,
+    },
+
     labelTxt: {
         fontSize: 18,
     },
 
     viewContainer: {
-        marginVertical: 10,
+        flex: 1,
+        marginVertical: 5,
     },
 
     title: {
@@ -198,13 +231,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         color: configs.colors.dark,
-        fontFamily: 'Times New Roman',
         paddingLeft: 30,
         paddingRight: 30,
         fontWeight: '900',
-        opacity: 0.7,
-        // letterSpacing:15,
-        // lineHeight:8,
+        opacity: 0.6,
     },
 
     back2Login: {
@@ -216,10 +246,14 @@ const styles = StyleSheet.create({
         color: configs.colors.primary,
         fontSize: 18,
         textAlign: 'center',
-        fontWeight: 'bold',
     },
 
     required: {
         color: configs.colors.danger,
+    },
+
+    textInput: {
+        backgroundColor: configs.colors.white,
+        color: configs.colors.silver,
     }
 })

@@ -15,6 +15,7 @@ import BottomTabStack from "./BottomTabStack";
 import CustomStackHeader from "../../components/CustomStackHeader";
 import SignupScreen from "../../screens/SignupScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
+import { Provider as PaperProvider } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,10 +23,10 @@ const Stack = createNativeStackNavigator();
 const AppRootStack = () => {
 
     return (
-        <>
+        <PaperProvider>
             <NavigationContainer>
                 <Stack.Navigator>
-
+{/* 
                     <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
@@ -40,7 +41,7 @@ const AppRootStack = () => {
                         options={{
                             headerShown: false,
                         }}
-                    />
+                    /> */}
 
                     <Stack.Screen
                         name="Register"
@@ -161,7 +162,7 @@ const AppRootStack = () => {
 
             </NavigationContainer>
 
-        </>
+        </PaperProvider>
     )
 }
 

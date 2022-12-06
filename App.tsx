@@ -75,7 +75,9 @@ const App = () => {
   };
 
   return (
+  
      <AppRootStack/>
+  
   );
 };
 
