@@ -20,7 +20,6 @@ import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
 import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
 
 
-
 const Stack = createNativeStackNavigator();
 
 
@@ -31,7 +30,7 @@ const AppRootStack = () => {
             <NavigationContainer>
                 <Stack.Navigator>
 
-                    {/* <Stack.Screen
+                    <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -73,7 +72,7 @@ const AppRootStack = () => {
                                 header: (props) => (<CustomStackHeader title="Enter verification code" />)
 
                             }}
-                    /> */}
+                    />
 
                     <Stack.Screen
                         name="Home"

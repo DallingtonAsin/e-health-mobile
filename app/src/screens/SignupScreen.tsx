@@ -102,7 +102,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                     />
 
                     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
-                        <Text style={styles.title}>Register for Vastel Medical Services</Text>
+                        <Text style={styles.title}>Create a Vastel Medical Services Account</Text>
 
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
@@ -273,12 +273,13 @@ const styles = StyleSheet.create({
     title: {
         marginVertical: 10,
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 16,
         color: configs.colors.dark,
         paddingLeft: 30,
         paddingRight: 30,
         fontWeight: '900',
         opacity: 0.6,
+        textTransform: 'uppercase',
     },
 
     back2Login: {

@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
 
     info: {
-        fontSize: 15,
+        fontSize: 16,
     },
 
     drNameTxt: {
