@@ -1,5 +1,5 @@
 export const colors = {
-    primary: '#5cb85c',
+    primary:  '#5cb85c',
     yellow: '#f8b718',
     secondary: '#462200',
     black: '#000',
@@ -18,6 +18,10 @@ export const colors = {
     inverse: '#292b2c',
     faded: "#f7f7f7",
     silver: '#ccc',
+    confirmedBg: '#e9faf7',
+    confirmedColor: '#4dc8bd',
+    pendingBg: '#e8eef0',
+    pendingColor: '#215d67',
 
 
 }

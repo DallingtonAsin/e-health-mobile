@@ -44,7 +44,10 @@ const MyAppointmentScreen = () => {
                 <Text style={styles.drNameTxt}>{item.drName}</Text>
                 <Text style={styles.info}>{item.address}</Text>
                 <Text style={styles.info}>Reason for consultation: <Text style={[styles.info, styles.darkTxt]}>{item.consultationReason}</Text></Text>
-                <Text style={[styles.info, styles.darkTxt]}>Date: {item.date} Time: {item.time}</Text>
+                 <View style={styles.dateView}>
+                    <Text style={[styles.info, styles.darkTxt]}>Date: {item.date}</Text>
+                    <Text style={[styles.info, styles.darkTxt]}>Time: {item.time}</Text>
+                 </View>
 
                 <View style={styles.typeView}>
                     <TouchableOpacity style={styles.type}>
@@ -143,16 +146,31 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 
+     dateView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
     completedTxt: {
-        color: config.colors.primary,
+        backgroundColor: config.colors.confirmedBg,
+        color: config.colors.confirmedColor,
         fontWeight: '600',
         marginLeft: 5,
+        borderRadius:5,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        padding:5
     },
 
     pendingTxt: {
-        color: config.colors.yellow,
+        backgroundColor: config.colors.pendingBg,
+        color: config.colors.pendingColor,
         fontWeight: '600',
         marginLeft: 5,
+        borderRadius:5,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        padding:5
     }
 
 
