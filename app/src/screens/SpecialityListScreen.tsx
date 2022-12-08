@@ -2,7 +2,6 @@ import React from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
-import * as RootNavigation from '../navigation/RootNavigation';
 
 interface SpecialityDetail {
     id: number,
@@ -73,7 +72,7 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
 
             <View style={styles.footer}>
                 <View>
-                    <Text style={styles.fees}>Fee :  <Text style={styles.amount}>${item.fee}</Text></Text>
+                    <Text style={styles.fees}>Fee:  <Text style={styles.amount}>${item.fee}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity

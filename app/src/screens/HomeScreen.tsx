@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             <Text style={styles.subtitle}>Doctors</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
                             <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
@@ -96,7 +96,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             <Text style={styles.subtitle}>Prescriptions</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MedicalRecords')}>
                             <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Medical Records</Text>
                         </TouchableOpacity>

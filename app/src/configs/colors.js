@@ -10,7 +10,7 @@ export const colors = {
     dark: '#0c0c0c',
     denger: '#E81A1A',
     pink: "#900",
-    prime: "#0275d8",
+    prime: 'rgb(30, 30, 40)', // "#0275d8",
     success: '#5cb85c',
     warning: '#f0ad4e',
     info: "#5bc0de",

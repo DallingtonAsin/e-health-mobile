@@ -1,21 +1,25 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabStack from "./BottomTabStack";
+import CustomStackHeader from "../../components/CustomStackHeader";
+import { Provider as PaperProvider } from 'react-native-paper';
+import * as configs from '../../configs';
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SplashScreen from "../../screens/SplashScreen";
 import SigninScreen from "../../screens/SigninScreen";
 import OtpScreen from "../../screens/OtpScreen";
-import * as configs from '../../configs';
+import SignupScreen from "../../screens/SignupScreen";
+import ProfileScreen from "../../screens/ProfileScreen";
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
-import { NavigationContainer } from '@react-navigation/native';
-import BottomTabStack from "./BottomTabStack";
-import CustomStackHeader from "../../components/CustomStackHeader";
-import SignupScreen from "../../screens/SignupScreen";
-import ProfileScreen from "../../screens/ProfileScreen";
-import { Provider as PaperProvider } from 'react-native-paper';
+import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
+import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +31,7 @@ const AppRootStack = () => {
             <NavigationContainer>
                 <Stack.Navigator>
 
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -69,7 +73,7 @@ const AppRootStack = () => {
                                 header: (props) => (<CustomStackHeader title="Enter verification code" />)
 
                             }}
-                    />
+                    /> */}
 
                     <Stack.Screen
                         name="Home"
@@ -117,6 +121,34 @@ const AppRootStack = () => {
                             headerTitle: `Profile`,
                             headerBackVisible: false,
                             headerShown: false,
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="MedicalRecords"
+                        component={MedicalRecordScreen}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: configs.colors.white,
+                            },
+                            headerTintColor: configs.colors.primary,
+                            headerTitle: `Medical Record History`,
+                            headerBackVisible: true,
+                            headerShown: true,
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="MyAppointments"
+                        component={MyAppointmentScreen}
+                        options={{
+                            headerStyle: {
+                                backgroundColor: configs.colors.white,
+                            },
+                            headerTintColor: configs.colors.primary,
+                            headerTitle: `My Appointments`,
+                            headerBackVisible: true,
+                            headerShown: true,
                         }}
                     />
 

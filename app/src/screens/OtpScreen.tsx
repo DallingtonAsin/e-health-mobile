@@ -77,7 +77,7 @@ const OtpScreen = ({ navigation }: {navigation: any}) => {
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
                         codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                        keyboardAppearance={"light"}
+                        keyboardAppearance={"dark"}
                         onCodeFilled={(code => {
                             verifyOtp(code);
                         })}
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
 
     borderStyleHighLighted: {
-        borderColor: "#03DAC6",
+        borderColor: configs.colors.primary,
     },
 
     underlineStyleBase: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     },
 
     underlineStyleHighLighted: {
-        borderColor: "#03DAC6",
+        borderColor: configs.colors.primary,
     },
 
 })
