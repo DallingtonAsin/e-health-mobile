@@ -8,31 +8,18 @@
  * @format
  */
 
-import React, {type PropsWithChildren} from 'react';
+import React, { useState, useEffect, type PropsWithChildren } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View, LogBox
 } from 'react-native';
 
-
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import HomeScreen from './app/src/screens/HomeScreen';
-import HomeStack from './app/src/navigation/stacks/HomeStack'
-import { NavigationContainer } from '@react-navigation/native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AppRootStack from './app/src/navigation/stacks/AppRootStack';
-import { navigationRef } from './app/src/navigation/RootNavigation';
+import Spinner from 'react-native-loading-spinner-overlay';
+import * as config from './app/src/configs'
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -41,7 +28,7 @@ const Section: React.FC<
   PropsWithChildren<{
     title: string;
   }>
-> = ({children, title}) => {
+> = ({ children, title }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -69,14 +56,24 @@ const Section: React.FC<
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [spinner, setSpinner] = useState(true);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  useEffect(() => {
+    setInterval(() => {
+      setSpinner(!spinner);
+    }, 3000);
+  }, []);
 
   return (
-  
-     <AppRootStack/>
+     <>
+        <Spinner
+        visible={spinner}
+        textContent={'Loading...'}
+        textStyle={{ color: config.colors.white }}
+      />
+      
+      <AppRootStack />
+     </>
   
   );
 };
