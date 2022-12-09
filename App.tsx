@@ -28,11 +28,11 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import HomeScreen from './app/screens/HomeScreen';
-import HomeStack from './app/navigation/stacks/HomeStack'
+import HomeScreen from './app/src/screens/HomeScreen';
+import HomeStack from './app/src/navigation/stacks/HomeStack'
 import { NavigationContainer } from '@react-navigation/native';
-import AppRootStack from './app/navigation/stacks/AppRootStack';
-import { navigationRef } from './app/navigation/RootNavigation';
+import AppRootStack from './app/src/navigation/stacks/AppRootStack';
+import { navigationRef } from './app/src/navigation/RootNavigation';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -75,7 +75,9 @@ const App = () => {
   };
 
   return (
+  
      <AppRootStack/>
+  
   );
 };
 
