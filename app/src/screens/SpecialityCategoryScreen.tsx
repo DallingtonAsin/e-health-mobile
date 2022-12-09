@@ -49,6 +49,7 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                     style={styles.searchbar}
+                    elevation={3}
                 />
                 <FlatList
                     data={specialities}
@@ -57,7 +58,8 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
-                    style={{ top: 20, bottom: 40 }}
+                    style={{ top: 20 }}
+                    ListFooterComponent={<View style={{height: 40}}/>}
                 />
             </View>
 
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
     searchbar: {
         marginHorizontal: 16,
         paddingVertical: 3,
+        backgroundColor: configs.colors.white,
     },
 
 
