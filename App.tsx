@@ -58,6 +58,7 @@ const Section: React.FC<
 };
 
 const App = () => {
+  
   const isDarkMode = useColorScheme() === 'dark';
   const [spinner, setSpinner] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -65,6 +66,7 @@ const App = () => {
   useEffect(() => {
     setInterval(() => {
       setSpinner(!spinner);
+      setIsLoggedIn(true);
     }, 3000);
   }, []);
 
