@@ -1,14 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { useState, useEffect, type PropsWithChildren } from 'react';
+import React, { useState, useEffect, useMemo, type PropsWithChildren } from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,15 +7,15 @@ import {
 } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import * as config from './app/src/configs'
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import AuthStackNavigator from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
+import { AuthContext } from './app/src/context/authContext';
+import * as config from './app/src/configs'
 
-
-LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs(['new NativeEventEmitter']); 
+LogBox.ignoreAllLogs();
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -58,7 +48,7 @@ const Section: React.FC<
 };
 
 const App = () => {
-  
+
   const isDarkMode = useColorScheme() === 'dark';
   const [spinner, setSpinner] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,16 +56,25 @@ const App = () => {
   useEffect(() => {
     setInterval(() => {
       setSpinner(!spinner);
-      setIsLoggedIn(true);
     }, 3000);
   }, []);
 
+  const authContext = useMemo(() => ({
+
+     signIn:  () => {
+         setIsLoggedIn(true);
+     }
+
+  }), []);
+
   return (
+    <AuthContext.Provider value={authContext}>
     <PaperProvider>
       <NavigationContainer>
          { isLoggedIn ? <SignedInStackNavigator/> : <AuthStackNavigator/> }
       </NavigationContainer>
     </PaperProvider>
+    </AuthContext.Provider>
   );
 };
 
