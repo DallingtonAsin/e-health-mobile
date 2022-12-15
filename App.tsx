@@ -17,9 +17,12 @@ import {
 } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import AppRootStack from './app/src/navigation/stacks/AppRootStack';
-import Spinner from 'react-native-loading-spinner-overlay';
 import * as config from './app/src/configs'
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider as PaperProvider } from 'react-native-paper';
+import AuthStackNavigator from "./app/src/navigation/stacks/AuthStackNavigator";
+import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
+
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -57,6 +60,7 @@ const Section: React.FC<
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [spinner, setSpinner] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setInterval(() => {
@@ -65,16 +69,11 @@ const App = () => {
   }, []);
 
   return (
-     <>
-        <Spinner
-        visible={spinner}
-        textContent={'Loading...'}
-        textStyle={{ color: config.colors.white }}
-      />
-      
-      <AppRootStack />
-     </>
-  
+    <PaperProvider>
+      <NavigationContainer>
+         { isLoggedIn ? <SignedInStackNavigator/> : <AuthStackNavigator/> }
+      </NavigationContainer>
+    </PaperProvider>
   );
 };
 

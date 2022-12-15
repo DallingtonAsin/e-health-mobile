@@ -5,6 +5,7 @@ import { TextInput } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { PaperSelect } from 'react-native-paper-select';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { formatDate } from '../components/common/SharedHelper';
 
 interface IUser {
     firstName: string,
@@ -82,14 +83,13 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
     };
 
     const handleConfirm = (date: Date) => {
-       
-        let dob = date.toDateString();
+        hideDatePicker();
+        let dob = formatDate(date);
         setUser({
             ...user,
             dob: dob
         });
         console.warn("A date has been picked: ", dob);
-        hideDatePicker();
     };
 
     const RegistrationScreen = () => {
