@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { navigateBack } from '../navigation/RootNavigation';
+import { navigateBack } from '../navigation/navigation';
 
 const CustomStackHeader = ({title}: {title: string}) => {
     return (

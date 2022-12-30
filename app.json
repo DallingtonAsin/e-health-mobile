@@ -1,4 +1,7 @@
 {
   "name": "Vastel",
-  "displayName": "Vastel"
+  "displayName": "Vastel",
+  "expo": {
+    "userInterfaceStyle": "automatic"
+  }
 }

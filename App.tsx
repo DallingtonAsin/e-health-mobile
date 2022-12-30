@@ -1,47 +1,27 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, {type PropsWithChildren} from 'react';
+import React, { useState, useEffect, useMemo, type PropsWithChildren } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View, LogBox
 } from 'react-native';
 
-
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import HomeScreen from './app/src/screens/HomeScreen';
-import HomeStack from './app/src/navigation/stacks/HomeStack'
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import AppRootStack from './app/src/navigation/stacks/AppRootStack';
-import { navigationRef } from './app/src/navigation/RootNavigation';
+import { Provider as PaperProvider } from 'react-native-paper';
+import AuthStackNavigator from "./app/src/navigation/stacks/AuthStackNavigator";
+import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
+import { AuthContext } from './app/src/context/authContext';
+import * as config from './app/src/configs'
 
-LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs(['new NativeEventEmitter']); 
+LogBox.ignoreAllLogs();
 
 const Section: React.FC<
   PropsWithChildren<{
     title: string;
   }>
-> = ({children, title}) => {
+> = ({ children, title }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -68,16 +48,33 @@ const Section: React.FC<
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const isDarkMode = useColorScheme() === 'dark';
+  const [spinner, setSpinner] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setInterval(() => {
+      setSpinner(!spinner);
+    }, 3000);
+  }, []);
+
+  const authContext = useMemo(() => ({
+
+     signIn:  () => {
+         setIsLoggedIn(true);
+     }
+
+  }), []);
 
   return (
-  
-     <AppRootStack/>
-  
+    <AuthContext.Provider value={authContext}>
+    <PaperProvider>
+      <NavigationContainer>
+         { isLoggedIn ? <SignedInStackNavigator/> : <AuthStackNavigator/> }
+      </NavigationContainer>
+    </PaperProvider>
+    </AuthContext.Provider>
   );
 };
 
