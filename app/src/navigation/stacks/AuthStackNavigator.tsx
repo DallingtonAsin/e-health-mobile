@@ -14,7 +14,7 @@ const AuthStackNavigator = () => {
     return (
                 <Stack.Navigator>
 
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -48,7 +48,7 @@ const AuthStackNavigator = () => {
                                 header: (props) => (<CustomStackHeader title="Enter verification code" />)
 
                             }}
-                    />
+                    /> */}
 
                     <Stack.Screen
                         name="Register"
