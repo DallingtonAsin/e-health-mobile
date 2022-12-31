@@ -80,7 +80,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 await storeAccessToken(data.access_token);
 
                 navigation.navigate('OTP', {
-                    otp: data.otp
+                    sentOtp: data.otp
                 });
             }
         }).catch((error) => {

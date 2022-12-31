@@ -17,15 +17,13 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
 
     const { sentOtp } = route.params;
     const [valid, setValid] = useState(false);
-    const [otp, setOTP] = useState(sentOtp ? sentOtp : "");
+    const [otp, setOTP] = useState(sentOtp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
 
     const onChangeOTP = (code: string) => {
         setOTP(code);
-        const isValid = code.length >= otpLength ? true : false;
-        setValid(isValid);
     }
 
     const verifyOtp = (code: string) => {
@@ -62,6 +60,10 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
     }
 
     useEffect(() => {
+
+        const isValid = otp.length >= otpLength;
+        setValid(isValid);
+
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -79,7 +81,7 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
-    }, []);
+    }, [otp]);
     return (
 
         <>
@@ -95,8 +97,8 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
                     <OTPInputView
                         style={{ width: '80%', height: 200 }}
                         pinCount={otpLength}
-                        code={otp}
-                        onCodeChanged={code => { setOTP(code), onChangeOTP(code) }}
+                        code={otp ? otp :  sentOtp }
+                        onCodeChanged={code => { onChangeOTP(code) }}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
                         codeInputHighlightStyle={styles.underlineStyleHighLighted}
