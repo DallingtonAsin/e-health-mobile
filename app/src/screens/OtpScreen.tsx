@@ -5,15 +5,19 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
+import Service from '../network/services/httpService';
+import { routes } from '../network/routes';
 
 
 const window = Dimensions.get('window');
 const otpLength = 4;
+const services = new Service();
 
-const OtpScreen = ({ navigation }: {navigation: any}) => {
+const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
 
+    const { sentOtp } = route.params;
     const [valid, setValid] = useState(false);
-    const [otp, setOTP] = useState("");
+    const [otp, setOTP] = useState(sentOtp ? sentOtp : "");
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -28,13 +32,32 @@ const OtpScreen = ({ navigation }: {navigation: any}) => {
         if (code && code.length == otpLength) {
             setIsLoading(true);
             Keyboard.dismiss();
-            setTimeout(() => {
+
+            let payload = {
+                otp: code
+            }
+            services.post(
+                routes.user.verify,
+                payload
+            ).then(async (res) => {
+                if (res && res.data) {
+                    let data = res.data;
+                    if(data.profile_status == 1){
+                        navigation.navigate('Home');
+                    }else{
+                        navigation.navigate('Register');
+                    }
+                }
+            }).catch((error) => {
+                Toast.show(error.message, Toast.LONG);
+            }).finally(() => {
                 setIsLoading(false);
-                setOTP('');
-                navigation.navigate('Register');
-            }, 2000);
+            });
+
+
+       
         } else {
-            Toast.show(`Please fill in a ${otpLength} otp`);
+            Toast.show(`Please enter verification code`);
         }
     }
 

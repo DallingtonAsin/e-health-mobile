@@ -24,14 +24,6 @@ const SignedInStackNavigator = () => {
         <Stack.Navigator>
 
             <Stack.Screen
-                name="Register"
-                component={SignupScreen}
-                options={{
-                    headerShown: false,
-                }}
-            />
-
-            <Stack.Screen
                 name="Home"
                 component={BottomTabStack}
                 options={{

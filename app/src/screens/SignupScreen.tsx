@@ -3,15 +3,17 @@ import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Sta
 import * as configs from '../configs'
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
+import Toast from 'react-native-simple-toast';
 import { PaperSelect } from 'react-native-paper-select';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate } from '../components/common/SharedHelper';
-import { AuthContext } from '../context/authContext';
+import Service from '../network/services/httpService';
+import { routes } from '../network/routes';
 
 interface IUser {
     firstName: string,
     lastName: string,
-    email: string,
+    email?: string,
     dob: string,
     gender: string,
     language: string,
@@ -20,35 +22,24 @@ interface IUser {
 }
 
 const numberOfLines = 5;
+const services = new Service();
+
+const InitialUser = {
+    firstName: '',
+    lastName:  '',
+    email:  '',
+    dob:  '',
+    gender:  '',
+    language:  '',
+    address:  '',
+    phoneNumber:  '',
+}
 
 const SignupScreen = ({ navigation }: { navigation: any }) => {
-
-    const InitialUser = {
-        firstName: '',
-        lastName:  '',
-        email:  '',
-        dob:  '',
-        gender:  '',
-        language:  '',
-        address:  '',
-        phoneNumber:  '',
-    }
 
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const { signIn } = React.useContext(AuthContext);
-
-    const [colors, setColors] = useState({
-        value: '',
-        list: [
-            { _id: '1', value: 'BLUE' },
-            { _id: '2', value: 'RED' },
-            { _id: '3', value: 'GREEN' },
-        ],
-        selectedList: [],
-        error: '',
-    });
 
     const [gender, setGender] = useState({
         value: '',
@@ -62,20 +53,61 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
 
     const submitDetails = () => {
+
+        if(!user.firstName){
+            Toast.show('Enter your first name', Toast.LONG);
+            return;
+        }
+
+        if(!user.lastName){
+            Toast.show('Enter your last name', Toast.LONG);
+            return;
+        }
+
+        if(!gender.value){
+            Toast.show('Select your gender', Toast.LONG);
+            return;
+        }
+
+        if(!user.address){
+            Toast.show('Enter your address', Toast.LONG);
+            return;
+        }
+
+        if(!user.dob){
+            Toast.show('Enter your date of birth', Toast.LONG);
+            return;
+        }
+
         setIsLoading(true);
-        setTimeout(() => {
-            signIn();
+
+        let payload = {
+            first_name: user.firstName,
+            last_name: user.lastName,
+            email: user?.email,
+            gender: gender.value,
+            address: user.address,
+            dob: user.dob
+        }
+        services.post(
+            routes.user.verify,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                if(data.profile_status == 1){
+                    navigation.navigate('Home');
+                }else{
+                    navigation.navigate('Register');
+                }
+            }
+        }).catch((error) => {
+            Toast.show(error.message, Toast.LONG);
+        }).finally(() => {
             setIsLoading(false);
-            navigation.navigate('Home');
-        }, 2000);
+        });
     }
 
-    const selectValidator = (value: any) => {
-        if (!value || value.length <= 0) {
-            return 'Please select a value.';
-        }
-        return '';
-    };
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -119,6 +151,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 error={false}
                                 style={styles.textInput}
                                 textColor={configs.colors.dark}
+                                onChangeText={text => setUser(prev => ({...prev, firstName: text}))}
                             />
                         </View>
 
@@ -132,6 +165,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={configs.colors.primary}
                                 style={styles.textInput}
                                 textColor={configs.colors.dark}
+                                onChangeText={text => setUser(prev => ({...prev, lastName: text}))}
                             />
                         </View>
 
@@ -144,21 +178,10 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={configs.colors.primary}
                                 style={styles.textInput}
                                 textColor={configs.colors.dark}
+                                onChangeText={text => setUser(prev => ({...prev, email: text}))}
                             />
                         </View>
 
-
-                        <View style={styles.viewContainer}>
-                            <Text style={styles.labelTxt}>Contact Number<Text style={styles.required}>*</Text></Text>
-                            <TextInput
-                                label="Phone Number"
-                                value={user?.phoneNumber}
-                                mode="outlined"
-                                activeOutlineColor={configs.colors.primary}
-                                style={styles.textInput}
-                                textColor={configs.colors.dark}
-                            />
-                        </View>
 
                         <View style={styles.viewContainer}>
                             <Text style={styles.labelTxt}>Address<Text style={styles.required}>*</Text></Text>
@@ -169,6 +192,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={configs.colors.primary}
                                 style={styles.textInput}
                                 textColor={configs.colors.dark}
+                                onChangeText={text => setUser(prev => ({...prev, address: text}))}
                             />
                         </View>
 
@@ -197,7 +221,6 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                     hideSearchBox={true}
                                     containerStyle={{ height: 10 }}
                                     dialogButtonLabelStyle={{ color: configs.colors.primary }}
-
                                 />
                             </View>
 
@@ -212,6 +235,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                     textColor={configs.colors.dark}
                                     onFocus={showDatePicker}
                                     showSoftInputOnFocus={false}
+                                    onChangeText={text => setUser(prev => ({...prev, dob: text}))}
                                 />
                                 <DateTimePickerModal
                                     isVisible={isDatePickerVisible}

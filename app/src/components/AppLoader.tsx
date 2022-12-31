@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import * as configs from '../configs';
-
 
 const AppLoader = () => {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.container]}>
-            <UIActivityIndicator color={configs.colors.primary} size={60} />
+            <UIActivityIndicator color={configs.colors.primary} size={60}/>
+            <Text>Please wait...</Text>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

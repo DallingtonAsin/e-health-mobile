@@ -6,8 +6,13 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { removeLeadingZeros } from '../components/common/SharedHelper';
+import Service from '../network/services/httpService';
+import { routes } from '../network/routes';
+import { storeAccessToken } from '../network/services/asyncStorageService';
 
-const SigninScreen = ({ navigation }: {navigation: any}) => {
+const services = new Service();
+
+const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
@@ -16,6 +21,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
     const [showMessage, setShowMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInput = useRef<PhoneInput>(null);
+
 
     const Signin = () => {
 
@@ -30,42 +36,62 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
             const phoneObj: any = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
             let number = phoneObj.number;
             const startsWithZero = number.startsWith("0");
-            if(startsWithZero){
+            if (startsWithZero) {
                 number = removeLeadingZeros(number);
             }
 
             const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`
             Alert.alert(
-                '', 
+                '',
                 `We will be verifying the phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
                 [
-                    {text: 'Edit', onPress: () => console.log('Edit Pressed')},
-                    {text: 'OK', onPress: async() => sendOTP() },
+                    { text: 'Edit', onPress: () => console.log('Edit Pressed') },
+                    {
+                        text: 'OK', onPress: async () => {
+                            let obj = {
+                                country_code: `+${phoneInput.current?.getCallingCode()}`,
+                                phone_number: number
+                            }
+                            sendOTP(obj)
+                        }
+                    },
                 ],
                 { cancelable: false }
-                );
-
-            // const countryIsoCode = phoneInput.current?.getCountryCode();
-            // const countryCode = phoneInput.current?.getCallingCode();
-            // console.log(`Selected phone number ${value} and formatted value ${formattedValue}`);
-            // console.log(`countryIsoCode: ${countryIsoCode} and countryCode: ${countryCode}`);
-
+            );
         } else {
             Toast.showWithGravity(`Please enter a valid phone number`, Toast.LONG, Toast.TOP);
         }
     }
 
-    const sendOTP = (phone: object = {}) => {
+    const sendOTP = (phoneObj: any) => {
         setIsLoading(true);
-        setTimeout(() => {
+        let payload = {
+            country_code: phoneObj.country_code,
+            phone_number: phoneObj.phone_number,
+            current_version: 1.2,
+        }
+
+        services.post(
+            routes.user.signup,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                await storeAccessToken(data.access_token);
+
+                navigation.navigate('OTP', {
+                    otp: data.otp
+                });
+            }
+        }).catch((error) => {
+            Toast.show(error.message, Toast.LONG);
+        }).finally(() => {
             setIsLoading(false);
-            navigation.navigate('OTP');
-        }, 2000);
+        });
     }
 
     const onChangePhoneNumber = (text: string) => {
         setValue(text);
-        // const isValid = phoneInput.current?.isValidNumber(value);
         const isValid = text && text.length >= 9 ? true : false;
         setValid(isValid);
     }
@@ -96,7 +122,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
             >
                 <View style={styles.header}>
                     <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={configs.images.logo}
-                     style={configs.styles.logo} />
+                        style={configs.styles.logo} />
                     <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
                 </View>
 
@@ -131,7 +157,7 @@ const SigninScreen = ({ navigation }: {navigation: any}) => {
                 </View>
             </KeyboardAvoidingView>
 
-            {isLoading && <AppLoader /> }
+            {isLoading && <AppLoader />}
 
         </>
     )

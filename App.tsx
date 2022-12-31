@@ -11,8 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import AuthStackNavigator from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
-import { AuthContext } from './app/src/context/authContext';
-import * as config from './app/src/configs'
+import { AxiosInstanceProvider } from './app/src/context/axiosContext';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); 
 LogBox.ignoreAllLogs();
@@ -49,7 +48,6 @@ const Section: React.FC<
 
 const App = () => {
 
-  const isDarkMode = useColorScheme() === 'dark';
   const [spinner, setSpinner] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -68,13 +66,13 @@ const App = () => {
   }), []);
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <AxiosInstanceProvider>
     <PaperProvider>
       <NavigationContainer>
          { isLoggedIn ? <SignedInStackNavigator/> : <AuthStackNavigator/> }
       </NavigationContainer>
     </PaperProvider>
-    </AuthContext.Provider>
+    </AxiosInstanceProvider>
   );
 };
 
