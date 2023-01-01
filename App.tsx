@@ -16,13 +16,13 @@ LogBox.ignoreAllLogs();
 function App() {
 
   const { state } = React.useContext(AuthContext);
-
-  if (state.isLoading) {
+console.log(`state is`, state.isAppLoading);
+  if (state.isAppLoading) {
    return(
      <AppLoader bgColor={config.colors.white}/>
    )
   }
-  
+
   return (
     <NavigationContainer>
       {!state.token

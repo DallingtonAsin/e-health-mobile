@@ -4,10 +4,12 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {useTheme} from 'react-native-paper';
 import * as configs from '../../configs'
 import HomeScreen from '../../screens/HomeScreen';
+import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
 import SpecialityListScreen from '../../screens/SpecialityListScreen';
 import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
@@ -27,7 +29,7 @@ const HomeStack = () => {
       }}
       data={[
         ({params}) => (
-          <Icon
+          <Icon5
             name="chevron-left"
             color="#E24E1B"
             size={12}
@@ -39,10 +41,10 @@ const HomeStack = () => {
           />
         ),
         ({params}) => (
-          <Icon name="flag" color="#E24E1B" size={12} onPress={() => {}} />
+          <Icon5 name="flag" color="#E24E1B" size={12} onPress={() => {}} />
         ),
         ({params}) => (
-          <Icon
+          <Icon5
             name="headphones"
             color="#E24E1B"
             size={12}
@@ -50,7 +52,7 @@ const HomeStack = () => {
           />
         ),
         ({params}) => (
-          <Icon name="heart" color="#E24E1B" size={14} onPress={() => {}} />
+          <Icon5 name="heart" color="#E24E1B" size={14} onPress={() => {}} />
         ),
       ]}
       initialExtrasVisible={false}>
@@ -79,7 +81,7 @@ const HomeStack = () => {
           component={HomeScreen}
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon
+              <Icon5
                 name="home"
                 style={{
                   fontSize: tabIconFontSize,
@@ -97,7 +99,7 @@ const HomeStack = () => {
           component={SpecialityListScreen}
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon
+              <Icon5
                 name="user-md"
                 style={{
                   fontSize: tabIconFontSize,
@@ -116,7 +118,7 @@ const HomeStack = () => {
           component={ContactUsScreen}
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon
+              <Icon5
                 name="question-circle"
                 style={{
                   fontSize: tabIconFontSize,
@@ -130,20 +132,20 @@ const HomeStack = () => {
         />
 
         <BottomTab.Screen
-          name="ProfileTabScreen"
-          component={ProfileScreen}
+          name="MoreTabScreen"
+          component={MoreItemsScreen}
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon
-                name="user-circle"
+              <Icon5
+                name="bars"
                 style={{
-                  fontSize: tabIconFontSize,
+                  fontSize: tabIconFontSize*1,
                   color: color,
                 }}
               />
             ),
             headerShown: false,
-            title: 'Profile',
+            title: 'More',
           }}
         />
 

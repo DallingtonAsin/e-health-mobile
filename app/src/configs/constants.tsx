@@ -5,6 +5,7 @@
     first_name: '',
     last_name: '',
     email: '',
+    country_code: '',
     phone_number: '',
     dob: '',
     gender: '',

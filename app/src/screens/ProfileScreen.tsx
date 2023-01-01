@@ -8,23 +8,16 @@ import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { IUser } from '../interfaces';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { formatDate } from '../components/common/SharedHelper';
 
 const ProfileScreen = () => {
 
-    const initialUser = {
-        first_name: '',
-        last_name: '',
-        address: '',
-        phone_number: '',
-        email: '',
-        dob: '',
-        gender: ''
-    }
-
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useState<IUser>(initialUser);
-    const { state, signin } = useContext(AuthContext);
+    const { state } = useContext(AuthContext);
+    const [user, setUser] = useState<IUser>(state.user);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const updateProfile = () => {
 
@@ -42,6 +35,23 @@ const ProfileScreen = () => {
         }
     }
 
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date: Date) => {
+        hideDatePicker();
+        let dob = formatDate(date);
+        setUser({
+            ...user,
+            dob: dob
+        });
+    };
+
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -51,10 +61,10 @@ const ProfileScreen = () => {
                     <Avatar.Image size={100} source={{ uri: config.images.profileImage }}>
                     </Avatar.Image>
 
-                    <Text style={[styles.usernameText]}>{state.user.first_name} {state.user.last_name}</Text>
+                    <Text style={[styles.usernameText]}>{user.first_name} {user.last_name}</Text>
                     <Text style={[styles.headerText]}>
                         <Icon5 name="map-marker-alt" size={16} color={config.colors.white} />
-                        <Text> {state.user.address} </Text>
+                        <Text> {user.address} </Text>
                     </Text>
 
                 </View>
@@ -69,87 +79,84 @@ const ProfileScreen = () => {
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>First Name</Text>
                         <TextInput
-                            // label="First Name"
                             mode='outlined'
-                            value={state.user.first_name}
+                            value={user.first_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                            onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
                         />
                     </View>
 
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Last Name</Text>
                         <TextInput
-                            // label="Last Name"
                             mode='outlined'
-                            value={state.user.last_name}
+                            value={user.last_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                        />
-                    </View>
-
-
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Contact Number</Text>
-                        <TextInput
-                            // label="First Name"
-                            mode='outlined'
-                            value={state.user.phone_number}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                            onChangeText={text => setUser(prev => ({ ...prev, last_name: text }))}
                         />
                     </View>
 
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Address</Text>
                         <TextInput
-                            // label="Address"
                             mode='outlined'
-                            value={state.user.address}
+                            value={user.address}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                            onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
                         />
                     </View>
 
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Email</Text>
                         <TextInput
-                            // label="Email"
                             mode='outlined'
-                            value={state.user.email}
+                            value={user.email}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                            onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
                         />
                     </View>
 
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Gender</Text>
                         <TextInput
-                            // label="Gender"
                             mode='outlined'
-                            value={state.user.gender}
+                            value={user.gender}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                            onChangeText={text => setUser(prev => ({ ...prev, gender: text }))}
                         />
                     </View>
 
                
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Date of Birth</Text>
+
                         <TextInput
-                            // label="Date of Birth"
-                            mode='outlined'
-                            value={state.user.dob}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                        />
+                                value={user.dob}
+                                disabled={isDisabled}
+                                mode="outlined"
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                error={!user.dob}
+                                onFocus={showDatePicker}
+                                showSoftInputOnFocus={false}
+                                onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
+                            />
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                onConfirm={handleConfirm}
+                                onCancel={hideDatePicker}
+                            />
                     </View>
 
                     <View style={styles.footer}>

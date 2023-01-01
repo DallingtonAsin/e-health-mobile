@@ -33,7 +33,8 @@ export default (reducer: any, action: any, defaultValue: any) => {
                 if (storedState) {
                     dispatch({
                         type: "hydrate",
-                        payload: storedState
+                        payload: storedState,
+                        isAppLoading: false
                     });
                 }
             }
@@ -62,6 +63,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        signout: () => {}
     });
 
     return { Context: Context, Provider: Provider };

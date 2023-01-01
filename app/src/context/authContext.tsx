@@ -23,7 +23,7 @@ const signin = (dispatch: any) => {
                 dispatch({
                     type: 'signin',
                     payload: data,
-                    isLoading: false
+                    isAppLoading: false
                 });
 
                 onSuccess(data.otp);
@@ -56,13 +56,13 @@ const verifyCode = (dispatch: any) => {
                     dispatch({
                         type: 'home',
                         payload: data,
-                        isLoading: false
+                        isAppLoading: false
                     });
                 } else {
                     dispatch({
                         type: 'signup',
                         payload: data,
-                        isLoading: false
+                        isAppLoading: false
                     });
                 }
 
@@ -91,8 +91,7 @@ const signup = (dispatch: any) => {
                 dispatch({
                     type: 'home',
                     payload: data,
-                    isLoading: false
-
+                    isAppLoading: false
                 });
 
                 onSuccess();
@@ -109,7 +108,7 @@ const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
         await removeAccessToken();
-        dispatch({ type: 'signout', isLoading: false });
+        dispatch({ type: 'signout', isAppLoading: false });
     };
 };
 
@@ -129,5 +128,5 @@ const displayErrorMessage = (error: any, onFailure: any) => {
 export const { Provider, Context, } = createDataContext(
     authReducer,
     { signin, verifyCode, signup, signout },
-    { user: initialUserState, token: '', authorization: '', isLoading: true },
+    { user: initialUserState, token: '', authorization: '', isAppLoading: false },
 );
