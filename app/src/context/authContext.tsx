@@ -2,10 +2,10 @@ import React from 'react';
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, LoginData, SignedinUser } from '../interfaces';
-import { getAccessToken, getUser, storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
+import { IUser, LoginData } from '../interfaces';
+import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
 import { authReducer } from './authReducer';
-import { initialUserState } from '../configs/constants';
+import  { initialUserState } from '../configs/constants';
 
 const services = new Service();
 
@@ -122,42 +122,8 @@ const displayErrorMessage = (error: any, onFailure: any) => {
     onFailure(message);
 }
 
-const initialLoginState: SignedinUser = {
-    ...initialUserState,
-    authorization: '',
-    token: '',
-}
-
-
-
-const [initialState, setInitialState] = React.useState<any>(initialLoginState);
-React.useEffect(() => {
-    setupInitialState();
-}, [])
-
-
-const setupInitialState = async () => {
-    try {
-        let accessToken = await getAccessToken();
-        let user = await getUser();
-        // console.log(`Access token`, accessToken);
-        setInitialState({
-            ...initialState,
-            token: accessToken
-        })
-        // setInitialState(prev => ({
-        //      ...prev, 
-        //     token: accessToken
-        //  }))
-        // console.log(`Initial state`, initialState);
-
-    } catch (err) {
-        throw err;
-    }
-}
-
 export const { Provider, Context,  } = createDataContext(
     authReducer,
     { signin, verifyCode, signup, signout },
-    initialState,
+    {user: initialUserState, token: '', authorization: ''},
 );

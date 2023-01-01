@@ -7,27 +7,15 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
-
-
-interface IUser {
-    id: number,
-    firstName: string,
-    lastName: string,
-    address: string,
-    phoneNumber: string,
-    email?: string,
-    dob: string,
-    gender: string,
-}
+import { IUser } from '../interfaces';
 
 const ProfileScreen = () => {
 
     const initialUser = {
-        id: 12,
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         address: '',
-        phoneNumber: '',
+        phone_number: '',
         email: '',
         dob: '',
         gender: ''

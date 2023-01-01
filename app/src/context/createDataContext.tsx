@@ -1,28 +1,54 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { IUser, LoginData } from '../interfaces';
-import { getAccessToken } from '../network/services/asyncStorageService';
-// import { initialLoginState } from '../configs/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default (reducer: any, action: any, defaultValue: any) => {
 
-    const Context = React.createContext({
-        state: defaultValue,
-        signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-    });
+    const storeData = async (value: any) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('access_token', jsonValue)
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    const getData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('access_token')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            throw e;
+        }
+    }
 
     const Provider = ({ children }: { children: any }) => {
 
         const [state, dispatch] = useReducer(reducer, defaultValue);
-        console.log(`Default State is`, defaultValue);
+
+        useEffect(() => {
+            async function rehydrate() {
+                const storedState = await getData()
+                if (storedState) {
+                    dispatch({
+                        type: "hydrate",
+                        payload: storedState
+                    });
+                }
+            }
+            rehydrate()
+        }, []);
+
+        useEffect(() => {
+            storeData(state);
+        }, [state])
 
         const boundActions: any = {};
 
         for (let key in action) {
             boundActions[key] = action[key](dispatch);
         }
-        
 
         return (
             <Context.Provider value={{ state, ...boundActions }}>
@@ -30,6 +56,13 @@ export default (reducer: any, action: any, defaultValue: any) => {
             </Context.Provider>
         )
     };
+
+    const Context = React.createContext({
+        state: defaultValue,
+        signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+    });
 
     return { Context: Context, Provider: Provider };
 };
