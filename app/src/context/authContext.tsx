@@ -1,17 +1,16 @@
-import React from 'react';
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
 import { authReducer } from './authReducer';
-import  { initialUserState } from '../configs/constants';
+import { initialUserState } from '../configs/constants';
 
 const services = new Service();
 
 const signin = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-      
+
         services.post(
             routes.user.signin,
             payload
@@ -23,7 +22,8 @@ const signin = (dispatch: any) => {
 
                 dispatch({
                     type: 'signin',
-                    payload: data
+                    payload: data,
+                    isLoading: false
                 });
 
                 onSuccess(data.otp);
@@ -55,12 +55,14 @@ const verifyCode = (dispatch: any) => {
                     await storeUser(data);
                     dispatch({
                         type: 'home',
-                        payload: data
+                        payload: data,
+                        isLoading: false
                     });
                 } else {
                     dispatch({
                         type: 'signup',
-                        payload: data
+                        payload: data,
+                        isLoading: false
                     });
                 }
 
@@ -88,7 +90,9 @@ const signup = (dispatch: any) => {
 
                 dispatch({
                     type: 'home',
-                    payload: data
+                    payload: data,
+                    isLoading: false
+
                 });
 
                 onSuccess();
@@ -102,10 +106,10 @@ const signup = (dispatch: any) => {
 };
 
 const signout = (dispatch: any) => {
-    return async() => {
+    return async () => {
         await removeAuthToken();
         await removeAccessToken();
-        dispatch({ type: 'signout' });
+        dispatch({ type: 'signout', isLoading: false });
     };
 };
 
@@ -113,17 +117,17 @@ const displayErrorMessage = (error: any, onFailure: any) => {
     let message;
     if (error && error.response) {
         message = error.response.data.message;
-    } else if(error.message){
+    } else if (error.message) {
         message = String(error.message);
-    }else{
-       message = String(error);
+    } else {
+        message = String(error);
     }
 
     onFailure(message);
 }
 
-export const { Provider, Context,  } = createDataContext(
+export const { Provider, Context, } = createDataContext(
     authReducer,
     { signin, verifyCode, signup, signout },
-    {user: initialUserState, token: '', authorization: ''},
+    { user: initialUserState, token: '', authorization: '', isLoading: true },
 );
