@@ -7,6 +7,8 @@ const routes = {
     signin: 'user/login',
     verify: 'user/verify',
     register: 'user/register',
+    updateProfile: 'user/profile/update',
+
    }
 
 }

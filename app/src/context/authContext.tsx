@@ -5,6 +5,7 @@ import { IUser, LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
 import { authReducer } from './authReducer';
 import { initialUserState } from '../configs/constants';
+import { displayErrorMessage } from '../components/common/SharedHelper';
 
 const services = new Service();
 
@@ -22,8 +23,7 @@ const signin = (dispatch: any) => {
 
                 dispatch({
                     type: 'signin',
-                    payload: data,
-                    isLoading: false
+                    payload: data
                 });
 
                 onSuccess(data.otp);
@@ -56,13 +56,12 @@ const verifyCode = (dispatch: any) => {
                     dispatch({
                         type: 'home',
                         payload: data,
-                        isLoading: false
+                        isAppLoading: false
                     });
                 } else {
                     dispatch({
                         type: 'signup',
-                        payload: data,
-                        isLoading: false
+                        payload: data
                     });
                 }
 
@@ -91,11 +90,41 @@ const signup = (dispatch: any) => {
                 dispatch({
                     type: 'home',
                     payload: data,
-                    isLoading: false
-
+                    isAppLoading: false
                 });
 
                 onSuccess();
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const updateProfile = (dispatch: any) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        console.log(`update profile payload`, payload);
+        services.post(
+            routes.user.updateProfile,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                
+                let data = res.data;
+                let user = data.user;
+                console.log('DATA AFTER UPDATING PROFILE', user);
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+
+                dispatch({
+                    type: 'home',
+                    payload: user,
+                    isAppLoading: false
+                });
+
+                onSuccess(res.data.message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -109,25 +138,12 @@ const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
         await removeAccessToken();
-        dispatch({ type: 'signout', isLoading: false });
+        dispatch({ type: 'signout', isAppLoading: false });
     };
 };
 
-const displayErrorMessage = (error: any, onFailure: any) => {
-    let message;
-    if (error && error.response) {
-        message = error.response.data.message;
-    } else if (error.message) {
-        message = String(error.message);
-    } else {
-        message = String(error);
-    }
-
-    onFailure(message);
-}
-
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, signout },
-    { user: initialUserState, token: '', authorization: '', isLoading: true },
+    { signin, verifyCode, signup, updateProfile, signout },
+    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

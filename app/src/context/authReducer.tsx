@@ -4,32 +4,29 @@ const authReducer = (state: any, action: any) => {
             return {
                 user: null,
                 authorization: action.payload.access_token,
-                token: null,
-                isLoading: true
+                token: null
             };
         case 'verify':
             return {
                 user: null,
                 authorization: action.payload.access_token,
-                token: null,
-                isLoading: true
+                token: null
             };
         case 'signup':
             return {
                 user: null,
                 authorization: action.payload.access_token,
-                token: null,
-                isLoading: true
+                token: null
             };
         case 'home':
             return {
                 user: action.payload,
                 authorization: action.payload.access_token,
                 token: action.payload.access_token,
-                isLoading: true
+                isAppLoading:  false
             };
         case 'signout':
-            return { user: null, authorization: null, token: null, isLoading: false };
+            return { user: null, authorization: null, token: null };
         case "hydrate":
             return action.payload
         default:

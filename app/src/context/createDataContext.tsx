@@ -22,6 +22,15 @@ export default (reducer: any, action: any, defaultValue: any) => {
             throw e;
         }
     }
+    
+    const Context = React.createContext({
+        state: defaultValue,
+        signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        signout: () => {},
+        updateProfile: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+    });
 
     const Provider = ({ children }: { children: any }) => {
 
@@ -33,7 +42,8 @@ export default (reducer: any, action: any, defaultValue: any) => {
                 if (storedState) {
                     dispatch({
                         type: "hydrate",
-                        payload: storedState
+                        payload: storedState,
+                        isAppLoading: false
                     });
                 }
             }
@@ -57,12 +67,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         )
     };
 
-    const Context = React.createContext({
-        state: defaultValue,
-        signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-    });
+  
 
     return { Context: Context, Provider: Provider };
 };
