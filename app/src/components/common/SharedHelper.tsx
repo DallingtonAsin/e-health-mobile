@@ -41,10 +41,24 @@ const displayMessage = (message: any) => {
   Toast.show(message, Toast.LONG);
 }
 
+const displayErrorMessage = (error: any, onFailure: any) => {
+  let message;
+  if (error && error.response) {
+      message = error.response.data.message;
+  } else if (error.message) {
+      message = String(error.message);
+  } else {
+      message = String(error);
+  }
+
+  onFailure(message);
+}
+
 
 export {
    removeLeadingZeros,
    getGreeting,
    displayMessage,
-   formatDate
+   formatDate,
+   displayErrorMessage
 }

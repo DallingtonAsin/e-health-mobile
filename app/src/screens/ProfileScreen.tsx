@@ -9,30 +9,71 @@ import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { IUser } from '../interfaces';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate } from '../components/common/SharedHelper';
+import { formatDate, displayMessage } from '../components/common/SharedHelper';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }: {navigation: any}) => {
 
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const { state } = useContext(AuthContext);
+    const { state, updateProfile } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const updateProfile = () => {
+    const submitProfile = () => {
 
         if (!isDisabled) {
+           
+            if (!user.first_name) {
+                Toast.show('Enter your first name', Toast.LONG);
+                return;
+            }
+    
+            if (!user.last_name) {
+                Toast.show('Enter your last name', Toast.LONG);
+                return;
+            }
+    
+            if (!user.address) {
+                Toast.show('Enter your address', Toast.LONG);
+                return;
+            }
+    
+            if (!user.gender) {
+                Toast.show('Select your gender', Toast.LONG);
+                return;
+            }
+    
+            if (!user.dob) {
+                Toast.show('Enter your date of birth', Toast.LONG);
+                return;
+            }
+    
             setIsLoading(true);
 
-            setTimeout(() => {
-                setIsLoading(false);
-                Toast.show(`Updating your information...`);
-                setIsDisabled(!isDisabled);
-            }, 3000);
+            let payload: IUser = {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user?.email,
+                address: user.address,
+                gender: user.gender,
+                dob: user.dob
+            }
+    
+            updateProfile({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+      
 
         } else {
             setIsDisabled(!isDisabled);
         }
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
+
+    const navigateMethod = async (message: string) => {
+        displayMessage(message);
+        navigation.navigate('Profile');
     }
 
     const showDatePicker = () => {
@@ -160,7 +201,7 @@ const ProfileScreen = () => {
                     </View>
 
                     <View style={styles.footer}>
-                        <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => updateProfile()}>
+                        <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => submitProfile()}>
                             <Text style={config.styles.btnText}>
                                 {isDisabled ? 'Edit Profile' : 'Submit'}
                             </Text>
@@ -208,7 +249,7 @@ const styles = StyleSheet.create({
     },
 
     infoText: {
-        fontSize: 18,
+        fontSize: config.fonts.extraLarge,
         color: config.colors.dark,
         opacity: 0.9
     },

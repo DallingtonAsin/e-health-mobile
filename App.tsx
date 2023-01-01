@@ -16,11 +16,11 @@ LogBox.ignoreAllLogs();
 function App() {
 
   const { state } = React.useContext(AuthContext);
-console.log(`state is`, state.isAppLoading);
+  console.log(`state is`, state.isAppLoading);
   if (state.isAppLoading) {
-   return(
-     <AppLoader bgColor={config.colors.white}/>
-   )
+    return (
+      <AppLoader bgColor={config.colors.white} />
+    )
   }
 
   return (

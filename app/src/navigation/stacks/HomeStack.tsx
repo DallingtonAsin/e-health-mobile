@@ -4,57 +4,29 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import {useTheme} from 'react-native-paper';
 import * as configs from '../../configs'
 import HomeScreen from '../../screens/HomeScreen';
 import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
 import SpecialityListScreen from '../../screens/SpecialityListScreen';
+import Icon5 from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
 import SplashScreen from '../../screens/SplashScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
+import {useTheme} from 'react-native-paper';
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 22;
 
 const HomeStack = () => {
-  const {colors} = useTheme();
 
   return (
     <MultiBarProvider
       overlayProps={{
         expandingMode: 'staging',
       }}
-      data={[
-        ({params}) => (
-          <Icon5
-            name="chevron-left"
-            color="#E24E1B"
-            size={12}
-            onPress={() => {
-              if (params.canGoBack()) {
-                params.goBack();
-              }
-            }}
-          />
-        ),
-        ({params}) => (
-          <Icon5 name="flag" color="#E24E1B" size={12} onPress={() => {}} />
-        ),
-        ({params}) => (
-          <Icon5
-            name="headphones"
-            color="#E24E1B"
-            size={12}
-            onPress={() => {}}
-          />
-        ),
-        ({params}) => (
-          <Icon5 name="heart" color="#E24E1B" size={14} onPress={() => {}} />
-        ),
-      ]}
+      data={[]}
       initialExtrasVisible={false}>
       <BottomTab.Navigator
         tabBar={props => (
@@ -91,6 +63,9 @@ const HomeStack = () => {
             ),
             headerShown: false,
             title: 'Home',
+            tabBarLabelStyle: {
+              fontSize: configs.fonts.normal
+           }
           }}
         />
 
@@ -109,6 +84,9 @@ const HomeStack = () => {
             ),
             headerShown: false,
             title: 'Doctors',
+            tabBarLabelStyle: {
+              fontSize: configs.fonts.normal
+           }
           }}
         />
 
@@ -128,24 +106,32 @@ const HomeStack = () => {
             ),
             headerShown: false,
             title: 'Help',
+            tabBarLabelStyle: {
+              fontSize: configs.fonts.normal
+           }
           }}
         />
 
         <BottomTab.Screen
           name="MoreTabScreen"
           component={MoreItemsScreen}
+          
           options={{
             tabBarIcon: ({color, size}) => (
               <Icon5
                 name="bars"
                 style={{
-                  fontSize: tabIconFontSize*1,
+                  fontSize: tabIconFontSize,
                   color: color,
                 }}
               />
             ),
             headerShown: false,
             title: 'More',
+            tabBarLabelStyle: {
+               fontSize: configs.fonts.normal
+            }
+          
           }}
         />
 

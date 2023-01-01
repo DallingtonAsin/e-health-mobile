@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 
     itemTitle: {
         color: '#000',
-        fontSize: 13,
+        fontSize: configs.fonts.normal,
         left: 12,
     },
 
