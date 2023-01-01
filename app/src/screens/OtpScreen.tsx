@@ -6,7 +6,8 @@ import { Avatar } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
-
+import { displayMessage } from '../components/common/SharedHelper';
+import { storeAccessToken } from '../network/services/asyncStorageService';
 
 const otpLength = 4;
 
@@ -19,7 +20,6 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const {state, verifyCode} = useContext(AuthContext);
 
-
     const onChangeOTP = (code: string) => {
         setOTP(code);
     }
@@ -29,13 +29,22 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
             setIsLoading(true);
             Keyboard.dismiss();
 
-            verifyCode(code);
-            setIsLoading(false);
-
-          
+            verifyCode({code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading});
         } else {
             Toast.show(`Please enter verification code`);
         }
+    }
+
+    const navigateMethod = async(data: any) => {
+        if(data.profile_status == 1){
+            navigation.navigate('Home');
+        }else{
+            navigation.navigate('Register');
+        }
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
     }
 
     useEffect(() => {

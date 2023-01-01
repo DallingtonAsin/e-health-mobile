@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { API_URL } from '@env';
-import { getAccessToken } from './asyncStorageService';
+import { getAuthToken } from './asyncStorageService';
 
-// const defaultHeaders = {
-//   "Accept": "application/json",
-//   "Content-Type": "application/json"
-// }
 
 class Service {
 
@@ -47,7 +43,7 @@ class Service {
   getHeader = async (isMultipart = false) => {
     try {
 
-      const bearerToken = await getAccessToken();
+      const bearerToken = await getAuthToken();
       const headers = {
         headers: {
           'Accept': 'application/json',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -15,6 +15,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
+import { Context as AuthContext } from '../context/authContext';
 
 const iconSize = 40;
 
@@ -24,15 +25,9 @@ interface IUser{
 }
 
 const HomeScreen = ({ navigation }: {navigation: any}) => {
-    const initialUser = {
-        firstName: 'Dr. Grace',
-        lastName: 'Kaisa'
-    }
+   
+    const { state } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>();
-
-    useEffect(() => {
-        setUser(initialUser);
-    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -63,7 +58,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                         <View style={{ left: 20 }}>
-                            <Text style={styles.greeting}>{getGreeting()} {user?.firstName}</Text>
+                            <Text style={styles.greeting}>{getGreeting()} {state.first_name}</Text>
                             <Text style={styles.amazing}>Today is amazing!</Text>
                         </View>
                     </View>

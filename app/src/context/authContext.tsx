@@ -2,52 +2,54 @@ import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
-import { storeAccessToken } from '../network/services/asyncStorageService';
+import { storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
 
 const services = new Service();
 
 const authReducer = (state: any, action: any) => {
     switch (action.type) {
-        case 'signout':
-            return { token: null };
         case 'signin':
             return {
                 ...action.payload,
-                authorization: action.payload.authorization,
-                token: null,
-                isLoading: false,
+                authorization: action.payload.access_token,
+                token: null
             };
         case 'verify':
             return {
                 ...action.payload,
                 authorization: action.payload.access_token,
-                token: action.payload.access_token,
-                isLoading: false,
+                token: null
             };
         case 'signup':
             return {
                 ...action.payload,
-                token: action.payload.access_token,
-                isLoading: false,
+                authorization: action.payload.access_token,
+                token: null,
             };
+        case 'home':
+            return {
+                ...action.payload,
+                authorization: action.payload.access_token,
+                token: action.payload.access_token,
+            };
+        case 'signout':
+            return { authorization: null, token: null };
         default:
             return state;
     }
 };
 
 const signin = (dispatch: any) => {
-    return ({payload, onSuccess, onFailure, onCompletion}:{payload:any, onSuccess:any,onFailure:any, onCompletion:any}) => {
-        console.log(`Payload`, payload);
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
+      
         services.post(
             routes.user.signin,
             payload
         ).then(async (res) => {
-            // console.log('Response', res);
-
             if (res && res.data) {
 
                 let data = res.data;
-                await storeAccessToken(res.data.authorization);
+                await storeAuthToken(data.access_token);
 
                 dispatch({
                     type: 'signin',
@@ -57,8 +59,7 @@ const signin = (dispatch: any) => {
                 onSuccess(data.otp);
             }
         }).catch((error) => {
-            console.log('Error', error);
-            onFailure();
+            displayErrorMessage(error, onFailure);
         }).finally(() => {
             onCompletion();
         });
@@ -67,54 +68,63 @@ const signin = (dispatch: any) => {
 
 
 const verifyCode = (dispatch: any) => {
-    return (code: string) => {
+    return ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
             routes.user.verify,
             { otp: code }
         ).then(async (res) => {
-            if (res && res.data) {
-                let data = res.data;
-                await storeAccessToken(res.data.access_token);
-                dispatch({
-                    type: 'signup',
-                    payload: data
-                });
-            }
-        }).catch((error) => {
-            console.log(`Error`, error);
-        }).finally(() => {
 
-        });
-    };
-};
-
-const signup = (dispatch: any) => {
-    return (payload: IUser) => {
-        services.post(
-            routes.user.register,
-            payload
-        ).then(async (res) => {
             if (res && res.data) {
+
                 let data = res.data;
-                await storeAccessToken(res.data.access_token);
+                let access_token = data.access_token;
+                await storeAuthToken(access_token);
+
                 if (data.profile_status == 1) {
+                    await storeAccessToken(access_token);
                     dispatch({
-                        type: 'signup',
+                        type: 'home',
                         payload: data
                     });
-                    // navigation.navigate('Home');
                 } else {
-                    // navigation.navigate('Register');
                     dispatch({
                         type: 'signup',
                         payload: data
                     });
                 }
+
+                onSuccess(data);
             }
         }).catch((error) => {
-            throw error;
+            displayErrorMessage(error, onFailure);
         }).finally(() => {
-            // setIsLoading(false);
+            onCompletion();
+        });
+    };
+};
+
+const signup = (dispatch: any) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.user.register,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                await storeAccessToken(data.access_token);
+
+                dispatch({
+                    type: 'home',
+                    payload: data
+                });
+
+                onSuccess();
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
         });
     };
 };
@@ -124,6 +134,19 @@ const signout = (dispatch: any) => {
         dispatch({ type: 'signout' });
     };
 };
+
+const displayErrorMessage = (error: any, onFailure: any) => {
+    let message;
+    if (error && error.response) {
+        message = error.response.data.message;
+    } else if(error.message){
+        message = String(error.message);
+    }else{
+       message = String(error);
+    }
+
+    onFailure(message);
+}
 
 export const { Provider, Context } = createDataContext(
     authReducer,

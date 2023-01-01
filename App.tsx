@@ -52,7 +52,7 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   const {state} = React.useContext(AuthContext);
-  console.log(state);
+ 
   return (
     <NavigationContainer>
       <Stack.Navigator>

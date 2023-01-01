@@ -24,7 +24,6 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const phoneInput = useRef<PhoneInput>(null);
     const { state, signin } = useContext(AuthContext);
 
-
     const Signin = () => {
 
         Keyboard.dismiss();
@@ -75,7 +74,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             current_version: '1.2',
         }
 
-        signin({payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: changeLoadingState});
+        signin({payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading});
     }
 
     const navigateMethod = (code: string) => {
@@ -84,7 +83,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         })
     }
 
-    const changeLoadingState = () => {
+    const stopLoading = () => {
         setIsLoading(!isLoading);
     }
 
