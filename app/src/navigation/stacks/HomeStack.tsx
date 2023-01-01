@@ -17,7 +17,7 @@ import ProfileScreen from '../../screens/ProfileScreen';
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 22;
 
-const BottomTabStack = () => {
+const HomeStack = () => {
   const {colors} = useTheme();
 
   return (
@@ -152,4 +152,4 @@ const BottomTabStack = () => {
     </MultiBarProvider>
   );
 };
-export default BottomTabStack;
+export default HomeStack;

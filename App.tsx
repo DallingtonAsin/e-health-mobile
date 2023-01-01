@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, type PropsWithChildren } from 'react';
+import React, { useState, useContext, useEffect, type PropsWithChildren } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,9 +9,11 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
-import AuthStackNavigator from "./app/src/navigation/stacks/AuthStackNavigator";
+import AuthFlow from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
-import { AxiosInstanceProvider } from './app/src/context/axiosContext';
+import { Provider as AuthProvider } from './app/src/context/authContext';
+import { Context as AuthContext } from './app/src/context/authContext';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']); 
 LogBox.ignoreAllLogs();
@@ -46,33 +48,39 @@ const Section: React.FC<
   );
 };
 
-const App = () => {
+const Stack = createNativeStackNavigator();
 
-  const [spinner, setSpinner] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setInterval(() => {
-      setSpinner(!spinner);
-    }, 3000);
-  }, []);
-
-  const authContext = useMemo(() => ({
-
-     signIn:  () => {
-         setIsLoggedIn(true);
-     }
-
-  }), []);
-
+function App() {
+  const {state} = React.useContext(AuthContext);
+  console.log(state);
   return (
-    <AxiosInstanceProvider>
-    <PaperProvider>
-      <NavigationContainer>
-         { isLoggedIn ? <SignedInStackNavigator/> : <AuthStackNavigator/> }
-      </NavigationContainer>
-    </PaperProvider>
-    </AxiosInstanceProvider>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {state.token === null ? (
+          <>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Auth"
+              component={AuthFlow}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="SignedIn"
+            component={SignedInStackNavigator}
+          />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   );
 };
 
@@ -94,5 +102,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default App;

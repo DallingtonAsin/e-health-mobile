@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Keyboard, Dimensions, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard, KeyboardAvoidingView } from 'react-native';
 import * as configs from '../configs';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
-import Service from '../network/services/httpService';
-import { routes } from '../network/routes';
+import { Context as AuthContext } from '../context/authContext';
 
 
-const window = Dimensions.get('window');
 const otpLength = 4;
-const services = new Service();
 
 const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
 
@@ -20,6 +17,7 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
     const [otp, setOTP] = useState(sentOtp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const {state, verifyCode} = useContext(AuthContext);
 
 
     const onChangeOTP = (code: string) => {
@@ -31,29 +29,10 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
             setIsLoading(true);
             Keyboard.dismiss();
 
-            let payload = {
-                otp: code
-            }
-            services.post(
-                routes.user.verify,
-                payload
-            ).then(async (res) => {
-                if (res && res.data) {
-                    let data = res.data;
-                    if(data.profile_status == 1){
-                        navigation.navigate('Home');
-                    }else{
-                        navigation.navigate('Register');
-                    }
-                }
-            }).catch((error) => {
-                Toast.show(error.message, Toast.LONG);
-            }).finally(() => {
-                setIsLoading(false);
-            });
+            verifyCode(code);
+            setIsLoading(false);
 
-
-       
+          
         } else {
             Toast.show(`Please enter verification code`);
         }

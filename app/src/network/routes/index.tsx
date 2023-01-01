@@ -4,7 +4,7 @@ const routes = {
 
    user: {
 
-    signup: 'user/signup',
+    signin: 'user/login',
     verify: 'user/verify',
     register: 'user/register',
    }

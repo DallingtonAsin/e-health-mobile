@@ -1,4 +1,4 @@
-
+import Toast from 'react-native-simple-toast';
 
 const removeLeadingZeros = (number: string) => {
   if (number) {
@@ -37,9 +37,14 @@ const formatDate = (date: Date) => {
   return formattedDate;
 }
 
+const displayMessage = (message: any) => {
+  Toast.show(message, Toast.LONG);
+}
+
 
 export {
    removeLeadingZeros,
    getGreeting,
+   displayMessage,
    formatDate
 }

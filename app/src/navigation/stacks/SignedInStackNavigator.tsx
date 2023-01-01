@@ -1,6 +1,6 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import BottomTabStack from "./BottomTabStack";
+import HomeStack from "./HomeStack";
 import * as configs from '../../configs';
 import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
@@ -25,7 +25,7 @@ const SignedInStackNavigator = () => {
 
             <Stack.Screen
                 name="Home"
-                component={BottomTabStack}
+                component={HomeStack}
                 options={{
                     headerShown: false,
                 }}

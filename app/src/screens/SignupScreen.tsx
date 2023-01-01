@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import * as configs from '../configs'
 import { TextInput } from 'react-native-paper';
@@ -7,27 +7,17 @@ import Toast from 'react-native-simple-toast';
 import { PaperSelect } from 'react-native-paper-select';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate } from '../components/common/SharedHelper';
-import Service from '../network/services/httpService';
-import { routes } from '../network/routes';
+import { Context as AuthContext } from '../context/authContext';
+import { IUser } from '../interfaces';
 
-interface IUser {
-    firstName: string,
-    lastName: string,
-    email?: string,
-    dob: string,
-    gender: string,
-    language: string,
-    address: string,
-    phoneNumber: string,
-}
 
 const numberOfLines = 5;
 
 const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const InitialUser = {
-        firstName: '',
-        lastName:  '',
+        first_name: '',
+        last_name:  '',
         email:  '',
         dob:  '',
         gender:  '',
@@ -39,7 +29,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const services = new Service();
+    const {state, signup} = useContext(AuthContext);
 
     const [gender, setGender] = useState({
         value: '',
@@ -54,12 +44,12 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const submitDetails = () => {
 
-        if(!user.firstName){
+        if(!user.first_name){
             Toast.show('Enter your first name', Toast.LONG);
             return;
         }
 
-        if(!user.lastName){
+        if(!user.last_name){
             Toast.show('Enter your last name', Toast.LONG);
             return;
         }
@@ -81,33 +71,18 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
         setIsLoading(true);
 
-        let payload = {
-            first_name: user.firstName,
-            last_name: user.lastName,
+        let payload: IUser = {
+            first_name: user.first_name,
+            last_name: user.last_name,
             email: user?.email,
             gender: gender.value,
             address: user.address,
             dob: user.dob
         }
      
-        services.post(
-            routes.user.register,
-            payload
-        ).then(async (res) => {
-            if (res && res.data) {
-                let data = res.data;
-                if(data.profile_status == 1){
-                    navigation.navigate('Home');
-                }else{
-                    navigation.navigate('Register');
-                }
-            }
-        }).catch((error) => {
-            console.log(`Err`, error);
-            Toast.show(error.message, Toast.LONG);
-        }).finally(() => {
-            setIsLoading(false);
-        });
+        signup(payload);
+        setIsLoading(false);
+       
     }
 
     const showDatePicker = () => {
@@ -145,15 +120,15 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
                         <TextInput
                             label="First Name"
-                            value={user.firstName}
+                            value={user.first_name}
                             mode="outlined"
                             dense={false}
                             activeOutlineColor={configs.colors.primary}
                             numberOfLines={numberOfLines}
-                            error={!user.firstName}
+                            error={!user.first_name}
                             style={styles.textInput}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser(prev => ({...prev, firstName: text}))}
+                            onChangeText={text => setUser(prev => ({...prev, first_name: text}))}
                           
                      />
                     </View>
@@ -163,13 +138,13 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={styles.labelTxt}>Last Name<Text style={styles.required}>*</Text></Text>
                         <TextInput
                             label="Last Name"
-                            value={user.lastName}
+                            value={user.last_name}
                             mode="outlined"
                             activeOutlineColor={configs.colors.primary}
                             style={styles.textInput}
-                            error={!user.lastName}
+                            error={!user.last_name}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser({...user, lastName: text})}
+                            onChangeText={text => setUser({...user, last_name: text})}
                         />
                     </View>
 

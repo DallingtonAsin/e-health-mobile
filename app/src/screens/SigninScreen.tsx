@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import * as configs from '../configs';
 import PhoneInput from "react-native-phone-number-input";
@@ -7,8 +7,9 @@ import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { removeLeadingZeros } from '../components/common/SharedHelper';
 import Service from '../network/services/httpService';
-import { routes } from '../network/routes';
-import { storeAccessToken } from '../network/services/asyncStorageService';
+import { Context as AuthContext } from '../context/authContext';
+import { LoginData } from '../interfaces';
+import { displayMessage } from '../components/common/SharedHelper';
 
 const services = new Service();
 
@@ -21,6 +22,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const [showMessage, setShowMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInput = useRef<PhoneInput>(null);
+    const { state, signin } = useContext(AuthContext);
 
 
     const Signin = () => {
@@ -52,7 +54,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                                 country_code: `+${phoneInput.current?.getCallingCode()}`,
                                 phone_number: number
                             }
-                            sendOTP(obj)
+                            sendVerificationCode(obj)
                         }
                     },
                 ],
@@ -63,33 +65,30 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const sendOTP = (phoneObj: any) => {
+    const sendVerificationCode = (phoneObj: any) => {
+
         setIsLoading(true);
-        let payload = {
+
+        let payload: LoginData = {
             country_code: phoneObj.country_code,
             phone_number: phoneObj.phone_number,
-            current_version: 1.2,
+            current_version: '1.2',
         }
 
-        services.post(
-            routes.user.signup,
-            payload
-        ).then(async (res) => {
-            if (res && res.data) {
-                let data = res.data;
-                await storeAccessToken(data.access_token);
-
-                navigation.navigate('OTP', {
-                    sentOtp: data.otp
-                });
-            }
-        }).catch((error) => {
-            Toast.show(error.message, Toast.LONG);
-        }).finally(() => {
-            setIsLoading(false);
-        });
+        signin({payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: changeLoadingState});
     }
 
+    const navigateMethod = (code: string) => {
+        navigation.navigate('OTP', {
+            sentOtp: code
+        })
+    }
+
+    const changeLoadingState = () => {
+        setIsLoading(!isLoading);
+    }
+
+    
     const onChangePhoneNumber = (text: string) => {
         setValue(text);
         const isValid = text && text.length >= 9 ? true : false;

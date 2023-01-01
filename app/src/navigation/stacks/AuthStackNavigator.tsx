@@ -7,14 +7,14 @@ import SigninScreen from "../../screens/SigninScreen";
 import OtpScreen from "../../screens/OtpScreen";
 import SignupScreen from "../../screens/SignupScreen";
 
-const Stack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
 
-const AuthStackNavigator = () => {
+const AuthFlow = () => {
 
     return (
-                <Stack.Navigator>
+                <AuthStack.Navigator>
 
-                    {/* <Stack.Screen
+                    <AuthStack.Screen
                         name="SplashScreen"
                         component={SplashScreen}
                         options={{
@@ -22,7 +22,7 @@ const AuthStackNavigator = () => {
                         }}
                     />
 
-                    <Stack.Screen
+                    <AuthStack.Screen
                         name="Signin"
                         component={SigninScreen}
                         options={{
@@ -30,7 +30,7 @@ const AuthStackNavigator = () => {
                         }}
                     /> 
 
-                     <Stack.Screen
+                     <AuthStack.Screen
                         name="OTP"
                         component={OtpScreen}
                         options={
@@ -48,9 +48,9 @@ const AuthStackNavigator = () => {
                                 header: (props) => (<CustomStackHeader title="Enter verification code" />)
 
                             }}
-                    /> */}
+                    />
 
-                    <Stack.Screen
+                    <AuthStack.Screen
                         name="Register"
                         component={SignupScreen}
                         options={{
@@ -58,8 +58,8 @@ const AuthStackNavigator = () => {
                         }}
                     />
 
-                </Stack.Navigator>
+                </AuthStack.Navigator>
     )
 }
 
-export default AuthStackNavigator;
+export default AuthFlow;
