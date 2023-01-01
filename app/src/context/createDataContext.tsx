@@ -7,6 +7,7 @@ export default ( reducer: any , action: any, defaultValue: any ) => {
         first_name: '',
         last_name: '',
         email: '',
+        phone_number: '',
         dob: '',
         gender: '',
         address: '',

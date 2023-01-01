@@ -8,7 +8,7 @@ import {
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as AppProvider } from 'react-native-paper';
 import AuthFlow from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
 import { Provider as AuthProvider } from './app/src/context/authContext';
@@ -67,7 +67,7 @@ function App() {
         ) : (
           <Stack.Screen
             options={{headerShown: false}}
-            name="SignedIn"
+            name="Home"
             component={SignedInStackNavigator}
           />
         )}
@@ -79,7 +79,9 @@ function App() {
 export default () => {
   return (
     <AuthProvider>
-      <App />
+      <AppProvider>
+        <App />
+      </AppProvider>
     </AuthProvider>
   );
 };

@@ -6,12 +6,10 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { removeLeadingZeros } from '../components/common/SharedHelper';
-import Service from '../network/services/httpService';
 import { Context as AuthContext } from '../context/authContext';
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 
-const services = new Service();
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
 
@@ -78,13 +76,15 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const navigateMethod = (code: string) => {
+        setValue("");
+        setFormattedValue("")
         navigation.navigate('OTP', {
             sentOtp: code
         })
     }
 
     const stopLoading = () => {
-        setIsLoading(!isLoading);
+        setIsLoading(false);
     }
 
     

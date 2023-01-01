@@ -24,7 +24,7 @@ const SignedInStackNavigator = () => {
         <Stack.Navigator>
 
             <Stack.Screen
-                name="Home"
+                name="HomeScreen"
                 component={HomeStack}
                 options={{
                     headerShown: false,

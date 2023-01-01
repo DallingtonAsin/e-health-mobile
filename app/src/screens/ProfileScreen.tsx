@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import * as config from '../configs'
@@ -6,6 +6,7 @@ import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
+import { Context as AuthContext } from '../context/authContext';
 
 
 interface IUser {
@@ -17,26 +18,25 @@ interface IUser {
     email?: string,
     dob: string,
     gender: string,
-    language: string,
 }
 
 const ProfileScreen = () => {
 
     const initialUser = {
         id: 12,
-        firstName: 'Dr. Grace',
-        lastName: 'Kaisa',
-        address: 'Jinja, Uganda',
-        phoneNumber: '+256772409074',
-        email: 'gmtkaisa1967@gmail.com',
-        dob: '1994-11-08',
-        gender: 'Female',
-        language: 'English',
+        firstName: '',
+        lastName: '',
+        address: '',
+        phoneNumber: '',
+        email: '',
+        dob: '',
+        gender: ''
     }
 
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState<IUser>(initialUser);
+    const { state, signin } = useContext(AuthContext);
 
     const updateProfile = () => {
 
@@ -63,10 +63,10 @@ const ProfileScreen = () => {
                     <Avatar.Image size={100} source={{ uri: config.images.profileImage }}>
                     </Avatar.Image>
 
-                    <Text style={[styles.usernameText]}>{user.firstName} {user.lastName}</Text>
+                    <Text style={[styles.usernameText]}>{state.first_name} {state.last_name}</Text>
                     <Text style={[styles.headerText]}>
-                        <Icon5 name="map-marker-alt" size={20} color={config.colors.white} />
-                        <Text> {user.address} </Text>
+                        <Icon5 name="map-marker-alt" size={16} color={config.colors.white} />
+                        <Text> {state.address} </Text>
                     </Text>
 
                 </View>
@@ -83,7 +83,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="First Name"
                             mode='outlined'
-                            value={user?.firstName}
+                            value={state.first_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -95,7 +95,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Last Name"
                             mode='outlined'
-                            value={user?.lastName}
+                            value={state.last_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -108,7 +108,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="First Name"
                             mode='outlined'
-                            value={user?.phoneNumber}
+                            value={state.phone_number}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -120,7 +120,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Address"
                             mode='outlined'
-                            value={user?.address}
+                            value={state.address}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -132,7 +132,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Email"
                             mode='outlined'
-                            value={user?.email}
+                            value={state.email}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -144,38 +144,27 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Gender"
                             mode='outlined'
-                            value={user?.gender}
+                            value={state.gender}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
                         />
                     </View>
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Language</Text>
-                        <TextInput
-                            // label="Language"
-                            mode='outlined'
-                            value={user?.language}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                        />
-                    </View>
-
+               
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Date of Birth</Text>
                         <TextInput
                             // label="Date of Birth"
                             mode='outlined'
-                            value={user?.dob}
+                            value={state.dob}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
                         />
                     </View>
 
-                    <View style={styles.buttonView}>
+                    <View style={styles.footer}>
                         <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => updateProfile()}>
                             <Text style={config.styles.btnText}>
                                 {isDisabled ? 'Edit Profile' : 'Submit'}
@@ -210,12 +199,12 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         paddingBottom: 50,
+        paddingHorizontal: 15,
     },
 
     scrollView: {
         flex: 1,
         backgroundColor: config.colors.white,
-        paddingHorizontal: 20,
     },
 
     profileTxt: {
@@ -236,6 +225,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 16,
         color: config.colors.white,
+        paddingVertical: 5
     },
 
     usernameText: {
@@ -251,7 +241,10 @@ const styles = StyleSheet.create({
         backgroundColor: config.colors.white,
     },
 
-    buttonView: {
-        paddingVertical: 10,
+    footer: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: config.colors.white,
+        marginBottom: 20,
     }
 })

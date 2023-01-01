@@ -1,9 +1,7 @@
-import React, { CSSProperties } from 'react';
 import {Dimensions} from 'react-native';
 import {colors} from './colors';
 
 const window = Dimensions.get('window');
-const screen = Dimensions.get('screen');
 
 export const styles = {
     
@@ -21,8 +19,8 @@ export const styles = {
     backgroundColor: colors.white,
     borderColor: colors.primary,
     borderWidth: 2,
-    paddingVertical: 15,
-    width: window.width*0.90,
+    paddingVertical: 12,
+    width: window.width*0.92,
     borderRadius: 8,
     alignItems: 'center',
   },

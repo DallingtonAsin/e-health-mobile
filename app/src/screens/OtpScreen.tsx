@@ -11,14 +11,14 @@ import { storeAccessToken } from '../network/services/asyncStorageService';
 
 const otpLength = 4;
 
-const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
+const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { sentOtp } = route.params;
     const [valid, setValid] = useState(false);
     const [otp, setOTP] = useState(sentOtp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const {state, verifyCode} = useContext(AuthContext);
+    const { state, verifyCode } = useContext(AuthContext);
 
     const onChangeOTP = (code: string) => {
         setOTP(code);
@@ -29,16 +29,17 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
             setIsLoading(true);
             Keyboard.dismiss();
 
-            verifyCode({code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading});
+            verifyCode({ code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
         } else {
             Toast.show(`Please enter verification code`);
         }
     }
 
-    const navigateMethod = async(data: any) => {
-        if(data.profile_status == 1){
+    const navigateMethod = async (data: any) => {
+        setOTP("");
+        if (data.profile_status == 1) {
             navigation.navigate('Home');
-        }else{
+        } else {
             navigation.navigate('Register');
         }
     }
@@ -85,7 +86,7 @@ const OtpScreen = ({ route, navigation }: {route:any, navigation: any}) => {
                     <OTPInputView
                         style={{ width: '80%', height: 200 }}
                         pinCount={otpLength}
-                        code={otp ? otp :  sentOtp }
+                        code={otp ? otp : sentOtp}
                         onCodeChanged={code => { onChangeOTP(code) }}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
