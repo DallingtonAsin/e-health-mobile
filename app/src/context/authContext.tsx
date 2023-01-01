@@ -3,41 +3,9 @@ import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
 import { storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
+import { authReducer } from './authReducer';
 
 const services = new Service();
-
-const authReducer = (state: any, action: any) => {
-    switch (action.type) {
-        case 'signin':
-            return {
-                ...action.payload,
-                authorization: action.payload.access_token,
-                token: null
-            };
-        case 'verify':
-            return {
-                ...action.payload,
-                authorization: action.payload.access_token,
-                token: null
-            };
-        case 'signup':
-            return {
-                ...action.payload,
-                authorization: action.payload.access_token,
-                token: null,
-            };
-        case 'home':
-            return {
-                ...action.payload,
-                authorization: action.payload.access_token,
-                token: action.payload.access_token,
-            };
-        case 'signout':
-            return { authorization: null, token: null };
-        default:
-            return state;
-    }
-};
 
 const signin = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -148,7 +116,7 @@ const displayErrorMessage = (error: any, onFailure: any) => {
     onFailure(message);
 }
 
-export const { Provider, Context } = createDataContext(
+export const { Provider, Context,  } = createDataContext(
     authReducer,
     { signin, verifyCode, signup, signout },
     { token: null, email: '' },

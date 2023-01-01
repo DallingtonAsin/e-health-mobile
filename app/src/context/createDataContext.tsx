@@ -1,25 +1,11 @@
 import React, { useReducer } from 'react';
-import { IUser, LoginData, SignedinUser } from '../interfaces';
+import { IUser, LoginData } from '../interfaces';
+import { initialLoginState } from '../configs/constants';
 
 export default ( reducer: any , action: any, defaultValue: any ) => {
 
-    const initialState: SignedinUser = {
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone_number: '',
-        dob: '',
-        gender: '',
-        address: '',
-        otp: '',
-        profile_status: false,
-        authorization: '',
-        token: '',
-
-    }
-
     const Context = React.createContext({
-        state: initialState,
+        state: initialLoginState,
         signin: ({payload, onSuccess, onFailure, onCompletion}: {payload: LoginData, onSuccess: any, onFailure:any, onCompletion:any}) => {},
         verifyCode: ({code, onSuccess, onFailure, onCompletion}: {code: string , onSuccess: any, onFailure:any, onCompletion:any}) => {},
         signup: ({payload, onSuccess, onFailure, onCompletion}: {payload: IUser, onSuccess: any, onFailure:any, onCompletion:any}) => {},
