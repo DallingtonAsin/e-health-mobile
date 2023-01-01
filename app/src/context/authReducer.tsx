@@ -28,7 +28,10 @@ const authReducer = (state: any, action: any) => {
         case 'signout':
             return { user: null, authorization: null, token: null };
         case "hydrate":
-            return action.payload
+            return {
+                ...action.payload,
+                isAppLoading: false,
+            }
         default:
             return state;
     }
