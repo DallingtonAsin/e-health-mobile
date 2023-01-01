@@ -7,7 +7,6 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
-import { storeAccessToken } from '../network/services/asyncStorageService';
 
 const otpLength = 4;
 

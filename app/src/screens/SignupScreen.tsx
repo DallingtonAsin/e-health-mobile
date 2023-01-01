@@ -6,7 +6,7 @@ import AppLoader from '../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import { PaperSelect } from 'react-native-paper-select';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate } from '../components/common/SharedHelper';
+import { formatDate, displayMessage } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
 import { IUser } from '../interfaces';
 
@@ -17,19 +17,19 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const InitialUser = {
         first_name: '',
-        last_name:  '',
-        email:  '',
-        dob:  '',
-        gender:  '',
-        language:  '',
-        address:  '',
-        phoneNumber:  '',
+        last_name: '',
+        email: '',
+        dob: '',
+        gender: '',
+        language: '',
+        address: '',
+        phoneNumber: '',
     }
 
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const {state, signup} = useContext(AuthContext);
+    const { state, signup } = useContext(AuthContext);
 
     const [gender, setGender] = useState({
         value: '',
@@ -44,27 +44,27 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const submitDetails = () => {
 
-        if(!user.first_name){
+        if (!user.first_name) {
             Toast.show('Enter your first name', Toast.LONG);
             return;
         }
 
-        if(!user.last_name){
+        if (!user.last_name) {
             Toast.show('Enter your last name', Toast.LONG);
             return;
         }
 
-        if(!gender.value){
-            Toast.show('Select your gender', Toast.LONG);
-            return;
-        }
-
-        if(!user.address){
+        if (!user.address) {
             Toast.show('Enter your address', Toast.LONG);
             return;
         }
 
-        if(!user.dob){
+        if (!gender.value) {
+            Toast.show('Select your gender', Toast.LONG);
+            return;
+        }
+
+        if (!user.dob) {
             Toast.show('Enter your date of birth', Toast.LONG);
             return;
         }
@@ -75,14 +75,21 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user?.email,
-            gender: gender.value,
             address: user.address,
+            gender: gender.value,
             dob: user.dob
         }
-     
-        signup(payload);
+
+        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+  
+    }
+
+    const stopLoading = () => {
         setIsLoading(false);
-       
+    }
+
+    const navigateMethod = async (data: any) => {
+        navigation.navigate('Home');
     }
 
     const showDatePicker = () => {
@@ -112,8 +119,8 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                 />
 
                 <ScrollView
-                 style={styles.scrollView} 
-                contentContainerStyle={styles.scrollContainer}>
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContainer}>
                     <Text style={styles.title}>Create a Vastel Medical Services Account</Text>
 
                     <View style={styles.inputWrap}>
@@ -128,9 +135,9 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             error={!user.first_name}
                             style={styles.textInput}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser(prev => ({...prev, first_name: text}))}
-                          
-                     />
+                            onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
+
+                        />
                     </View>
 
 
@@ -144,7 +151,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             style={styles.textInput}
                             error={!user.last_name}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser({...user, last_name: text})}
+                            onChangeText={text => setUser({ ...user, last_name: text })}
                         />
                     </View>
 
@@ -157,7 +164,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             activeOutlineColor={configs.colors.primary}
                             style={styles.textInput}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser(prev => ({...prev, email: text}))}
+                            onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
                         />
                     </View>
 
@@ -172,7 +179,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             style={styles.textInput}
                             error={!user.address}
                             textColor={configs.colors.dark}
-                            onChangeText={text => setUser(prev => ({...prev, address: text}))}
+                            onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
                         />
                     </View>
 
@@ -216,7 +223,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 textColor={configs.colors.dark}
                                 onFocus={showDatePicker}
                                 showSoftInputOnFocus={false}
-                                onChangeText={text => setUser(prev => ({...prev, dob: text}))}
+                                onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
                             />
                             <DateTimePickerModal
                                 isVisible={isDatePickerVisible}

@@ -22,7 +22,7 @@ export default ( reducer: any , action: any, defaultValue: any ) => {
         state: initialState,
         signin: ({payload, onSuccess, onFailure, onCompletion}: {payload: LoginData, onSuccess: any, onFailure:any, onCompletion:any}) => {},
         verifyCode: ({code, onSuccess, onFailure, onCompletion}: {code: string , onSuccess: any, onFailure:any, onCompletion:any}) => {},
-        signup: (payload: IUser) => {},
+        signup: ({payload, onSuccess, onFailure, onCompletion}: {payload: IUser, onSuccess: any, onFailure:any, onCompletion:any}) => {},
     });
 
     const Provider = ({ children }: {children: any}) => {
