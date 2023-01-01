@@ -7,7 +7,7 @@ interface IUser {
     address: string
 }
 
-interface SignedinUser {
+interface User{
     first_name: string,
     last_name: string,
     email?: string,
@@ -17,8 +17,12 @@ interface SignedinUser {
     address: string,
     otp: string,
     profile_status: boolean,
+}
+
+interface SignedinUser {
+    user: User,
     authorization:string,
-    token: string,
+    token?: string,
 }
 
 

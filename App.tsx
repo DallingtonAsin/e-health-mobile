@@ -12,9 +12,7 @@ import { Provider as AppProvider } from 'react-native-paper';
 import AuthFlow from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
 import { Provider as AuthProvider } from './app/src/context/authContext';
-import { authReducer } from './app/src/context/authReducer';
 import { Context as AuthContext } from './app/src/context/authContext';
-import { initialLoginState } from './app/src/configs/constants';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
@@ -55,7 +53,6 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   const {state} = React.useContext(AuthContext);
-  const [authState, dispatch] = React.useReducer(authReducer, initialLoginState);
  
   return (
     <NavigationContainer>

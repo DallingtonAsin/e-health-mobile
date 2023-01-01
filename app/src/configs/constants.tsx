@@ -1,7 +1,7 @@
 
   import { SignedinUser } from "../interfaces";
-  
-  const initialLoginState: SignedinUser = {
+
+  const initialUser = {
     first_name: '',
     last_name: '',
     email: '',
@@ -11,9 +11,12 @@
     address: '',
     otp: '',
     profile_status: false,
+  }
+  
+  const initialUserState: SignedinUser = {
+    user: initialUser,
     authorization: '',
     token: '',
-
 }
 
-export  { initialLoginState }
+export  { initialUserState }

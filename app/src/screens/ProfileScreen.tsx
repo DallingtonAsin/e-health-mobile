@@ -63,10 +63,10 @@ const ProfileScreen = () => {
                     <Avatar.Image size={100} source={{ uri: config.images.profileImage }}>
                     </Avatar.Image>
 
-                    <Text style={[styles.usernameText]}>{state.first_name} {state.last_name}</Text>
+                    <Text style={[styles.usernameText]}>{state.user.first_name} {state.user.last_name}</Text>
                     <Text style={[styles.headerText]}>
                         <Icon5 name="map-marker-alt" size={16} color={config.colors.white} />
-                        <Text> {state.address} </Text>
+                        <Text> {state.user.address} </Text>
                     </Text>
 
                 </View>
@@ -83,7 +83,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="First Name"
                             mode='outlined'
-                            value={state.first_name}
+                            value={state.user.first_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -95,7 +95,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Last Name"
                             mode='outlined'
-                            value={state.last_name}
+                            value={state.user.last_name}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -108,7 +108,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="First Name"
                             mode='outlined'
-                            value={state.phone_number}
+                            value={state.user.phone_number}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -120,7 +120,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Address"
                             mode='outlined'
-                            value={state.address}
+                            value={state.user.address}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -132,7 +132,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Email"
                             mode='outlined'
-                            value={state.email}
+                            value={state.user.email}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -144,7 +144,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Gender"
                             mode='outlined'
-                            value={state.gender}
+                            value={state.user.gender}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
@@ -157,7 +157,7 @@ const ProfileScreen = () => {
                         <TextInput
                             // label="Date of Birth"
                             mode='outlined'
-                            value={state.dob}
+                            value={state.user.dob}
                             disabled={isDisabled}
                             activeOutlineColor={config.colors.primary}
                             style={isDisabled ? styles.disabledInput : styles.enabledInput}
