@@ -41,8 +41,9 @@ const ContactUsScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Need help? Please contact us.</Text>
+           
             <View style={styles.subcontainer}>
+            <Text style={styles.title}>Need help? Please contact us.</Text>
                 <FlatList
                     data={contacts}
                     renderItem={renderItem}
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
+        fontSize: configs.fonts.extraLarge,
         textAlign: 'center',
         color: configs.colors.dark,
         fontWeight: 'bold',
@@ -106,8 +107,7 @@ const styles = StyleSheet.create({
 
     itemTitle: {
         color: '#000',
-        fontSize: 15,
-
+        fontSize: configs.fonts.medium,
     },
 
     arrow: {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
 
     contactTitle: {
-        fontSize: 16,
+        fontSize: configs.fonts.medium,
         fontWeight: 'bold',
     },
 

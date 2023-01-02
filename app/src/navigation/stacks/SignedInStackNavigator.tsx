@@ -12,6 +12,7 @@ import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
 import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
 import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
+import NotificationScreen from "../../screens/NotificationScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -39,7 +40,7 @@ const SignedInStackNavigator = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Specialist Categories`,
+                    headerTitle: `Speciality`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}
@@ -57,6 +58,19 @@ const SignedInStackNavigator = () => {
                     headerShown: true,
                 }}
                 component={SpecialityListScreen} />
+
+            <Stack.Screen
+                name="Notifications"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Notifications`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={NotificationScreen} />
 
             <Stack.Screen
                 name="Profile"

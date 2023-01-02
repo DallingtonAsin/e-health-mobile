@@ -17,6 +17,7 @@ interface User{
     address: string,
     otp: string,
     profile_status: boolean,
+    image?: string | ''
 }
 
 interface SignedinUser {
@@ -32,6 +33,11 @@ interface LoginData {
     current_version: string,
 }
 
+interface Notification{
+    id: number,
+    message: string,
+}
 
 
-export type { IUser, LoginData, SignedinUser }
+
+export type { IUser, LoginData, SignedinUser, Notification }

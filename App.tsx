@@ -16,7 +16,7 @@ LogBox.ignoreAllLogs();
 function App() {
 
   const { state } = React.useContext(AuthContext);
-  console.log(`state is`, state.isAppLoading);
+  console.log(`current app state is`, state.isAppLoading);
   if (state.isAppLoading) {
     return (
       <AppLoader bgColor={config.colors.white} />

@@ -8,6 +8,7 @@ import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import * as configs from '../configs';
+import { getUserInitials } from '../components/common/SharedHelper';
 
 
 const MoreItemsScreen = ({navigation}: {navigation: any}) => {
@@ -18,7 +19,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
     const listItems = [
         {id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile')},
         {id: 2, name: 'Settings', icon: 'cog', isIcon5: true, action: () => comingSoon()},
-        {id: 3, name: 'Notification Inbox', icon: 'envelope', isIcon5: true, action: () => comingSoon()},
+        {id: 3, name: 'Notification Inbox', icon: 'envelope', isIcon5: true, action: () => navigation.navigate('Notifications')},
         {id: 4, name: 'Help & Support', icon: 'question-circle', isIcon5: true, action: () => comingSoon()},
         {id: 5, name: 'Terms & Conditions', icon: 'files-o', isIcon5: false, action: () => comingSoon()},
         {id: 6, name: 'About Us', icon: 'info-circle', isIcon5: false, action: () => comingSoon()},
@@ -50,8 +51,11 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
             <SafeAreaView style={styles.container}>
 
                 <View style={styles.header}>
-                    <Avatar.Image size={80} source={{ uri: config.images.profileImage }}>
-                    </Avatar.Image>
+                   {
+                        state.user.image
+                            ? <Avatar.Image size={80} source={{ uri: config.images.profileImage }}></Avatar.Image>
+                            : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                    }
                     <Text style={[styles.usernameText]}>{state.user.first_name} {state.user.last_name}</Text>
                     <Text style={[styles.headerText]}>
                         <Text> {`0`}{state.user.phone_number} </Text>
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
 
     itemTitle: {
         color: '#000',
-        fontSize: configs.fonts.normal,
+        fontSize: configs.fonts.medium,
         left: 12,
     },
 

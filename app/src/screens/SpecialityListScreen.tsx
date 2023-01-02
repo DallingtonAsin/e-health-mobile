@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
@@ -17,7 +17,7 @@ interface SpecialityDetail {
 
 const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
 
-    const specialities = [
+    const initialSpecialities = [
         { id: 1, name: 'Dr. Anthony Luna', phoneNumber: '+256780225155', course: 'MBBS, DNB', title: 'Nutrionist', experience: `5 Yrs`, languages: `English, Swahili, Luganda`, src: 'https://familydoctor.org/wp-content/uploads/2018/02/41808433_l.jpg', fee: 800 },
         { id: 2, name: 'Dr. Grace Kaisa', phoneNumber: '0700477421', course: 'MBBS, DNB', title: 'Dentist', experience: `3 Yrs`, languages: `English, Luganda`, src: 'https://thumbs.dreamstime.com/b/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg', fee: 330 },
         { id: 3, name: 'Dr. Herman Keid', phoneNumber: '0774014727', course: 'MBBS, DNB', title: 'Surgeon', experience: `1 Yr`, languages: `English, Luo, Luganda`, src: 'https://t4.ftcdn.net/jpg/03/16/76/11/360_F_316761139_yVmLRT0AVwpZwOTgpmfrdIKrtFfg0bop.jpg', fee: 450 },
@@ -32,7 +32,8 @@ const SpecialityListScreen = ({ navigation }: { navigation: any }) => {
         { id: 12, name: 'Dr. Allen Kemi', phoneNumber: '0774014727', course: 'MBBS, DNB', title: 'Dermatologist', experience: `2 Yrs`, languages: `English, Runyankore`, src: 'https://i.pinimg.com/originals/5b/a1/a3/5ba1a398ac0aa7fe01480166fd2b818f.png', fee: 175 },
     ]
 
-
+    const [specialities, setSpecialities] = useState(initialSpecialities);
+    
     const bookSpecialist = (item: SpecialityDetail) => {
         
         let doctor = {
@@ -117,11 +118,12 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
+        fontSize: configs.fonts.large,
         textAlign: 'center',
         color: configs.colors.dark,
-        fontWeight: 'bold',
+        fontWeight: '600',
         marginVertical: 10,
+        opacity:0.7
     },
 
     subcontainer: {
@@ -190,20 +192,20 @@ const styles = StyleSheet.create({
     },
 
     userTitle: {
-        fontSize: 16,
+        fontSize: configs.fonts.large,
         color: configs.colors.primary,
     },
 
     titles: {
         opacity: 0.8,
-        fontSize: 16,
+        fontSize: configs.fonts.normal,
     },
 
     values: {
         fontWeight: 'bold',
         color: configs.colors.black,
         opacity: 0.6,
-        fontSize: 14,
+        fontSize: configs.fonts.normal,
     },
 
     fees: {

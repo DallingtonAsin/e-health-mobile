@@ -38,6 +38,10 @@ export const styles = {
   logo: {
     borderColor: colors.white,
     borderWidth: 0,
+  },
+
+  userAvatar: {
+    backgroundColor: colors.white
   }
   
 } as const;
