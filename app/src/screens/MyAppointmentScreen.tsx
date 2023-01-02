@@ -38,15 +38,17 @@ const MyAppointmentScreen = () => {
         <TouchableOpacity style={styles.item}>
             <View style={styles.avatarView}>
                 <Avatar.Image size={80} source={{ uri: item.drImage }} />
+                {/* <Avatar.Text size={75} label={`A`} /> */}
+
             </View>
             <View style={styles.main}>
 
                 <Text style={styles.drNameTxt}>{item.drName}</Text>
                 <Text style={styles.info}>{item.address}</Text>
-                <Text style={styles.info}>Reason for consultation: <Text style={[styles.info, styles.darkTxt]}>{item.consultationReason}</Text></Text>
+                <Text style={styles.info}>Reason for consultation: <Text style={[styles.info]}>{item.consultationReason}</Text></Text>
                  <View style={styles.dateView}>
-                    <Text style={[styles.info, styles.darkTxt]}>Date: {item.date}</Text>
-                    <Text style={[styles.info, styles.darkTxt]}>Time: {item.time}</Text>
+                    <Text style={[styles.info]}>Date: {item.date}</Text>
+                    <Text style={[styles.info]}>Time: {item.time}</Text>
                  </View>
 
                 <View style={styles.typeView}>
@@ -128,17 +130,12 @@ const styles = StyleSheet.create({
     },
 
     info: {
-        fontSize: 16,
+        fontSize: config.fonts.medium,
     },
 
     drNameTxt: {
         fontSize: 16,
         fontWeight: '500',
-        color: config.colors.dark
-    },
-
-
-    darkTxt: {
         color: config.colors.dark
     },
 

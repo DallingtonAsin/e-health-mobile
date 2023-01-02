@@ -50,9 +50,9 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             </Avatar.Image>
                         </TouchableOpacity>
 
-                        <Pressable style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
+                        <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
 
 
