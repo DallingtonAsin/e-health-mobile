@@ -1,6 +1,7 @@
 import * as types from './actions';
 
 const authReducer = (state: any, action: any) => {
+    console.log(`Current action data`, action.payload);
     switch (action.type) {
         case types.USER_SIGNIN:
             return {
@@ -34,10 +35,12 @@ const authReducer = (state: any, action: any) => {
                 token: null
             };
         case types.HYDRATE:
-            return {
-                ...action.payload,
-                isAppLoading: false,
-            }
+            return action.payload;
+        case types.STOP_SPINNER:
+                return {
+                    ...state,
+                    isAppLoading: false
+                };
         default:
             return state;
     }

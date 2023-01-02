@@ -55,9 +55,8 @@ const verifyCode = (dispatch: any) => {
                     await storeAccessToken(access_token);
                     await storeUser(data);
                     dispatch({
-                        types: types.HOME,
-                        payload: data,
-                        isAppLoading: false
+                        type: types.HOME,
+                        payload: data
                     });
                 } else {
                     dispatch({
@@ -89,9 +88,8 @@ const signup = (dispatch: any) => {
                 await storeUser(data);
 
                 dispatch({
-                    types: types.HOME,
-                    payload: data,
-                    isAppLoading: false
+                    type: types.HOME,
+                    payload: data
                 });
 
                 onSuccess();
@@ -120,9 +118,8 @@ const updateProfile = (dispatch: any) => {
                 await storeUser(user);
 
                 dispatch({
-                    types: types.HOME,
-                    payload: user,
-                    isAppLoading: false
+                    type: types.HOME,
+                    payload: user
                 });
 
                 onSuccess(res.data.message);
@@ -141,7 +138,7 @@ const signout = (dispatch: any) => {
         await removeAccessToken();
         dispatch({
             type: types.USER_SIGNOUT,
-            isAppLoading: false
+            payload: { isAppLoading: false }
         });
     };
 };

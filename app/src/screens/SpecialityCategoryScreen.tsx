@@ -42,7 +42,7 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Find your consultation</Text>
+            <Text style={styles.title}>Find your doctor by speciality</Text>
             <View style={styles.subcontainer}>
                 <Searchbar
                     placeholder="Search for doctor"
@@ -50,6 +50,7 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     value={searchQuery}
                     style={styles.searchbar}
                     elevation={3}
+                    inputStyle={styles.searchbarInput}
                 />
                 <FlatList
                     data={specialities}
@@ -59,7 +60,7 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
                     style={{ top: 20 }}
-                    ListFooterComponent={<View style={{height: 40}}/>}
+                    ListFooterComponent={<View style={{height: 100}}/>}
                 />
             </View>
 
@@ -81,18 +82,22 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
-        textAlign: 'center',
-        color: configs.colors.dark,
-        fontWeight: 'bold',
+        fontSize: configs.fonts.extraLarge,
+        textAlign: 'left',
+        left: 28,
+        fontWeight: '700',
         marginVertical: 10,
-        opacity: 0.8
     },
 
     subcontainer: {
         flex: 1,
         marginHorizontal: 10,
         top: 15,
+    },
+    
+    itemTitle: {
+        color: '#000',
+        fontSize: configs.fonts.medium,
     },
 
     item: {
@@ -120,10 +125,8 @@ const styles = StyleSheet.create({
         backgroundColor: configs.colors.white,
     },
 
-
-    itemTitle: {
-        color: '#000',
-        fontSize: 15,
+    searchbarInput:{
+        fontSize: configs.fonts.large,
     },
 
     arrow: {

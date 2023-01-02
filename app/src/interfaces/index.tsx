@@ -32,6 +32,11 @@ interface LoginData {
     current_version: string,
 }
 
+interface Notification{
+    id: number,
+    message: string,
+}
 
 
-export type { IUser, LoginData, SignedinUser }
+
+export type { IUser, LoginData, SignedinUser, Notification }

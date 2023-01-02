@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { IUser, LoginData } from '../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as types from './actions'
 
 export default (reducer: any, action: any, defaultValue: any) => {
 
@@ -38,14 +38,20 @@ export default (reducer: any, action: any, defaultValue: any) => {
 
         useEffect(() => {
             async function rehydrate() {
-                const storedState = await getData()
+                const storedState = await getData();
+           
                 if (storedState) {
+                    console.log(`Stored state is available`);
                     dispatch({
-                        type: "hydrate",
-                        payload: storedState,
-                        isAppLoading: false
+                        type: types.HYDRATE,
+                        payload: storedState
                     });
                 }
+
+                dispatch({
+                    type: types.STOP_SPINNER,
+                    payload: { isAppLoading: false }
+                });
             }
             rehydrate()
         }, []);

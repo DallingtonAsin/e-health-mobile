@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             </Avatar.Image>
                         </TouchableOpacity>
 
-                        <Pressable style={styles.notificationView} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                        <Pressable style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                         </Pressable>
                     </View>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     },
 
     subtitle: {
-        fontSize: 15,
+        fontSize: configs.fonts.normal,
         fontWeight: 'bold',
         top: 10,
         textAlign: 'center'

@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     },
 
     infoText: {
-        fontSize: config.fonts.extraLarge,
+        fontSize: config.fonts.medium,
         color: config.colors.dark,
         opacity: 0.9
     },
