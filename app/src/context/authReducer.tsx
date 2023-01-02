@@ -1,33 +1,39 @@
+import * as types from './actions';
+
 const authReducer = (state: any, action: any) => {
     switch (action.type) {
-        case 'signin':
+        case types.USER_SIGNIN:
             return {
                 user: null,
                 authorization: action.payload.access_token,
                 token: null
             };
-        case 'verify':
+        case types.USER_VERIFY:
             return {
                 user: null,
                 authorization: action.payload.access_token,
                 token: null
             };
-        case 'signup':
+        case types.USER_SIGNUP:
             return {
                 user: null,
                 authorization: action.payload.access_token,
                 token: null
             };
-        case 'home':
+        case types.HOME:
             return {
                 user: action.payload,
                 authorization: action.payload.access_token,
                 token: action.payload.access_token,
-                isAppLoading:  false
+                isAppLoading: false
             };
-        case 'signout':
-            return { user: null, authorization: null, token: null };
-        case "hydrate":
+        case types.USER_SIGNOUT:
+            return {
+                user: null,
+                authorization: null,
+                token: null
+            };
+        case types.HYDRATE:
             return {
                 ...action.payload,
                 isAppLoading: false,

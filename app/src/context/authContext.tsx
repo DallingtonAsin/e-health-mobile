@@ -6,6 +6,7 @@ import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAcc
 import { authReducer } from './authReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
+import * as types from './actions'
 
 const services = new Service();
 
@@ -22,7 +23,7 @@ const signin = (dispatch: any) => {
                 await storeAuthToken(data.access_token);
 
                 dispatch({
-                    type: 'signin',
+                    type: types.USER_SIGNIN,
                     payload: data
                 });
 
@@ -54,13 +55,13 @@ const verifyCode = (dispatch: any) => {
                     await storeAccessToken(access_token);
                     await storeUser(data);
                     dispatch({
-                        type: 'home',
+                        types: types.HOME,
                         payload: data,
                         isAppLoading: false
                     });
                 } else {
                     dispatch({
-                        type: 'signup',
+                        type: types.USER_SIGNUP,
                         payload: data
                     });
                 }
@@ -88,7 +89,7 @@ const signup = (dispatch: any) => {
                 await storeUser(data);
 
                 dispatch({
-                    type: 'home',
+                    types: types.HOME,
                     payload: data,
                     isAppLoading: false
                 });
@@ -105,21 +106,21 @@ const signup = (dispatch: any) => {
 
 const updateProfile = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        console.log(`update profile payload`, payload);
+
         services.post(
             routes.user.updateProfile,
             payload
         ).then(async (res) => {
             if (res && res.data) {
-                
+
                 let data = res.data;
                 let user = data.user;
-                console.log('DATA AFTER UPDATING PROFILE', user);
+
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
 
                 dispatch({
-                    type: 'home',
+                    types: types.HOME,
                     payload: user,
                     isAppLoading: false
                 });
@@ -138,7 +139,10 @@ const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
         await removeAccessToken();
-        dispatch({ type: 'signout', isAppLoading: false });
+        dispatch({
+            type: types.USER_SIGNOUT,
+            isAppLoading: false
+        });
     };
 };
 
