@@ -8,6 +8,7 @@ import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import * as configs from '../configs';
+import { getUserInitials } from '../components/common/SharedHelper';
 
 
 const MoreItemsScreen = ({navigation}: {navigation: any}) => {
@@ -50,8 +51,11 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
             <SafeAreaView style={styles.container}>
 
                 <View style={styles.header}>
-                    <Avatar.Image size={80} source={{ uri: config.images.profileImage }}>
-                    </Avatar.Image>
+                   {
+                        state.user.image
+                            ? <Avatar.Image size={80} source={{ uri: config.images.profileImage }}></Avatar.Image>
+                            : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                    }
                     <Text style={[styles.usernameText]}>{state.user.first_name} {state.user.last_name}</Text>
                     <Text style={[styles.headerText]}>
                         <Text> {`0`}{state.user.phone_number} </Text>

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { SafeAreaView, Text, FlatList, View, StyleSheet } from "react-native";
+import { SafeAreaView, Text, FlatList, View, StyleSheet, Image } from "react-native";
 import { Notification } from "../interfaces";
 import * as configs from '../configs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { Avatar } from 'react-native-paper';
 
 
 const NotificationScreen = () => {
@@ -23,7 +24,7 @@ const NotificationScreen = () => {
 
     const EmptyListMessage = () =>  (
             <View style={styles.emptyViewContainer}>
-                <Icon5 name={"bell"} size={80} color={configs.colors.gray} />
+                <Image style={styles.image} source={configs.images.no_notifications} />
                 <Text style={{fontSize: configs.fonts.large, paddingVertical: 5}}>No notifications found</Text>
             </View>
      )
@@ -80,5 +81,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+
+    image: {
+        width: 80,
+        height: 80,
+        tintColor: configs.colors.gray
     }
 })

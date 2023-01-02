@@ -17,6 +17,7 @@ interface User{
     address: string,
     otp: string,
     profile_status: boolean,
+    image?: string | ''
 }
 
 interface SignedinUser {

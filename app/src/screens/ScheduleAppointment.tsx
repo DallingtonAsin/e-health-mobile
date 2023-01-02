@@ -9,7 +9,7 @@ import Toast from 'react-native-simple-toast';
 import { getCalendarTheme } from '../configs/themes';
 import { TextInput } from 'react-native-paper';
 import { RadioButton } from 'react-native-paper';
-
+import MultiSelect from 'react-native-multiple-select';
 
 let defaultDateState = { selected: true, marked: false, disabled: false, selectedColor: configs.colors.gray }
 const screen = Dimensions.get('screen');
@@ -82,24 +82,26 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         contact.SendSms(number);
     }
 
-    const bookAppointment = () => {
-        if(!appointmentDate){
-            Toast.show(`Please select appointment date`); return;
-        }
+    const confirmAppointment = () => {
+        // if(!appointmentDate){
+        //     Toast.show(`Please select appointment date`); return;
+        // }
 
-        if(!appointmentHour){
-            Toast.show(`Please select appointment hour`); return;
-        } 
-        if(!appointmentType){
-            Toast.show(`Please select appointment type`); return;
-        }
-        if(patientSymptoms.length < 0){
-            Toast.show(`Please select atleast one symptom`); return;
-        }
-
-        if (appointmentDate && appointmentHour && appointmentType && patientSymptoms.length > 0) {
-            navigation.navigate('AppointmentConfirmation');
-        }
+        // if(!appointmentHour){
+        //     Toast.show(`Please select appointment hour`); return;
+        // } 
+        // if(!appointmentType){
+        //     Toast.show(`Please select appointment type`); return;
+        // }
+        // if(patientSymptoms.length < 0){
+        //     Toast.show(`Please select atleast one symptom`); return;
+        // }
+        // if (appointmentDate && appointmentHour && appointmentType && patientSymptoms.length > 0) {
+        //     navigation.navigate('AppointmentConfirmation');
+        // }
+        navigation.navigate('AppointmentConfirmation', {
+            src: src, name: name, phoneNumber: phoneNumber, title:title
+        });
     }
 
     const AppointmentScreen = () => (
@@ -121,7 +123,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             disablePan={false}
                             hideKnob={true}
                             markedDates={markedDates}
-                            initialPosition={"open"}
+                            // initialPosition={"open"}
                             allowShadow={true}
                             disabledByDefault={true}
                             disableAllTouchEventsForDisabledDays={true}
@@ -170,7 +172,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 <ScrollView horizontal={true}> 
                     <View>
                     <Text style={styles.pickDate}>Symptoms</Text>
-                            {
+                            {/* {
                                 symptoms.map((symptom) => {
                                     return (
                                         <TouchableOpacity
@@ -182,7 +184,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                                         </TouchableOpacity>
                                     )
                                 })
-                            }
+                            } */}
                     </View>
                     </ScrollView>
 
@@ -233,8 +235,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 </View>
 
                 <View style={styles.footer}>
-                    <TouchableOpacity style={[configs.styles.secondaryBtn, {width: screen.width*0.9}]}
-                        onPress={() => bookAppointment()}>
+                    <TouchableOpacity onPress={() => confirmAppointment()}
+                    style={[configs.styles.secondaryBtn, {width: screen.width*0.9}]}>
                         <Text style={styles.okayText}>Book now</Text>
                     </TouchableOpacity>
                 </View>
@@ -284,17 +286,9 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-
         flex: 1,
-        marginVertical: 5,
-
-        // flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // marginVertical: 20,
- 
+        marginVertical: 5
     },
-
 
     name: {
         color: configs.colors.black,
@@ -368,8 +362,7 @@ const styles = StyleSheet.create({
 
     fcontainer: {
         flex: 1,
-        backgroundColor: configs.colors.white,
-        // justifyContent: 'space-between'
+        backgroundColor: configs.colors.white
     },
 
     fscroll: {
@@ -421,5 +414,4 @@ const styles = StyleSheet.create({
         borderColor: configs.colors.primary,
         alignItems: 'flex-start'
     }
-
 });

@@ -55,10 +55,19 @@ const displayErrorMessage = (error: any, onFailure: any) => {
 }
 
 
+const getUserInitials = (name: string) => {
+     if(name){
+      return name.split(" ").map((n)=>n[0]).join("");
+     }
+    return name;
+}
+
+
 export {
    removeLeadingZeros,
    getGreeting,
    displayMessage,
    formatDate,
-   displayErrorMessage
+   displayErrorMessage,
+   getUserInitials
 }

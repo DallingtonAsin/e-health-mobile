@@ -16,6 +16,7 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
+import { getUserInitials } from '../components/common/SharedHelper';
 
 const iconSize = 40;
 
@@ -45,9 +46,11 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={styles.headerImageSection}>
                         <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
-                            <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}>
-                                <Icon name="wrench" size={iconSize} color={configs.colors.primary} />
-                            </Avatar.Image>
+                            {
+                                state.user.image 
+                                ? <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}></Avatar.Image>
+                                :  <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={configs.styles.userAvatar}/>
+                            }
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
@@ -231,5 +234,5 @@ const styles = StyleSheet.create({
     image: {
         top:10,
         left:20,
-    }
+    },
 })
