@@ -132,6 +132,25 @@ const updateProfile = (dispatch: any) => {
     };
 };
 
+
+const getMedicalSpecialties = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.medical.specialties
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
@@ -145,6 +164,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

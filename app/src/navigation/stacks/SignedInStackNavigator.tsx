@@ -2,7 +2,7 @@ import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeStack from "./HomeStack";
 import * as configs from '../../configs';
-import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
+import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 import SpecialityListScreen from "../../screens/SpecialityListScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SignupScreen from "../../screens/SignupScreen";

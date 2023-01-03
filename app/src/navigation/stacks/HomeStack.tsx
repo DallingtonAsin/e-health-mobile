@@ -14,7 +14,7 @@ import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
 import SplashScreen from '../../screens/SplashScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
 import {useTheme} from 'react-native-paper';
-import SpecialityCategoryScreen from '../../screens/SpecialityCategoryScreen';
+import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 
 const BottomTab = createBottomTabNavigator();
 const tabIconFontSize = 22;
