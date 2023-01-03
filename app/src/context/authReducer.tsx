@@ -1,7 +1,7 @@
 import * as types from './actions';
 
 const authReducer = (state: any, action: any) => {
-    console.log(`Current action data`, action.payload);
+    // console.log(`Current action data`, action.payload);
     switch (action.type) {
         case types.USER_SIGNIN:
             return {

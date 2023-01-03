@@ -158,7 +158,24 @@ const getDoctorsBySpecialty = () => {
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;
-                console.log(`doctors by specialty`, data);
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getDoctorInfo = () => {
+    return ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.medical.doctors}/${doctorId}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                
+                let data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -182,6 +199,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
