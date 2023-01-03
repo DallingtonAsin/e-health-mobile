@@ -7,7 +7,6 @@ import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { MedicalSpecialty } from "../interfaces";
-import App from "../../../App";
 
 const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 
@@ -31,7 +30,7 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const Item = ({ item }: {item: MedicalSpecialty}) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList', {specialty_id: item.id, specialty_name: item.name})}>
             <Text style={styles.itemTitle}>{item.name}</Text>
             <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
         </TouchableOpacity>

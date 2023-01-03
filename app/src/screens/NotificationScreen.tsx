@@ -23,11 +23,11 @@ const NotificationScreen = () => {
     );
 
     const EmptyListMessage = () =>  (
-            <View style={styles.emptyViewContainer}>
-                <Image style={styles.image} source={configs.images.no_notifications} />
-                <Text style={{fontSize: configs.fonts.large, paddingVertical: 5}}>No notifications found</Text>
+            <View style={configs.styles.emptyViewContainer}>
+                <Image style={configs.styles.image} source={configs.images.no_notifications} />
+                <Text style={configs.styles.noInfoText}>No notifications found</Text>
             </View>
-     )
+     );
       
 
     return (
@@ -77,15 +77,4 @@ const styles = StyleSheet.create({
         fontSize: configs.fonts.medium,
     },
 
-    emptyViewContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
-    image: {
-        width: 80,
-        height: 80,
-        tintColor: configs.colors.gray
-    }
 })

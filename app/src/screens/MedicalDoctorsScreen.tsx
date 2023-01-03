@@ -1,16 +1,22 @@
-import React, { useState } from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { SafeAreaView, FlatList, View, Image, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import { DoctorsDetail } from "../interfaces";
 import { initialSpecialities } from "../configs/constants";
+import { Context as AuthContext } from '../context/authContext';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from "../components/AppLoader";
 
-const MedicalDoctorsScreen = ({ navigation }: { navigation: any }) => {
+const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const [specialities, setSpecialities] = useState<DoctorsDetail[]>(initialSpecialities);
-    
-    const bookSpecialist = (item: DoctorsDetail) => {
-        
+    const { specialty_id, specialty_name } = route.params;
+    const [isLoading, setIsLoading] = useState(true);
+    const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>(initialSpecialities);
+    const { getDoctorsBySpecialty } = useContext(AuthContext);
+
+    const bookMedicalDoctor = (item: DoctorsDetail) => {
+
         let doctor = {
             first_name: item.first_name,
             last_name: item.last_name,
@@ -21,6 +27,17 @@ const MedicalDoctorsScreen = ({ navigation }: { navigation: any }) => {
         navigation.navigate('ScheduleAppointment', doctor);
     }
 
+    useEffect(() => {
+        getDoctorsBySpecialty({ specialtyId: specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
+    }, []);
+
+    const populateMedicalDoctors = (medicalSpecialties: DoctorsDetail[]) => {
+        setMedicalDoctors(medicalSpecialties)
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
 
@@ -42,19 +59,19 @@ const MedicalDoctorsScreen = ({ navigation }: { navigation: any }) => {
                     <Text style={styles.values}>{item.experience}</Text>
                 </View>
                 <View>
-                    <Text style={styles.titles}>Language</Text>
+                    <Text style={styles.titles}>Languages</Text>
                     <Text style={styles.values}>{item.languages}</Text>
                 </View>
             </View>
 
             <View style={styles.footer}>
                 <View>
-                    <Text style={styles.fees}>Fee:  <Text style={styles.amount}>${item.service_fee}</Text></Text>
+                    <Text style={styles.fees}>Fee:  <Text style={styles.amount}>{item.service_fee}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity
                         style={styles.bookBtn}
-                        onPress={() => bookSpecialist(item)}
+                        onPress={() => bookMedicalDoctor(item)}
                     >
                         <Text style={styles.btnTxt}>Book</Text>
                     </TouchableOpacity>
@@ -64,16 +81,34 @@ const MedicalDoctorsScreen = ({ navigation }: { navigation: any }) => {
         </View>
     );
 
+    const EmptyListMessage = () => (
+        <View style={configs.styles.emptyViewContainer}>
+            <Image style={configs.styles.image} source={configs.images.no_information} />
+            <Text style={configs.styles.noInfoText}>No doctors found in {specialty_name} department.</Text>
+        </View>
+    );
+
+    if (isLoading) {
+        return (
+            <AppLoader bgColor={configs.colors.white} />
+        )
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Doctors available in this speciality</Text>
             <View style={styles.subcontainer}>
                 <FlatList
-                    data={specialities}
+                    data={medicalDoctors}
                     renderItem={renderItem}
                     keyExtractor={(item: DoctorsDetail, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    ListHeaderComponent={() => (!medicalDoctors.length ? 
+                        null  
+                        : <Text style={styles.title}>Doctors in {specialty_name} speciality</Text>)}
+          
+                    ListEmptyComponent={EmptyListMessage}
                 />
             </View>
 
@@ -99,7 +134,7 @@ const styles = StyleSheet.create({
         color: configs.colors.dark,
         fontWeight: '600',
         marginVertical: 10,
-        opacity:0.7
+        opacity: 0.7
     },
 
     subcontainer: {

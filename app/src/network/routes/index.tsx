@@ -11,6 +11,7 @@ const routes = {
 
    medical: {
       specialties: 'medical/specialties',
+      doctors_by_specialty: 'medical/doctors/specialty',
    }
 
 }
