@@ -1,16 +1,17 @@
-import {Dimensions} from 'react-native';
-import {colors} from './colors';
+import { Dimensions } from 'react-native';
+import { colors, } from './colors';
+import { fonts } from './fonts'
 
 const window = Dimensions.get('window');
 
 export const styles = {
-    
+
   primaryBtn: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     borderWidth: 2,
     paddingVertical: 15,
-    width: window.width*0.90,
+    width: window.width * 0.90,
     borderRadius: 5,
     alignItems: 'center',
   },
@@ -20,7 +21,7 @@ export const styles = {
     borderColor: colors.primary,
     borderWidth: 2,
     paddingVertical: 12,
-    width: window.width*0.92,
+    width: window.width * 0.92,
     borderRadius: 8,
     alignItems: 'center',
   },
@@ -42,6 +43,26 @@ export const styles = {
 
   userAvatar: {
     backgroundColor: colors.white
+  },
+
+  emptyViewContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  image: {
+    width: 80,
+    height: 80,
+    tintColor: colors.gray
+  },
+
+  noInfoText: {
+    fontSize: fonts.large,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 5,
+    textAlign: 'center'
   }
-  
+
 } as const;

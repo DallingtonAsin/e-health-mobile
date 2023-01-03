@@ -38,6 +38,24 @@ interface Notification{
     message: string,
 }
 
+interface MedicalSpecialty {
+    id: number,
+    name: string,
+}
+
+interface DoctorsDetail {
+    id: number,
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    qualification: string | '',
+    profession: string,
+    title: string,
+    experience: string,
+    languages: string,
+    image: string,
+    service_fee: number,
+}
 
 
-export type { IUser, LoginData, SignedinUser, Notification }
+export type { IUser, LoginData, SignedinUser, Notification, MedicalSpecialty, DoctorsDetail }

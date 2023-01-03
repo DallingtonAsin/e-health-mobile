@@ -1,44 +1,50 @@
-import React from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, ListRenderItemInfo } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
+import { Context as AuthContext } from '../context/authContext';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
+import { MedicalSpecialty } from "../interfaces";
 
-interface SpecialityCategory {
-    id: number,
-    name: string,
-}
-
-const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
+const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = (query: string) => setSearchQuery(query);
+    const [isLoading, setIsLoading] = useState(true);
+    const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([]);
+    const { getMedicalSpecialties } = useContext(AuthContext);
 
-    const specialities = [
-        { id: 1, name: 'Cardic Surgery' },
-        { id: 2, name: 'Eye Specialist' },
-        { id: 3, name: 'Clinic Nutrietion' },
-        { id: 4, name: 'Cardic Doctor' },
-        { id: 5, name: 'Child Specialist' },
-        { id: 6, name: 'Ear Nose Throat' },
-        { id: 7, name: 'Cardic Surgery' },
-        { id: 8, name: 'Cardiology' },
-        { id: 9, name: 'Clinic Nutrietion' },
-        { id: 10, name: 'Cardic Surgery' },
-        { id: 11, name: 'Cardiology' },
-        { id: 12, name: 'Clinic Nutrietion' },
-    ]
 
-    const Item = ({ item }: {item: SpecialityCategory}) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList')}>
+    useEffect(() => {
+        getMedicalSpecialties({ onSuccess: populateSpecialities, onFailure: displayMessage, onCompletion: stopLoading});
+    }, []);
+
+    const populateSpecialities = (medicalSpecialties: MedicalSpecialty[]) => {
+        setMedicalSpecialties(medicalSpecialties)
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
+
+    const Item = ({ item }: {item: MedicalSpecialty}) => (
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList', {specialty_id: item.id, specialty_name: item.name})}>
             <Text style={styles.itemTitle}>{item.name}</Text>
             <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
         </TouchableOpacity>
     );
 
-    const renderItem = ({ item }: { item: SpecialityCategory }) => (
+    const renderItem = ({ item }: { item: MedicalSpecialty }) => (
         <Item item={item} />
     );
+
+    if(isLoading){
+        return (
+            <AppLoader bgColor={configs.colors.white}/>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -53,9 +59,9 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     inputStyle={styles.searchbarInput}
                 />
                 <FlatList
-                    data={specialities}
+                    data={medicalSpecialties}
                     renderItem={renderItem}
-                    keyExtractor={(item: SpecialityCategory, index:number) => item.id.toString()}
+                    keyExtractor={(item: MedicalSpecialty, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
@@ -63,12 +69,11 @@ const SpecialityCategoryScreen = ({ navigation }: { navigation: any }) => {
                     ListFooterComponent={<View style={{height: 100}}/>}
                 />
             </View>
-
         </SafeAreaView>
     )
 }
 
-export default SpecialityCategoryScreen;
+export default MedicalSpecialtyScreen;
 
 const styles = StyleSheet.create({
     container: {

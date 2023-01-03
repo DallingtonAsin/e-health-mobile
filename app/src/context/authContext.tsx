@@ -132,6 +132,43 @@ const updateProfile = (dispatch: any) => {
     };
 };
 
+
+const getMedicalSpecialties = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.medical.specialties
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getDoctorsBySpecialty = () => {
+    return ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.medical.doctors_by_specialty}/${specialtyId}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                console.log(`doctors by specialty`, data);
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
@@ -145,6 +182,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
