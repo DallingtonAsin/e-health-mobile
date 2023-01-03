@@ -7,7 +7,7 @@ interface IUser {
     address: string
 }
 
-interface User{
+interface User {
     first_name: string,
     last_name: string,
     email?: string,
@@ -22,7 +22,7 @@ interface User{
 
 interface SignedinUser {
     user: User,
-    authorization:string,
+    authorization: string,
     token?: string,
 }
 
@@ -33,7 +33,7 @@ interface LoginData {
     current_version: string,
 }
 
-interface Notification{
+interface Notification {
     id: number,
     message: string,
 }
@@ -57,5 +57,17 @@ interface DoctorsDetail {
     service_fee: number,
 }
 
+interface CommunicationType {
+    id: number,
+    name: string
+}
 
-export type { IUser, LoginData, SignedinUser, Notification, MedicalSpecialty, DoctorsDetail }
+export type {
+    IUser,
+    LoginData,
+    SignedinUser,
+    Notification,
+    MedicalSpecialty,
+    DoctorsDetail,
+    CommunicationType
+}

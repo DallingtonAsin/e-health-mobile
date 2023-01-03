@@ -7,6 +7,8 @@ import { initialSpecialities } from "../configs/constants";
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
+import Toast from 'react-native-simple-toast';
+
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -16,15 +18,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const { getDoctorsBySpecialty } = useContext(AuthContext);
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
-
-        let doctor = {
-            first_name: item.first_name,
-            last_name: item.last_name,
-            phone_number: item.phone_number,
-            src: item.image,
-            title: item.title
-        }
-        navigation.navigate('ScheduleAppointment', doctor);
+            navigation.navigate('ScheduleAppointment', { doctor_id: item.id });
     }
 
     useEffect(() => {

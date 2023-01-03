@@ -1,40 +1,39 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
-import Toast from 'react-native-simple-toast';
 import { getCalendarTheme } from '../configs/themes';
 import { TextInput } from 'react-native-paper';
 import { RadioButton } from 'react-native-paper';
+import { DoctorsDetail } from '../interfaces';
+import { Context as AuthContext } from '../context/authContext';
+import { initialDoctorInfo, workingHours, commonSymptoms, communicationChannels } from '../configs/constants';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
+import { CommunicationType } from '../interfaces';
 import MultiSelect from 'react-native-multiple-select';
+import Toast from 'react-native-simple-toast';
+import { Item } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
+
 
 let defaultDateState = { selected: true, marked: false, disabled: false, selectedColor: configs.colors.gray }
 const screen = Dimensions.get('screen');
 
 const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    let item = route.params;
-    const { src, name, phoneNumber, title } = item;
+    const { doctor_id } = route.params;
 
-    const workingHours = ['08:00', '10:00', '12:00', '14:00', '15:00', '18:00', '10:30', '12:30', '14:30', '15:30', '19:30'];
-    const commonSymptoms = ['cold', 'cough', 'flue', 'Nasal congestion', 'Sore throat', 'Allergies', 'Rash', 'Other'];
-    const contactTypes = ['In person', 'Audio Call', 'Video Session'];
-
-    let doctorSchedule = {
-        '2022-12-05': defaultDateState,
-        '2022-12-07': defaultDateState,
-        '2022-12-08': defaultDateState,
-        '2022-12-10': defaultDateState
-    }
+    const [isLoading, setIsLoading] = useState(true);
+    const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
+    const { getDoctorInfo } = useContext(AuthContext);
 
     const calendarTheme = useRef(getCalendarTheme());
-
     const [hours, setHours] = useState<string[]>(workingHours);
     const [symptoms, setSymptoms] = useState<string[]>(commonSymptoms);
-    const [types, setTypes] = useState<string[]>(contactTypes)
+    const [types, setTypes] = useState<CommunicationType[]>(communicationChannels)
 
     const [appointmentDate, setAppointmentDate] = useState<string>('');
     const [appointmentHour, setAppointmentHour] = useState<string>('');
@@ -42,13 +41,25 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [patientSymptoms, setPatientSymptoms] = useState<string[]>([]);
     const [otherSymptoms, setOtherSymptoms] = useState('');
     const [hasOtherSymptoms, setHasOtherSymptoms] = useState(false);
-
     const [markedDates, setMarkedDates] = useState<any>();
+
+
+    useEffect(() => {
+        getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: stopLoading });
+    }, []);
+
+    const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
+        setDoctorInfo(doctorInfo)
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
 
     const setPatientAppointmentDate = (day: any) => {
         if (day && day.dateString) {
             setAppointmentDate(day.dateString)
-        }else{
+        } else {
             console.log(`No day captured`);
         }
     }
@@ -100,79 +111,81 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         //     navigation.navigate('AppointmentConfirmation');
         // }
         navigation.navigate('AppointmentConfirmation', {
-            src: src, name: name, phoneNumber: phoneNumber, title:title
+            src: doctorInfo.image,
+            name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
+            phoneNumber: doctorInfo.phone_number,
+            profession: doctorInfo.profession
         });
     }
 
     const AppointmentScreen = () => (
         <SafeAreaView style={styles.fcontainer}>
-                <View>
-                    <Text style={styles.pickDate}>Pick a day</Text>
-                    <CalendarProvider
-                        date={new Date().toDateString()}
-                        showTodayButton={false}>
-                        <ExpandableCalendar
-                            onDayPress={day => {
-                                setPatientAppointmentDate(day);
-                            }}
-                            // firstDay={1}
-                            leftArrowImageSource={configs.images.previous}
-                            rightArrowImageSource={configs.images.next}
-                            theme={calendarTheme.current}
-                            hideDayNames={false}
-                            disablePan={false}
-                            hideKnob={true}
-                            markedDates={markedDates}
-                            // initialPosition={"open"}
-                            allowShadow={true}
-                            disabledByDefault={true}
-                            disableAllTouchEventsForDisabledDays={true}
-                        />
-                    </CalendarProvider>
-                </View>
-                <View>
-                    <Text style={styles.pickDate}>Pick time</Text>
-                    <View style={{ margin: 0, flexDirection: 'row' }}>
-                            {
-                                hours.map((hour) => {
-                                    return (
-                                        <TouchableOpacity
-                                            activeOpacity={1}
-                                            style={[styles.types, appointmentHour == hour ? { backgroundColor: configs.colors.danger, borderColor: configs.colors.danger } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
-                                            onPress={() => setAppointmentHour(hour)}
-                                            key={hour}>
-                                            <Text style={[styles.hrText, appointmentHour == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
-                                        </TouchableOpacity>
-                                    );
-                                })
-                            }
-                    </View>
-                </View>
-
-                <View>
-                    <Text style={styles.pickDate}>Type</Text>
+            <View>
+                <Text style={styles.pickDate}>Pick a day</Text>
+                <CalendarProvider
+                    date={new Date().toDateString()}
+                    showTodayButton={false}>
+                    <ExpandableCalendar
+                        onDayPress={day => {
+                            setPatientAppointmentDate(day);
+                        }}
+                        // firstDay={1}
+                        leftArrowImageSource={configs.images.previous}
+                        rightArrowImageSource={configs.images.next}
+                        theme={calendarTheme.current}
+                        hideDayNames={false}
+                        disablePan={false}
+                        hideKnob={true}
+                        markedDates={markedDates}
+                        // initialPosition={"open"}
+                        allowShadow={true}
+                        disabledByDefault={true}
+                        disableAllTouchEventsForDisabledDays={true}
+                    />
+                </CalendarProvider>
+            </View>
+            <View>
+                <Text style={styles.pickDate}>Pick time</Text>
+                <View style={{ margin: 0, flexDirection: 'row' }}>
                     {
-                        types.map((type: any) => {
+                        hours.map((hour) => {
                             return (
-                                <View style={{ flexDirection: 'row', marginHorizontal: 1 }}>
-                                    <RadioButton
-                                        value={type}
-                                        status={appointmentType === type ? 'checked' : 'unchecked'}
-                                        onPress={() => setAppointmentType(type)}
-                                        color={configs.colors.danger}
-                                        key={type}
-                                    />
-                                    <Text style={{ color: configs.colors.gray, fontSize: 18 }}>{type}</Text>
-                                </View>
-                            )
+                                <TouchableOpacity
+                                    activeOpacity={1}
+                                    style={[styles.types, appointmentHour == hour ? { backgroundColor: configs.colors.danger, borderColor: configs.colors.danger } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
+                                    onPress={() => setAppointmentHour(hour)}
+                                    key={hour}>
+                                    <Text style={[styles.hrText, appointmentHour == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
+                                </TouchableOpacity>
+                            );
                         })
                     }
                 </View>
+            </View>
 
-                <ScrollView horizontal={true}> 
-                    <View>
+            <View>
+                <Text style={styles.pickDate}>Type</Text>
+                {
+                    types.map(({ id, name }: { id: number, name: string }) => {
+                        return (
+                            <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
+                                <RadioButton
+                                    value={name}
+                                    status={appointmentType === name ? 'checked' : 'unchecked'}
+                                    onPress={() => setAppointmentType(name)}
+                                    color={configs.colors.danger}
+                                />
+                                <Text style={{ color: configs.colors.gray, fontSize: 18 }}>{name}</Text>
+                            </View>
+                        )
+                    })
+                }
+            </View>
+
+            <ScrollView horizontal={true}>
+                <View>
                     <Text style={styles.pickDate}>Symptoms</Text>
-                            {/* {
+                    {/* {
                                 symptoms.map((symptom) => {
                                     return (
                                         <TouchableOpacity
@@ -185,22 +198,28 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                                     )
                                 })
                             } */}
-                    </View>
-                    </ScrollView>
-
-                {hasOtherSymptoms && <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                    <Text style={{ fontSize: 16 }}>Describe your other symptoms</Text>
-                    <TextInput
-                        value={otherSymptoms}
-                        onChangeText={text => setOtherSymptoms(text)}
-                        multiline={true}
-                        mode="outlined"
-                        numberOfLines={7}
-                    />
                 </View>
-                }
+            </ScrollView>
+
+            {hasOtherSymptoms && <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                <Text style={{ fontSize: 16 }}>Describe your other symptoms</Text>
+                <TextInput
+                    value={otherSymptoms}
+                    onChangeText={text => setOtherSymptoms(text)}
+                    multiline={true}
+                    mode="outlined"
+                    numberOfLines={7}
+                />
+            </View>
+            }
         </SafeAreaView>
     );
+
+    if (isLoading) {
+        return (
+            <AppLoader bgColor={configs.colors.white} />
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -209,22 +228,22 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                >
+            >
                 <View style={styles.header}>
                     <View style={styles.doctorInfo}>
-                        <Avatar.Image size={60} source={{ uri: src }} />
+                        <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
                         <View style={styles.personalInfo}>
-                            <Text style={styles.name}>{name}</Text>
-                            <Text style={styles.infoTitle}>{title}</Text>
+                            <Text style={styles.name}>{doctorInfo.first_name}</Text>
+                            <Text style={styles.infoTitle}>{doctorInfo.last_name}</Text>
                         </View>
                     </View>
 
                     <View style={styles.contacts}>
-                        <TouchableOpacity onPress={() => smsDoctor(phoneNumber)} style={styles.sms}>
+                        <TouchableOpacity onPress={() => smsDoctor(doctorInfo.phone_number)} style={styles.sms}>
                             <Icon5 name="sms" size={22} style={styles.callBtn} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => callDoctor(phoneNumber)} style={styles.sms}>
+                        <TouchableOpacity onPress={() => callDoctor(doctorInfo.phone_number)} style={styles.sms}>
                             <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
                         </TouchableOpacity>
                     </View>
@@ -236,7 +255,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
                 <View style={styles.footer}>
                     <TouchableOpacity onPress={() => confirmAppointment()}
-                    style={[configs.styles.secondaryBtn, {width: screen.width*0.9}]}>
+                        style={[configs.styles.secondaryBtn, { width: screen.width * 0.9 }]}>
                         <Text style={styles.okayText}>Book now</Text>
                     </TouchableOpacity>
                 </View>

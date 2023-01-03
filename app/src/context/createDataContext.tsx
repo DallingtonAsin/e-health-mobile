@@ -32,6 +32,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         updateProfile: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsBySpecialty: ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorInfo: ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });
 
     const Provider = ({ children }: { children: any }) => {
@@ -43,7 +44,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
                 const storedState = await getData();
            
                 if (storedState) {
-                    console.log(`Stored state is available`);
+                    // console.log(`Stored state is available`);
                     dispatch({
                         type: types.HYDRATE,
                         payload: storedState
