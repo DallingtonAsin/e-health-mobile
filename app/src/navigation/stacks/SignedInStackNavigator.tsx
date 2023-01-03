@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeStack from "./HomeStack";
 import * as configs from '../../configs';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
-import SpecialityListScreen from "../../screens/SpecialityListScreen";
+import SpecialityListScreen from "../../screens/MedicalDoctorsScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import SignupScreen from "../../screens/SignupScreen";
 import ProfileScreen from "../../screens/ProfileScreen";

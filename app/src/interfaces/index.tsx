@@ -43,5 +43,19 @@ interface MedicalSpecialty {
     name: string,
 }
 
+interface DoctorsDetail {
+    id: number,
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    qualification: string | '',
+    profession: string,
+    title: string,
+    experience: string,
+    languages: string,
+    image: string,
+    service_fee: number,
+}
 
-export type { IUser, LoginData, SignedinUser, Notification, MedicalSpecialty }
+
+export type { IUser, LoginData, SignedinUser, Notification, MedicalSpecialty, DoctorsDetail }
