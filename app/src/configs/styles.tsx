@@ -39,6 +39,7 @@ export const styles = {
   logo: {
     borderColor: colors.white,
     borderWidth: 0,
+    tintColor: colors.primary
   },
 
   userAvatar: {
