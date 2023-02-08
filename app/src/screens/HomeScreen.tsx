@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -6,8 +6,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
-    Pressable
+    TouchableOpacity
 } from 'react-native';
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';

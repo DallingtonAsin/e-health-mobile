@@ -62,6 +62,20 @@ interface CommunicationType {
     name: string
 }
 
+interface MyAppointmentInfo {
+    id: number,
+    drImage: string,
+    drName: string,
+    city: string,
+    address: string,
+    consultationReason: string,
+    date: string,
+    time: string,
+    status: boolean,
+    statusText: string,
+    type: string,
+}
+
 export type {
     IUser,
     LoginData,
@@ -69,5 +83,6 @@ export type {
     Notification,
     MedicalSpecialty,
     DoctorsDetail,
-    CommunicationType
+    CommunicationType,
+    MyAppointmentInfo
 }

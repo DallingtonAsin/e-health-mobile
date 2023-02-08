@@ -16,7 +16,6 @@ import AppLoader from '../components/AppLoader';
 import { CommunicationType } from '../interfaces';
 import MultiSelect from 'react-native-multiple-select';
 import Toast from 'react-native-simple-toast';
-import { Item } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 
 
 let defaultDateState = { selected: true, marked: false, disabled: false, selectedColor: configs.colors.gray }

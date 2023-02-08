@@ -6,12 +6,19 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "clean": "cd android && ./gradlew clean && cd ..",
+    "uninstall": "cd android && ./gradlew uninstallAll && cd ..",
     "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug",
     "gar": "cd android && ./gradlew assembleRelease",
-    "postinstall": "npx typesync"
+    "postinstall": "npx typesync",
+    "android:dev": "react-native run-android --variant=developmentdebug",
+    "android:dev-release": "react-native run-android --variant=developmentrelease",
+    "android:staging": "react-native run-android --variant=stagingdebug",
+    "android:staging-release": "react-native run-android --variant=stagingrelease",
+    "android:prod": "react-native run-android --variant=productiondebug",
+    "android:prod-release": "react-native run-android --variant=productionrelease"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
@@ -34,6 +41,7 @@
     "react-native-animatable": "^1.3.3",
     "react-native-calendars": "^1.1292.0",
     "react-native-communications": "^2.2.1",
+    "react-native-config": "^1.5.0",
     "react-native-dotenv": "^3.4.2",
     "react-native-indicators": "^0.17.0",
     "react-native-modal-datetime-picker": "^14.0.0",
