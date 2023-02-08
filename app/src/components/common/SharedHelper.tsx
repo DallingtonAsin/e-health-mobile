@@ -32,7 +32,7 @@ const getGreeting = () => {
 
 const formatDate = (date: Date) => {
   const offset = date.getTimezoneOffset()
-  date = new Date(date.getTime() - (offset*60*1000))
+  date = new Date(date.getTime() - (offset * 60 * 1000))
   let formattedDate = date.toISOString().split('T')[0];
   return formattedDate;
 }
@@ -44,11 +44,11 @@ const displayMessage = (message: any) => {
 const displayErrorMessage = (error: any, onFailure: any) => {
   let message;
   if (error && error.response) {
-      message = error.response.data.message;
+    message = error.response.data.message;
   } else if (error.message) {
-      message = String(error.message);
+    message = String(error.message);
   } else {
-      message = String(error);
+    message = String(error);
   }
 
   onFailure(message);
@@ -56,18 +56,41 @@ const displayErrorMessage = (error: any, onFailure: any) => {
 
 
 const getUserInitials = (name: string) => {
-     if(name){
-      return name.split(" ").map((n)=>n[0]).join("");
-     }
-    return name;
+  if (name) {
+    return name.split(" ").map((n) => n[0]).join("");
+  }
+  return name;
+}
+
+const getCurrentDate = () => {
+  const date = new Date();
+  const formattedDate = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+  return formattedDate;
+}
+
+const readableDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const options: any = { weekday: 'short', day: 'numeric', month: 'long' };
+  const formattedDate = date.toLocaleDateString('en-US', options);
+  return formattedDate;
+}
+
+const readableTime = (timeStr: any) => {
+  const date = new Date(`1970-01-01T${timeStr}:00`);
+  const options: any = { hour: 'numeric', minute: 'numeric', hour12: true };
+  const formattedTime = date.toLocaleTimeString('en-US', options);
+  return formattedTime
 }
 
 
 export {
-   removeLeadingZeros,
-   getGreeting,
-   displayMessage,
-   formatDate,
-   displayErrorMessage,
-   getUserInitials
+  removeLeadingZeros,
+  getGreeting,
+  displayMessage,
+  formatDate,
+  displayErrorMessage,
+  getUserInitials,
+  getCurrentDate,
+  readableDate,
+  readableTime
 }

@@ -3,10 +3,12 @@ import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'rea
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { readableDate, readableTime } from '../components/common/SharedHelper';
+
 
 const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navigation: any}) => {
 
-  const { src, name, phoneNumber, title } = route.params
+  const { src, name, phoneNumber, title, appointmentInfo } = route.params
 
   const navigateToHome = () => {
       navigation.navigate(`Home`);
@@ -34,7 +36,7 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navig
 
           <Text style={styles.date}>
              <Icon5 name="calendar-alt" 
-          size={15} color={configs.colors.white} /> on Mon, 21 December - 10:00 am</Text>
+          size={15} color={configs.colors.white} /> on {readableDate(appointmentInfo.date)} - {readableTime(appointmentInfo.time)}</Text>
       
         <Pressable style={styles.button} onPress={() => navigateToHome()}>
           <Text style={styles.okayText}>Okay</Text>
