@@ -22,7 +22,7 @@ const NotificationScreen = () => {
         <Item item={item} />
     );
 
-    const EmptyListMessage = () =>  (
+    const EmptyListComponent = () =>  (
             <View style={configs.styles.emptyViewContainer}>
                 <Image style={configs.styles.image} source={configs.images.no_notifications} />
                 <Text style={configs.styles.noInfoText}>No notifications found</Text>
@@ -37,7 +37,7 @@ const NotificationScreen = () => {
                 renderItem={renderItem}
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyExtractor={(item: Notification, index: number) => item.id.toString()}
-                ListEmptyComponent={EmptyListMessage}
+                ListEmptyComponent={EmptyListComponent}
             />
 
         </SafeAreaView>
