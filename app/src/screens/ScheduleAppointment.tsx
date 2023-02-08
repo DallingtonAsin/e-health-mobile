@@ -1,51 +1,46 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, TextInput } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
-import { ExpandableCalendar, CalendarProvider } from 'react-native-calendars';
-import { getCalendarTheme } from '../configs/themes';
-import { TextInput } from 'react-native-paper';
+import { Calendar } from 'react-native-calendars';
+// import { TextInput } from 'react-native-paper';
 import { RadioButton } from 'react-native-paper';
 import { DoctorsDetail } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
-import { initialDoctorInfo, workingHours, commonSymptoms, communicationChannels } from '../configs/constants';
-import { displayMessage } from '../components/common/SharedHelper';
+import { initialDoctorInfo, workingHours, communicationChannels } from '../configs/constants';
+import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { CommunicationType } from '../interfaces';
-import MultiSelect from 'react-native-multiple-select';
 import Toast from 'react-native-simple-toast';
 
-
-let defaultDateState = { selected: true, marked: false, disabled: false, selectedColor: configs.colors.gray }
 const screen = Dimensions.get('screen');
 
 const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { doctor_id } = route.params;
-
     const [isLoading, setIsLoading] = useState(true);
-    const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
-    const { getDoctorInfo } = useContext(AuthContext);
-
-    const calendarTheme = useRef(getCalendarTheme());
-    const [hours, setHours] = useState<string[]>(workingHours);
-    const [symptoms, setSymptoms] = useState<string[]>(commonSymptoms);
-    const [types, setTypes] = useState<CommunicationType[]>(communicationChannels)
+    const currentDate = getCurrentDate();
 
     const [appointmentDate, setAppointmentDate] = useState<string>('');
-    const [appointmentHour, setAppointmentHour] = useState<string>('');
+    const [appointmentTime, setAppointmentTime] = useState<string>('');
     const [appointmentType, setAppointmentType] = useState<string>('');
-    const [patientSymptoms, setPatientSymptoms] = useState<string[]>([]);
-    const [otherSymptoms, setOtherSymptoms] = useState('');
-    const [hasOtherSymptoms, setHasOtherSymptoms] = useState(false);
+
+    const [selected, setSelected] = useState(currentDate);
+    const [symptoms, setSymptoms] = useState('');
+    const { getDoctorInfo } = useContext(AuthContext);
+    const [isFocused, setIsFocused] = useState(false);
+
     const [markedDates, setMarkedDates] = useState<any>();
+    const [hours, setHours] = useState<string[]>(workingHours);
+    const [types, setTypes] = useState<CommunicationType[]>(communicationChannels);
+    const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
 
 
     useEffect(() => {
         getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: stopLoading });
-    }, []);
+    }, [doctor_id]);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
         setDoctorInfo(doctorInfo)
@@ -56,32 +51,31 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const setPatientAppointmentDate = (day: any) => {
-        if (day && day.dateString) {
-            setAppointmentDate(day.dateString)
-        } else {
-            console.log(`No day captured`);
-        }
+        setAppointmentDate(day.dateString);
     }
 
-    const addOrRemoveSymptom = (symptom: string) => {
 
-        if (!patientSymptoms.includes(symptom)) {
-            setPatientSymptoms(prevSymptoms => [
-                ...prevSymptoms,
-                symptom,
-            ]);
-        } else {
-            removeSymptom(symptom)
-        }
-    }
-
-    const removeSymptom = (symptom: string) => {
-        var array = patientSymptoms;
-        var index = array.indexOf(symptom)
-        if (index !== -1) {
-            array.splice(index, 1);
-            setPatientSymptoms(array);
-        }
+    const CustomCalendar = (props: any) => {
+        const marked = useMemo(() => ({
+            [selected]: {
+                selected: true,
+                selectedColor: configs.colors.danger,
+                selectedTextColor: configs.colors.white,
+            }
+        }), [selected]);
+        return (
+            <Calendar
+                markedDates={marked}
+                initialDate={currentDate}
+                minDate={currentDate}
+                disableAllTouchEventsForDisabledDays={true}
+                onDayPress={(day) => {
+                    setSelected(day.dateString);
+                    props.onDaySelect && props.onDaySelect(day);
+                }}
+                {...props}
+            />
+        );
     }
 
     const callDoctor = (number: string) => {
@@ -93,126 +87,34 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const confirmAppointment = () => {
-        // if(!appointmentDate){
-        //     Toast.show(`Please select appointment date`); return;
-        // }
+        if (!appointmentDate) {
+            Toast.show(`Please select appointment date`); return;
+        }
 
-        // if(!appointmentHour){
-        //     Toast.show(`Please select appointment hour`); return;
-        // } 
-        // if(!appointmentType){
-        //     Toast.show(`Please select appointment type`); return;
-        // }
-        // if(patientSymptoms.length < 0){
-        //     Toast.show(`Please select atleast one symptom`); return;
-        // }
-        // if (appointmentDate && appointmentHour && appointmentType && patientSymptoms.length > 0) {
-        //     navigation.navigate('AppointmentConfirmation');
-        // }
+        if (!appointmentTime) {
+            Toast.show(`Please select appointment hour`); return;
+        }
+        if (!appointmentType) {
+            Toast.show(`Please select appointment type`); return;
+        }
+        if (!symptoms) {
+            Toast.show(`Please enter atleast one symptom`); return;
+        }
+        if (appointmentDate && appointmentTime && appointmentType && symptoms) {
+            navigation.navigate('AppointmentConfirmation');
+        }
+        let appointmentDetails = { date: appointmentDate, time: appointmentTime, type: appointmentType, symptoms: symptoms };
+        // console.log(appointmentDetails);
+
         navigation.navigate('AppointmentConfirmation', {
             src: doctorInfo.image,
             name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
             phoneNumber: doctorInfo.phone_number,
-            profession: doctorInfo.profession
+            profession: doctorInfo.profession,
+            appointmentInfo: appointmentDetails
         });
     }
 
-    const AppointmentScreen = () => (
-        <SafeAreaView style={styles.fcontainer}>
-            <View>
-                <Text style={styles.pickDate}>Pick a day</Text>
-                <CalendarProvider
-                    date={new Date().toDateString()}
-                    showTodayButton={false}>
-                    <ExpandableCalendar
-                        onDayPress={day => {
-                            setPatientAppointmentDate(day);
-                        }}
-                        // firstDay={1}
-                        leftArrowImageSource={configs.images.previous}
-                        rightArrowImageSource={configs.images.next}
-                        theme={calendarTheme.current}
-                        hideDayNames={false}
-                        disablePan={false}
-                        hideKnob={true}
-                        markedDates={markedDates}
-                        // initialPosition={"open"}
-                        allowShadow={true}
-                        disabledByDefault={true}
-                        disableAllTouchEventsForDisabledDays={true}
-                    />
-                </CalendarProvider>
-            </View>
-            <View>
-                <Text style={styles.pickDate}>Pick time</Text>
-                <View style={{ margin: 0, flexDirection: 'row' }}>
-                    {
-                        hours.map((hour) => {
-                            return (
-                                <TouchableOpacity
-                                    activeOpacity={1}
-                                    style={[styles.types, appointmentHour == hour ? { backgroundColor: configs.colors.danger, borderColor: configs.colors.danger } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
-                                    onPress={() => setAppointmentHour(hour)}
-                                    key={hour}>
-                                    <Text style={[styles.hrText, appointmentHour == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
-                                </TouchableOpacity>
-                            );
-                        })
-                    }
-                </View>
-            </View>
-
-            <View>
-                <Text style={styles.pickDate}>Type</Text>
-                {
-                    types.map(({ id, name }: { id: number, name: string }) => {
-                        return (
-                            <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
-                                <RadioButton
-                                    value={name}
-                                    status={appointmentType === name ? 'checked' : 'unchecked'}
-                                    onPress={() => setAppointmentType(name)}
-                                    color={configs.colors.danger}
-                                />
-                                <Text style={{ color: configs.colors.gray, fontSize: 18 }}>{name}</Text>
-                            </View>
-                        )
-                    })
-                }
-            </View>
-
-            <ScrollView horizontal={true}>
-                <View>
-                    <Text style={styles.pickDate}>Symptoms</Text>
-                    {/* {
-                                symptoms.map((symptom) => {
-                                    return (
-                                        <TouchableOpacity
-                                            activeOpacity={1}
-                                            style={[styles.symptoms, patientSymptoms.includes(symptom) ? { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver } : { backgroundColor: configs.colors.white, borderColor: configs.colors.silver }]}
-                                            onPress={() => addOrRemoveSymptom(symptom)}
-                                            key={symptom}>
-                                            <Text style={[styles.symptomText, patientSymptoms.includes(symptom) ? { color: configs.colors.white } : { color: configs.colors.gray }]}>{symptom}</Text>
-                                        </TouchableOpacity>
-                                    )
-                                })
-                            } */}
-                </View>
-            </ScrollView>
-
-            {hasOtherSymptoms && <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                <Text style={{ fontSize: 16 }}>Describe your other symptoms</Text>
-                <TextInput
-                    value={otherSymptoms}
-                    onChangeText={text => setOtherSymptoms(text)}
-                    multiline={true}
-                    mode="outlined"
-                    numberOfLines={7}
-                />
-            </View>
-            }
-        </SafeAreaView>
-    );
 
     if (isLoading) {
         return (
@@ -226,8 +128,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-            >
+                showsHorizontalScrollIndicator={false}>
+
                 <View style={styles.header}>
                     <View style={styles.doctorInfo}>
                         <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
@@ -248,14 +150,77 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                     </View>
                 </View>
 
-                <View style={styles.body}>
-                    <AppointmentScreen />
+                <View style={styles.fcontainer}>
+                    <View>
+                        <Text style={styles.pickDate}>Select date</Text>
+                        <CustomCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
+                    </View>
+                    <View>
+                        <Text style={styles.pickDate}>Select time</Text>
+                        <View style={{ margin: 0, flexDirection: 'row' }}>
+                            {
+                                hours.map((hour) => {
+                                    return (
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            style={[styles.types, appointmentTime == hour ? { backgroundColor: configs.colors.danger, borderColor: configs.colors.danger } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
+                                            onPress={() => setAppointmentTime(hour)}
+                                            key={hour}>
+                                            <Text style={[styles.hrText, appointmentTime == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
+                                        </TouchableOpacity>
+                                    );
+                                })
+                            }
+                        </View>
+                    </View>
+
+                    <View>
+                        <Text style={styles.pickDate}>Type</Text>
+                        {
+                            types.map(({ id, name }: { id: number, name: string }) => {
+                                return (
+                                    <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
+                                        <RadioButton
+                                            value={name}
+                                            status={appointmentType === name ? 'checked' : 'unchecked'}
+                                            onPress={() => setAppointmentType(name)}
+                                            color={configs.colors.danger}
+                                        />
+                                        <Text style={{ color: configs.colors.gray, fontSize: 18 }}>{name}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
+
+                    <View style={{ marginHorizontal: 0, marginVertical: 0 }}>
+                        <Text style={styles.pickDate}>Symptoms</Text>
+                        <TextInput
+                            editable
+                            value={symptoms}
+                            onChangeText={text => setSymptoms(text)}
+                            multiline={true}
+                            numberOfLines={3}
+                            style={{
+                                borderColor: isFocused ? configs.colors.primary : configs.colors.gray,
+                                height: 80,
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                marginVertical: 3,
+                                padding: 8,
+                            }}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                        />
+                    </View>
+
                 </View>
+
 
                 <View style={styles.footer}>
                     <TouchableOpacity onPress={() => confirmAppointment()}
                         style={[configs.styles.secondaryBtn, { width: screen.width * 0.9 }]}>
-                        <Text style={styles.okayText}>Book now</Text>
+                        <Text style={styles.confirmText}>Book now</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -341,7 +306,7 @@ const styles = StyleSheet.create({
     },
 
 
-    okayText: {
+    confirmText: {
         fontSize: 18,
         color: configs.colors.primary,
         fontWeight: 'bold',
@@ -355,14 +320,6 @@ const styles = StyleSheet.create({
         borderRadius: 3,
     },
 
-    tabText: {
-        color: '#000',
-        margin: 8,
-        fontSize: 16,
-        fontWeight: 'bold',
-        opacity: 0.6
-    },
-
     contacts: {
         flexDirection: 'row',
         alignItems: 'stretch'
@@ -374,21 +331,13 @@ const styles = StyleSheet.create({
 
     pickDate: {
         fontSize: 18,
-        paddingVertical: 15,
-        marginLeft: 15,
+        paddingVertical: 5,
+        marginLeft: 2,
     },
 
     fcontainer: {
         flex: 1,
         backgroundColor: configs.colors.white
-    },
-
-    fscroll: {
-        flex: 1,
-    },
-
-    fscrollcontainer: {
-        flexGrow: 1,
     },
 
     types: {
@@ -400,17 +349,6 @@ const styles = StyleSheet.create({
         backgroundColor: configs.colors.white
     },
 
-    symptoms: {
-        marginHorizontal: 5,
-        borderWidth: 1,
-        borderColor: '#bbb',
-        padding: 8,
-        borderRadius: 5,
-        backgroundColor: configs.colors.white,
-        width: '40%',
-        alignItems: 'center',
-        marginVertical: 5,
-    },
 
     hrText: {
         fontSize: 16,
@@ -421,15 +359,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '400',
     },
-
-    symptomsContainer: {
-        margin: 0,
-        flexDirection: 'row',
-        paddingRight: 10,
-        flex: 1,
-        flexWrap: 'wrap',
-        borderWidth: 1,
-        borderColor: configs.colors.primary,
-        alignItems: 'flex-start'
-    }
 });
