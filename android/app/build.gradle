@@ -1,5 +1,18 @@
 apply plugin: "com.android.application"
 
+// configure environment files 
+
+project.ext.envConfigFiles = [
+   productiondebug: ".env.production",
+   productionrelease: ".env.production",
+   developmentrelease: ".env.development",
+   developmentdebug: ".env.development",
+   stagingrelease: ".env.staging",
+   stagingdebug: ".env.staging"
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" // <- add this line
+
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -131,8 +144,35 @@ def reactNativeArchitectures() {
 
 android {
     ndkVersion rootProject.ext.ndkVersion
-
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+     // add this block
+    flavorDimensions "default"
+    productFlavors {
+
+        development {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.vastel.development"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.vastel"
+        }
+
+        staging {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.vastel.staging"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.vastel"
+        }
+
+        production {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.vastel"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.vastel"
+        }
+      
+      
+    }
 
     defaultConfig {
         applicationId "com.vastel"
@@ -221,6 +261,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            matchingFallbacks = ['debug', 'release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
