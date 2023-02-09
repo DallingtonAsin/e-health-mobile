@@ -13,7 +13,13 @@ const routes = {
       specialties: 'medical/specialties',
       doctors: 'medical/doctors',
       doctors_by_specialty: 'medical/doctors/specialty',
+   },
+
+   appointments: {
+      types: 'appointments/types',
+      index: 'appointments',
    }
+
 
 }
 

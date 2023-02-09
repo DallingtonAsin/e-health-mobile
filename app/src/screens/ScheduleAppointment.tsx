@@ -5,14 +5,13 @@ import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { Calendar } from 'react-native-calendars';
-// import { TextInput } from 'react-native-paper';
 import { RadioButton } from 'react-native-paper';
 import { DoctorsDetail } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
-import { initialDoctorInfo, workingHours, communicationChannels } from '../configs/constants';
+import { initialDoctorInfo, workingHours } from '../configs/constants';
 import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
-import { CommunicationType } from '../interfaces';
+import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
 
 const screen = Dimensions.get('screen');
@@ -21,6 +20,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const { doctor_id } = route.params;
     const [isLoading, setIsLoading] = useState(true);
+    const [isAppointmentTypeLoading, setAppointmentTypeLoading] = useState(true);
+
     const currentDate = getCurrentDate();
 
     const [appointmentDate, setAppointmentDate] = useState<string>('');
@@ -29,25 +30,26 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const [selected, setSelected] = useState(currentDate);
     const [symptoms, setSymptoms] = useState('');
-    const { getDoctorInfo } = useContext(AuthContext);
+    const { getDoctorInfo, getAppointmentTypes } = useContext(AuthContext);
     const [isFocused, setIsFocused] = useState(false);
 
     const [markedDates, setMarkedDates] = useState<any>();
     const [hours, setHours] = useState<string[]>(workingHours);
-    const [types, setTypes] = useState<CommunicationType[]>(communicationChannels);
+    const [appointmentTypes, setAppointmentTypes] = useState<AppointmentType[]>([]);
     const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
 
 
     useEffect(() => {
-        getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: stopLoading });
-    }, [doctor_id]);
+        getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+        getAppointmentTypes({ onSuccess: populateAppointmentTypes, onFailure: displayMessage, onCompletion: () => { setAppointmentTypeLoading(false) }});
+    }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
-        setDoctorInfo(doctorInfo)
+        setDoctorInfo(doctorInfo);
     }
 
-    const stopLoading = () => {
-        setIsLoading(false);
+    const populateAppointmentTypes = (types: AppointmentType[]) => {
+        setAppointmentTypes(types);
     }
 
     const setPatientAppointmentDate = (day: any) => {
@@ -116,7 +118,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
 
-    if (isLoading) {
+    if (isLoading || isAppointmentTypeLoading) {
         return (
             <AppLoader bgColor={configs.colors.white} />
         )
@@ -177,7 +179,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                     <View>
                         <Text style={styles.pickDate}>Type</Text>
                         {
-                            types.map(({ id, name }: { id: number, name: string }) => {
+                            appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
                                 return (
                                     <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
                                         <RadioButton

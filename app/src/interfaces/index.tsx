@@ -57,7 +57,7 @@ interface DoctorsDetail {
     service_fee: number,
 }
 
-interface CommunicationType {
+interface AppointmentType {
     id: number,
     name: string
 }
@@ -83,6 +83,6 @@ export type {
     Notification,
     MedicalSpecialty,
     DoctorsDetail,
-    CommunicationType,
+    AppointmentType,
     MyAppointmentInfo
 }

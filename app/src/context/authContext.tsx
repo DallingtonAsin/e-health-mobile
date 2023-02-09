@@ -186,6 +186,24 @@ const getDoctorInfo = () => {
     };
 };
 
+const getAppointmentTypes = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.appointments.types
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
@@ -199,6 +217,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getAppointmentTypes, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
