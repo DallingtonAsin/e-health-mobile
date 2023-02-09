@@ -77,7 +77,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
                 <View style={styles.header}>
                     <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={configs.images.otpImage} />
-                    <Text style={styles.otpTxt}>Enter OTP that has been sent to your phone number</Text>
+                    <Text style={styles.otpTxt}>Enter verification code that has been sent to your phone number</Text>
                 </View>
 
                 <View style={styles.body}>

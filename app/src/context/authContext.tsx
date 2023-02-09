@@ -1,7 +1,7 @@
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, LoginData } from '../interfaces';
+import { IUser, AppointmentInfo, LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
 import { authReducer } from './authReducer';
 import { initialUserState } from '../configs/constants';
@@ -186,6 +186,41 @@ const getDoctorInfo = () => {
     };
 };
 
+const getAppointmentTypes = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.appointments.types
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const submitAppointment = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.appointments.index,
+            payload
+        ).then(async (res: any) => {
+            if (res && res.data) {
+                onSuccess(res.data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
@@ -199,6 +234,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getAppointmentTypes, submitAppointment, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

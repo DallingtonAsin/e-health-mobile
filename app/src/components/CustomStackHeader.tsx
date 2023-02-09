@@ -8,7 +8,7 @@ const CustomStackHeader = ({title}: {title: string}) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => navigateBack()}>
-            <Icon5 name="arrow-left" size={25} color={configs.colors.primary} style={styles.arrowIcon}/>
+            <Icon5 name="arrow-left" size={20} color={configs.colors.primary} style={styles.arrowIcon}/>
             </TouchableOpacity>
             <Text style={styles.verifyTxt}>{title}</Text>
         </View>
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     },
 
     arrowIcon: {
-        left:45,
+        left: 25,
     }
 });

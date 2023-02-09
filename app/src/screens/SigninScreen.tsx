@@ -119,7 +119,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 130 : 200} source={configs.images.logo}
+                    <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={configs.images.logo}
                         style={configs.styles.logo} />
                     <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
                 </View>

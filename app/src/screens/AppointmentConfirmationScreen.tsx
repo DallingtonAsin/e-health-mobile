@@ -6,13 +6,9 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { readableDate, readableTime } from '../components/common/SharedHelper';
 
 
-const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navigation: any}) => {
+const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-  const { src, name, phoneNumber, title, appointmentInfo } = route.params
-
-  const navigateToHome = () => {
-      navigation.navigate(`Home`);
-  }
+  const { src, name, title, appointmentInfo } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,10 +19,10 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navig
 
         <View style={styles.body}>
           <Icon5 name="check-circle" size={90} color={configs.colors.white} />
-          <Text style={styles.bookedTitle}>Appointment booked!</Text>
-          <Text style={styles.info}>You have an appointment with</Text>
+          <Text style={[styles.bookedTitle, { fontWeight: 'bold' }]}>Appointment booked!</Text>
+          <Text style={[styles.bookedTitle]}>Appointment number: <Text style={{ fontWeight: 'bold' }}>{appointmentInfo.appointment_number}</Text></Text>
           <View style={styles.details}>
-            <Avatar.Image size={60} source={{uri: src}} />
+            <Avatar.Image size={60} source={{ uri: src }} />
             <View style={styles.personalInfo}>
               <Text style={styles.name}>{name}</Text>
               <Text style={styles.infoTitle}>{title}</Text>
@@ -34,11 +30,11 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route:any, navig
           </View>
         </View>
 
-          <Text style={styles.date}>
-             <Icon5 name="calendar-alt" 
-          size={15} color={configs.colors.white} /> on {readableDate(appointmentInfo.date)} - {readableTime(appointmentInfo.time)}</Text>
-      
-        <Pressable style={styles.button} onPress={() => navigateToHome()}>
+        <Text style={styles.date}>
+          <Icon5 name="calendar-alt"
+            size={15} color={configs.colors.white} /> on {readableDate(appointmentInfo.appointment_date)} - {readableTime(appointmentInfo.appointment_time)}</Text>
+
+        <Pressable style={styles.button} onPress={() => navigation.navigate(`Home`)}>
           <Text style={styles.okayText}>Okay</Text>
         </Pressable>
 
@@ -72,10 +68,9 @@ const styles = StyleSheet.create({
   },
 
   bookedTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: configs.fonts.large,
     color: configs.colors.white,
-    marginVertical: 15,
+    marginVertical: 5,
   },
 
   info: {
@@ -87,11 +82,11 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: 'row',
     backgroundColor: configs.colors.white,
-    paddingHorizontal: 35,
+    paddingHorizontal: 25,
     paddingVertical: 10,
     width: '90%',
     borderRadius: 5,
-    marginVertical: 20
+    marginVertical: 35
   },
 
   name: {
@@ -143,5 +138,3 @@ const styles = StyleSheet.create({
   }
 
 });
-
-
