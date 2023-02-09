@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, TextInput } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import * as configs from '../configs';
@@ -8,7 +8,7 @@ import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
 import { DoctorsDetail } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
-import { initialDoctorInfo, workingHours } from '../configs/constants';
+import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
@@ -24,28 +24,32 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const currentDate = getCurrentDate();
 
-    const [appointmentDate, setAppointmentDate] = useState<string>('');
+    const [appointmentDate, setAppointmentDate] = useState<string>(currentDate);
     const [appointmentTime, setAppointmentTime] = useState<string>('');
     const [appointmentType, setAppointmentType] = useState<string>('');
 
-    const [selected, setSelected] = useState(currentDate);
     const [symptoms, setSymptoms] = useState('');
     const { getDoctorInfo, getAppointmentTypes } = useContext(AuthContext);
     const [isFocused, setIsFocused] = useState(false);
 
-    const [markedDates, setMarkedDates] = useState<any>();
-    const [hours, setHours] = useState<string[]>(workingHours);
     const [appointmentTypes, setAppointmentTypes] = useState<AppointmentType[]>([]);
     const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
-
+    const [schedule, setSchedule] = useState<any>();
+    const [scheduleDates, setScheduleDates] = useState<any>();
+    const [scheduleHours, setScheduleHours] = useState<string[]>([]);
 
     useEffect(() => {
         getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
-        getAppointmentTypes({ onSuccess: populateAppointmentTypes, onFailure: displayMessage, onCompletion: () => { setAppointmentTypeLoading(false) }});
+        getAppointmentTypes({ onSuccess: populateAppointmentTypes, onFailure: displayMessage, onCompletion: () => { setAppointmentTypeLoading(false) } });
     }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
+        console.log(`Doctor info`, doctorInfo);
         setDoctorInfo(doctorInfo);
+        if (doctorInfo.schedule_dates) {
+            setScheduleDates(doctorInfo.schedule_dates);
+            console.log(`Doctor schedule`, doctorInfo.schedule_dates);
+        }
     }
 
     const populateAppointmentTypes = (types: AppointmentType[]) => {
@@ -53,39 +57,39 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const setPatientAppointmentDate = (day: any) => {
+        console.log(day.dateString);
         setAppointmentDate(day.dateString);
     }
 
+    const CustomDay = ({ date, selected, onPress }: { date: any, selected: any, onPress: any }) => {
+
+        const dateString = date.dateString;
+        let backgroundColor = selected ? configs.colors.primary : configs.colors.white;
+
+        if (scheduleDates.includes(dateString)) {
+            return (
+                <TouchableOpacity onPress={onPress} style={[{ backgroundColor: backgroundColor }, selected && { padding: 6, borderRadius: 20 }]}>
+                    <Text style={[styles.dayText, selected && styles.selectedDateText]}>{date.day}</Text>
+                </TouchableOpacity>
+            );
+        }
+
+        return (<Text style={[styles.day, styles.disabled]}>{date.day}</Text>);
+    };
 
     const CustomCalendar = (props: any) => {
-        const marked = useMemo(() => ({
-            [selected]: {
-                selected: true,
-                selectedColor: configs.colors.danger,
-                selectedTextColor: configs.colors.white,
-            }
-        }), [selected]);
         return (
             <Calendar
-                markedDates={marked}
                 initialDate={currentDate}
                 minDate={currentDate}
-                disableAllTouchEventsForDisabledDays={true}
-                onDayPress={(day) => {
-                    setSelected(day.dateString);
-                    props.onDaySelect && props.onDaySelect(day);
+                onPress={setPatientAppointmentDate}
+                dayComponent={({ date }: { date: any }) => {
+                    return <CustomDay date={date} selected={appointmentDate === date.dateString} onPress={() => setPatientAppointmentDate(date)} />;
                 }}
+                disableAllTouchEventsForDisabledDays={true}
                 {...props}
             />
         );
-    }
-
-    const callDoctor = (number: string) => {
-        contact.callPhoneNumber(number);
-    }
-
-    const smsDoctor = (number: string) => {
-        contact.SendSms(number);
     }
 
     const confirmAppointment = () => {
@@ -107,7 +111,6 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         }
         let appointmentDetails = { date: appointmentDate, time: appointmentTime, type: appointmentType, symptoms: symptoms };
         // console.log(appointmentDetails);
-
         navigation.navigate('AppointmentConfirmation', {
             src: doctorInfo.image,
             name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
@@ -136,17 +139,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                     <View style={styles.doctorInfo}>
                         <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
                         <View style={styles.personalInfo}>
-                            <Text style={styles.name}>{doctorInfo.first_name}</Text>
+                            <Text style={styles.infoTitle}>{doctorInfo.first_name}</Text>
                             <Text style={styles.infoTitle}>{doctorInfo.last_name}</Text>
                         </View>
                     </View>
 
                     <View style={styles.contacts}>
-                        <TouchableOpacity onPress={() => smsDoctor(doctorInfo.phone_number)} style={styles.sms}>
+                        <TouchableOpacity onPress={() => contact.SendSms(doctorInfo.phone_number)} style={styles.sms}>
                             <Icon5 name="sms" size={22} style={styles.callBtn} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => callDoctor(doctorInfo.phone_number)} style={styles.sms}>
+                        <TouchableOpacity onPress={() => contact.callPhoneNumber(doctorInfo.phone_number)} style={styles.sms}>
                             <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
                         </TouchableOpacity>
                     </View>
@@ -161,11 +164,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         <Text style={styles.pickDate}>Select time</Text>
                         <View style={{ margin: 0, flexDirection: 'row' }}>
                             {
-                                hours.map((hour) => {
+                                scheduleHours.map((hour) => {
                                     return (
                                         <TouchableOpacity
                                             activeOpacity={1}
-                                            style={[styles.types, appointmentTime == hour ? { backgroundColor: configs.colors.danger, borderColor: configs.colors.danger } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
+                                            style={[styles.types, appointmentTime == hour ? { backgroundColor: configs.colors.primary, borderColor: configs.colors.primary } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
                                             onPress={() => setAppointmentTime(hour)}
                                             key={hour}>
                                             <Text style={[styles.hrText, appointmentTime == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
@@ -186,11 +189,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                                             value={name}
                                             status={appointmentType === name ? 'checked' : 'unchecked'}
                                             onPress={() => setAppointmentType(name)}
-                                            color={configs.colors.danger}
+                                            color={configs.colors.primary}
                                         />
-                                        <Text style={{ color: configs.colors.gray, fontSize: 18 }}>{name}</Text>
+                                        <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>{name}</Text>
                                     </View>
-                                )
+                                );
                             })
                         }
                     </View>
@@ -234,6 +237,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 export default ScheduleAppointmentScreen;
 
 const styles = StyleSheet.create({
+
     container: {
         flex: 1,
         shadowColor: configs.colors.black,
@@ -333,7 +337,7 @@ const styles = StyleSheet.create({
 
     pickDate: {
         fontSize: 18,
-        paddingVertical: 5,
+        paddingVertical: 10,
         marginLeft: 2,
     },
 
@@ -351,7 +355,6 @@ const styles = StyleSheet.create({
         backgroundColor: configs.colors.white
     },
 
-
     hrText: {
         fontSize: 16,
         fontWeight: '400',
@@ -361,4 +364,22 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '400',
     },
+
+    day: {
+        fontSize: 16,
+        color: '#2d4150'
+    },
+
+    disabled: {
+        color: '#d9e1e8'
+    },
+
+    selectedDateText: {
+        color: configs.colors.white
+    },
+
+    dayText: {
+        fontSize: 16,
+        color: '#333'
+    }
 });

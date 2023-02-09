@@ -55,6 +55,8 @@ interface DoctorsDetail {
     languages: string,
     image: string,
     service_fee: number,
+    schedule_dates: string[],
+    schedule: string[],
 }
 
 interface AppointmentType {
