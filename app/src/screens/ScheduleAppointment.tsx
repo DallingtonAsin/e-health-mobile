@@ -6,12 +6,12 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
-import { DoctorsDetail } from '../interfaces';
+import { AppointmentInfo, DoctorsDetail } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
 import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
-import { AppointmentType } from '../interfaces';
+import { IUser, AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
 
 const screen = Dimensions.get('screen');
@@ -20,6 +20,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const { doctor_id } = route.params;
     const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isAppointmentTypeLoading, setAppointmentTypeLoading] = useState(true);
 
     const currentDate = getCurrentDate();
@@ -29,7 +30,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [appointmentType, setAppointmentType] = useState<string>('');
 
     const [symptoms, setSymptoms] = useState('');
-    const { getDoctorInfo, getAppointmentTypes } = useContext(AuthContext);
+    const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AuthContext);
+    const [user, setUser] = useState<IUser>(state.user);
     const [isFocused, setIsFocused] = useState(false);
 
     const [appointmentTypes, setAppointmentTypes] = useState<AppointmentType[]>([]);
@@ -44,7 +46,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
-      
+
         setDoctorInfo(doctorInfo);
         if (doctorInfo.schedule_dates) {
             setScheduleDates(doctorInfo.schedule_dates);
@@ -62,6 +64,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const setPatientAppointmentDate = (day: any) => {
         let date = day.dateString;
         setScheduleHours(schedule[date]);
+        setAppointmentTime('');
         setAppointmentDate(date);
     }
 
@@ -111,17 +114,36 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
             Toast.show(`Please enter atleast one symptom`); return;
         }
         if (appointmentDate && appointmentTime && appointmentType && symptoms) {
-            navigation.navigate('AppointmentConfirmation');
+            let appointmentDetails: AppointmentInfo = {
+                patient_id: user.id,
+                doctor_id: doctor_id,
+                appointment_type: appointmentType,
+                appointment_date: appointmentDate,
+                appointment_time: appointmentTime,
+                symptoms: symptoms
+            };
+            setIsSubmitting(true);
+            resetAppointmentInfo();
+            submitAppointment({ payload: appointmentDetails, onSuccess: displaySuccessScreen, onFailure: displayMessage, onCompletion: () => { setIsSubmitting(false) } });
         }
-        let appointmentDetails = { date: appointmentDate, time: appointmentTime, type: appointmentType, symptoms: symptoms };
-        // console.log(appointmentDetails);
-        // navigation.navigate('AppointmentConfirmation', {
-        //     src: doctorInfo.image,
-        //     name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
-        //     phoneNumber: doctorInfo.phone_number,
-        //     profession: doctorInfo.profession,
-        //     appointmentInfo: appointmentDetails
-        // });
+
+    }
+
+    const resetAppointmentInfo = () => {
+        setAppointmentDate('');
+        setAppointmentTime('');
+        setAppointmentType('');
+        setSymptoms('');
+    }
+
+    const displaySuccessScreen = (appointmentDetails: any) => {
+        navigation.navigate('AppointmentConfirmation', {
+            src: doctorInfo.image,
+            name: `${doctorInfo.title} ${doctorInfo.first_name} ${doctorInfo.last_name}`,
+            phoneNumber: doctorInfo.phone_number,
+            title: doctorInfo.profession,
+            appointmentInfo: appointmentDetails
+        });
     }
 
 
@@ -132,6 +154,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     return (
+        <>
         <SafeAreaView style={styles.container}>
             <ScrollView
                 style={styles.scroll}
@@ -234,6 +257,10 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 </View>
             </ScrollView>
         </SafeAreaView>
+
+        { isSubmitting && <AppLoader />}
+
+        </>
     )
 
 }

@@ -1,4 +1,5 @@
 interface IUser {
+    id?: number,
     first_name: string,
     last_name: string,
     email?: string,
@@ -78,6 +79,16 @@ interface MyAppointmentInfo {
     type: string,
 }
 
+interface AppointmentInfo{
+    patient_id: any,
+    doctor_id: number,
+    appointment_type: string,
+    appointment_date: string,
+    appointment_time: string,
+    symptoms: string,
+    notes?: string,
+}
+
 export type {
     IUser,
     LoginData,
@@ -86,5 +97,6 @@ export type {
     MedicalSpecialty,
     DoctorsDetail,
     AppointmentType,
+    AppointmentInfo,
     MyAppointmentInfo
 }
