@@ -44,11 +44,14 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
-        console.log(`Doctor info`, doctorInfo);
+      
         setDoctorInfo(doctorInfo);
         if (doctorInfo.schedule_dates) {
             setScheduleDates(doctorInfo.schedule_dates);
-            console.log(`Doctor schedule`, doctorInfo.schedule_dates);
+        }
+
+        if (doctorInfo.schedule) {
+            setSchedule(doctorInfo.schedule);
         }
     }
 
@@ -57,8 +60,9 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const setPatientAppointmentDate = (day: any) => {
-        console.log(day.dateString);
-        setAppointmentDate(day.dateString);
+        let date = day.dateString;
+        setScheduleHours(schedule[date]);
+        setAppointmentDate(date);
     }
 
     const CustomDay = ({ date, selected, onPress }: { date: any, selected: any, onPress: any }) => {
@@ -111,13 +115,13 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         }
         let appointmentDetails = { date: appointmentDate, time: appointmentTime, type: appointmentType, symptoms: symptoms };
         // console.log(appointmentDetails);
-        navigation.navigate('AppointmentConfirmation', {
-            src: doctorInfo.image,
-            name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
-            phoneNumber: doctorInfo.phone_number,
-            profession: doctorInfo.profession,
-            appointmentInfo: appointmentDetails
-        });
+        // navigation.navigate('AppointmentConfirmation', {
+        //     src: doctorInfo.image,
+        //     name: `${doctorInfo.title}${doctorInfo.first_name} ${doctorInfo.last_name}`,
+        //     phoneNumber: doctorInfo.phone_number,
+        //     profession: doctorInfo.profession,
+        //     appointmentInfo: appointmentDetails
+        // });
     }
 
 
