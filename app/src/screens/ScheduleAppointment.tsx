@@ -123,7 +123,6 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 symptoms: symptoms
             };
             setIsSubmitting(true);
-            resetAppointmentInfo();
             submitAppointment({ payload: appointmentDetails, onSuccess: displaySuccessScreen, onFailure: displayMessage, onCompletion: () => { setIsSubmitting(false) } });
         }
 
@@ -137,6 +136,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const displaySuccessScreen = (appointmentDetails: any) => {
+        resetAppointmentInfo();
         navigation.navigate('AppointmentConfirmation', {
             src: doctorInfo.image,
             name: `${doctorInfo.title} ${doctorInfo.first_name} ${doctorInfo.last_name}`,
@@ -155,110 +155,110 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     return (
         <>
-        <SafeAreaView style={styles.container}>
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}>
+            <SafeAreaView style={styles.container}>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
 
-                <View style={styles.header}>
-                    <View style={styles.doctorInfo}>
-                        <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
-                        <View style={styles.personalInfo}>
-                            <Text style={styles.infoTitle}>{doctorInfo.first_name}</Text>
-                            <Text style={styles.infoTitle}>{doctorInfo.last_name}</Text>
+                    <View style={styles.header}>
+                        <View style={styles.doctorInfo}>
+                            <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
+                            <View style={styles.personalInfo}>
+                                <Text style={styles.infoTitle}>{doctorInfo.first_name}</Text>
+                                <Text style={styles.infoTitle}>{doctorInfo.last_name}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.contacts}>
+                            <TouchableOpacity onPress={() => contact.SendSms(doctorInfo.phone_number)} style={styles.sms}>
+                                <Icon5 name="sms" size={22} style={styles.callBtn} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => contact.callPhoneNumber(doctorInfo.phone_number)} style={styles.sms}>
+                                <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
+                            </TouchableOpacity>
                         </View>
                     </View>
 
-                    <View style={styles.contacts}>
-                        <TouchableOpacity onPress={() => contact.SendSms(doctorInfo.phone_number)} style={styles.sms}>
-                            <Icon5 name="sms" size={22} style={styles.callBtn} />
-                        </TouchableOpacity>
+                    <View style={styles.fcontainer}>
+                        <View>
+                            <Text style={styles.pickDate}>Select date</Text>
+                            <CustomCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
+                        </View>
+                        <View>
+                            <Text style={styles.pickDate}>Select time</Text>
+                            <View style={{ margin: 0, flexDirection: 'row' }}>
+                                {
+                                    scheduleHours.map((hour) => {
+                                        return (
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                style={[styles.types, appointmentTime == hour ? { backgroundColor: configs.colors.primary, borderColor: configs.colors.primary } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
+                                                onPress={() => setAppointmentTime(hour)}
+                                                key={hour}>
+                                                <Text style={[styles.hrText, appointmentTime == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
+                                            </TouchableOpacity>
+                                        );
+                                    })
+                                }
+                            </View>
+                        </View>
 
-                        <TouchableOpacity onPress={() => contact.callPhoneNumber(doctorInfo.phone_number)} style={styles.sms}>
-                            <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                <View style={styles.fcontainer}>
-                    <View>
-                        <Text style={styles.pickDate}>Select date</Text>
-                        <CustomCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
-                    </View>
-                    <View>
-                        <Text style={styles.pickDate}>Select time</Text>
-                        <View style={{ margin: 0, flexDirection: 'row' }}>
+                        <View>
+                            <Text style={styles.pickDate}>Type</Text>
                             {
-                                scheduleHours.map((hour) => {
+                                appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
                                     return (
-                                        <TouchableOpacity
-                                            activeOpacity={1}
-                                            style={[styles.types, appointmentTime == hour ? { backgroundColor: configs.colors.primary, borderColor: configs.colors.primary } : { backgroundColor: configs.colors.silver, borderColor: configs.colors.silver }]}
-                                            onPress={() => setAppointmentTime(hour)}
-                                            key={hour}>
-                                            <Text style={[styles.hrText, appointmentTime == hour ? { color: configs.colors.white } : { color: configs.colors.dark }]}>{hour}</Text>
-                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
+                                            <RadioButton
+                                                value={name}
+                                                status={appointmentType === name ? 'checked' : 'unchecked'}
+                                                onPress={() => setAppointmentType(name)}
+                                                color={configs.colors.primary}
+                                            />
+                                            <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>{name}</Text>
+                                        </View>
                                     );
                                 })
                             }
                         </View>
+
+                        <View style={{ marginHorizontal: 0, marginVertical: 0 }}>
+                            <Text style={styles.pickDate}>Symptoms</Text>
+                            <TextInput
+                                editable
+                                value={symptoms}
+                                onChangeText={text => setSymptoms(text)}
+                                multiline={true}
+                                numberOfLines={3}
+                                style={{
+                                    borderColor: isFocused ? configs.colors.primary : configs.colors.gray,
+                                    height: 80,
+                                    borderWidth: 1,
+                                    borderRadius: 4,
+                                    marginVertical: 3,
+                                    padding: 8,
+                                }}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                            />
+                        </View>
+
                     </View>
 
-                    <View>
-                        <Text style={styles.pickDate}>Type</Text>
-                        {
-                            appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
-                                return (
-                                    <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
-                                        <RadioButton
-                                            value={name}
-                                            status={appointmentType === name ? 'checked' : 'unchecked'}
-                                            onPress={() => setAppointmentType(name)}
-                                            color={configs.colors.primary}
-                                        />
-                                        <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>{name}</Text>
-                                    </View>
-                                );
-                            })
-                        }
+
+                    <View style={styles.footer}>
+                        <TouchableOpacity onPress={() => confirmAppointment()}
+                            style={[configs.styles.secondaryBtn, { width: screen.width * 0.9 }]}>
+                            <Text style={styles.confirmText}>Book now</Text>
+                        </TouchableOpacity>
                     </View>
+                </ScrollView>
+            </SafeAreaView>
 
-                    <View style={{ marginHorizontal: 0, marginVertical: 0 }}>
-                        <Text style={styles.pickDate}>Symptoms</Text>
-                        <TextInput
-                            editable
-                            value={symptoms}
-                            onChangeText={text => setSymptoms(text)}
-                            multiline={true}
-                            numberOfLines={3}
-                            style={{
-                                borderColor: isFocused ? configs.colors.primary : configs.colors.gray,
-                                height: 80,
-                                borderWidth: 1,
-                                borderRadius: 4,
-                                marginVertical: 3,
-                                padding: 8,
-                            }}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                        />
-                    </View>
-
-                </View>
-
-
-                <View style={styles.footer}>
-                    <TouchableOpacity onPress={() => confirmAppointment()}
-                        style={[configs.styles.secondaryBtn, { width: screen.width * 0.9 }]}>
-                        <Text style={styles.confirmText}>Book now</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-
-        { isSubmitting && <AppLoader />}
+            {isSubmitting && <AppLoader />}
 
         </>
     )

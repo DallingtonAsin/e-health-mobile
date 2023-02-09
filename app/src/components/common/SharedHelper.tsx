@@ -47,6 +47,8 @@ const displayErrorMessage = (error: any, onFailure: any) => {
     message = error.response.data.message;
   } else if (error.message) {
     message = String(error.message);
+  } else if (error.error) {
+    message = String(error.error);
   } else {
     message = String(error);
   }
