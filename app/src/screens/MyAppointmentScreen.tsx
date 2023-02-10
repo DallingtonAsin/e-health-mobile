@@ -80,12 +80,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={<EmptyListComponent message="No Pending Appointments" />}
+                            ListEmptyComponent={!isPendingLoading ? <EmptyListComponent message="No Pending Appointments"/> : null }
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isPendingLoading && !refreshing && <AppLoader />}
+                {isPendingLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
             </>
         );
     }
@@ -111,12 +111,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={<EmptyListComponent message="No Completed Appointments" />}
+                            ListEmptyComponent={!isCompletedLoading ? <EmptyListComponent message="No Completed Appointments"/> : null}
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isCompletedLoading && !refreshing && <AppLoader />}
+                {isCompletedLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
             </>
         );
     }
@@ -141,12 +141,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={<EmptyListComponent message="No Cancelled Appointments" />}
+                            ListEmptyComponent={ !isCancelledLoading ? <EmptyListComponent message="No Cancelled Appointments"/> : null}
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isCancelledLoading && !refreshing && <AppLoader />}
+                {isCancelledLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
             </>
         );
     }
