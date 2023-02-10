@@ -9,7 +9,7 @@ const reusable = {
   button: {
     borderWidth: 2,
     paddingVertical: 12,
-    width: window.width*0.92,
+    width: window.width * 0.92,
     borderRadius: 5,
   },
 
@@ -22,7 +22,7 @@ export const styles = {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     alignItems: 'center',
-  
+
   },
 
   secondaryBtn: {
@@ -77,6 +77,22 @@ export const styles = {
     alignItems: 'center',
     paddingVertical: 5,
     textAlign: 'center'
+  },
+
+  completedTxt: {
+    backgroundColor: colors.confirmedBg,
+    color: colors.confirmedColor
+
+  },
+
+  pendingTxt: {
+    backgroundColor: colors.pendingBg,
+    color: colors.pendingColor
+  },
+
+  cancelledTxt: {
+    backgroundColor: colors.pink,
+    color: colors.white
   }
 
 } as const;

@@ -1,12 +1,13 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
-import * as configs from '../configs';
+import * as config from '../configs';
 import { Avatar } from 'react-native-paper';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
+    const { appointment_number, appointment_date, appointment_time, appointment_type, symptoms, status } = appointmentInfo;
 
     const Separator = () => (
         <View style={styles.separator} />
@@ -39,34 +40,37 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 </View>
 
                 <View style={styles.body}>
-                    <ContentItem title={"Appointment Number"} value={appointmentInfo.appointment_number} />
+                    <ContentItem title={"Appointment Number"} value={appointment_number} />
                     <Separator />
-                    <ContentItem title={"Appointment Type"} value={appointmentInfo.appointment_type} />
+                    <ContentItem title={"Appointment Type"} value={appointment_type} />
                     <Separator />
-                    <ContentItem title={"Sypmptoms"} value={appointmentInfo.symptoms} />
+                    <ContentItem title={"Sypmptoms"} value={symptoms} />
                     <Separator />
-                    <ContentItem title={"Appointment Date"} value={appointmentInfo.appointment_date} />
+                    <ContentItem title={"Appointment Date"} value={appointment_date} />
                     <Separator />
-                    <ContentItem title={"Appointment Time"} value={appointmentInfo.appointment_time} />
+                    <ContentItem title={"Appointment Time"} value={appointment_time} />
                     <Separator />
                     <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
                     <Separator />
                     <View style={styles.appointmentInfo}>
                         <Text style={styles.subtitle}>Status</Text>
-                        <Text style={styles.info}>{appointmentInfo.status}</Text>
+                        <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
                     </View>
+                    <Separator />
                 </View>
 
+                {
+                    status == 'Pending' && <View style={styles.footer}>
+                        <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                        </Pressable>
 
-                <View style={styles.footer}>
-                    <Pressable style={[configs.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                        <Text style={[styles.buttonText, { color: configs.colors.white }]}>Join Meeting</Text>
-                    </Pressable>
+                        <Pressable style={[config.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                        </Pressable>
+                    </View>
+                }
 
-                    <Pressable style={[configs.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
-                        <Text style={[styles.buttonText, { color: configs.colors.white }]}>Cancel Appointment</Text>
-                    </Pressable>
-                </View>
 
             </ScrollView>
         </SafeAreaView>
@@ -78,12 +82,12 @@ export default AppointmentDetailsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.white,
+        backgroundColor: config.colors.white,
         marginVertical: 10,
         marginHorizontal: 7,
         elevation: 8,
         borderRadius: 8,
-        shadowColor: configs.colors.primary,
+        shadowColor: config.colors.primary,
         shadowOpacity: 0.5,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 0 },
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 4,
         borderWidth: 0.5,
-        borderColor: configs.colors.primary,
+        borderColor: config.colors.primary,
         marginHorizontal: 10,
         borderRadius: 8,
         paddingHorizontal: 8,
@@ -117,12 +121,12 @@ const styles = StyleSheet.create({
 
     titles: {
         opacity: 0.8,
-        fontSize: configs.fonts.normal,
+        fontSize: config.fonts.normal,
     },
 
     userTitle: {
-        fontSize: configs.fonts.large,
-        color: configs.colors.primary,
+        fontSize: config.fonts.large,
+        color: config.colors.primary,
     },
 
     appointmentInfo: {
@@ -134,26 +138,26 @@ const styles = StyleSheet.create({
 
     subtitle: {
         fontWeight: '400',
-        fontSize: configs.fonts.medium,
+        fontSize: config.fonts.medium,
         opacity: 0.9,
         textTransform: 'uppercase',
     },
 
     info: {
-        color: configs.colors.primary,
-        fontSize: configs.fonts.large,
+        color: config.colors.primary,
+        fontSize: config.fonts.large,
         fontWeight: '400',
     },
 
     bookedTitle: {
-        fontSize: configs.fonts.large,
-        color: configs.colors.white,
+        fontSize: config.fonts.large,
+        color: config.colors.white,
         marginVertical: 5,
     },
 
     details: {
         flexDirection: 'row',
-        backgroundColor: configs.colors.white,
+        backgroundColor: config.colors.white,
         paddingHorizontal: 25,
         paddingVertical: 10,
         width: '90%',
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        color: configs.colors.black,
+        color: config.colors.black,
         fontSize: 18,
         fontWeight: 'bold'
     },
@@ -173,19 +177,19 @@ const styles = StyleSheet.create({
     },
 
     infoTitle: {
-        color: configs.colors.black,
+        color: config.colors.black,
         fontSize: 16,
         opacity: 0.6
     },
 
     date: {
-        color: configs.colors.white,
+        color: config.colors.white,
         fontSize: 16,
         opacity: 0.7
     },
 
     button: {
-        backgroundColor: configs.colors.white,
+        backgroundColor: config.colors.white,
         paddingHorizontal: 148,
         paddingVertical: 18,
         borderRadius: 5,
@@ -197,7 +201,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontSize: configs.fonts.large,
+        fontSize: config.fonts.large,
         fontWeight: '600',
         textTransform: 'capitalize',
     },
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
     },
 
     separator: {
-        width: '85%',
+        width: '90%',
         height: 1,
         marginTop: 5,
         backgroundColor: '#e2e2e2',
