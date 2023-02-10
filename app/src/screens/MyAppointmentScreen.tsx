@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useWindowDimensions } from 'react-native';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
@@ -15,8 +15,8 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>();
     const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>();
 
-    const [isPendingLoading, setIsPendingLoading] = useState(true);
     const [isCompletedLoading, setIsCompletedLoading] = useState(true);
+    const [isPendingLoading, setIsPendingLoading] = useState(true);
     const [isCancelledLoading, setIsCancelledLoading] = useState(true);
 
     const { state, getMyAppointments } = useContext(AuthContext);
@@ -31,24 +31,27 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         { key: 'cancelled', title: 'Cancelled' }
     ]);
 
+    const fetchPendingAppointments = () => {
+        getMyAppointments({ payload: { patient_id: user.id, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+    }
+
+    const fetchCompletedAppointments = () => {
+        getMyAppointments({ payload: { patient_id: user.id, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+    }
+
+    const fetchCancelledAppointments = () => {
+        getMyAppointments({ payload: { patient_id: user.id, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+    }
+
+    const setPendingAppoinments = (data: MyAppointmentInfo[]) => { setPendingAppointments(data); }
+    const setCompletedAppoinments = (data: MyAppointmentInfo[]) => { setCompletedAppointments(data); }
+    const setCancelledAppoinments = (data: MyAppointmentInfo[]) => { setCancelledAppointments(data); }
 
     useEffect(() => {
-        getMyAppointments({ payload: { patient_id: user.id, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+        fetchPendingAppointments();
+        fetchCompletedAppointments();
+        fetchCancelledAppointments();
     }, []);
-
-    const setPendingAppoinments = (data: MyAppointmentInfo[]) => {
-        setPendingAppointments(data);
-    }
-
-    const setCompletedAppoinments = (data: MyAppointmentInfo[]) => {
-        setCompletedAppointments(data);
-    }
-
-    const setCancelledAppoinments = (data: MyAppointmentInfo[]) => {
-        setCancelledAppointments(data);
-    }
 
     const EmptyListComponent = ({ message }: { message: string }) => (
         <View style={config.styles.emptyViewContainer}>
@@ -57,59 +60,103 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         </View>
     );
 
-    const PendingAppointmentsScreen = () => (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.subcontainer}>
-                <FlatList
-                    data={pendingAppointments}
-                    renderItem={renderItem}
-                    keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    ListEmptyComponent={<EmptyListComponent message="No Pending Appointments" />}
-                />
-            </View>
-        </SafeAreaView>
-    );
+    const PendingAppointmentsScreen = () => {
+        const [refreshing, setRefreshing] = useState(false);
 
-    const CancelledAppointmentsScreen = () => (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.subcontainer}>
-                <FlatList
-                    data={cancelledAppointments}
-                    renderItem={renderItem}
-                    keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    ListEmptyComponent={<EmptyListComponent message="No Cancelled Appointments" />}
-                />
-            </View>
-        </SafeAreaView>
-    );
+        const onRefresh = () => {
+            setRefreshing(true);
+            fetchPendingAppointments();
+            setRefreshing(false);
+        };
 
-    const CompletedAppointmentsScreen = () => (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.subcontainer}>
-                <FlatList
-                    data={completedAppiontments}
-                    renderItem={renderItem}
-                    keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    ListEmptyComponent={<EmptyListComponent message="No Completed Appointments" />}
-                />
-            </View>
-        </SafeAreaView>
-    );
+        return (
+            <>
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.subcontainer}>
+                        <FlatList
+                            data={pendingAppointments}
+                            renderItem={renderItem}
+                            keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ flexGrow: 1 }}
+                            ListEmptyComponent={<EmptyListComponent message="No Pending Appointments" />}
+                            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                        />
+                    </View>
+                </SafeAreaView>
+                {isPendingLoading && !refreshing && <AppLoader />}
+            </>
+        );
+    }
+
+    const CompletedAppointmentsScreen = () => {
+
+        const [refreshing, setRefreshing] = useState(false);
+
+        const onRefresh = () => {
+            setRefreshing(true);
+            fetchCompletedAppointments();
+            setRefreshing(false);
+        };
+
+        return (
+            <>
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.subcontainer}>
+                        <FlatList
+                            data={completedAppiontments}
+                            renderItem={renderItem}
+                            keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ flexGrow: 1 }}
+                            ListEmptyComponent={<EmptyListComponent message="No Completed Appointments" />}
+                            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                        />
+                    </View>
+                </SafeAreaView>
+                {isCompletedLoading && !refreshing && <AppLoader />}
+            </>
+        );
+    }
+
+    const CancelledAppointmentsScreen = () => {
+        const [refreshing, setRefreshing] = useState(false);
+
+        const onRefresh = () => {
+            setRefreshing(true);
+            fetchCancelledAppointments();
+            setRefreshing(false);
+        };
+
+        return (
+            <>
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.subcontainer}>
+                        <FlatList
+                            data={cancelledAppointments}
+                            renderItem={renderItem}
+                            keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ flexGrow: 1 }}
+                            ListEmptyComponent={<EmptyListComponent message="No Cancelled Appointments" />}
+                            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                        />
+                    </View>
+                </SafeAreaView>
+                {isCancelledLoading && !refreshing && <AppLoader />}
+            </>
+        );
+    }
 
     const renderScene = SceneMap({
         pending: PendingAppointmentsScreen,
         cancelled: CancelledAppointmentsScreen,
         completed: CompletedAppointmentsScreen
     });
+
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
         <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointmentInfo: item })}>
@@ -154,12 +201,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             style={{ backgroundColor: config.colors.white }}
         />
     );
-
-    if (isPendingLoading || isCompletedLoading || isCancelledLoading) {
-        return (
-            <AppLoader bgColor={config.colors.white} />
-        )
-    }
 
     return (
         <TabView
@@ -251,7 +292,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 50,
-        backgroundColor:  '#00bfff',
+        backgroundColor: '#00bfff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -267,6 +308,5 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-
 
 });

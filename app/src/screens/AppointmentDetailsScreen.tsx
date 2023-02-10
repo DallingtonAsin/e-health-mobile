@@ -1,13 +1,20 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import * as config from '../configs';
 import { Avatar } from 'react-native-paper';
+import { Context as AuthContext } from '../context/authContext';
+import { IUser } from '../interfaces';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
     const { appointment_number, appointment_date, appointment_time, appointment_type, symptoms, status } = appointmentInfo;
+    const { state, cancelAppointment } = useContext(AuthContext);
+    const [user, setUser] = useState<IUser>(state.user);
+    const [isLoading, setIsLoading] = useState(false);
 
     const Separator = () => (
         <View style={styles.separator} />
@@ -20,60 +27,90 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         </View>
     );
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContainer}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.header}>
-                    <View>
-                        <Avatar.Image size={80} source={{ uri: appointmentInfo.doctor.image }} />
-                    </View>
-                    <View>
-                        <Text style={styles.name}>{appointmentInfo.doctor.title} {appointmentInfo.doctor.first_name} {appointmentInfo.doctor.last_name}</Text>
-                        <Text style={styles.titles}>{appointmentInfo.doctor.qualification}</Text>
-                        <Text style={styles.userTitle}>{appointmentInfo.doctor.profession}</Text>
-                    </View>
-                </View>
-
-                <View style={styles.body}>
-                    <ContentItem title={"Appointment Number"} value={appointment_number} />
-                    <Separator />
-                    <ContentItem title={"Appointment Type"} value={appointment_type} />
-                    <Separator />
-                    <ContentItem title={"Sypmptoms"} value={symptoms} />
-                    <Separator />
-                    <ContentItem title={"Appointment Date"} value={appointment_date} />
-                    <Separator />
-                    <ContentItem title={"Appointment Time"} value={appointment_time} />
-                    <Separator />
-                    <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
-                    <Separator />
-                    <View style={styles.appointmentInfo}>
-                        <Text style={styles.subtitle}>Status</Text>
-                        <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
-                    </View>
-                    <Separator />
-                </View>
-
+    const cancelMedicalAppointment = () => {
+        Alert.alert(
+            '',
+            `Are you sure you want to cancel appointment ${appointment_number}?`,
+            [
                 {
-                    status == 'Pending' && <View style={styles.footer}>
-                        <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
-                        </Pressable>
+                    text: 'Yes', onPress: async () => {
+                        let payload = {
+                            patient_id: user.id,
+                            appointment_number: appointment_number
+                        }
+                        setIsLoading(true);
+                        cancelAppointment({ payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: afterCancelling });
+                    }
+                },
+                { text: 'No', onPress: () => console.log('Cancel Pressed') },
+            ],
+            { cancelable: false }
+        );
+    }
 
-                        <Pressable style={[config.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
-                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                        </Pressable>
+    const afterCancelling = () => {
+        setIsLoading(false);
+        navigation.navigate('MyAppointments');
+    }
+
+    return (
+        <>
+            <SafeAreaView style={styles.container}>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.header}>
+                        <View>
+                            <Avatar.Image size={80} source={{ uri: appointmentInfo.doctor.image }} />
+                        </View>
+                        <View>
+                            <Text style={styles.name}>{appointmentInfo.doctor.title} {appointmentInfo.doctor.first_name} {appointmentInfo.doctor.last_name}</Text>
+                            <Text style={styles.titles}>{appointmentInfo.doctor.qualification}</Text>
+                            <Text style={styles.userTitle}>{appointmentInfo.doctor.profession}</Text>
+                        </View>
                     </View>
-                }
+
+                    <View style={styles.body}>
+                        <ContentItem title={"Appointment Number"} value={appointment_number} />
+                        <Separator />
+                        <ContentItem title={"Appointment Type"} value={appointment_type} />
+                        <Separator />
+                        <ContentItem title={"Sypmptoms"} value={symptoms} />
+                        <Separator />
+                        <ContentItem title={"Appointment Date"} value={appointment_date} />
+                        <Separator />
+                        <ContentItem title={"Appointment Time"} value={appointment_time} />
+                        <Separator />
+                        <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
+                        <Separator />
+                        <View style={styles.appointmentInfo}>
+                            <Text style={styles.subtitle}>Status</Text>
+                            <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
+                        </View>
+                        <Separator />
+                    </View>
+
+                    {
+                        status == 'Pending' && <View style={styles.footer}>
+                            <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                            </Pressable>
+
+                            <Pressable style={[config.styles.dangerBtn]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                            </Pressable>
+                        </View>
+                    }
 
 
-            </ScrollView>
-        </SafeAreaView>
+                </ScrollView>
+            </SafeAreaView>
+
+            {isLoading && <AppLoader />}
+        </>
     );
 }
 
