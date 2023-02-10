@@ -28,8 +28,8 @@ const MyAppointmentScreen = () => {
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'pending', title: 'Pending' },
-        { key: 'cancelled', title: 'Cancelled' },
         { key: 'completed', title: 'Completed' },
+        { key: 'cancelled', title: 'Cancelled' }
     ]);
 
 
