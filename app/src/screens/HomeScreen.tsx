@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                             <Text style={styles.subtitle}>Prescriptions</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MedicalRecords')}>
+                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Medical History</Text>
                         </TouchableOpacity>
