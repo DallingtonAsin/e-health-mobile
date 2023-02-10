@@ -132,7 +132,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     </TouchableOpacity>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
-                        <Text style={[styles.status, item.status === 'Completed' && styles.completedTxt,  item.status === 'Cancelled' && styles.cancelledTxt,  item.status === 'Pending' && styles.pendingTxt]}>{item.status}</Text>
+                        <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt,  item.status === 'Cancelled' && config.styles.cancelledTxt,  item.status === 'Pending' && config.styles.pendingTxt]}>{item.status}</Text>
                     </View>
                 </View>
             </View>
@@ -247,19 +247,5 @@ const styles = StyleSheet.create({
         padding: 5
     },
 
-    completedTxt: {
-        backgroundColor: config.colors.confirmedBg,
-        color: config.colors.confirmedColor
-       
-    },
-
-    pendingTxt: {
-        backgroundColor: config.colors.pendingBg,
-        color: config.colors.pendingColor
-    },
-
-    cancelledTxt: {
-        backgroundColor: config.colors.pink,
-        color: config.colors.white
-    }
+   
 });
