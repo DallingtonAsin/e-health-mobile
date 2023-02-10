@@ -7,7 +7,6 @@ import { Avatar } from 'react-native-paper';
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    console.log(`Your appointment info`, appointmentInfo);
 
     const Separator = () => (
         <View style={styles.separator} />
@@ -25,43 +24,49 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
             >
-                    <View style={styles.header}>
-                        <View>
-                            <Avatar.Image size={80} source={{ uri: appointmentInfo.doctor.image }} />
-                        </View>
-                        <View>
-                            <Text style={styles.name}>{appointmentInfo.doctor.title} {appointmentInfo.doctor.first_name} {appointmentInfo.doctor.last_name}</Text>
-                            <Text style={styles.titles}>{appointmentInfo.doctor.qualification}</Text>
-                            <Text style={styles.userTitle}>{appointmentInfo.doctor.profession}</Text>
-                        </View>
+                <View style={styles.header}>
+                    <View>
+                        <Avatar.Image size={80} source={{ uri: appointmentInfo.doctor.image }} />
                     </View>
-
-                    <View style={styles.body}>
-                        <ContentItem title={"Appointment Number"} value={appointmentInfo.appointment_number} />
-                        <Separator />
-                        <ContentItem title={"Appointment Type"} value={appointmentInfo.appointment_type} />
-                        <Separator />
-                        <ContentItem title={"Sypmptoms"} value={appointmentInfo.symptoms} />
-                        <Separator />
-                        <ContentItem title={"Appointment Date"} value={appointmentInfo.appointment_date} />
-                        <Separator />
-                        <ContentItem title={"Appointment Time"} value={appointmentInfo.appointment_time} />
-                        <Separator />
-                        <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
-                        <Separator />
+                    <View>
+                        <Text style={styles.name}>{appointmentInfo.doctor.title} {appointmentInfo.doctor.first_name} {appointmentInfo.doctor.last_name}</Text>
+                        <Text style={styles.titles}>{appointmentInfo.doctor.qualification}</Text>
+                        <Text style={styles.userTitle}>{appointmentInfo.doctor.profession}</Text>
                     </View>
+                </View>
 
-
-                    <View style={styles.footer}>
-                        <Pressable style={[configs.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                            <Text style={[styles.buttonText, { color: configs.colors.white }]}>Join Meeting</Text>
-                        </Pressable>
-
-                        <Pressable style={[configs.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
-                            <Text style={[styles.buttonText, { color: configs.colors.white }]}>Cancel Appointment</Text>
-                        </Pressable>
+                <View style={styles.body}>
+                    <ContentItem title={"Appointment Number"} value={appointmentInfo.appointment_number} />
+                    <Separator />
+                    <ContentItem title={"Appointment Type"} value={appointmentInfo.appointment_type} />
+                    <Separator />
+                    <ContentItem title={"Sypmptoms"} value={appointmentInfo.symptoms} />
+                    <Separator />
+                    <ContentItem title={"Appointment Date"} value={appointmentInfo.appointment_date} />
+                    <Separator />
+                    <ContentItem title={"Appointment Time"} value={appointmentInfo.appointment_time} />
+                    <Separator />
+                    <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
+                    <Separator />
+                    <View style={styles.appointmentInfo}>
+                        <Text style={styles.subtitle}>Status</Text>
+                        <Text style={styles.info}>{appointmentInfo.status}</Text>
                     </View>
+                </View>
+
+
+                <View style={styles.footer}>
+                    <Pressable style={[configs.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
+                        <Text style={[styles.buttonText, { color: configs.colors.white }]}>Join Meeting</Text>
+                    </Pressable>
+
+                    <Pressable style={[configs.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
+                        <Text style={[styles.buttonText, { color: configs.colors.white }]}>Cancel Appointment</Text>
+                    </Pressable>
+                </View>
 
             </ScrollView>
         </SafeAreaView>
@@ -93,16 +98,21 @@ const styles = StyleSheet.create({
     },
 
     header: {
+        flex: 1,
         flexDirection: 'row',
-        marginVertical: 10,
+        marginTop: 10,
         justifyContent: 'space-around'
     },
 
     body: {
+        flex: 4,
         borderWidth: 0.5,
         borderColor: configs.colors.primary,
         marginHorizontal: 10,
         borderRadius: 8,
+        paddingHorizontal: 8,
+        marginTop: 12,
+        marginBottom: 15,
     },
 
     titles: {
@@ -116,20 +126,23 @@ const styles = StyleSheet.create({
     },
 
     appointmentInfo: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 10
+        paddingHorizontal: 8,
+        paddingVertical: 6,
     },
 
     subtitle: {
         fontWeight: '400',
-        fontSize: configs.fonts.large,
-        opacity: 0.8,
+        fontSize: configs.fonts.medium,
+        opacity: 0.9,
+        textTransform: 'uppercase',
     },
 
     info: {
-        color: '#808080',
-        fontSize: configs.fonts.large
+        color: configs.colors.primary,
+        fontSize: configs.fonts.large,
+        fontWeight: '400',
     },
 
     bookedTitle: {
@@ -194,10 +207,10 @@ const styles = StyleSheet.create({
     },
 
     footer: {
+        flex: 1,
         flexDirection: 'column',
         alignSelf: 'center',
-        position: 'absolute',
-        bottom: 30,
+        marginVertical: 10
     },
 
     separator: {
