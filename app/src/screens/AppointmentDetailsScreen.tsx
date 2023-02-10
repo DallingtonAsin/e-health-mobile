@@ -54,20 +54,23 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     <Separator />
                     <View style={styles.appointmentInfo}>
                         <Text style={styles.subtitle}>Status</Text>
-                        <Text style={[status == 'Pending' && { color: config.colors.pendingColor } , status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success} ]}>{status}</Text>
+                        <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
                     </View>
+                    <Separator />
                 </View>
 
+                {
+                    status == 'Pending' && <View style={styles.footer}>
+                        <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                        </Pressable>
 
-                <View style={styles.footer}>
-                    <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
-                    </Pressable>
+                        <Pressable style={[config.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                        </Pressable>
+                    </View>
+                }
 
-                    <Pressable style={[config.styles.dangerBtn]} onPress={() => navigation.navigate(`Home`)}>
-                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                    </Pressable>
-                </View>
 
             </ScrollView>
         </SafeAreaView>
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     },
 
     separator: {
-        width: '85%',
+        width: '90%',
         height: 1,
         marginTop: 5,
         backgroundColor: '#e2e2e2',
