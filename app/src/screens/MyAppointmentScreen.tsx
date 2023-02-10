@@ -6,7 +6,7 @@ import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { IUser, MyAppointmentInfo } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
-import { displayMessage } from '../components/common/SharedHelper';
+import { displayMessage, strContains } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
 
@@ -127,7 +127,10 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.typeView}>
-                    <TouchableOpacity style={styles.type}>
+                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type, 'audio') && {backgroundColor: config.colors.silver},
+                    strContains(item.appointment_type, 'video') && {backgroundColor: config.colors.warning},
+                    strContains(item.appointment_type, 'person') && {backgroundColor: config.colors.confirmedColor},
+                ]}>
                         <Text style={styles.typeTxt}>{item.appointment_type}</Text>
                     </TouchableOpacity>
                     <View style={styles.statusView}>
@@ -210,7 +213,6 @@ const styles = StyleSheet.create({
     },
 
     type: {
-        backgroundColor: config.colors.primary,
         padding: 5,
         borderRadius: 4,
     },

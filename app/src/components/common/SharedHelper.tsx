@@ -84,6 +84,10 @@ const readableTime = (timeStr: any) => {
   return formattedTime
 }
 
+const strContains = (str: string,  substr:string) => {
+  return str.toLocaleLowerCase().indexOf(substr.toLocaleLowerCase()) !== -1
+}
+
 
 export {
   removeLeadingZeros,
@@ -94,5 +98,6 @@ export {
   getUserInitials,
   getCurrentDate,
   readableDate,
-  readableTime
+  readableTime,
+  strContains
 }
