@@ -49,15 +49,15 @@ interface DoctorsDetail {
     first_name: string,
     last_name: string,
     phone_number: string,
-    qualification: string | '',
+    qualification?: string,
     profession: string,
     title: string,
     experience: string,
-    languages: string,
-    image: string,
+    languages?: string,
+    image?: string,
     service_fee: number,
-    schedule_dates: string[],
-    schedule: string[],
+    schedule_dates?: string[],
+    schedule?: string[],
 }
 
 interface AppointmentType {
@@ -67,16 +67,12 @@ interface AppointmentType {
 
 interface MyAppointmentInfo {
     id: number,
-    drImage: string,
-    drName: string,
-    city: string,
-    address: string,
-    consultationReason: string,
-    date: string,
-    time: string,
-    status: boolean,
-    statusText: string,
-    type: string,
+    doctor: DoctorsDetail,
+    symptoms: string,
+    appointment_type: string,
+    appointment_date: string,
+    appointment_time: string,
+    status: string,
 }
 
 interface AppointmentInfo{

@@ -174,7 +174,6 @@ const getDoctorInfo = () => {
             `${routes.medical.doctors}/${doctorId}`
         ).then(async (res) => {
             if (res && res.data) {
-                
                 let data = res.data;
                 onSuccess(data);
             }
@@ -221,6 +220,23 @@ const submitAppointment = () => {
     };
 };
 
+const getMyAppointments = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.appointments.myappointments}/${payload.patient_id}/${payload.status}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const signout = (dispatch: any) => {
     return async () => {
         await removeAuthToken();
@@ -234,6 +250,6 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getAppointmentTypes, submitAppointment, signout },
+    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getAppointmentTypes, submitAppointment, getMyAppointments, signout },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
