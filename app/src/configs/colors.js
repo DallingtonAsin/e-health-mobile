@@ -9,7 +9,7 @@ export const colors = {
     light: '#F9F9F9',
     dark: '#0c0c0c',
     denger: '#E81A1A',
-    pink: "#900",
+    pink: "#dc3545",
     prime: 'rgb(30, 30, 40)', // "#0275d8",
     success: '#5cb85c',
     warning: '#f0ad4e',

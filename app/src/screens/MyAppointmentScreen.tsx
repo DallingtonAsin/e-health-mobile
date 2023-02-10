@@ -1,42 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar } from 'react-native-paper';
 import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { MyAppointmentInfo } from '../interfaces';
+import { IUser, MyAppointmentInfo } from '../interfaces';
+import { Context as AuthContext } from '../context/authContext';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
 
 
 const MyAppointmentScreen = () => {
 
-    const myappointmentInfo: any = [
-        // { id: 1, drImage: 'https://familydoctor.org/wp-content/uploads/2018/02/41808433_l.jpg', drName: 'Dr. Grace Kaisa', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: true, statusText: 'Completed', type: 'Prescription' },
-        // { id: 2, drImage: 'https://static2.bigstockphoto.com/4/7/3/large1500/374246794.jpg', drName: 'Dr. Dallington A', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: false, statusText: 'Pending', type: 'Video Call' },
-        // { id: 3, drImage: 'https://www.seekpng.com/png/full/13-132502_alligator-black-male-doctor-png.png', drName: 'Dr. Herman', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: false, statusText: 'Pending', type: 'Audio Call' },
-        // { id: 4, drImage: 'https://thumbs.dreamstime.com/b/portrait-positive-black-doctor-holding-medical-chart-male-over-white-background-178499631.jpg', drName: 'Dr. Ceasar', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: true, statusText: 'Completed', type: 'Prescription' },
-        // { id: 5, drImage: 'https://pngimg.com/uploads/doctor/doctor_PNG15957.png', drName: 'Hariharan G', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: false, statusText: 'Pending', type: 'Audio Call' },
-        // { id: 6, drImage: 'https://st.depositphotos.com/1770836/1357/i/950/depositphotos_13576597-stock-photo-female-doctor-or-nurse.jpg', drName: 'Dr. Jude', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: true, statusText: 'Completed', type: 'Audio Call' },
-        // { id: 7, drImage: 'https://i.pinimg.com/originals/5b/a1/a3/5ba1a398ac0aa7fe01480166fd2b818f.png', drName: 'Dr. Agaba', city: 'Karaikudi', address: 'Ntinda - Kampala', consultationReason: 'Skin related problem', date: '2022-12-04', time: '7:30 PM', status: true, statusText: 'Completed', type: 'Prescription' },
+    const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>();
+    const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>();
+    const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>();
 
-    ];
+    const [isPendingLoading, setIsPendingLoading] = useState(true);
+    const [isCompletedLoading, setIsCompletedLoading] = useState(true);
+    const [isCancelledLoading, setIsCancelledLoading] = useState(true);
 
-    const [activeAppointments, setActiveAppointment] = useState<MyAppointmentInfo[]>();
-    const [cancelledAppointments, setCancelledAppointment] = useState<MyAppointmentInfo[]>();
-    const [pastAppointments, setPastAppointment] = useState<MyAppointmentInfo[]>();
+    const { state, getMyAppointments } = useContext(AuthContext);
+    const [user, setUser] = useState<IUser>(state.user);
 
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-        { key: 'active', title: 'Active' },
-        { key: 'cancelled', title: 'Cancelled' },
-        { key: 'past', title: 'Past' },
+        { key: 'pending', title: 'pending' },
+        { key: 'cancelled', title: 'cancelled' },
+        { key: 'completed', title: 'completed' },
     ]);
 
 
     useEffect(() => {
-        setActiveAppointment(myappointmentInfo);
+        getMyAppointments({ payload: { patient_id: user.id, status: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, status: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, status: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
     }, []);
+
+    const setPendingAppoinments = (data: MyAppointmentInfo[]) => {
+        setPendingAppointments(data);
+    }
+
+    const setCompletedAppoinments = (data: MyAppointmentInfo[]) => {
+        setCompletedAppointments(data);
+    }
+
+    const setCancelledAppoinments = (data: MyAppointmentInfo[]) => {
+        setCancelledAppointments(data);
+    }
 
     const EmptyListComponent = ({ message }: { message: string }) => (
         <View style={config.styles.emptyViewContainer}>
@@ -45,17 +58,17 @@ const MyAppointmentScreen = () => {
         </View>
     );
 
-    const ActiveAppointmentsScreen = () => (
+    const PendingAppointmentsScreen = () => (
         <SafeAreaView style={styles.container}>
             <View style={styles.subcontainer}>
                 <FlatList
-                    data={activeAppointments}
+                    data={pendingAppointments}
                     renderItem={renderItem}
                     keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}
-                    ListEmptyComponent={<EmptyListComponent message="No Active Appointments" />}
+                    ListEmptyComponent={<EmptyListComponent message="No Pending Appointments" />}
                 />
             </View>
         </SafeAreaView>
@@ -77,50 +90,49 @@ const MyAppointmentScreen = () => {
         </SafeAreaView>
     );
 
-    const PastAppointmentsScreen = () => (
+    const CompletedAppointmentsScreen = () => (
         <SafeAreaView style={styles.container}>
             <View style={styles.subcontainer}>
                 <FlatList
-                    data={pastAppointments}
+                    data={completedAppiontments}
                     renderItem={renderItem}
                     keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}
-                    ListEmptyComponent={<EmptyListComponent message="No Past Appointments" />}
+                    ListEmptyComponent={<EmptyListComponent message="No Completed Appointments" />}
                 />
             </View>
         </SafeAreaView>
     );
 
     const renderScene = SceneMap({
-        active: ActiveAppointmentsScreen,
+        pending: PendingAppointmentsScreen,
         cancelled: CancelledAppointmentsScreen,
-        past: PastAppointmentsScreen
+        completed: CompletedAppointmentsScreen
     });
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
         <TouchableOpacity style={styles.item}>
             <View style={styles.avatarView}>
-                <Avatar.Image size={80} source={{ uri: item.drImage }} />
+                <Avatar.Image size={80} source={{ uri: item.doctor.image }} />
             </View>
             <View style={styles.main}>
 
-                <Text style={styles.drNameTxt}>{item.drName}</Text>
-                <Text style={styles.info}>{item.address}</Text>
-                <Text style={styles.info}>Reason for consultation: <Text style={[styles.info]}>{item.consultationReason}</Text></Text>
+                <Text style={styles.doctorTxt}>{item.doctor.title} {item.doctor.first_name} {item.doctor.last_name}</Text>
+                <Text style={styles.info}>Reason: <Text style={[styles.info]}>{item.symptoms}</Text></Text>
                 <View style={styles.dateView}>
-                    <Text style={[styles.info]}>Date: {item.date}</Text>
-                    <Text style={[styles.info]}>Time: {item.time}</Text>
+                    <Text style={[styles.info]}>Date: {item.appointment_date}</Text>
+                    <Text style={[styles.info]}>Time: {item.appointment_time}</Text>
                 </View>
 
                 <View style={styles.typeView}>
                     <TouchableOpacity style={styles.type}>
-                        <Text style={styles.typeTxt}>{item.type}</Text>
+                        <Text style={styles.typeTxt}>{item.appointment_type}</Text>
                     </TouchableOpacity>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
-                        <Text style={item.status ? styles.completedTxt : styles.pendingTxt}>{item.statusText}</Text>
+                        <Text style={[styles.status, item.status === 'Completed' && styles.completedTxt,  item.status === 'Cancelled' && styles.cancelledTxt,  item.status === 'Pending' && styles.pendingTxt]}>{item.status}</Text>
                     </View>
                 </View>
             </View>
@@ -139,6 +151,12 @@ const MyAppointmentScreen = () => {
             style={{ backgroundColor: config.colors.white }}
         />
     );
+
+    if (isPendingLoading || isCompletedLoading || isCancelledLoading) {
+        return (
+            <AppLoader bgColor={config.colors.white} />
+        )
+    }
 
     return (
         <TabView
@@ -205,7 +223,7 @@ const styles = StyleSheet.create({
         fontSize: config.fonts.medium,
     },
 
-    drNameTxt: {
+    doctorTxt: {
         fontSize: 16,
         fontWeight: '500',
         color: config.colors.dark
@@ -220,9 +238,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
-    completedTxt: {
-        backgroundColor: config.colors.confirmedBg,
-        color: config.colors.confirmedColor,
+    status: {
         fontWeight: '600',
         marginLeft: 5,
         borderRadius: 5,
@@ -231,14 +247,19 @@ const styles = StyleSheet.create({
         padding: 5
     },
 
+    completedTxt: {
+        backgroundColor: config.colors.confirmedBg,
+        color: config.colors.confirmedColor
+       
+    },
+
     pendingTxt: {
         backgroundColor: config.colors.pendingBg,
-        color: config.colors.pendingColor,
-        fontWeight: '600',
-        marginLeft: 5,
-        borderRadius: 5,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        padding: 5
+        color: config.colors.pendingColor
+    },
+
+    cancelledTxt: {
+        backgroundColor: config.colors.pink,
+        color: config.colors.white
     }
 });
