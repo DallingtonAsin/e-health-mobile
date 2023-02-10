@@ -224,9 +224,10 @@ const styles = StyleSheet.create({
     },
 
     doctorTxt: {
-        fontSize: 16,
+        fontSize: config.fonts.large,
         fontWeight: '500',
-        color: config.colors.dark
+        color: config.colors.dark,
+        opacity: 0.7,
     },
 
     statusView: {

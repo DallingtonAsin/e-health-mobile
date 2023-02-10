@@ -14,7 +14,7 @@ export const colors = {
     success: '#5cb85c',
     warning: '#f0ad4e',
     info: "#5bc0de",
-    danger: '#d9534f',
+    danger:  '#d9534f', // '#A94442',
     inverse: '#292b2c',
     faded: "#f7f7f7",
     silver: '#ccc',
