@@ -34,9 +34,9 @@ const MyAppointmentScreen = () => {
 
 
     useEffect(() => {
-        getMyAppointments({ payload: { patient_id: user.id, status: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, status: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, status: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
     }, []);
 
     const setPendingAppoinments = (data: MyAppointmentInfo[]) => {
