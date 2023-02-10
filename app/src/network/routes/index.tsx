@@ -18,7 +18,8 @@ const routes = {
    appointments: {
       types: 'appointments/types',
       index: 'appointments',
-      myappointments: 'appointments/patient'
+      myappointments: 'appointments/patient',
+      cancel: 'appointments/cancel',
    }
 
 

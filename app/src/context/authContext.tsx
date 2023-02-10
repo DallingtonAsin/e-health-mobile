@@ -220,6 +220,27 @@ const submitAppointment = () => {
     };
 };
 
+const cancelAppointment = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            routes.appointments.cancel,
+            payload
+        ).then(async (res: any) => {
+            console.log(`Res`, res);
+            console.log(`Res data`, res.data);
+
+            if (res && res.data && res.data.message) {
+                let message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
@@ -250,6 +271,9 @@ const signout = (dispatch: any) => {
 
 export const { Provider, Context, } = createDataContext(
     authReducer,
-    { signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getAppointmentTypes, submitAppointment, getMyAppointments, signout },
+    {
+        signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout
+    },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
