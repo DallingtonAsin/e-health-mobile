@@ -5,13 +5,13 @@ import * as configs from '../../configs';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 import SpecialityListScreen from "../../screens/MedicalDoctorsScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
-import SignupScreen from "../../screens/SignupScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
-import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
-import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
+import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
+import AppointmentDetailsScreen from "../../screens/AppointmentDetailsScreen";
+import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
 import NotificationScreen from "../../screens/NotificationScreen";
 
 
@@ -109,6 +109,20 @@ const SignedInStackNavigator = () => {
                     },
                     headerTintColor: configs.colors.primary,
                     headerTitle: `Appointments`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+            />
+
+            <Stack.Screen
+                name="AppointmentDetails"
+                component={AppointmentDetailsScreen}
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Appointment Information`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

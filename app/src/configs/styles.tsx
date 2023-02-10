@@ -4,25 +4,38 @@ import { fonts } from './fonts'
 
 const window = Dimensions.get('window');
 
+const reusable = {
+
+  button: {
+    borderWidth: 2,
+    paddingVertical: 12,
+    width: window.width*0.92,
+    borderRadius: 5,
+  },
+
+}
+
 export const styles = {
 
   primaryBtn: {
+    ...reusable.button,
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-    borderWidth: 2,
-    paddingVertical: 15,
-    width: window.width * 0.90,
-    borderRadius: 5,
     alignItems: 'center',
+  
   },
 
   secondaryBtn: {
+    ...reusable.button,
     backgroundColor: colors.white,
     borderColor: colors.primary,
-    borderWidth: 2,
-    paddingVertical: 12,
-    width: window.width * 0.92,
-    borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  dangerBtn: {
+    ...reusable.button,
+    backgroundColor: colors.danger,
+    borderColor: colors.danger,
     alignItems: 'center',
   },
 

@@ -40,7 +40,7 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navi
 
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 export default AppointmentConfirmationScreen;

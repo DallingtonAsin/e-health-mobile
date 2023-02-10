@@ -7,7 +7,6 @@ import { initialSpecialities } from "../configs/constants";
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
-import Toast from 'react-native-simple-toast';
 
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
@@ -169,6 +168,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 5
     },
+    
     footer: {
         flex: 1,
         flexDirection: 'row',
