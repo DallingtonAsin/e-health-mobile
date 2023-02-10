@@ -84,6 +84,18 @@ const readableTime = (timeStr: any) => {
   return formattedTime
 }
 
+const strContains = (str: string, substr: string) => {
+  return str.toLocaleLowerCase().indexOf(substr.toLocaleLowerCase()) !== -1
+}
+
+const getDayMonth = (date: string) => {
+  const dateObject = new Date(date);
+  const day = dateObject.getDate();
+  const month = dateObject.getMonth() + 1;
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(dateObject);
+  return [day, monthName];
+}
+
 
 export {
   removeLeadingZeros,
@@ -94,5 +106,7 @@ export {
   getUserInitials,
   getCurrentDate,
   readableDate,
-  readableTime
+  readableTime,
+  strContains,
+  getDayMonth
 }

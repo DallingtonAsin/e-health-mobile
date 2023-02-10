@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { Avatar } from 'react-native-paper';
 import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { IUser, MyAppointmentInfo } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
-import { displayMessage } from '../components/common/SharedHelper';
+import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
 
@@ -114,8 +113,9 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
         <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointmentInfo: item })}>
-            <View style={styles.avatarView}>
-                <Avatar.Image size={80} source={{ uri: item.doctor.image }} />
+            <View style={styles.circle}>
+                <Text style={styles.day}>{getDayMonth(item.appointment_date)[0]}</Text>
+                <Text style={styles.month}>{getDayMonth(item.appointment_date)[1]}</Text>
             </View>
             <View style={styles.main}>
 
@@ -127,12 +127,15 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.typeView}>
-                    <TouchableOpacity style={styles.type}>
+                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type, 'audio') && { backgroundColor: config.colors.silver },
+                    strContains(item.appointment_type, 'video') && { backgroundColor: config.colors.warning },
+                    strContains(item.appointment_type, 'person') && { backgroundColor: config.colors.confirmedColor },
+                    ]}>
                         <Text style={styles.typeTxt}>{item.appointment_type}</Text>
                     </TouchableOpacity>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
-                        <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt,  item.status === 'Cancelled' && config.styles.cancelledTxt,  item.status === 'Pending' && config.styles.pendingTxt]}>{item.status}</Text>
+                        <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt, item.status === 'Cancelled' && config.styles.cancelledTxt, item.status === 'Pending' && config.styles.pendingTxt]}>{item.status}</Text>
                     </View>
                 </View>
             </View>
@@ -189,11 +192,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
 
-    avatarView: {
-        flex: 1,
-        justifyContent: 'center'
-    },
-
     main: {
         flex: 3,
         paddingHorizontal: 20,
@@ -210,13 +208,14 @@ const styles = StyleSheet.create({
     },
 
     type: {
-        backgroundColor: config.colors.primary,
         padding: 5,
         borderRadius: 4,
     },
 
     typeTxt: {
-        color: config.colors.white
+        color: config.colors.white,
+        fontWeight: 'bold',
+        fontSize: config.fonts.normal
     },
 
     info: {
@@ -224,9 +223,10 @@ const styles = StyleSheet.create({
     },
 
     doctorTxt: {
-        fontSize: 16,
+        fontSize: config.fonts.large,
         fontWeight: '500',
-        color: config.colors.dark
+        color: config.colors.dark,
+        opacity: 0.7,
     },
 
     statusView: {
@@ -247,5 +247,26 @@ const styles = StyleSheet.create({
         padding: 5
     },
 
-   
+    circle: {
+        width: 80,
+        height: 80,
+        borderRadius: 50,
+        backgroundColor: '#00bfff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    day: {
+        fontSize: 24,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+
+    month: {
+        fontSize: 14,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+
+
 });
