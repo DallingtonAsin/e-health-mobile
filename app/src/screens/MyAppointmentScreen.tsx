@@ -10,7 +10,7 @@ import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
 
-const MyAppointmentScreen = () => {
+const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>();
     const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>();
@@ -34,9 +34,9 @@ const MyAppointmentScreen = () => {
 
 
     useEffect(() => {
-        getMyAppointments({ payload: { patient_id: user.id, status: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, status: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
-        getMyAppointments({ payload: { patient_id: user.id, status: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+        getMyAppointments({ payload: { patient_id: user.id, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
     }, []);
 
     const setPendingAppoinments = (data: MyAppointmentInfo[]) => {
@@ -113,7 +113,7 @@ const MyAppointmentScreen = () => {
     });
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
-        <TouchableOpacity style={styles.item}>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointmentInfo: item })}>
             <View style={styles.avatarView}>
                 <Avatar.Image size={80} source={{ uri: item.doctor.image }} />
             </View>

@@ -223,7 +223,7 @@ const submitAppointment = () => {
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
-            `${routes.appointments.myappointments}/${payload.patient_id}/${payload.status}`
+            `${routes.appointments.myappointments}/${payload.patient_id}/${payload.path}`
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;
