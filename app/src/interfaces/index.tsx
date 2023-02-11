@@ -1,14 +1,6 @@
+
 interface IUser {
     id?: number,
-    first_name: string,
-    last_name: string,
-    email?: string,
-    dob: string,
-    gender: string,
-    address: string
-}
-
-interface User {
     first_name: string,
     last_name: string,
     email?: string,
@@ -18,11 +10,11 @@ interface User {
     address: string,
     otp: string,
     profile_status: boolean,
-    image?: string | ''
+    image?: string
 }
 
 interface SignedinUser {
-    user: User,
+    user: IUser,
     authorization: string,
     token?: string,
 }
@@ -69,13 +61,13 @@ interface MyAppointmentInfo {
     id: number,
     doctor: DoctorsDetail,
     symptoms: string,
-    appointment_type: string,
+    appointment_type: AppointmentType,
     appointment_date: string,
     appointment_time: string,
     status: string,
 }
 
-interface AppointmentInfo{
+interface AppointmentInfo {
     patient_id: any,
     doctor_id: number,
     appointment_type: string,

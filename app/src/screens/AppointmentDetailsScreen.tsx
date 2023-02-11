@@ -11,7 +11,7 @@ import AppLoader from '../components/AppLoader';
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { appointment_number, appointment_date, appointment_time, appointment_type, symptoms, status } = appointmentInfo;
+    const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, is_online, status } = appointmentInfo;
     const { state, cancelAppointment } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isLoading, setIsLoading] = useState(false);
@@ -64,28 +64,28 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 >
                     <View style={styles.header}>
                         <View>
-                            <Avatar.Image size={80} source={{ uri: appointmentInfo.doctor.image }} />
+                            <Avatar.Image size={80} source={{ uri: doctor.image }} />
                         </View>
                         <View>
-                            <Text style={styles.name}>{appointmentInfo.doctor.title} {appointmentInfo.doctor.first_name} {appointmentInfo.doctor.last_name}</Text>
-                            <Text style={styles.titles}>{appointmentInfo.doctor.qualification}</Text>
-                            <Text style={styles.userTitle}>{appointmentInfo.doctor.profession}</Text>
+                            <Text style={styles.name}>{doctor.title} {doctor.first_name} {doctor.last_name}</Text>
+                            <Text style={styles.titles}>{doctor.qualification}</Text>
+                            <Text style={styles.userTitle}>{doctor.profession}</Text>
                         </View>
                     </View>
 
                     <View style={styles.body}>
                         <ContentItem title={"Appointment Number"} value={appointment_number} />
-                        <Separator />
-                        <ContentItem title={"Appointment Type"} value={appointment_type} />
-                        <Separator />
+                        <Separator/>
+                        <ContentItem title={"Appointment Type"} value={appointment_type.name} />
+                        <Separator/>
                         <ContentItem title={"Sypmptoms"} value={symptoms} />
-                        <Separator />
+                        <Separator/>
                         <ContentItem title={"Appointment Date"} value={appointment_date} />
-                        <Separator />
+                        <Separator/>
                         <ContentItem title={"Appointment Time"} value={appointment_time} />
-                        <Separator />
-                        <ContentItem title={"Service Fee"} value={appointmentInfo.doctor.service_fee} />
-                        <Separator />
+                        <Separator/>
+                        <ContentItem title={"Service Fee"} value={doctor.service_fee} />
+                        <Separator/>
                         <View style={styles.appointmentInfo}>
                             <Text style={styles.subtitle}>Status</Text>
                             <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
@@ -94,10 +94,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     </View>
 
                     {
-                        status == 'Pending' && <View style={styles.footer}>
-                            <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
-                            </Pressable>
+                        status == 'Pending' &&
+                        <View style={styles.footer}>
+
+                            {is_online &&
+                                <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
+                                    <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                                </Pressable>
+                            }
 
                             <Pressable style={[config.styles.dangerBtn]} onPress={() => cancelMedicalAppointment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
