@@ -11,7 +11,8 @@ import AppLoader from '../components/AppLoader';
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, is_online, status } = appointmentInfo;
+    const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
+  
     const { state, cancelAppointment } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isLoading, setIsLoading] = useState(false);
@@ -75,22 +76,26 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                     <View style={styles.body}>
                         <ContentItem title={"Appointment Number"} value={appointment_number} />
-                        <Separator/>
+                        <Separator />
                         <ContentItem title={"Appointment Type"} value={appointment_type.name} />
-                        <Separator/>
+                        <Separator />
                         <ContentItem title={"Sypmptoms"} value={symptoms} />
-                        <Separator/>
+                        <Separator />
                         <ContentItem title={"Appointment Date"} value={appointment_date} />
-                        <Separator/>
+                        <Separator />
                         <ContentItem title={"Appointment Time"} value={appointment_time} />
-                        <Separator/>
+                        <Separator />
                         <ContentItem title={"Service Fee"} value={doctor.service_fee} />
-                        <Separator/>
+                        <Separator />
                         <View style={styles.appointmentInfo}>
                             <Text style={styles.subtitle}>Status</Text>
                             <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
                         </View>
                         <Separator />
+
+                        { completed_at && <><ContentItem title={"Completed At"} value={completed_at}/><Separator/></> }
+                        { cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at}/><Separator/></> }
+                        
                     </View>
 
                     {
