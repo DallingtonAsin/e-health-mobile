@@ -87,7 +87,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                         <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
                             <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Prescriptions</Text>
+                            <Text style={styles.subtitle}>Pharmacy</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
