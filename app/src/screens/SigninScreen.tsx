@@ -17,17 +17,15 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInput = useRef<PhoneInput>(null);
-    const { state, signin } = useContext(AuthContext);
+    const { signin } = useContext(AuthContext);
 
     const Signin = () => {
 
         Keyboard.dismiss();
 
         const checkValid = phoneInput.current?.isValidNumber(value);
-        setShowMessage(true);
         setValid(checkValid ? checkValid : false);
 
         if (checkValid) {
@@ -72,7 +70,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             current_version: '1.2',
         }
 
-        signin({payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading});
+        signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
     const navigateMethod = (code: string) => {
@@ -87,7 +85,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         setIsLoading(false);
     }
 
-    
+
     const onChangePhoneNumber = (text: string) => {
         setValue(text);
         const isValid = text && text.length >= 9 ? true : false;
@@ -138,8 +136,10 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                             setFormattedValue(text);
                         }}
                         withDarkTheme={false}
-                        withShadow
-                        autoFocus={false}
+                        withShadow={true}
+                        autoFocus={true}
+                        disabled={false}
+                        // containerStyle={{borderColor: configs.colors.gray, borderWidth: 1}}
                     />
 
                 </View>

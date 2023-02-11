@@ -193,7 +193,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         <TabBar
             {...props}
             renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: config.colors.black, fontSize: config.fonts.large, fontWeight: '400' }}>
+                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.large, fontWeight: '400' }}>
                     {route.title}
                 </Text>
             )}
