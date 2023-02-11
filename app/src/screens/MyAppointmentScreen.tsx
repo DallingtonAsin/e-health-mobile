@@ -174,11 +174,11 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.typeView}>
-                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type, 'audio') && { backgroundColor: config.colors.silver },
-                    strContains(item.appointment_type, 'video') && { backgroundColor: config.colors.warning },
-                    strContains(item.appointment_type, 'person') && { backgroundColor: config.colors.confirmedColor },
+                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type.name, 'audio') && { backgroundColor: config.colors.silver },
+                    strContains(item.appointment_type.name, 'video') && { backgroundColor: config.colors.warning },
+                    strContains(item.appointment_type.name, 'person') && { backgroundColor: config.colors.confirmedColor },
                     ]}>
-                        <Text style={styles.typeTxt}>{item.appointment_type}</Text>
+                        <Text style={styles.typeTxt}>{item.appointment_type.name}</Text>
                     </TouchableOpacity>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>

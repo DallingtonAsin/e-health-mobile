@@ -61,7 +61,7 @@ interface MyAppointmentInfo {
     id: number,
     doctor: DoctorsDetail,
     symptoms: string,
-    appointment_type: string,
+    appointment_type: AppointmentType,
     appointment_date: string,
     appointment_time: string,
     status: string,
