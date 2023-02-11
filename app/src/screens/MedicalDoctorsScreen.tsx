@@ -36,10 +36,10 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
         <View style={styles.item}>
             <View style={styles.header}>
-                <View>
+                <View style={styles.image}>
                     <Avatar.Image size={80} source={{ uri: item.image }} />
                 </View>
-                <View>
+                <View style={styles.profile}>
                     <Text style={styles.name}>{item.title} {item.first_name} {item.last_name}</Text>
                     <Text style={styles.titles}>{item.qualification}</Text>
                     <Text style={styles.userTitle}>{item.profession}</Text>
@@ -99,7 +99,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     contentContainerStyle={{ flexGrow: 1 }}
                     ListHeaderComponent={() => (!medicalDoctors.length ? 
                         null  
-                        : <Text style={styles.title}>Doctors in {specialty_name} speciality</Text>)}
+                        : <Text style={styles.title}>Doctors in {specialty_name} specialty</Text>)}
           
                     ListEmptyComponent={EmptyListMessage}
                 />
@@ -143,11 +143,12 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 5,
         shadowOpacity: 1.0,
-        marginVertical: 5,
-        marginHorizontal: 16,
+        marginVertical: 8,
+        marginHorizontal: 10,
         borderRadius: 10,
         backgroundColor: configs.colors.white,
-        padding: 30,
+        paddingHorizontal: 18,
+        paddingVertical: 20,
         elevation: 5
     },
 
@@ -158,8 +159,16 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         flexDirection: 'row',
-        paddingVertical: 5,
         justifyContent: 'space-around'
+    },
+
+    image: {
+        flex: 1,
+    },
+
+    profile: {
+        flex: 2,
+        marginHorizontal: 12,
     },
 
     body: {
@@ -192,8 +201,7 @@ const styles = StyleSheet.create({
 
     name: {
         color: configs.colors.black,
-        fontSize: 18,
-        fontWeight: 'bold'
+        fontSize: configs.fonts.large
     },
 
     userTitle: {
