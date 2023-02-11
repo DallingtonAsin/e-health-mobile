@@ -16,18 +16,15 @@ import { Avatar } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
 import { getUserInitials } from '../components/common/SharedHelper';
+import { IUser } from '../interfaces';
 
 const iconSize = 40;
 
-interface IUser{
-   firstName: string,
-   lastName: string,
-}
 
 const HomeScreen = ({ navigation }: {navigation: any}) => {
    
     const { state } = useContext(AuthContext);
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser>(state.user);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -46,9 +43,9 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                     <View style={styles.headerImageSection}>
                         <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
                             {
-                                state.user.image 
+                                user.image 
                                 ? <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}></Avatar.Image>
-                                :  <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={configs.styles.userAvatar}/>
+                                :  <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar}/>
                             }
                         </TouchableOpacity>
 
@@ -60,7 +57,7 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                         <View style={{ left: 20 }}>
-                            <Text style={styles.greeting}>{getGreeting()} {state.user.first_name}</Text>
+                            <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
                             <Text style={styles.amazing}>Today is amazing!</Text>
                         </View>
                     </View>
