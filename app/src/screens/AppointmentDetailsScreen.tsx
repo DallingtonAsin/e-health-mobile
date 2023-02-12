@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable, Alert } fr
 import * as config from '../configs';
 import { Avatar } from 'react-native-paper';
 import { Context as AuthContext } from '../context/authContext';
-import { IUser } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
@@ -14,7 +13,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
   
     const { state, cancelAppointment } = useContext(AuthContext);
-    const [user, setUser] = useState<IUser>(state.user);
+    const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
 
     const Separator = () => (

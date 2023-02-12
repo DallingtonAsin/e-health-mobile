@@ -11,7 +11,7 @@ import { Context as AuthContext } from '../context/authContext';
 import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
-import { IUser, AppointmentType } from '../interfaces';
+import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
 
 const screen = Dimensions.get('screen');
@@ -31,7 +31,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const [symptoms, setSymptoms] = useState('');
     const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AuthContext);
-    const [user, setUser] = useState<IUser>(state.user);
+    const user = state.user;
     const [isFocused, setIsFocused] = useState(false);
 
     const [appointmentTypes, setAppointmentTypes] = useState<AppointmentType[]>([]);

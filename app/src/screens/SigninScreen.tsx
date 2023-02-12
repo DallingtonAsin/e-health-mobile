@@ -74,15 +74,14 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const navigateMethod = (code: string) => {
-       
+        setValue("");
+        setFormattedValue("");
         navigation.navigate('OTP', {
             sentOtp: code
-        })
+        });
     }
 
     const stopLoading = () => {
-        setValue("");
-        setFormattedValue("");
         setIsLoading(false);
     }
 
