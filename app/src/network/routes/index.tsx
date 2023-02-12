@@ -2,11 +2,11 @@
 
 const routes = {
 
-   user: {
-    signin: 'user/login',
-    verify: 'user/verify',
-    register: 'user/register',
-    updateProfile: 'user/profile/update',
+   patient: {
+    signin: 'patient/login',
+    verify: 'patient/verify',
+    register: 'patient/register',
+    updateProfile: 'patient/profile/update',
    },
 
    medical: {
@@ -16,10 +16,12 @@ const routes = {
    },
 
    appointments: {
-      types: 'appointments/types',
       index: 'appointments',
-      myappointments: 'appointments/patient',
       cancel: 'appointments/cancel',
+      types: 'appointments/types',
+      patient: {
+         myappointments: 'appointments/patient',
+      }
    }
 
 

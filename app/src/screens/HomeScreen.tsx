@@ -16,15 +16,14 @@ import { Avatar } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
 import { getUserInitials } from '../components/common/SharedHelper';
-import { IUser } from '../interfaces';
 
 const iconSize = 40;
 
 
-const HomeScreen = ({ navigation }: {navigation: any}) => {
-   
+const HomeScreen = ({ navigation }: { navigation: any }) => {
+
     const { state } = useContext(AuthContext);
-    const [user, setUser] = useState<IUser>(state.user);
+    const user = state.user;
 
     return (
         <SafeAreaView style={styles.container}>
@@ -42,10 +41,9 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
 
                     <View style={styles.headerImageSection}>
                         <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
-                            {
-                                user.image 
+                            {user.image
                                 ? <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}></Avatar.Image>
-                                :  <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar}/>
+                                : <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
                             }
                         </TouchableOpacity>
 
@@ -69,46 +67,53 @@ const HomeScreen = ({ navigation }: {navigation: any}) => {
                 <View style={styles.body}>
                     <Text style={styles.title}>Quick Actions</Text>
 
-
                     <View style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
-                            <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Doctors</Text>
-                        </TouchableOpacity>
+                        {user.is_patient &&
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
+                                <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Doctors</Text>
+                            </TouchableOpacity>
+                        }
 
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
                             <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
 
-                    </View>
-
-                    <View style={styles.cardContainer}>
-
-                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
-                            <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Pharmacy</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
-                            <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Medical History</Text>
-                        </TouchableOpacity>
+                        {!user.is_patient &&
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Profile')}>
+                                <Icon5 name="user-circle" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Profile</Text>
+                            </TouchableOpacity>
+                        }
 
                     </View>
 
-                    <View style={styles.cardContainer}>
+                    {user.is_patient &&
+                        <View style={styles.cardContainer}>
+                            <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                                <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Pharmacy</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                                <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Medical History</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
 
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
-                            <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Help</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
-                            <Icon name="gear" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Settings</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {user.is_patient &&
+                        <View style={styles.cardContainer}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
+                                <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Help</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                                <Icon name="gear" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Settings</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
 
                 </View>
 
@@ -228,7 +233,7 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        top:10,
-        left:20,
+        top: 10,
+        left: 20,
     },
-})
+});

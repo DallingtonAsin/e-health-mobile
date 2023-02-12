@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, Refre
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { IUser, MyAppointmentInfo } from '../interfaces';
+import { MyAppointmentInfo } from '../interfaces';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
@@ -20,7 +20,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     const [isCancelledLoading, setIsCancelledLoading] = useState(true);
 
     const { state, getMyAppointments } = useContext(AuthContext);
-    const [user, setUser] = useState<IUser>(state.user);
+    const user = state.user;
 
     const layout = useWindowDimensions();
 
