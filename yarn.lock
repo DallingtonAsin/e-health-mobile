@@ -7149,6 +7149,11 @@ react-native-dotenv@^3.4.2:
   dependencies:
     dotenv "^16.0.3"
 
+react-native-dropdown-select-list@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/react-native-dropdown-select-list/-/react-native-dropdown-select-list-2.0.4.tgz"
+  integrity sha512-H7aRhhSHYvl5v+Ufy5CtXhaRHgrRQakWn+IexSFCP/+nUFu5yvwfmtbVEfIszMjr6szPuiabG15trrbswHlmCw==
+
 react-native-gradle-plugin@^0.70.3:
   version "0.70.3"
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz"
@@ -7184,11 +7189,6 @@ react-native-pager-view@^6.1.1:
   version "6.1.1"
   resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-6.1.1.tgz"
   integrity sha512-4WqR0YWBjaUtc3iPVk8w6wsTsMq+r0plNiXdqPXOiUdQIhxKfsP1iqb6hRzdeJKOo8UH7RCP6zI7dxdFEAXzrw==
-
-react-native-paper-select@^0.3.9:
-  version "0.3.9"
-  resolved "https://registry.npmjs.org/react-native-paper-select/-/react-native-paper-select-0.3.9.tgz"
-  integrity sha512-/J/KT4J+RrqzObgrC2l6CDlPdAwjeit0d3MsX6dahNDm0YTK4SOfZM5YdkyleVFCRBlGunaCAsyU/AvWRx+BUA==
 
 react-native-paper@^5.1.2:
   version "5.1.2"

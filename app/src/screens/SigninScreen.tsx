@@ -74,14 +74,15 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const navigateMethod = (code: string) => {
-        setValue("");
-        setFormattedValue("")
+       
         navigation.navigate('OTP', {
             sentOtp: code
         })
     }
 
     const stopLoading = () => {
+        setValue("");
+        setFormattedValue("");
         setIsLoading(false);
     }
 
@@ -139,7 +140,6 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         withShadow={true}
                         autoFocus={true}
                         disabled={false}
-                        // containerStyle={{borderColor: configs.colors.gray, borderWidth: 1}}
                     />
 
                 </View>

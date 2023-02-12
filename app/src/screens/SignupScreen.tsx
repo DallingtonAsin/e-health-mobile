@@ -1,15 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import * as configs from '../configs'
+import * as config from '../configs';
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import Toast from 'react-native-simple-toast';
-import { PaperSelect } from 'react-native-paper-select';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage } from '../components/common/SharedHelper';
+import { formatDate, displayMessage, isValidEmail } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
 import { IUser } from '../interfaces';
-
+import { SelectList } from 'react-native-dropdown-select-list';
 
 const numberOfLines = 5;
 
@@ -21,26 +20,21 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
         email: '',
         dob: '',
         gender: '',
-        language: '',
         address: '',
-        phoneNumber: '',
+        phone_number: '',
+        profile_status: false,
     }
 
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const { state, signup } = useContext(AuthContext);
+    const [gender, setGender] = useState("");
+    const { signup } = useContext(AuthContext);
 
-    const [gender, setGender] = useState({
-        value: '',
-        list: [
-            { _id: '1', value: 'Male' },
-            { _id: '2', value: 'Female' },
-        ],
-        selectedList: [],
-        error: '',
-    });
-
+    const genderOptions = [
+        {key:'1', value:'Male'},
+        {key:'2', value:'Female'},
+    ];
 
     const submitDetails = () => {
 
@@ -54,12 +48,19 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
+        if(user.email){
+            if(!isValidEmail(user.email)){
+                Toast.show('Please enter a valid email', Toast.LONG);
+                return;
+            }
+        }
+
         if (!user.address) {
             Toast.show('Enter your address', Toast.LONG);
             return;
         }
 
-        if (!gender.value) {
+        if (!gender) {
             Toast.show('Select your gender', Toast.LONG);
             return;
         }
@@ -76,11 +77,11 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             last_name: user.last_name,
             email: user?.email,
             address: user.address,
-            gender: gender.value,
+            gender: gender,
             dob: user.dob
         }
 
-        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+       signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
   
     }
 
@@ -115,7 +116,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             <SafeAreaView style={styles.container}>
 
                 <StatusBar
-                    backgroundColor={configs.colors.primary}
+                    backgroundColor={config.colors.primary}
                 />
 
                 <ScrollView
@@ -130,11 +131,11 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             value={user.first_name}
                             mode="outlined"
                             dense={false}
-                            activeOutlineColor={configs.colors.primary}
+                            activeOutlineColor={config.colors.primary}
                             numberOfLines={numberOfLines}
                             error={!user.first_name}
                             style={styles.textInput}
-                            textColor={configs.colors.dark}
+                            textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
 
                         />
@@ -147,10 +148,10 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             label="Last Name"
                             value={user.last_name}
                             mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
+                            activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
                             error={!user.last_name}
-                            textColor={configs.colors.dark}
+                            textColor={config.colors.dark}
                             onChangeText={text => setUser({ ...user, last_name: text })}
                         />
                     </View>
@@ -161,9 +162,9 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             label="Email address"
                             value={user.email}
                             mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
+                            activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
-                            textColor={configs.colors.dark}
+                            textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
                         />
                     </View>
@@ -175,10 +176,10 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             label="Address"
                             value={user.address}
                             mode="outlined"
-                            activeOutlineColor={configs.colors.primary}
+                            activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
                             error={!user.address}
-                            textColor={configs.colors.dark}
+                            textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
                         />
                     </View>
@@ -186,28 +187,14 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                     <View style={[styles.viewContainer, { flex: 1, flexDirection: 'row', justifyContent: 'space-between' }]}>
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
-                            <PaperSelect
-                                label="Select Gender"
-                                value={gender.value}
-                                onSelection={(value: any) => {
-                                    setGender({
-                                        ...gender,
-                                        value: value.text,
-                                        selectedList: value.selectedList,
-                                        error: '',
-                                    });
-                                }}
-                                arrayList={[...gender.list]}
-                                selectedArrayList={gender.selectedList}
-                                errorText={gender.error}
-                                multiEnable={false}
-                                textInputMode="outlined"
-                                searchStyle={{ iconColor: configs.colors.primary }}
-                                checkboxColor={configs.colors.primary}
-                                activeOutlineColor={configs.colors.primary}
-                                hideSearchBox={true}
-                                containerStyle={{ height: 10 }}
-                                dialogButtonLabelStyle={{ color: configs.colors.primary }}
+                            <SelectList 
+                                setSelected={(val: string) => setGender(val)} 
+                                data={genderOptions} 
+                                save="value"
+                                search={false}
+                                placeholder={"Select Gender"}
+                                inputStyles={{color: gender ? config.colors.black : config.colors.danger, fontWeight: gender ? 'normal' : '500' }}
+                                boxStyles={{ borderColor: gender ? config.colors.gray : config.colors.danger, borderWidth: gender ? 1 : 2, borderRadius: 4, marginTop: 6, height: 49 }}
                             />
                         </View>
 
@@ -217,10 +204,10 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 label="Date of Birth"
                                 value={user.dob}
                                 mode="outlined"
-                                activeOutlineColor={configs.colors.primary}
+                                activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
                                 error={!user.dob}
-                                textColor={configs.colors.dark}
+                                textColor={config.colors.dark}
                                 onFocus={showDatePicker}
                                 showSoftInputOnFocus={false}
                                 onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
@@ -228,16 +215,18 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             <DateTimePickerModal
                                 isVisible={isDatePickerVisible}
                                 mode="date"
+                                display='inline'
                                 onConfirm={handleConfirm}
                                 onCancel={hideDatePicker}
+                                
                             />
                         </View>
                     </View>
 
                     <View style={styles.viewContainer}>
-                        <TouchableOpacity style={configs.styles.secondaryBtn}
+                        <TouchableOpacity style={config.styles.secondaryBtn}
                             onPress={() => submitDetails()}>
-                            <Text style={[configs.styles.btnText]}>Continue</Text>
+                            <Text style={[config.styles.btnText]}>Continue</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -254,7 +243,7 @@ export default SignupScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.white,
+        backgroundColor: config.colors.white,
     },
 
     scrollView: {
@@ -284,7 +273,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         textAlign: 'center',
         fontSize: 16,
-        color: configs.colors.dark,
+        color: config.colors.dark,
         paddingLeft: 30,
         paddingRight: 30,
         fontWeight: '900',
@@ -298,17 +287,17 @@ const styles = StyleSheet.create({
     },
 
     back2LoginTxt: {
-        color: configs.colors.primary,
+        color: config.colors.primary,
         fontSize: 18,
         textAlign: 'center',
     },
 
     required: {
-        color: configs.colors.danger,
+        color: config.colors.danger,
     },
 
     textInput: {
-        backgroundColor: configs.colors.white,
-        color: configs.colors.silver,
+        backgroundColor: config.colors.white,
+        color: config.colors.silver,
     }
 })

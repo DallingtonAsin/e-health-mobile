@@ -9,7 +9,9 @@ import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { IUser } from '../interfaces';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, getUserInitials } from '../components/common/SharedHelper';
+import { formatDate, displayMessage, getUserInitials, getJsonObjByValue } from '../components/common/SharedHelper';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
@@ -18,6 +20,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const { state, updateProfile } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const genderOptions = [
+        {key:'1', value:'Male'},
+        {key:'2', value:'Female'},
+    ];
 
     const submitProfile = () => {
 
@@ -74,6 +81,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const navigateMethod = async (message: string) => {
         displayMessage(message);
         navigation.navigate('Profile');
+        setIsDisabled(true);
     }
 
     const showDatePicker = () => {
@@ -168,14 +176,16 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={styles.detailView}>
                         <Text style={styles.infoText}>Gender</Text>
-                        <TextInput
-                            mode='outlined'
-                            value={user.gender}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            onChangeText={text => setUser(prev => ({ ...prev, gender: text }))}
-                        />
+                        <SelectList 
+                                setSelected={(val: string) => setUser(prev => ({ ...prev, gender: val }))}
+                                data={genderOptions} 
+                                save="value"
+                                search={false}
+                                defaultOption={getJsonObjByValue(genderOptions, user.gender)}
+                                placeholder={"Select Gender"}
+                                inputStyles={{color: config.colors.black}}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                            />
                     </View>
 
 

@@ -96,6 +96,20 @@ const getDayMonth = (date: string) => {
   return [day, monthName];
 }
 
+const isValidEmail = (email: string) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+const getJsonObjByValue = (arr : any, value: any) => {
+  let result = arr.filter(function(obj: any) {
+    return obj.value === value;
+  });
+  return result[0];
+}
 
 export {
   removeLeadingZeros,
@@ -108,5 +122,7 @@ export {
   readableDate,
   readableTime,
   strContains,
-  getDayMonth
+  getDayMonth,
+  isValidEmail,
+  getJsonObjByValue
 }

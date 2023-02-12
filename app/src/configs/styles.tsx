@@ -46,7 +46,7 @@ export const styles = {
 
   btnText: {
     color: colors.primary,
-    fontSize: 20,
+    fontSize: fonts.large,
   },
 
   logo: {

@@ -11,7 +11,7 @@ const SplashScreen = ({navigation}: {navigation: any}) => {
         <StatusBar backgroundColor={configs.colors.primary}/>
             <View style={styles.header}>
             <Avatar.Image size={150} source={configs.images.logo} style={configs.styles.logo} />
-            <Text style={styles.drText}>Access doctor anywhere, anytime.</Text>
+            <Text style={styles.drText}>Access doctor anytime anywhere</Text>
             </View>
             <View style={styles.footer}>
              <TouchableOpacity style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn]} onPress={() => {navigation.navigate('Signin')}}>
