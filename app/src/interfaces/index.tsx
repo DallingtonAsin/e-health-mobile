@@ -10,7 +10,8 @@ interface IUser {
     address: string,
     otp?: string,
     profile_status?: boolean,
-    image?: string
+    image?: string,
+    is_patient?: boolean,
 }
 
 interface SignedinUser {

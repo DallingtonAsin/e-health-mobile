@@ -12,9 +12,8 @@ const services = new Service();
 
 const signin = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-
         services.post(
-            routes.user.signin,
+            routes.patient.signin,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -41,7 +40,7 @@ const signin = (dispatch: any) => {
 const verifyCode = (dispatch: any) => {
     return ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
-            routes.user.verify,
+            routes.patient.verify,
             { otp: code }
         ).then(async (res) => {
 
@@ -78,7 +77,7 @@ const verifyCode = (dispatch: any) => {
 const signup = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
-            routes.user.register,
+            routes.patient.register,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -104,9 +103,8 @@ const signup = (dispatch: any) => {
 
 const updateProfile = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
-
         services.post(
-            routes.user.updateProfile,
+            routes.patient.updateProfile,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -226,9 +224,6 @@ const cancelAppointment = () => {
             routes.appointments.cancel,
             payload
         ).then(async (res: any) => {
-            console.log(`Res`, res);
-            console.log(`Res data`, res.data);
-
             if (res && res.data && res.data.message) {
                 let message = res.data.message;
                 onSuccess(message);
@@ -244,7 +239,7 @@ const cancelAppointment = () => {
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
-            `${routes.appointments.myappointments}/${payload.patient_id}/${payload.path}`
+            `${routes.appointments.patient.myappointments}/${payload.patient_id}/${payload.path}`
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;

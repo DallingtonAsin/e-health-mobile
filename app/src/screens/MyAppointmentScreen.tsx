@@ -21,6 +21,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const { state, getMyAppointments } = useContext(AuthContext);
     const [user, setUser] = useState<IUser>(state.user);
+    // console.log('User', user);
 
     const layout = useWindowDimensions();
 
