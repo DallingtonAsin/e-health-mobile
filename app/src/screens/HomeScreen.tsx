@@ -28,9 +28,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     return (
         <SafeAreaView style={styles.container}>
 
-            <StatusBar
-                backgroundColor={configs.colors.primary}
-            />
+            <StatusBar backgroundColor={configs.colors.primary} />
 
             <ScrollView
                 style={styles.scroll}

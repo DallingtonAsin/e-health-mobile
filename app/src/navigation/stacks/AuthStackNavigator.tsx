@@ -40,12 +40,11 @@ const AuthFlow = () => {
 
                         headerStyle: {
                             backgroundColor: configs.colors.white,
-
                         },
                         headerTintColor: configs.colors.primary,
                         headerTitle: `Verify Phone Number`,
                         headerBackVisible: true,
-                        headerShown: true,
+                        headerShown: false,
                         header: (props) => (<CustomStackHeader title="Verify Phone Number" />)
 
                     }}
