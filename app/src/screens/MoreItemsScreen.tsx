@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import * as configs from '../configs';
 import { getUserInitials } from '../components/common/SharedHelper';
 
@@ -14,7 +14,7 @@ import { getUserInitials } from '../components/common/SharedHelper';
 const MoreItemsScreen = ({navigation}: {navigation: any}) => {
 
     const [isLoading, setIsLoading] = useState(false);
-    const { state, signout } = useContext(AuthContext);
+    const { state, signout } = useContext(AppContext);
 
     const listItems = [
         {id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile')},

@@ -26,7 +26,7 @@ const signin = (dispatch: any) => {
                     payload: data
                 });
 
-                onSuccess(data.otp);
+                onSuccess(data);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -264,11 +264,72 @@ const signout = (dispatch: any) => {
     };
 };
 
+const authenticateDoctor = (dispatch: any) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.doctor.signin,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                await storeAuthToken(data.access_token);
+
+                dispatch({
+                    type: types.USER_SIGNIN,
+                    payload: data
+                });
+
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getDoctorLanguages = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.doctor.languages}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getDoctorSpecialties = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.doctor.specialties}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context, } = createDataContext(
     authReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
-        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor,
+        getDoctorLanguages, getDoctorSpecialties
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

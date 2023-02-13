@@ -4,7 +4,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as config from '../configs';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { MyAppointmentInfo } from '../interfaces';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
@@ -19,7 +19,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     const [isPendingLoading, setIsPendingLoading] = useState(true);
     const [isCancelledLoading, setIsCancelledLoading] = useState(true);
 
-    const { state, getMyAppointments } = useContext(AuthContext);
+    const { state, getMyAppointments } = useContext(AppContext);
     const user = state.user;
 
     const layout = useWindowDimensions();

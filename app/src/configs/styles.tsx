@@ -8,8 +8,8 @@ const reusable = {
 
   button: {
     borderWidth: 2,
-    paddingVertical: 12,
-    width: window.width * 0.92,
+    paddingVertical: 15,
+    width: '92%',
     borderRadius: 5,
   },
 

@@ -3,7 +3,7 @@ import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Searchbar } from 'react-native-paper';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { MedicalSpecialty } from "../interfaces";
@@ -14,7 +14,7 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
     const onChangeSearch = (query: string) => setSearchQuery(query);
     const [isLoading, setIsLoading] = useState(true);
     const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([]);
-    const { getMedicalSpecialties } = useContext(AuthContext);
+    const { getMedicalSpecialties } = useContext(AppContext);
 
 
     useEffect(() => {
