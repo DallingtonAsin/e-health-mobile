@@ -22,13 +22,14 @@ export default (reducer: any, action: any, defaultValue: any) => {
             throw e;
         }
     }
-    
+
     const Context = React.createContext({
         state: defaultValue,
+        authenticateDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signin: ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         verifyCode: ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        signout: () => {},
+        signout: () => { },
         updateProfile: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsBySpecialty: ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
@@ -37,6 +38,9 @@ export default (reducer: any, action: any, defaultValue: any) => {
         submitAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         cancelAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMyAppointments: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorLanguages: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorSpecialties: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
+   
     });
 
     const Provider = ({ children }: { children: any }) => {
@@ -46,7 +50,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         useEffect(() => {
             async function rehydrate() {
                 const storedState = await getData();
-           
+
                 if (storedState) {
                     // console.log(`Stored state is available`);
                     dispatch({
@@ -80,7 +84,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         )
     };
 
-  
+
 
     return { Context: Context, Provider: Provider };
 };

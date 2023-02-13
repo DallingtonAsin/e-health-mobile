@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard, StatusBar, KeyboardAvoidingView } from 'react-native';
 import * as configs from '../configs';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from '../components/common/SharedHelper';
 
 const otpLength = 4;
 
 const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { sentOtp } = route.params;
+    const { country_code, phone_number, sent_otp, is_doctor } = route.params;
     const [valid, setValid] = useState(false);
-    const [otp, setOTP] = useState(sentOtp);
+    const [otp, setOTP] = useState(sent_otp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const { state, verifyCode } = useContext(AuthContext);
+    const { verifyCode, authenticateDoctor } = useContext(AppContext);
+
 
     const onChangeOTP = (code: string) => {
         setOTP(code);
@@ -27,8 +28,19 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         if (code && code.length == otpLength) {
             setIsLoading(true);
             Keyboard.dismiss();
+            if(is_doctor){
+                let payload = {
+                    country_code: country_code,
+                    phone_number: phone_number,
+                    otp: code
+                }
+          
+                authenticateDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+            }else{
+                verifyCode({ code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+            }
 
-            verifyCode({ code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+            
         } else {
             Toast.show(`Please enter verification code`);
         }
@@ -39,7 +51,11 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         if (data.profile_status == 1) {
             navigation.navigate('Home');
         } else {
-            navigation.navigate('Register');
+            if (is_doctor) {
+                navigation.navigate('DoctorRegistration');
+            } else {
+                navigation.navigate('PatientRegistration');
+            }
         }
     }
 
@@ -75,17 +91,24 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         <>
             <KeyboardAvoidingView style={styles.container}>
 
+            <StatusBar backgroundColor={configs.colors.primary} />
+
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 130 : 180} source={configs.images.otpImage} />
-                    <Text style={styles.otpTxt}>Enter verification code that has been sent to your phone number</Text>
+                    <Avatar.Image size={isKeyboardVisible ? 120 : 120} source={configs.images.otpImage} />
+                    <Text style={styles.otpTxt}>
+                        { is_doctor
+                            ? 'Enter the code assigned to you by the administrator, or contact the administrator.'
+                            : 'Enter the OTP that has been sent to your phone number'
+                        }
+                    </Text>
                 </View>
 
                 <View style={styles.body}>
 
                     <OTPInputView
-                        style={{ width: '80%', height: 200 }}
+                        style={{ width: '80%', height: 100 }}
                         pinCount={otpLength}
-                        code={otp ? otp : sentOtp}
+                        code={otp ? otp : sent_otp}
                         onCodeChanged={code => { onChangeOTP(code) }}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
@@ -95,18 +118,19 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                             verifyOtp(code);
                         })}
                     />
+
                 </View>
 
                 <View style={styles.footer}>
                     <TouchableOpacity
                         disabled={!valid}
-                        style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, , configs.styles.bottomizedBtn]}
+                        style={[ configs.styles.secondaryBtn,  configs.styles.bottomizedBtn]}
                         onPress={() => verifyOtp(otp)}>
-                        <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Verify OTP</Text>
+                        <Text style={[configs.styles.btnText,  { color: configs.colors.primary }]}>Verify OTP</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
-            {isLoading && <AppLoader />}
+            {isLoading && <AppLoader color={configs.colors.white}/>}
 
         </>
     )
@@ -117,19 +141,19 @@ export default OtpScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.white
+        backgroundColor: configs.colors.primary
     },
 
     header: {
         flex: 2,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     body: {
         flex: 1,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -137,7 +161,7 @@ const styles = StyleSheet.create({
     footer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.primary,
     },
 
     textSignin: {
@@ -148,10 +172,9 @@ const styles = StyleSheet.create({
     },
 
     otpTxt: {
-        fontSize: 18,
+        fontSize: configs.fonts.large,
         top: 15,
-        color: configs.colors.dark,
-        opacity: 0.7,
+        color: configs.colors.white,
         textTransform: 'none',
         textAlign: 'center',
         marginHorizontal: 20
@@ -159,11 +182,11 @@ const styles = StyleSheet.create({
 
     borderStyleBase: {
         width: 30,
-        height: 45
+        height: 45,
     },
 
     borderStyleHighLighted: {
-        borderColor: configs.colors.primary,
+        borderColor: configs.colors.white,
     },
 
     underlineStyleBase: {
@@ -171,11 +194,13 @@ const styles = StyleSheet.create({
         height: 65,
         borderWidth: 1,
         fontSize: 20,
-        color: configs.colors.dark
+        color: configs.colors.dark,
+        backgroundColor: configs.colors.white,
     },
 
     underlineStyleHighLighted: {
-        borderColor: configs.colors.primary,
+        borderColor: configs.colors.white,
+        backgroundColor: configs.colors.white,
     },
 
-})
+});

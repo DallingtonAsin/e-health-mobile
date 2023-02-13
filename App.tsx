@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider as AppProvider } from 'react-native-paper';
 import AuthFlow from "./app/src/navigation/stacks/AuthStackNavigator";
 import SignedInStackNavigator from './app/src/navigation/stacks/SignedInStackNavigator';
-import { Provider as AuthProvider } from './app/src/context/authContext';
-import { Context as AuthContext } from './app/src/context/authContext';
+import { Provider as AuthProvider } from './app/src/context/appContext';
+import { Context as AppContext } from './app/src/context/appContext';
 import AppLoader from './app/src/components/AppLoader';
 import * as config from './app/src/configs';
 
@@ -15,7 +15,7 @@ LogBox.ignoreAllLogs();
 
 function App() {
 
-  const { state } = React.useContext(AuthContext);
+  const { state } = React.useContext(AppContext);
   // console.log(`current app state is`, state.isAppLoading);
   if (state.isAppLoading) {
     return (

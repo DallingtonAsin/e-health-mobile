@@ -9,6 +9,14 @@ const routes = {
     updateProfile: 'patient/profile/update',
    },
 
+   doctor: {
+      signin: 'doctor/login',
+      register: 'doctor/register',
+      updateProfile: 'doctor/profile/update',
+      languages: 'doctor/languages',
+      specialties: 'doctor/specialties',
+     },
+
    medical: {
       specialties: 'medical/specialties',
       doctors: 'medical/doctors',

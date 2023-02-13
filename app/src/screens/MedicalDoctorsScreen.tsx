@@ -3,8 +3,7 @@ import { SafeAreaView, FlatList, View, Image, StyleSheet, Text, TouchableOpacity
 import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import { DoctorsDetail } from "../interfaces";
-import { initialSpecialities } from "../configs/constants";
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
 
@@ -13,8 +12,8 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     const { specialty_id, specialty_name } = route.params;
     const [isLoading, setIsLoading] = useState(true);
-    const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>(initialSpecialities);
-    const { getDoctorsBySpecialty } = useContext(AuthContext);
+    const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
+    const { getDoctorsBySpecialty } = useContext(AppContext);
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
             navigation.navigate('ScheduleAppointment', { doctor_id: item.id });

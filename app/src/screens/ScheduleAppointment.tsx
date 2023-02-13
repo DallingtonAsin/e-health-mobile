@@ -7,7 +7,7 @@ import * as contact from '../components/common/communications';
 import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
 import { AppointmentInfo, DoctorsDetail } from '../interfaces';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
@@ -30,7 +30,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [appointmentType, setAppointmentType] = useState<string>('');
 
     const [symptoms, setSymptoms] = useState('');
-    const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AuthContext);
+    const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AppContext);
     const user = state.user;
     const [isFocused, setIsFocused] = useState(false);
 

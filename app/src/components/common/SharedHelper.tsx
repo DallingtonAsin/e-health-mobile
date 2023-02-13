@@ -96,7 +96,7 @@ const getDayMonth = (date: string) => {
   return [day, monthName];
 }
 
-const isValidEmail = (email: string) => {
+const isValidEmail = (email: any) => {
   return String(email)
     .toLowerCase()
     .match(

@@ -6,7 +6,7 @@ import { Avatar } from 'react-native-paper';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { IUser } from '../interfaces';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, displayMessage, getUserInitials, getJsonObjByValue } from '../components/common/SharedHelper';
@@ -17,7 +17,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const { state, updateProfile } = useContext(AuthContext);
+    const { state, updateProfile } = useContext(AppContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 

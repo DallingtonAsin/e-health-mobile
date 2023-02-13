@@ -14,7 +14,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 
 const iconSize = 40;
@@ -22,15 +22,13 @@ const iconSize = 40;
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state } = useContext(AuthContext);
+    const { state } = useContext(AppContext);
     const user = state.user;
 
     return (
         <SafeAreaView style={styles.container}>
 
-            <StatusBar
-                backgroundColor={configs.colors.primary}
-            />
+            <StatusBar backgroundColor={configs.colors.primary} />
 
             <ScrollView
                 style={styles.scroll}

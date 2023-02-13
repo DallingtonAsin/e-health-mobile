@@ -6,9 +6,10 @@ import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { removeLeadingZeros } from '../components/common/SharedHelper';
-import { Context as AuthContext } from '../context/authContext';
+import { Context as AppContext } from '../context/appContext';
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
+import { Switch } from 'react-native-paper';
 
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
@@ -19,7 +20,14 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInput = useRef<PhoneInput>(null);
-    const { signin } = useContext(AuthContext);
+    const { signin } = useContext(AppContext);
+
+    const [isDoctor, setIsDoctor] = useState(false);
+    const onToggleSwitch = () => setIsDoctor(!isDoctor);
+    const userType = isDoctor ? 'patient' : 'doctor';
+    const currentUserType = isDoctor ? 'Doctor' : 'Patient';
+    const actionType = isDoctor ? 'Disable' : 'Enable';
+
 
     const Signin = () => {
 
@@ -39,17 +47,25 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
             const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`
             Alert.alert(
-                '',
-                `We will be verifying the phone number ${formattedNumber}. is this OK, or would like to edit the number?`,
+                `${isDoctor ? 'Doctor' : 'Patient'} Signup`,
+                `We will be verifying the phone number ${formattedNumber} as a ${isDoctor ? 'doctor' : 'patient'}'s number. is this ok or would like to edit the number?`,
                 [
-                    { text: 'Edit', onPress: () => console.log('Edit Pressed') },
+                    { text: 'Edit', onPress: () => { } },
                     {
                         text: 'OK', onPress: async () => {
                             let obj = {
                                 country_code: `+${phoneInput.current?.getCallingCode()}`,
                                 phone_number: number
                             }
-                            sendVerificationCode(obj)
+                            if(isDoctor){
+                                navigation.navigate('OTP', {
+                                    ...obj,
+                                    sent_otp: '',
+                                    is_doctor: isDoctor
+                                });
+                            }else{
+                                sendVerificationCode(obj);
+                            }
                         }
                     },
                 ],
@@ -63,21 +79,24 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const sendVerificationCode = (phoneObj: any) => {
 
         setIsLoading(true);
-
+        
         let payload: LoginData = {
             country_code: phoneObj.country_code,
             phone_number: phoneObj.phone_number,
             current_version: '1.2',
         }
 
-        signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+          signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
-    const navigateMethod = (code: string) => {
+    const navigateMethod = (data: any) => {
         setValue("");
         setFormattedValue("");
         navigation.navigate('OTP', {
-            sentOtp: code
+            country_code: data.country_code,
+            phone_number: data.phone_number,
+            sent_otp: data.otp,
+            is_doctor: isDoctor
         });
     }
 
@@ -119,7 +138,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 <View style={styles.header}>
                     <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={configs.images.logo}
                         style={configs.styles.logo} />
-                    <Text style={styles.ephoneTxt}>Use your phone number to login or register</Text>
+                    <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 
                 <View style={styles.body}>
@@ -140,12 +159,18 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         autoFocus={true}
                         disabled={false}
                     />
-
                 </View>
 
+                <View style={styles.switchView}>
+                        <Switch value={isDoctor} onValueChange={onToggleSwitch} color={configs.colors.primary} style={styles.switch} />
+                        <Text style={styles.switchText}>{actionType} switch to proceed with {userType} login</Text>
+                    </View>
+
                 <View style={styles.footer}>
+                   
+
                     <TouchableOpacity
-                        disabled={false} // {!valid}
+                        disabled={false}
                         style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, configs.styles.bottomizedBtn]}
                         onPress={() => Signin()}
                     >
@@ -178,8 +203,8 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: configs.colors.white,
-        alignItems: 'center',
         marginVertical: 15,
+        alignItems: 'center',
         justifyContent: 'center',
     },
 
@@ -197,13 +222,27 @@ const styles = StyleSheet.create({
     },
 
     ephoneTxt: {
-        fontSize: 18,
+        fontSize: configs.fonts.extraLarge,
         top: 15,
-        color: configs.colors.dark,
-        opacity: 0.7,
-        textTransform: 'none',
+        textTransform: 'capitalize',
         textAlign: 'center',
-        marginHorizontal: 20
+        marginHorizontal: 20,
     },
 
-})
+    switchView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal:35
+    },
+
+    switch: {
+        transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+        marginHorizontal: 10,
+    },
+
+    switchText: {
+        fontSize: configs.fonts.large
+    }
+
+});

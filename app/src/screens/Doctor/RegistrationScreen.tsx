@@ -1,18 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import * as config from '../configs';
+import * as config from '../../configs';
 import { TextInput } from 'react-native-paper';
-import AppLoader from '../components/AppLoader';
+import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, isValidEmail } from '../components/common/SharedHelper';
-import { Context as AuthContext } from '../context/authContext';
-import { IUser } from '../interfaces';
+import { formatDate, displayMessage, isValidEmail, getJsonObjByValue } from '../../components/common/SharedHelper';
+import { Context as AppContext } from '../../context/appContext';
+import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { HOSPITAL_NAME } from '@env';
+
 
 const numberOfLines = 5;
 
-const SignupScreen = ({ navigation }: { navigation: any }) => {
+const DoctorRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const InitialUser = {
         first_name: '',
@@ -27,14 +29,41 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isLoading, setIsLoading] = useState(false);
+    const [languages, setLanguages] = useState([]);
+    const [specialties, setSpecialties] = useState([]);
+    // const [isForm1Filled, setIsForm1Filled] = useState(false);
+
+    const [isFetchingLanguages, setIsFetchingLanguages] = useState(true);
+    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
+
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [gender, setGender] = useState("");
-    const { signup } = useContext(AuthContext);
+    const { signup, getDoctorLanguages, getDoctorSpecialties } = useContext(AppContext);
 
     const genderOptions = [
         {key:'1', value:'Male'},
         {key:'2', value:'Female'},
     ];
+
+    const titleOptions = [
+        {key:'1', value:'Dr.'},
+        {key:'2', value:'Mr.'},
+        {key:'3', value:'Mrs.'},
+        {key:'4', value:'Ms.'},
+    ];
+
+    useEffect(() => {
+            getDoctorLanguages({onSuccess:populateLanguages, onFailure: displayMessage, onCompletion: () => { setIsFetchingLanguages(false) } });
+            getDoctorSpecialties({onSuccess:populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
+    }, []);
+
+    const populateLanguages = (data:any) => {
+        setLanguages(data);
+    }
+
+    const populateSpecialties = (data:any) => {
+        setSpecialties(data);
+    }
 
     const submitDetails = () => {
 
@@ -48,11 +77,13 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
-        if(user.email){
-            if(!isValidEmail(user.email)){
-                Toast.show('Please enter a valid email', Toast.LONG);
-                return;
-            }
+        if(!user.email){
+            Toast.show('Enter your email address', Toast.LONG);
+        }
+
+        if(!isValidEmail(user.email)){
+            Toast.show('Please enter a valid email', Toast.LONG);
+            return;
         }
 
         if (!user.address) {
@@ -81,12 +112,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
             dob: user.dob
         }
 
-       signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
-  
-    }
-
-    const stopLoading = () => {
-        setIsLoading(false);
+        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
     const navigateMethod = async (data: any) => {
@@ -122,7 +148,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContainer}>
-                    <Text style={styles.title}>Create a Vastel Medical Services Account</Text>
+                    <Text style={styles.title}>Medical Doctor Registration</Text>
 
                     <View style={styles.inputWrap}>
                         <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
@@ -133,7 +159,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             dense={false}
                             activeOutlineColor={config.colors.primary}
                             numberOfLines={numberOfLines}
-                            error={!user.first_name}
+                            // error={!user.first_name}
                             style={styles.textInput}
                             textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
@@ -150,19 +176,46 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
-                            error={!user.last_name}
+                            // error={!user.last_name}
                             textColor={config.colors.dark}
                             onChangeText={text => setUser({ ...user, last_name: text })}
                         />
                     </View>
 
+                    <View style={styles.inputWrap}>
+                        <Text style={styles.labelTxt}>Specialty<Text style={styles.required}>*</Text></Text>
+                        <SelectList 
+                                setSelected={(val: string) => setUser(prev => ({ ...prev, specialty: val }))}
+                                data={specialties} 
+                                save="value"
+                                search={false}
+                                placeholder={"Select Specialty"}
+                                inputStyles={{color: config.colors.black}}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                            />
+                    </View>
+
+                    <View style={styles.inputWrap}>
+                            <Text style={styles.labelTxt}>Title<Text style={styles.required}>*</Text></Text>
+                            <SelectList 
+                                setSelected={(val: string) => setUser(prev => ({ ...prev, title: val }))} 
+                                data={titleOptions} 
+                                save="value"
+                                search={false}
+                                placeholder={"Select Title"}
+                                inputStyles={{color: config.colors.black}}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                            />
+                        </View>
+
                     <View style={styles.viewContainer}>
-                        <Text style={styles.labelTxt}>Email address</Text>
+                        <Text style={styles.labelTxt}>Email<Text style={styles.required}>*</Text></Text>
                         <TextInput
                             label="Email address"
                             value={user.email}
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
+                            // error={!user.email}
                             style={styles.textInput}
                             textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
@@ -170,7 +223,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
 
-                    <View style={styles.viewContainer}>
+                    {/* <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Address<Text style={styles.required}>*</Text></Text>
                         <TextInput
                             label="Address"
@@ -182,19 +235,18 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
                         />
-                    </View>
+                    </View> */}
 
                     <View style={[styles.viewContainer, { flex: 1, flexDirection: 'row', justifyContent: 'space-between' }]}>
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
                             <SelectList 
-                                setSelected={(val: string) => setGender(val)} 
+                                 setSelected={(val: string) => setUser(prev => ({ ...prev, gender: val }))} 
                                 data={genderOptions} 
                                 save="value"
                                 search={false}
-                                placeholder={"Select Gender"}
-                                inputStyles={{color: gender ? config.colors.black : config.colors.danger, fontWeight: gender ? 'normal' : '500' }}
-                                boxStyles={{ borderColor: gender ? config.colors.gray : config.colors.danger, borderWidth: gender ? 1 : 2, borderRadius: 4, marginTop: 6, height: 49 }}
+                                inputStyles={{color: config.colors.black}}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
                             />
                         </View>
 
@@ -206,7 +258,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                error={!user.dob}
+                                // error={!user.dob}
                                 textColor={config.colors.dark}
                                 onFocus={showDatePicker}
                                 showSoftInputOnFocus={false}
@@ -224,26 +276,34 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                     <View style={styles.viewContainer}>
-                        <TouchableOpacity style={config.styles.secondaryBtn}
+                        <TouchableOpacity style={[config.styles.secondaryBtn, {width: '100%'}]}
                             onPress={() => submitDetails()}>
-                            <Text style={[config.styles.btnText]}>Continue</Text>
+                            <Text style={[config.styles.btnText]}>Next</Text>
                         </TouchableOpacity>
                     </View>
 
                 </ScrollView>
             </SafeAreaView>
-            {isLoading && <AppLoader />}
+            {isLoading || isFetchingLanguages || isFetchingSpecialties && <AppLoader />}
         </>
     )
 }
 
 
-export default SignupScreen;
+export default DoctorRegistrationScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: config.colors.white,
+        marginVertical: 10,
+        marginHorizontal: 6,
+        elevation: 8,
+        borderRadius: 8,
+        shadowColor: config.colors.gray,
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 0 },
     },
 
     scrollView: {
@@ -272,12 +332,8 @@ const styles = StyleSheet.create({
     title: {
         marginVertical: 10,
         textAlign: 'center',
-        fontSize: 16,
-        color: config.colors.dark,
-        paddingLeft: 30,
-        paddingRight: 30,
-        fontWeight: '900',
-        opacity: 0.6,
+        fontSize: config.fonts.extraLarge,
+        fontWeight: '800',
         textTransform: 'uppercase',
     },
 
