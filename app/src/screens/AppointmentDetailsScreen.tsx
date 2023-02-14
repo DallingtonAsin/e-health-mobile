@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable, Alert, TouchableOpacity } from 'react-native';
 import * as config from '../configs';
 import { Avatar } from 'react-native-paper';
 import { Context as AppContext } from '../context/appContext';
@@ -11,7 +11,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
-  
+
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
@@ -92,26 +92,28 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         </View>
                         <Separator />
 
-                        { completed_at && <><ContentItem title={"Completed At"} value={completed_at}/><Separator/></> }
-                        { cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at}/><Separator/></> }
-                        
+                        {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
+                        {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
+
+                        {
+                            status == 'Pending' &&
+                            <View style={styles.footer}>
+
+                                {is_online &&
+                                    <TouchableOpacity style={[config.styles.primaryBtn, { bottom: 15, alignSelf: 'center', width: '100%' }]} onPress={() => navigation.navigate(`Home`)}>
+                                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                                    </TouchableOpacity>
+                                }
+
+                                <TouchableOpacity style={[config.styles.dangerBtn, { alignSelf: 'center', width: '100%' }]} onPress={() => cancelMedicalAppointment()}>
+                                    <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+
                     </View>
 
-                    {
-                        status == 'Pending' &&
-                        <View style={styles.footer}>
 
-                            {is_online &&
-                                <Pressable style={[config.styles.primaryBtn, { bottom: 15 }]} onPress={() => navigation.navigate(`Home`)}>
-                                    <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
-                                </Pressable>
-                            }
-
-                            <Pressable style={[config.styles.dangerBtn]} onPress={() => cancelMedicalAppointment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                            </Pressable>
-                        </View>
-                    }
 
 
                 </ScrollView>
@@ -258,8 +260,7 @@ const styles = StyleSheet.create({
     footer: {
         flex: 1,
         flexDirection: 'column',
-        alignSelf: 'center',
-        marginVertical: 10
+        marginVertical: 15
     },
 
     separator: {

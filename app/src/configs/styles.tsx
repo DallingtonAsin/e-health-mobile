@@ -2,14 +2,14 @@ import { Dimensions } from 'react-native';
 import { colors, } from './colors';
 import { fonts } from './fonts'
 
-const window = Dimensions.get('window');
+const width = Dimensions.get('window').width;
 
 const reusable = {
 
   button: {
     borderWidth: 2,
-    paddingVertical: 15,
-    width: '92%',
+    paddingVertical: 13.5,
+    width: width*.92,
     borderRadius: 5,
   },
 
