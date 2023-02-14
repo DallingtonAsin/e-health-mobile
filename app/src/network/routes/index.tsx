@@ -29,6 +29,9 @@ const routes = {
       types: 'appointments/types',
       patient: {
          myappointments: 'appointments/patient',
+      },
+      doctor: {
+         myappointments: 'appointments/doctor',
       }
    }
 

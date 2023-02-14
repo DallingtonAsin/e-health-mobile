@@ -63,7 +63,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 email: user?.email,
                 address: user.address,
                 gender: user.gender,
-                dob: user.dob
+                dob: user.dob,
+                is_patient: user.is_patient
             }
 
             updateProfile({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
@@ -113,8 +114,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     }
                     <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
                     <Text style={[styles.headerText]}>
-                        <Icon5 name="map-marker-alt" size={16} color={config.colors.white} />
-                        <Text> {user.address} </Text>
+                       {user.is_patient &&  <> <Icon5 name="map-marker-alt" size={16} color={config.colors.white}/><Text> {user.address} </Text></>}
+                       {!user.is_patient && <> <Icon5 name="user-md" size={18} color={config.colors.white}/><Text> {user.profession} </Text></>}
                     </Text>
 
                 </View>

@@ -103,8 +103,9 @@ const signup = (dispatch: any) => {
 
 const updateProfile = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = payload.is_patient ?  routes.patient.updateProfile : routes.doctor.updateProfile;
         services.post(
-            routes.patient.updateProfile,
+            endpoint,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -238,8 +239,9 @@ const cancelAppointment = () => {
 
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments;
         services.get(
-            `${routes.appointments.patient.myappointments}/${payload.patient_id}/${payload.path}`
+            `${endpoint}/${payload.user_id}/${payload.path}`
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;
@@ -273,13 +275,23 @@ const authenticateDoctor = (dispatch: any) => {
             if (res && res.data) {
 
                 let data = res.data;
-                await storeAuthToken(data.access_token);
+                let access_token = data.access_token;
+                await storeAuthToken(access_token);
 
-                dispatch({
-                    type: types.USER_SIGNIN,
-                    payload: data
-                });
-
+                if (data.profile_status == 1) {
+                    await storeAccessToken(access_token);
+                    await storeUser(data);
+                    dispatch({
+                        type: types.HOME,
+                        payload: data
+                    });
+                } else {
+                    dispatch({
+                        type: types.USER_SIGNUP,
+                        payload: data
+                    });
+                }
+                
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -356,7 +368,7 @@ export const { Provider, Context, } = createDataContext(
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment,
-         signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties
+        signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

@@ -31,16 +31,18 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         { key: 'cancelled', title: 'Cancelled' }
     ]);
 
+    let payload = { user_id: user.id, is_patient: user.is_patient };
+
     const fetchPendingAppointments = () => {
-        getMyAppointments({ payload: { patient_id: user.id, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
     }
 
     const fetchCompletedAppointments = () => {
-        getMyAppointments({ payload: { patient_id: user.id, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
     }
 
     const fetchCancelledAppointments = () => {
-        getMyAppointments({ payload: { patient_id: user.id, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
     }
 
     const setPendingAppoinments = (data: MyAppointmentInfo[]) => { setPendingAppointments(data); }
@@ -80,12 +82,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={!isPendingLoading ? <EmptyListComponent message="No Pending Appointments"/> : null }
+                            ListEmptyComponent={!isPendingLoading ? <EmptyListComponent message="No Pending Appointments" /> : null}
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isPendingLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
+                {isPendingLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
         );
     }
@@ -111,12 +113,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={!isCompletedLoading ? <EmptyListComponent message="No Completed Appointments"/> : null}
+                            ListEmptyComponent={!isCompletedLoading ? <EmptyListComponent message="No Completed Appointments" /> : null}
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isCompletedLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
+                {isCompletedLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
         );
     }
@@ -141,12 +143,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={ !isCancelledLoading ? <EmptyListComponent message="No Cancelled Appointments"/> : null}
+                            ListEmptyComponent={!isCancelledLoading ? <EmptyListComponent message="No Cancelled Appointments" /> : null}
                             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         />
                     </View>
                 </SafeAreaView>
-                {isCancelledLoading && !refreshing && <AppLoader bgColor={config.colors.white}/>}
+                {isCancelledLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
         );
     }
@@ -166,7 +168,9 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             </View>
             <View style={styles.main}>
 
-                <Text style={styles.doctorTxt}>{item.doctor.title} {item.doctor.first_name} {item.doctor.last_name}</Text>
+                {user.is_patient && <Text style={styles.doctorTxt}>{item.doctor.title} {item.doctor.first_name} {item.doctor.last_name}</Text>}
+                {!user.is_patient && <Text style={styles.doctorTxt}>{item.patient.first_name} {item.patient.last_name}</Text>}
+
                 <Text style={styles.info}>Reason: <Text style={[styles.info]}>{item.symptoms}</Text></Text>
                 <View style={styles.dateView}>
                     <Text style={[styles.info]}>Date: {item.appointment_date}</Text>

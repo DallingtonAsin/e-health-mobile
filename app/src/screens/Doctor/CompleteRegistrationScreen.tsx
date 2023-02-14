@@ -8,7 +8,7 @@ import { displayMessage } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-
+import { useNavigation } from '@react-navigation/native';
 
 const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
 
