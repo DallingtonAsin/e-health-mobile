@@ -9,7 +9,7 @@ import { RadioButton } from 'react-native-paper';
 import { AppointmentInfo, DoctorsDetail } from '../interfaces';
 import { Context as AppContext } from '../context/appContext';
 import { initialDoctorInfo } from '../configs/constants';
-import { displayMessage, getCurrentDate } from '../components/common/SharedHelper';
+import { displayMessage, getCurrentDate, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
@@ -164,7 +164,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
                     <View style={styles.header}>
                         <View style={styles.doctorInfo}>
-                            <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
+                            {doctorInfo.image
+                                ? <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
+                                : <Avatar.Text size={60} label={getUserInitials(`${doctorInfo.first_name} ${doctorInfo.last_name}`)}
+                                    style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
+                            }
                             <View style={styles.personalInfo}>
                                 <Text style={styles.infoTitle}>{doctorInfo.first_name}</Text>
                                 <Text style={styles.infoTitle}>{doctorInfo.last_name}</Text>

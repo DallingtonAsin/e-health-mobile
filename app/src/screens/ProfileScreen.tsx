@@ -111,7 +111,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             ? <Avatar.Image size={80} source={{ uri: config.images.profileImage }}></Avatar.Image>
                             : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
                     }
-                    <Text style={[styles.usernameText]}>{user.first_name} {user.last_name}</Text>
+                    <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
                     <Text style={[styles.headerText]}>
                         <Icon5 name="map-marker-alt" size={16} color={config.colors.white} />
                         <Text> {user.address} </Text>

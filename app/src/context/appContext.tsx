@@ -290,6 +290,33 @@ const authenticateDoctor = (dispatch: any) => {
     };
 };
 
+const registerDoctor = (dispatch: any) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.doctor.register,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                await storeAccessToken(data.access_token);
+                await storeUser(data);
+
+                dispatch({
+                    type: types.HOME,
+                    payload: data
+                });
+
+                onSuccess();
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const getDoctorLanguages = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
@@ -328,8 +355,8 @@ export const { Provider, Context, } = createDataContext(
     authReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
-        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor,
-        getDoctorLanguages, getDoctorSpecialties
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment,
+         signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
