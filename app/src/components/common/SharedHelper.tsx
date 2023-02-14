@@ -104,11 +104,23 @@ const isValidEmail = (email: any) => {
     );
 };
 
-const getJsonObjByValue = (arr : any, value: any) => {
-  let result = arr.filter(function(obj: any) {
+const getJsonObjByValue = (arr: any, value: any) => {
+  let result = arr.filter(function (obj: any) {
     return obj.value === value;
   });
   return result[0];
+}
+
+const isValidDob = (birthdateStr: string) => {
+  const birthdate = new Date(birthdateStr);
+  const today: any = new Date();
+
+  const ageDiffMs = today - birthdate.getTime();
+  const ageDate = new Date(ageDiffMs);
+
+  const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  console.log(`Age is`, age);
+  return age >= 18
 }
 
 export {
@@ -124,5 +136,6 @@ export {
   strContains,
   getDayMonth,
   isValidEmail,
+  isValidDob,
   getJsonObjByValue
 }

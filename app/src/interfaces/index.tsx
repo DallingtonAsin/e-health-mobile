@@ -49,6 +49,7 @@ interface DoctorsDetail {
     id: number,
     first_name: string,
     last_name: string,
+    country_code?: string,
     phone_number: string,
     qualification?: string,
     profession: string,
@@ -61,6 +62,17 @@ interface DoctorsDetail {
     schedule?: string[],
 }
 
+interface PatientDetail {
+    id?: number,
+    first_name: string,
+    last_name: string,
+    country_code?: string,
+    phone_number: string,
+    email?: string,
+    address?: string,
+    dob?: string
+}
+
 interface AppointmentType {
     id: number,
     name: string
@@ -69,6 +81,7 @@ interface AppointmentType {
 interface MyAppointmentInfo {
     id: number,
     doctor: DoctorsDetail,
+    patient: PatientDetail,
     symptoms: string,
     appointment_type: AppointmentType,
     appointment_date: string,
@@ -93,6 +106,7 @@ export type {
     Notification,
     MedicalSpecialty,
     DoctorsDetail,
+    PatientDetail,
     AppointmentType,
     AppointmentInfo,
     MyAppointmentInfo

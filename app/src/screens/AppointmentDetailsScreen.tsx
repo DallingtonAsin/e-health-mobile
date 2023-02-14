@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import * as config from '../configs';
 import { Avatar } from 'react-native-paper';
 import { Context as AppContext } from '../context/appContext';
-import { displayMessage } from '../components/common/SharedHelper';
+import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { doctor, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
+    const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -64,13 +64,30 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 >
                     <View style={styles.header}>
                         <View>
-                            <Avatar.Image size={80} source={{ uri: doctor.image }} />
+                            {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.image }} />}
+                            {user.is_patient && !doctor.image && <Avatar.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+
+                            {!user.is_patient && patient.image && <Avatar.Image size={80} source={{ uri: patient.image }} />}
+                            {!user.is_patient && !patient.image && <Avatar.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                         </View>
-                        <View>
-                            <Text style={styles.name}>{doctor.title} {doctor.first_name} {doctor.last_name}</Text>
-                            <Text style={styles.titles}>{doctor.qualification}</Text>
-                            <Text style={styles.userTitle}>{doctor.profession}</Text>
-                        </View>
+
+                        {
+                            user.is_patient &&
+                            <View style={styles.userInfo}>
+                                <Text style={styles.name}>{doctor.title} {doctor.first_name} {doctor.last_name}</Text>
+                                <Text style={styles.titles}>{doctor.qualification}</Text>
+                                <Text style={styles.userTitle}>{doctor.profession}</Text>
+                            </View>
+                        }
+
+                        {
+                            !user.is_patient &&
+                            <View>
+                                <Text style={styles.name}>{patient.first_name} {patient.last_name}</Text>
+                                <Text style={styles.titles}>{patient.country_code}{patient.phone_number}</Text>
+                                <Text style={styles.userTitle}>{patient.address}</Text>
+                            </View>
+                        }
                     </View>
 
                     <View style={styles.body}>
@@ -105,16 +122,16 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                                     </TouchableOpacity>
                                 }
 
-                                <TouchableOpacity style={[config.styles.dangerBtn, { alignSelf: 'center', width: '100%' }]} onPress={() => cancelMedicalAppointment()}>
-                                    <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                                </TouchableOpacity>
+
+                                {user.is_patient &&
+                                    <TouchableOpacity style={[config.styles.dangerBtn, { alignSelf: 'center', width: '100%' }]} onPress={() => cancelMedicalAppointment()}>
+                                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                                    </TouchableOpacity>
+                                }
                             </View>
                         }
 
                     </View>
-
-
-
 
                 </ScrollView>
             </SafeAreaView>
@@ -167,13 +184,15 @@ const styles = StyleSheet.create({
     },
 
     titles: {
-        opacity: 0.8,
-        fontSize: config.fonts.normal,
+        opacity: 0.9,
+        fontSize: config.fonts.large,
+        textAlign: 'center',
     },
 
     userTitle: {
         fontSize: config.fonts.large,
         color: config.colors.primary,
+        textAlign: 'center',
     },
 
     appointmentInfo: {
@@ -213,9 +232,13 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        color: config.colors.black,
-        fontSize: 18,
-        fontWeight: 'bold'
+        fontSize: config.fonts.large,
+        fontWeight: '700',
+        textAlign: 'center'
+    },
+
+    userInfo: {
+        alignItems: 'center',
     },
 
     personalInfo: {
