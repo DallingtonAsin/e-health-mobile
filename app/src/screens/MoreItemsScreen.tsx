@@ -15,6 +15,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const { state, signout } = useContext(AppContext);
+    const user = state.user;
 
     const listItems = [
         {id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile')},
@@ -52,13 +53,13 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
 
                 <View style={styles.header}>
                    {
-                        state.user.image
+                        user.image
                             ? <Avatar.Image size={80} source={{ uri: config.images.profileImage }}></Avatar.Image>
-                            : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                            : <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={config.styles.userAvatar} />
                     }
-                    <Text style={[styles.usernameText]}>{state.user.first_name} {state.user.last_name}</Text>
+                    <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
                     <Text style={[styles.headerText]}>
-                        <Text> {`0`}{state.user.phone_number} </Text>
+                        <Text> {`0`}{user.phone_number} </Text>
                     </Text>
                 </View>
 

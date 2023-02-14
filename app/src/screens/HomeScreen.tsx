@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                         <View style={{ left: 20 }}>
-                            <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
+                            <Text style={styles.greeting}>{getGreeting()} {!user.is_patient && user.title} {user.first_name}</Text>
                             <Text style={styles.amazing}>Today is amazing!</Text>
                         </View>
                     </View>

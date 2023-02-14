@@ -4,7 +4,7 @@ import * as configs from '../configs';
 import { Avatar } from 'react-native-paper';
 import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
-import { displayMessage } from '../components/common/SharedHelper';
+import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
 
 
@@ -13,10 +13,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const { specialty_id, specialty_name } = route.params;
     const [isLoading, setIsLoading] = useState(true);
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
-    const { getDoctorsBySpecialty } = useContext(AppContext);
+    const { state, getDoctorsBySpecialty } = useContext(AppContext);
+    const user = state.user;
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
-            navigation.navigate('ScheduleAppointment', { doctor_id: item.id });
+        navigation.navigate('ScheduleAppointment', { doctor_id: item.id });
     }
 
     useEffect(() => {
@@ -36,7 +37,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
         <View style={styles.item}>
             <View style={styles.header}>
                 <View style={styles.image}>
-                    <Avatar.Image size={80} source={{ uri: item.image }} />
+                    {item.image
+                        ? <Avatar.Image size={80} source={{ uri: item.image }} />
+                        : <Avatar.Text size={80} label={getUserInitials(`${item.first_name} ${item.last_name}`)}
+                            style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
+                    }
                 </View>
                 <View style={styles.profile}>
                     <Text style={styles.name}>{item.title} {item.first_name} {item.last_name}</Text>
@@ -56,7 +61,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                 </View>
             </View>
 
-            <View style={styles.footer}>
+            {user.is_patient && <View style={styles.footer}>
                 <View>
                     <Text style={styles.fees}>Fee:  <Text style={styles.amount}>{item.service_fee}</Text></Text>
                 </View>
@@ -69,6 +74,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     </TouchableOpacity>
                 </View>
             </View>
+            }
 
         </View>
     );
@@ -96,10 +102,10 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}
-                    ListHeaderComponent={() => (!medicalDoctors.length ? 
-                        null  
+                    ListHeaderComponent={() => (!medicalDoctors.length ?
+                        null
                         : <Text style={styles.title}>Doctors in {specialty_name} specialty</Text>)}
-          
+
                     ListEmptyComponent={EmptyListMessage}
                 />
             </View>
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 5
     },
-    
+
     footer: {
         flex: 1,
         flexDirection: 'row',
@@ -229,5 +235,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     }
 
-})
-
+});
