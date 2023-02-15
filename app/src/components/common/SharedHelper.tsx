@@ -119,7 +119,6 @@ const isValidDob = (birthdateStr: string) => {
   const ageDate = new Date(ageDiffMs);
 
   const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-  console.log(`Age is`, age);
   return age >= 18
 }
 

@@ -8,7 +8,7 @@ import { displayMessage } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import { useNavigation } from '@react-navigation/native';
+
 
 const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
 
@@ -75,7 +75,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
             service_fee: user.service_fee
         }
         payload.phone_number && delete payload.phone_number;
-        // console.log(`Doctors payload`, payload);
+       
         setIsLoading(true);
        registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
@@ -122,6 +122,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
                             onChangeText={text => setUser(prev => ({ ...prev, qualification: text }))}
+                            placeholder="E.g Bsc, Msc"
 
                         />
                     </View>
@@ -193,7 +194,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
                 </ScrollView>
             </SafeAreaView>
-            {isLoading || isFetchingLanguages && <AppLoader />}
+            { (isLoading || isFetchingLanguages) && <AppLoader />}
         </>
     )
 }
