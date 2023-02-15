@@ -346,6 +346,23 @@ const getDoctorLanguages = () => {
     };
 };
 
+const getDoctorsCalendar = () => {
+    return ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.doctor.calendar}/${doctor_id}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const getDoctorSpecialties = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
@@ -367,8 +384,8 @@ export const { Provider, Context, } = createDataContext(
     authReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
-        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment,
-        signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, 
+        signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

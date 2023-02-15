@@ -99,6 +99,14 @@ interface AppointmentInfo {
     notes?: string,
 }
 
+interface DoctorCalendar{
+    id: number,
+    doctor_id?: number,
+    date: string,
+    start_time: string,
+    end_time: string
+}
+
 export type {
     IUser,
     LoginData,
@@ -109,5 +117,6 @@ export type {
     PatientDetail,
     AppointmentType,
     AppointmentInfo,
+    DoctorCalendar,
     MyAppointmentInfo
 }

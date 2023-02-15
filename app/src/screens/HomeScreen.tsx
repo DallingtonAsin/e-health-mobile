@@ -73,17 +73,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </TouchableOpacity>
                         }
 
+                        {!user.is_patient &&
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DoctorsCalendar')}>
+                                <Icon5 name="clock" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>My Calendar</Text>
+                            </TouchableOpacity>
+                        }
+
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
                             <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
 
-                        {!user.is_patient &&
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Profile')}>
-                                <Icon5 name="user-circle" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Profile</Text>
-                            </TouchableOpacity>
-                        }
+
 
                     </View>
 

@@ -41,6 +41,8 @@ export default (reducer: any, action: any, defaultValue: any) => {
         getDoctorLanguages: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorSpecialties: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
         registerDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorsCalendar: ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+  
     });
 
     const Provider = ({ children }: { children: any }) => {

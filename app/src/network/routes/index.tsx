@@ -15,6 +15,7 @@ const routes = {
       updateProfile: 'doctor/profile/update',
       languages: 'doctor/languages',
       specialties: 'doctor/specialties',
+      calendar: 'doctor/schedule',
      },
 
    medical: {
