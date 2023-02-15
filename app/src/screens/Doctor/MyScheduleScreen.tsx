@@ -2,13 +2,14 @@ import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } 
 import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { DataTable, Divider } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
-import { displayMessage } from '../../components/common/SharedHelper';
+import { displayMessage, getCurrentDate } from '../../components/common/SharedHelper';
 import * as config from '../../configs';
 import { Context as AppContext } from '../../context/appContext';
 import { DoctorCalendar } from '../../interfaces';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetHeader } from '../../components/BottomSheetHeader';
+import { Calendar } from 'react-native-calendars';
 
 
 const MyScheduleScreen = () => {
@@ -16,13 +17,14 @@ const MyScheduleScreen = () => {
     const [schedule, setSchedule] = useState<DoctorCalendar[]>();
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [isSheetVisible, setIsSheetVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
 
     const { state, getDoctorsCalendar } = useContext(AppContext);
     const user = state.user;
 
     const addScheduleRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
+    const currentDate = getCurrentDate();
 
     useEffect(() => {
         getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
@@ -56,7 +58,34 @@ const MyScheduleScreen = () => {
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.end_time}</Text></DataTable.Cell>
         </DataTable.Row>
-    )
+    );
+
+    const CustomCalendar = (props: any) => {
+
+        const marked = useMemo(() => ({
+            [currentDate]: { selected: false, selectedColor: config.colors.white, selectedTextColor: config.colors.gray, },
+            [selectedDate]: {
+              selected: true,
+              selectedColor: config.colors.primary,
+              selectedTextColor: config.colors.white,
+            }
+          }), [selectedDate]);
+
+        return (
+          <Calendar
+            initialDate={''}
+            minDate={currentDate}
+            markedDates={marked}
+            onDayPress={(day) => {
+                setSelectedDate(day.dateString);
+                props.onDaySelect && props.onDaySelect(day);
+              }}
+            disableAllTouchEventsForDisabledDays={true}
+            hideArrows={false}
+            {...props}
+          />
+        );
+      }
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -82,6 +111,10 @@ const MyScheduleScreen = () => {
       const handleClosePress = useCallback(() => {
         addScheduleRef.current?.close();
       }, []);
+
+      const submitSchedule = () => {
+        console.log(`selected date`, selectedDate);
+      }
 
     return (
         <>
@@ -112,10 +145,11 @@ const MyScheduleScreen = () => {
                       <Divider style={styles.divider}/>
                       
                       <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                 
+                      <CustomCalendar onDaySelect={(day: any) => {}}/>
                       </BottomSheetScrollView>
                       
-                      <TouchableOpacity style={[config.styles.primaryBtn, {alignSelf: 'center', bottom:20}]}>
+                      <TouchableOpacity onPress={() => submitSchedule()}
+                      style={[config.styles.primaryBtn, {alignSelf: 'center', bottom:20}]}>
                       <Text style={[config.styles.btnText, {color: config.colors.white}]}>Submit</Text>
                       </TouchableOpacity>
                       
