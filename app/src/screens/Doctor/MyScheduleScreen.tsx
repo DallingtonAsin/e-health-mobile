@@ -1,20 +1,28 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet } from 'react-native';
-import { DataTable } from 'react-native-paper';
+import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react';
+import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { DataTable, Divider } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import { displayMessage } from '../../components/common/SharedHelper';
 import * as config from '../../configs';
 import { Context as AppContext } from '../../context/appContext';
 import { DoctorCalendar } from '../../interfaces';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetHeader } from '../../components/BottomSheetHeader';
+
 
 const MyScheduleScreen = () => {
 
     const [schedule, setSchedule] = useState<DoctorCalendar[]>();
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [isSheetVisible, setIsSheetVisible] = useState(false);
 
     const { state, getDoctorsCalendar } = useContext(AppContext);
     const user = state.user;
+
+    const addScheduleRef = useRef<BottomSheet>(null);
+    const snapPoints = useMemo(() => ['25%', '75%'], []);
 
     useEffect(() => {
         getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
@@ -55,6 +63,26 @@ const MyScheduleScreen = () => {
         setRefreshing(false);
     }
 
+    const renderBackDrop = useCallback((props: any) => ( <BottomSheetBackdrop {...props} opacity={0.2}/>),[]);
+
+    const CircleButton = ({ onPress }: { onPress: any }) => (
+        <TouchableOpacity onPress={onPress} style={styles.circularButton}>
+            <Icon5 name="plus" size={20} color={config.colors.white} />
+        </TouchableOpacity>
+    );
+
+    const handleSheetChanges = useCallback((index: number) => {
+        addScheduleRef.current?.snapToIndex(index)
+      }, []);
+
+      const handleSnapPress = useCallback((index: number) => {
+        addScheduleRef.current?.snapToIndex(index);
+      }, []);
+
+      const handleClosePress = useCallback(() => {
+        addScheduleRef.current?.close();
+      }, []);
+
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -70,6 +98,31 @@ const MyScheduleScreen = () => {
                             onRefresh={onRefresh}
                         />}
                 />
+                <CircleButton onPress={() => handleSnapPress(1)} />
+
+                <BottomSheet
+                      ref={addScheduleRef}
+                      index={-1}
+                      snapPoints={snapPoints}
+                      enablePanDownToClose={true}
+                      backdropComponent={renderBackDrop}
+                      onChange={handleSheetChanges}
+                      handleComponent={() => <BottomSheetHeader title='Add schedule' onClose={handleClosePress}/> }>
+                      
+                      <Divider style={styles.divider}/>
+                      
+                      <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                 
+                      </BottomSheetScrollView>
+                      
+                      <TouchableOpacity style={[config.styles.primaryBtn, {alignSelf: 'center', bottom:20}]}>
+                      <Text style={[config.styles.btnText, {color: config.colors.white}]}>Submit</Text>
+                      </TouchableOpacity>
+                      
+                      </BottomSheet>
+
+
+
             </SafeAreaView>
             {isLoading && <AppLoader />}
         </>
@@ -118,6 +171,28 @@ const styles = StyleSheet.create({
 
     tableHead: {
         backgroundColor: config.colors.primary
-    }
+    },
+
+    circularButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: config.colors.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    divider:{
+        borderBottomColor: '#e2e2e2',
+        borderBottomWidth: 1,
+        marginTop:20
+      },
+
+      contentContainer: {
+        alignItems: 'center'
+      },
 
 });
