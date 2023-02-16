@@ -35,7 +35,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 {
                     text: 'Yes', onPress: async () => {
                         let payload = {
-                            patient_id: user.id,
+                            patient_id: patient.id,
                             appointment_number: appointment_number
                         }
                         setIsLoading(true);

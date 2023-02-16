@@ -13,6 +13,7 @@ import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
 import AppointmentDetailsScreen from "../../screens/AppointmentDetailsScreen";
 import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
 import NotificationScreen from "../../screens/NotificationScreen";
+import MyScheduleScreen from "../../screens/Doctor/MyScheduleScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -165,6 +166,19 @@ const SignedInStackNavigator = () => {
                     headerShown: true,
                 }}
                 component={ScheduleAppointmentScreen} />
+
+            <Stack.Screen
+                name="DoctorsCalendar"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `My Calendar`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={MyScheduleScreen} />
 
         </Stack.Navigator>
     )

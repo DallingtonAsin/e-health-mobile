@@ -1,7 +1,9 @@
+import { AppAction } from '../interfaces';
 import * as types from './actions';
 
-const authReducer = (state: any, action: any) => {
-    // console.log(`Current action data`, action.payload);
+
+const appReducer = (state: any, action: AppAction) => {
+   
     switch (action.type) {
         case types.USER_SIGNIN:
             return {
@@ -46,4 +48,4 @@ const authReducer = (state: any, action: any) => {
     }
 };
 
-export { authReducer }
+export { appReducer }

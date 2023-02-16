@@ -1,4 +1,9 @@
 
+interface AppAction {
+    type: string;
+    payload?: any;
+  }
+
 interface IUser {
     id?: number,
     first_name: string,
@@ -99,7 +104,16 @@ interface AppointmentInfo {
     notes?: string,
 }
 
+interface DoctorCalendar{
+    id: number,
+    doctor_id?: number,
+    date: string,
+    start_time: string,
+    end_time: string
+}
+
 export type {
+    AppAction,
     IUser,
     LoginData,
     SignedinUser,
@@ -109,5 +123,6 @@ export type {
     PatientDetail,
     AppointmentType,
     AppointmentInfo,
+    DoctorCalendar,
     MyAppointmentInfo
 }

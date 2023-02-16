@@ -13,6 +13,7 @@ import { displayMessage, getCurrentDate, getUserInitials } from '../components/c
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
+import { CustomDay } from '../components/CustomDay';
 
 const screen = Dimensions.get('screen');
 
@@ -68,30 +69,16 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         setAppointmentDate(date);
     }
 
-    const CustomDay = ({ date, selected, onPress }: { date: any, selected: any, onPress: any }) => {
 
-        const dateString = date.dateString;
-        let backgroundColor = selected ? configs.colors.primary : configs.colors.white;
-
-        if (scheduleDates.includes(dateString)) {
-            return (
-                <TouchableOpacity onPress={onPress} style={[{ backgroundColor: backgroundColor }, selected && { padding: 6, borderRadius: 20 }]}>
-                    <Text style={[styles.dayText, selected && styles.selectedDateText]}>{date.day}</Text>
-                </TouchableOpacity>
-            );
-        }
-
-        return (<Text style={[styles.day, styles.disabled]}>{date.day}</Text>);
-    };
-
-    const CustomCalendar = (props: any) => {
+    const AppointmentsCalendar = (props: any) => {
         return (
             <Calendar
                 initialDate={currentDate}
                 minDate={currentDate}
                 onPress={setPatientAppointmentDate}
                 dayComponent={({ date }: { date: any }) => {
-                    return <CustomDay date={date} selected={appointmentDate === date.dateString} onPress={() => setPatientAppointmentDate(date)} />;
+                    return <CustomDay date={date} selected={appointmentDate === date.dateString} 
+                    onPress={() => setPatientAppointmentDate(date)} scheduleDates={scheduleDates} />;
                 }}
                 disableAllTouchEventsForDisabledDays={true}
                 {...props}
@@ -189,7 +176,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                     <View style={styles.fcontainer}>
                         <View>
                             <Text style={styles.pickDate}>Select date</Text>
-                            <CustomCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
+                            <AppointmentsCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
                         </View>
                         <View>
                             <Text style={styles.pickDate}>Select time</Text>
@@ -400,21 +387,9 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 
-    day: {
-        fontSize: 16,
-        color: '#2d4150'
-    },
 
-    disabled: {
-        color: '#d9e1e8'
-    },
 
-    selectedDateText: {
-        color: configs.colors.white
-    },
 
-    dayText: {
-        fontSize: 16,
-        color: '#333'
-    }
+
+   
 });
