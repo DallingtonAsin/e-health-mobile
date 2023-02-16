@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { AppointmentInfo, IUser, LoginData } from '../interfaces';
+import {AppAction, AppointmentInfo, IUser, LoginData } from '../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as types from './actions'
 
@@ -42,7 +42,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         getDoctorSpecialties: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
         registerDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsCalendar: ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-  
+        submitDoctorSchedule: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });
 
     const Provider = ({ children }: { children: any }) => {

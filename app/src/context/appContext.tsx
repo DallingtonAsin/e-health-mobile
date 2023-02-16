@@ -3,7 +3,7 @@ import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, AppointmentInfo, LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
-import { authReducer } from './authReducer';
+import { appReducer } from './appReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions'
@@ -380,12 +380,29 @@ const getDoctorSpecialties = () => {
     };
 };
 
+const submitDoctorSchedule = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.doctor.calendar,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                onSuccess(res.data.message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context, } = createDataContext(
-    authReducer,
+    appReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
-        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, 
-        signout, authenticateDoctor, registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor,
+         registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

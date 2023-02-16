@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { DataTable, Divider } from 'react-native-paper';
+import { DataTable, Divider, Button } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import { displayMessage, getCurrentDate } from '../../components/common/SharedHelper';
 import * as config from '../../configs';
@@ -10,6 +10,8 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetHeader } from '../../components/BottomSheetHeader';
 import { Calendar } from 'react-native-calendars';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from 'react-native-simple-toast';
 
 
 const MyScheduleScreen = () => {
@@ -19,19 +21,29 @@ const MyScheduleScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
 
-    const { state, getDoctorsCalendar } = useContext(AppContext);
+    const { state, getDoctorsCalendar, submitDoctorSchedule } = useContext(AppContext);
     const user = state.user;
 
     const addScheduleRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['25%', '75%'], []);
+    const snapPoints = useMemo(() => ['25%', '85%'], []);
     const currentDate = getCurrentDate();
 
+    const [startTime, setStartTime] = useState();
+    const [endTime, setEndTime] = useState();
+
+    const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
+    const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
+
     useEffect(() => {
-        getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+        fetchDoctorCalendar();
     }, []);
 
     const populateCalendar = (data: DoctorCalendar[]) => {
         setSchedule(data);
+    }
+
+    const fetchDoctorCalendar = () => {
+        getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
     }
 
     const HeaderComponent = () => {
@@ -65,34 +77,37 @@ const MyScheduleScreen = () => {
         const marked = useMemo(() => ({
             [currentDate]: { selected: false, selectedColor: config.colors.white, selectedTextColor: config.colors.gray, },
             [selectedDate]: {
-              selected: true,
-              selectedColor: config.colors.primary,
-              selectedTextColor: config.colors.white,
+                selected: true,
+                selectedColor: config.colors.primary,
+                selectedTextColor: config.colors.white,
             }
-          }), [selectedDate]);
+        }), [selectedDate]);
 
         return (
-          <Calendar
-            initialDate={''}
-            minDate={currentDate}
-            markedDates={marked}
-            onDayPress={(day) => {
-                setSelectedDate(day.dateString);
-                props.onDaySelect && props.onDaySelect(day);
-              }}
-            disableAllTouchEventsForDisabledDays={true}
-            hideArrows={false}
-            {...props}
-          />
+            <Calendar
+                hideExtraDays={true}
+                initialDate={currentDate}
+                minDate={currentDate}
+                markedDates={marked}
+
+                onDayPress={(day) => {
+                    setSelectedDate(day.dateString);
+                    props.onDaySelect && props.onDaySelect(day);
+                }}
+                disableAllTouchEventsForDisabledDays={true}
+                hideArrows={false}
+                {...props}
+            />
         );
-      }
+    }
 
     const onRefresh = () => {
         setRefreshing(true);
+        fetchDoctorCalendar();
         setRefreshing(false);
     }
 
-    const renderBackDrop = useCallback((props: any) => ( <BottomSheetBackdrop {...props} opacity={0.2}/>),[]);
+    const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), []);
 
     const CircleButton = ({ onPress }: { onPress: any }) => (
         <TouchableOpacity onPress={onPress} style={styles.circularButton}>
@@ -100,21 +115,71 @@ const MyScheduleScreen = () => {
         </TouchableOpacity>
     );
 
+    const SetTimeButton = ({ time, buttonText, onPress }: { time: any, buttonText: any, onPress: any }) => (
+        <View style={styles.buttonView}>
+            <Button icon="clock" mode="contained"
+                textColor={config.colors.gray} style={{ borderWidth: 1, borderColor: config.colors.gray, opacity: 0.9 }}
+                buttonColor={config.colors.white} onPress={onPress}>{buttonText}</Button>
+            <Text style={styles.time}>{time}</Text>
+        </View>
+    );
+
     const handleSheetChanges = useCallback((index: number) => {
         addScheduleRef.current?.snapToIndex(index)
-      }, []);
+    }, []);
 
-      const handleSnapPress = useCallback((index: number) => {
+    const handleSnapPress = useCallback((index: number) => {
         addScheduleRef.current?.snapToIndex(index);
-      }, []);
+    }, []);
 
-      const handleClosePress = useCallback(() => {
+    const handleClosePress = useCallback(() => {
         addScheduleRef.current?.close();
-      }, []);
+    }, []);
 
-      const submitSchedule = () => {
-        console.log(`selected date`, selectedDate);
-      }
+    const setSelectedStartTime = (time: any) => {
+        setStartTimePickerVisible(false);
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+
+        setStartTime(formattedTime);
+    }
+
+    const setSelectedEndTime = (time: any) => {
+        setEndTimePickerVisible(false);
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        setEndTime(formattedTime);
+    }
+
+    const submitSchedule = () => {
+        if (!selectedDate) {
+            Toast.show(`Please select date`);
+        }
+        if (!startTime) {
+            Toast.show(`Please select start time`);
+        }
+        if (!endTime) {
+            Toast.show(`Please select end time`);
+        }
+
+        if (selectedDate && startTime && endTime) {
+
+            let payload = {
+                doctor_id: user.id,
+                date: selectedDate,
+                start_time: startTime,
+                end_time: endTime
+            }
+            setIsLoading(true);
+            submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+
+        }
+
+    }
+
+    const updateCalendar = (message: string) => {
+        handleClosePress();
+        displayMessage(message);
+        fetchDoctorCalendar();
+    }
 
     return (
         <>
@@ -132,32 +197,48 @@ const MyScheduleScreen = () => {
                         />}
                 />
                 <CircleButton onPress={() => handleSnapPress(1)} />
-
-                <BottomSheet
-                      ref={addScheduleRef}
-                      index={-1}
-                      snapPoints={snapPoints}
-                      enablePanDownToClose={true}
-                      backdropComponent={renderBackDrop}
-                      onChange={handleSheetChanges}
-                      handleComponent={() => <BottomSheetHeader title='Add schedule' onClose={handleClosePress}/> }>
-                      
-                      <Divider style={styles.divider}/>
-                      
-                      <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                      <CustomCalendar onDaySelect={(day: any) => {}}/>
-                      </BottomSheetScrollView>
-                      
-                      <TouchableOpacity onPress={() => submitSchedule()}
-                      style={[config.styles.primaryBtn, {alignSelf: 'center', bottom:20}]}>
-                      <Text style={[config.styles.btnText, {color: config.colors.white}]}>Submit</Text>
-                      </TouchableOpacity>
-                      
-                      </BottomSheet>
-
-
-
             </SafeAreaView>
+
+            <BottomSheet
+                ref={addScheduleRef}
+                index={-1}
+                snapPoints={snapPoints}
+                enablePanDownToClose={true}
+                backdropComponent={renderBackDrop}
+                onChange={handleSheetChanges}
+                handleComponent={() => <BottomSheetHeader title='Add schedule' onClose={handleClosePress} />}>
+                <Divider style={styles.divider} />
+
+                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                    <CustomCalendar onDaySelect={(day: any) => { }} />
+
+                    <SetTimeButton time={startTime} buttonText={'Start Time'} onPress={() => setStartTimePickerVisible(true)} />
+                    <SetTimeButton time={endTime} buttonText={'End Time'} onPress={() => setEndTimePickerVisible(true)} />
+
+                    <DateTimePickerModal
+                        isVisible={isStartTimePickerVisible}
+                        mode="time"
+                        display='inline'
+                        onConfirm={setSelectedStartTime}
+                        onCancel={() => setStartTimePickerVisible(false)}
+                    />
+
+                    <DateTimePickerModal
+                        isVisible={isEndTimePickerVisible}
+                        mode="time"
+                        display='inline'
+                        onConfirm={setSelectedEndTime}
+                        onCancel={() => setEndTimePickerVisible(false)}
+                    />
+
+                </BottomSheetScrollView>
+
+                <TouchableOpacity onPress={() => submitSchedule()}
+                    style={[config.styles.primaryBtn, { alignSelf: 'center', bottom: 20 }]}>
+                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
+                </TouchableOpacity>
+
+            </BottomSheet>
             {isLoading && <AppLoader />}
         </>
     )
@@ -219,14 +300,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    divider:{
+    divider: {
         borderBottomColor: '#e2e2e2',
         borderBottomWidth: 1,
-        marginTop:20
-      },
+        marginTop: 20
+    },
 
-      contentContainer: {
-        alignItems: 'center'
-      },
+    contentContainer: {
+        paddingHorizontal: 25,
+    },
+
+    buttonView: {
+        flexDirection: 'row',
+        paddingVertical: 5,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+
+    time: {
+        fontSize: config.fonts.extraLarge,
+        fontWeight: '900',
+    }
 
 });

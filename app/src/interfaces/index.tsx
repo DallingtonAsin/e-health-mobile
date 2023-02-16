@@ -1,4 +1,9 @@
 
+interface AppAction {
+    type: string;
+    payload?: any;
+  }
+
 interface IUser {
     id?: number,
     first_name: string,
@@ -108,6 +113,7 @@ interface DoctorCalendar{
 }
 
 export type {
+    AppAction,
     IUser,
     LoginData,
     SignedinUser,
