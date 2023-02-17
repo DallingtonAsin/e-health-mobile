@@ -28,7 +28,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<IUser>(state.user);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isUpdatingImage, setIsUpdatingImage] = useState(false);
-    console.log('image url', user.image);
 
     const genderOptions = [
         { key: '1', value: 'Male' },
@@ -150,11 +149,16 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
             setIsUpdatingImage(true);
 
-            updateProfileImage({ user: user_obj, payload: formData, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => { setIsUpdatingImage(false) } });
+            updateProfileImage({ user: user_obj, payload: formData, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: afterUpdatingPicture });
 
         } catch (err: any) {
             Toast.show(err.message, Toast.LONG);
         }
+    }
+
+    const afterUpdatingPicture = () => {
+        setIsUpdatingImage(false);
+        setVisible(false);
     }
 
     const confirmRemovePicture = () => {
