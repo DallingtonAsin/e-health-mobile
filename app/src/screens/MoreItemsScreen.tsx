@@ -51,7 +51,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
         <>
             <SafeAreaView style={styles.container}>
 
-                <View style={styles.header}>
+                {/* <View style={styles.header}>
                    {
                         user.image
                             ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
@@ -61,7 +61,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
                     <Text style={[styles.headerText]}>
                         <Text> {`0`}{user.phone_number} </Text>
                     </Text>
-                </View>
+                </View> */}
 
 
                 <View style={styles.body}>

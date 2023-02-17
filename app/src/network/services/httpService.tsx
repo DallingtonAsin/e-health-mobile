@@ -56,6 +56,22 @@ class Service {
     }
   }
 
+  delete = async (endpoint: string) => {
+    try {
+
+      const headers = await this.getHeader();
+      const response = this.request().delete(endpoint, headers).then(res => {
+        return res;
+      }).catch((error) => {
+        if (error && error.response && error.response.data) throw error.response.data
+        throw error
+      });
+      return response;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   getHeader = async (isMultipart = false) => {
     try {
 

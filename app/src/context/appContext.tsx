@@ -112,6 +112,7 @@ const updateProfile = (dispatch: any) => {
 
                 let data = res.data;
                 let user = data.user;
+                let message = res.data.message;
 
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
@@ -121,7 +122,7 @@ const updateProfile = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess(res.data.message);
+                onSuccess(user, message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -144,6 +145,7 @@ const updateProfileImage = (dispatch: any) => {
 
                 let data = res.data;
                 let user = data.user;
+                let message = res.data.message;
 
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
@@ -153,7 +155,38 @@ const updateProfileImage = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess(res.data.message);
+                onSuccess(user, message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const deleteProfileImage = (dispatch: any) => {
+    return ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = user.is_patient ?  routes.patient.updateProfilePicture : routes.doctor.updateProfilePicture;
+
+        services.delete(
+            `${endpoint}/${user.id}/profile-picture/delete`
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                let user = data.user;
+                let message = res.data.message;
+
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
+
+                onSuccess(user, message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -433,7 +466,7 @@ export const { Provider, Context, } = createDataContext(
     appReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
-        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor,
+        getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor, deleteProfileImage,
          registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
