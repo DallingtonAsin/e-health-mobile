@@ -31,6 +31,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
         signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signout: () => { },
         updateProfile: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        updateProfileImage: ({ user, payload, onSuccess, onFailure, onCompletion }: { user:any,  payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsBySpecialty: ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorInfo: ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },

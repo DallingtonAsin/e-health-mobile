@@ -131,6 +131,38 @@ const updateProfile = (dispatch: any) => {
     };
 };
 
+const updateProfileImage = (dispatch: any) => {
+    return ({ user, payload, onSuccess, onFailure, onCompletion }: { user: any, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = user.is_patient ?  routes.patient.updateProfilePicture : routes.doctor.updateProfilePicture;
+
+        services.post(
+            `${endpoint}/${user.id}/profile-picture`,
+            payload,
+            true
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                let user = data.user;
+
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
+
+                onSuccess(res.data.message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 const getMedicalSpecialties = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -402,7 +434,7 @@ export const { Provider, Context, } = createDataContext(
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor,
-         registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule
+         registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

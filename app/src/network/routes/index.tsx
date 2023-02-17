@@ -7,12 +7,14 @@ const routes = {
     verify: 'patient/verify',
     register: 'patient/register',
     updateProfile: 'patient/profile/update',
+    updateProfilePicture: 'patient',
    },
 
    doctor: {
       signin: 'doctor/login',
       register: 'doctor/register',
       updateProfile: 'doctor/profile/update',
+      updateProfilePicture: 'doctor',
       languages: 'doctor/languages',
       specialties: 'doctor/specialties',
       calendar: 'doctor/schedule',

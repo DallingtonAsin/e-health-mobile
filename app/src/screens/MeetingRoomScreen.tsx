@@ -8,11 +8,10 @@ import {
   View,
   StyleSheet
 } from 'react-native';
-import AgoraUIKit from 'agora-rn-uikit';
 import { AGORA_APP_ID, AGORA_CHANNEL_NAME, AGORA_TEMP_TOKEN } from '@env';
 import * as configs from '../configs';
 
-const createAgoraRtcEngine = require('react-native-agora');
+// const createAgoraRtcEngine = require('react-native-agora');
 
 const appId = AGORA_APP_ID;
 const channelName = AGORA_CHANNEL_NAME;
@@ -35,10 +34,10 @@ const MeetingRoomScreen = ({ navigation }: { navigation: any }) => {
     token: token,
   };
 
-  const agoraEngine = createAgoraRtcEngine();
-  agoraEngine.initialize({
-    appId: appId,
-  });
+  // const agoraEngine = createAgoraRtcEngine();
+  // agoraEngine.initialize({
+  //   appId: appId,
+  // });
 
   const rtcCallbacks = {
     EndCall: () => setVideoCall(false),
@@ -59,22 +58,22 @@ const MeetingRoomScreen = ({ navigation }: { navigation: any }) => {
       }
       // agoraEngineRef.current = createAgoraRtcEngine();
       // const agoraEngine = agoraEngineRef.current;
-      agoraEngine.registerEventHandler({
-        onJoinChannelSuccess: () => {
-          showMessage('Successfully joined the channel ' + channelName);
-          setIsJoined(true);
-        },
-        onUserJoined: (_connection: any, Uid: any) => {
-          showMessage('Remote user joined with uid ' + Uid);
-          setRemoteUid(Uid);
-        },
-        onUserOffline: (_connection: any, Uid: any) => {
-          showMessage('Remote user left the channel. uid: ' + Uid);
-          setRemoteUid(0);
-        },
-      });
+      // agoraEngine.registerEventHandler({
+      //   onJoinChannelSuccess: () => {
+      //     showMessage('Successfully joined the channel ' + channelName);
+      //     setIsJoined(true);
+      //   },
+      //   onUserJoined: (_connection: any, Uid: any) => {
+      //     showMessage('Remote user joined with uid ' + Uid);
+      //     setRemoteUid(Uid);
+      //   },
+      //   onUserOffline: (_connection: any, Uid: any) => {
+      //     showMessage('Remote user left the channel. uid: ' + Uid);
+      //     setRemoteUid(0);
+      //   },
+      // });
 
-      agoraEngine.enableVideo();
+      // agoraEngine.enableVideo();
     } catch (e) {
       console.log(e);
     }
@@ -90,24 +89,28 @@ const MeetingRoomScreen = ({ navigation }: { navigation: any }) => {
   };
 
 
-  return videoCall ? (
-    <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
-  ) : (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.viewContainer}>
-
-        <View style={styles.body}>
-          <Text>Information about the meeting will go here...</Text>
-        </View>
-
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.joinButton} onPress={() => setVideoCall(true)}>
-            <Text style={styles.meetingText}>Join Meeting</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+  return(
+    <></>
   )
+  
+  // videoCall ? (
+  //   <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+  // ) : (
+  //   <SafeAreaView style={styles.container}>
+  //     <View style={styles.viewContainer}>
+
+  //       <View style={styles.body}>
+  //         <Text>Information about the meeting will go here...</Text>
+  //       </View>
+
+  //       <View style={styles.footer}>
+  //         <TouchableOpacity style={styles.joinButton} onPress={() => setVideoCall(true)}>
+  //           <Text style={styles.meetingText}>Join Meeting</Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     </View>
+  //   </SafeAreaView>
+  
 }
 export default MeetingRoomScreen;
 

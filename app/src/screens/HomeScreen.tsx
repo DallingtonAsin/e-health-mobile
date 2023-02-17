@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.headerImageSection}>
                         <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
                             {user.image
-                                ? <Avatar.Image size={80} source={{ uri: configs.images.profileImage }}></Avatar.Image>
+                                ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
                                 : <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
                             }
                         </TouchableOpacity>

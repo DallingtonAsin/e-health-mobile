@@ -25,9 +25,9 @@ class Service {
     }
   }
 
-  post = async (endpoint: string, data: any) => {
+  post = async (endpoint: string, data: any, isMultipart = false) => {
     try {
-      const headers = await this.getHeader();
+      const headers = await this.getHeader(isMultipart);
       const response = this.request().post(endpoint, data, headers).then(res => {
         return res;
       }).catch((error) => {
@@ -40,9 +40,10 @@ class Service {
     }
   }
 
-  put = async (endpoint: string, data: any) => {
+  put = async (endpoint: string, data: any, isMultipart = false) => {
     try {
-      const headers = await this.getHeader();
+
+      const headers = await this.getHeader(isMultipart);
       const response = this.request().put(endpoint, data, headers).then(res => {
         return res;
       }).catch((error) => {
@@ -62,7 +63,7 @@ class Service {
       const headers = {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': isMultipart ? 'multipart/form-data' : 'application/json',
+          'Content-Type': isMultipart ?  'multipart/form-data' : 'application/json',
           'Authorization': 'Bearer ' + bearerToken
         },
       }
