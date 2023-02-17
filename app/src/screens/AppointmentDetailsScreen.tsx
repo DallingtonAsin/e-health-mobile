@@ -15,7 +15,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
-
+   
     const Separator = () => (
         <View style={styles.separator} />
     );
