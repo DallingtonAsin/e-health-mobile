@@ -54,7 +54,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
                 <View style={styles.header}>
                    {
                         user.image
-                            ? <Avatar.Image size={80} source={{ uri: config.images.profileImage }}></Avatar.Image>
+                            ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
                             : <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={config.styles.userAvatar} />
                     }
                     <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
