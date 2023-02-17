@@ -24,11 +24,10 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { state, updateProfile, updateProfileImage } = useContext(AppContext);
+    const { state, updateProfile, updateProfileImage, deleteProfileImage } = useContext(AppContext);
     const [user, setUser] = useState<IUser>(state.user);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isUpdatingImage, setIsUpdatingImage] = useState(false);
-    console.log('image url', user.image);
 
     const genderOptions = [
         { key: '1', value: 'Male' },
@@ -76,7 +75,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 is_patient: user.is_patient
             }
 
-            updateProfile({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+            updateProfile({ payload: payload, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
 
 
         } else {
@@ -84,7 +83,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const navigateMethod = async (message: string) => {
+    const onUpdatingProfile = async (user: IUser, message: string) => {
+        setUser(user);
         displayMessage(message);
         navigation.navigate('Profile');
         setIsDisabled(true);
@@ -129,8 +129,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const submitProfilePicture = async (image: any) => {
-
-
         try {
 
             const mimeType = image.mime;
@@ -150,12 +148,34 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
             setIsUpdatingImage(true);
 
-            updateProfileImage({ user: user_obj, payload: formData, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => { setIsUpdatingImage(false) } });
+            updateProfileImage({ user: user_obj, payload: formData, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: closeLoader });
 
         } catch (err: any) {
             Toast.show(err.message, Toast.LONG);
         }
     }
+
+    const closeLoader = () => {
+        setIsUpdatingImage(false);
+        setVisible(false);
+    }
+
+    const deleteProfilePicture = async () => {
+        try {
+
+            const user_obj = {
+                id: user.id,
+                is_patient: user.is_patient
+            }
+            setIsUpdatingImage(true);
+
+            deleteProfileImage({ user: user_obj, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: closeLoader });
+
+        } catch (err: any) {
+            Toast.show(err.message, Toast.LONG);
+        }
+    }
+
 
     const confirmRemovePicture = () => {
 
@@ -165,7 +185,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             [
                 {
                     text: "OK",
-                    onPress: () => { },
+                    onPress: () => { deleteProfilePicture() },
                     style: "cancel",
                 },
             ],
@@ -188,13 +208,13 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
                                 }
 
-                                {!isDisabled && <IconButton
+                                { !isDisabled && <IconButton
                                     icon="pencil"
                                     iconColor={config.colors.white}
                                     size={15}
                                     onPress={() => setVisible(!visible)}
                                     style={styles.camera}
-                                />}
+                                /> }
                             </View>
                             :
                             <View style={styles.profile_avatar}>
@@ -475,14 +495,12 @@ const styles = StyleSheet.create({
     },
 
     profile_avatar: {
-        width: 120,
-        height: 120,
-        borderRadius: 70,
+        width: 80,
+        height: 80,
+        borderRadius: 50,
         alignSelf: 'center',
-        position: 'absolute',
-        marginTop: 90,
         backgroundColor: config.colors.white,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: "white",
     },
 
