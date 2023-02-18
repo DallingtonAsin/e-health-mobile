@@ -1,83 +1,81 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet
-} from 'react-native';
+import React, {  useState, useEffect } from 'react';
+import { PermissionsAndroid, Platform } from 'react-native';
+import AgoraUIKit from 'agora-rn-uikit';
 import { AGORA_APP_ID, AGORA_CHANNEL_NAME, AGORA_TEMP_TOKEN } from '@env';
-import * as configs from '../configs';
-
-// const createAgoraRtcEngine = require('react-native-agora');
+import AppLoader from '../components/AppLoader';
+import {createAgoraRtcEngine} from 'react-native-agora';
 
 const appId = AGORA_APP_ID;
 const channelName = AGORA_CHANNEL_NAME;
 const token = AGORA_TEMP_TOKEN;
-const uid = 0;
 
-const MeetingRoomScreen = ({ navigation }: { navigation: any }) => {
+const MeetingRoomScreen = ({ videoCall, is_video, connectionData, setVideoCall,  }: { videoCall: boolean, is_video:boolean, connectionData: any, setVideoCall: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
-  const [isJoined, setIsJoined] = useState(false); 
-  const [remoteUid, setRemoteUid] = useState(0); 
-  const [message, setMessage] = useState('');
-  const [videoCall, setVideoCall] = useState(false);
+  // const [isJoined, setIsJoined] = useState(false);
+  // const [remoteUid, setRemoteUid] = useState(0);
+  // const [message, setMessage] = useState('');
+  // const [connectionData, setConnectionData] = useState<any>()
 
-  // const {colors} = useTheme();
-  // const styles = makeStyles(colors);
-
-  const connectionData = {
-    appId: appId,
-    channel: channelName,
-    token: token,
-  };
-
-  // const agoraEngine = createAgoraRtcEngine();
-  // agoraEngine.initialize({
-  //   appId: appId,
-  // });
+  const agoraEngine = createAgoraRtcEngine();
+  console.log(`Your connection info`, connectionData);
+  agoraEngine.initialize({
+    appId: connectionData.appId
+  });
 
   const rtcCallbacks = {
     EndCall: () => setVideoCall(false),
   };
 
-  const showMessage = (msg: string) => {
-    setMessage(msg);
-  };
+  // useEffect(() => {
+  //   const connection = {
+  //     appId: appId,
+  //     channel: channelName,
+  //     token: token,
+  //   };
+  //   setConnectionData(connection);
+  // }, [])
 
-  useEffect(() => {
-    setupVideoSDKEngine();
-  });
+  // const showMessage = (msg: string) => {
+  //   setMessage(msg);
+  // };
 
-  const setupVideoSDKEngine = async () => {
-    try {
-      if (Platform.OS === 'android') {
-        await getPermission();
-      }
-      // agoraEngineRef.current = createAgoraRtcEngine();
-      // const agoraEngine = agoraEngineRef.current;
-      // agoraEngine.registerEventHandler({
-      //   onJoinChannelSuccess: () => {
-      //     showMessage('Successfully joined the channel ' + channelName);
-      //     setIsJoined(true);
-      //   },
-      //   onUserJoined: (_connection: any, Uid: any) => {
-      //     showMessage('Remote user joined with uid ' + Uid);
-      //     setRemoteUid(Uid);
-      //   },
-      //   onUserOffline: (_connection: any, Uid: any) => {
-      //     showMessage('Remote user left the channel. uid: ' + Uid);
-      //     setRemoteUid(0);
-      //   },
-      // });
+  // useEffect(() => {
+  //   setupVideoSDKEngine();
+  // }, []);
 
-      // agoraEngine.enableVideo();
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const setupVideoSDKEngine = async () => {
+  //   try {
+  //     if (Platform.OS === 'android') {
+  //       await getPermission();
+  //     }
+  
+  //     agoraEngine.registerEventHandler({
+  //       onJoinChannelSuccess: () => {
+  //         showMessage('Successfully joined the channel ' + channelName);
+  //         setIsJoined(true);
+  //       },
+  //       onUserJoined: (_connection: any, Uid: any) => {
+  //         showMessage('Remote user joined with uid ' + Uid);
+  //         setRemoteUid(Uid);
+  //       },
+  //       onUserOffline: (_connection: any, Uid: any) => {
+  //         showMessage('Remote user left the channel. uid: ' + Uid);
+  //         setRemoteUid(0);
+  //       },
+  //     });
+  //     console.log(`is video`, is_video);
+  //     if(is_video){
+  //       console.log(`Video loading...`);
+  //       agoraEngine.enableVideo();
+  //     }else{
+  //       console.log(`Audio loading...`);
+  //       agoraEngine.enableAudio();
+  //     }
+
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   const getPermission = async () => {
     if (Platform.OS === 'android') {
@@ -89,62 +87,10 @@ const MeetingRoomScreen = ({ navigation }: { navigation: any }) => {
   };
 
 
-  return(
-    <></>
-  )
-  
-  // videoCall ? (
-  //   <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
-  // ) : (
-  //   <SafeAreaView style={styles.container}>
-  //     <View style={styles.viewContainer}>
+  return videoCall
+    ? <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+    : <AppLoader />
 
-  //       <View style={styles.body}>
-  //         <Text>Information about the meeting will go here...</Text>
-  //       </View>
-
-  //       <View style={styles.footer}>
-  //         <TouchableOpacity style={styles.joinButton} onPress={() => setVideoCall(true)}>
-  //           <Text style={styles.meetingText}>Join Meeting</Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     </View>
-  //   </SafeAreaView>
-  
 }
+
 export default MeetingRoomScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  viewContainer: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-
-  joinButton: {
-    backgroundColor: configs.colors.primary,
-    bottom: 50,
-    position: 'absolute',
-    paddingHorizontal: 120,
-    paddingVertical: 18,
-    borderRadius: 5,
-  },
-
-  meetingText: {
-    color: configs.colors.white,
-    fontSize: 16,
-  },
-
-  body: {
-    flex: 1,
-  },
-
-  footer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
