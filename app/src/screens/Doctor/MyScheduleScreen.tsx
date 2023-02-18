@@ -19,7 +19,6 @@ const MyScheduleScreen = () => {
     const [schedule, setSchedule] = useState<DoctorCalendar[]>();
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('');
 
     const { state, getDoctorsCalendar, submitDoctorSchedule } = useContext(AppContext);
     const user = state.user;
@@ -28,8 +27,9 @@ const MyScheduleScreen = () => {
     const snapPoints = useMemo(() => ['25%', '85%'], []);
     const currentDate = getCurrentDate();
 
-    const [startTime, setStartTime] = useState();
-    const [endTime, setEndTime] = useState();
+    const [selectedDate, setSelectedDate] = useState<string>(currentDate);
+    const [startTime, setStartTime] = useState<string>();
+    const [endTime, setEndTime] = useState<string>();
 
     const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
     const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
@@ -178,6 +178,9 @@ const MyScheduleScreen = () => {
     const updateCalendar = (message: string) => {
         handleClosePress();
         displayMessage(message);
+        setSelectedDate(currentDate);
+        setStartTime("");
+        setEndTime("");
         fetchDoctorCalendar();
     }
 

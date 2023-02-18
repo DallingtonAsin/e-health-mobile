@@ -9,26 +9,31 @@ const appId = AGORA_APP_ID;
 const channelName = AGORA_CHANNEL_NAME;
 const token = AGORA_TEMP_TOKEN;
 
-const MeetingRoomScreen = ({ videoCall, is_video, setVideoCall }: { videoCall: boolean, is_video:boolean, setVideoCall: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const MeetingRoomScreen = ({ videoCall, is_video, connectionData, setVideoCall,  }: { videoCall: boolean, is_video:boolean, connectionData: any, setVideoCall: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
-  const [isJoined, setIsJoined] = useState(false);
-  const [remoteUid, setRemoteUid] = useState(0);
-  const [message, setMessage] = useState('');
-
-  const connectionData = {
-    appId: appId,
-    channel: channelName,
-    token: token,
-  };
+  // const [isJoined, setIsJoined] = useState(false);
+  // const [remoteUid, setRemoteUid] = useState(0);
+  // const [message, setMessage] = useState('');
+  // const [connectionData, setConnectionData] = useState<any>()
 
   const agoraEngine = createAgoraRtcEngine();
+  console.log(`Your connection info`, connectionData);
   agoraEngine.initialize({
-    appId: appId,
+    appId: connectionData.appId
   });
 
   const rtcCallbacks = {
     EndCall: () => setVideoCall(false),
   };
+
+  // useEffect(() => {
+  //   const connection = {
+  //     appId: appId,
+  //     channel: channelName,
+  //     token: token,
+  //   };
+  //   setConnectionData(connection);
+  // }, [])
 
   // const showMessage = (msg: string) => {
   //   setMessage(msg);

@@ -12,7 +12,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            symptoms, completed_at, cancelled_at, is_online, is_video, status } = appointmentInfo;
+            symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -58,7 +58,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     }
 
     if(videoCall){
-        return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} setVideoCall={setVideoCall}/>
+        return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} connectionData={meeting_access} setVideoCall={setVideoCall}/>
     }
 
     return (

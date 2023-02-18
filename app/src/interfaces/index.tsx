@@ -112,6 +112,12 @@ interface DoctorCalendar{
     end_time: string
 }
 
+interface agoraConnection{
+    appId: string,
+    channel: string,
+    token: string
+}
+
 export type {
     AppAction,
     IUser,
@@ -124,5 +130,6 @@ export type {
     AppointmentType,
     AppointmentInfo,
     DoctorCalendar,
-    MyAppointmentInfo
+    MyAppointmentInfo,
+    agoraConnection
 }

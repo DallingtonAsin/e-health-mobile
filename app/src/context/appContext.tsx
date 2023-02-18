@@ -83,6 +83,7 @@ const signup = (dispatch: any) => {
             if (res && res.data) {
 
                 let data = res.data;
+                // console.log(`Patient token`, data.access_token);
                 await storeAccessToken(data.access_token);
                 await storeUser(data);
 
@@ -376,6 +377,7 @@ const registerDoctor = (dispatch: any) => {
             if (res && res.data) {
 
                 let data = res.data;
+                // console.log(`Doctor token`, data.access_token);
                 await storeAccessToken(data.access_token);
                 await storeUser(data);
 
