@@ -5,16 +5,20 @@ import { Avatar } from 'react-native-paper';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
+import MeetingRoomScreen from './MeetingRoomScreen';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type, symptoms, completed_at, cancelled_at, is_online, status } = appointmentInfo;
+    const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
+            symptoms, completed_at, cancelled_at, is_online, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
+    const [videoCall, setVideoCall] = useState(false);
+
    
     const Separator = () => (
         <View style={styles.separator} />
@@ -51,6 +55,10 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const afterCancelling = () => {
         setIsLoading(false);
         navigation.navigate('MyAppointments');
+    }
+
+    if(videoCall){
+        return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} setVideoCall={setVideoCall}/>
     }
 
     return (
@@ -117,7 +125,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                             <View style={styles.footer}>
 
                                 {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, { bottom: 15, alignSelf: 'center', width: '100%' }]} onPress={() => navigation.navigate(`Home`)}>
+                                    <TouchableOpacity style={[config.styles.primaryBtn, { bottom: 15, alignSelf: 'center', width: '100%' }]} onPress={() => setVideoCall(true)}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
                                     </TouchableOpacity>
                                 }
