@@ -126,8 +126,8 @@ const HomeStack = () => {
                 }}
               />
             ),
-            headerShown: false,
-            title: 'More',
+            headerShown: true,
+            title: 'Preferences',
             tabBarLabelStyle: {
                fontSize: configs.fonts.normal
             }

@@ -18,7 +18,7 @@ const MoreItemsScreen = ({navigation}: {navigation: any}) => {
     const user = state.user;
 
     const listItems = [
-        {id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile')},
+        {id: 1, name: 'Profile Information', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile')},
         {id: 2, name: 'Settings', icon: 'cog', isIcon5: true, action: () => comingSoon()},
         {id: 3, name: 'Notification Inbox', icon: 'envelope', isIcon5: true, action: () => navigation.navigate('Notifications')},
         {id: 4, name: 'Help & Support', icon: 'question-circle', isIcon5: true, action: () => comingSoon()},
