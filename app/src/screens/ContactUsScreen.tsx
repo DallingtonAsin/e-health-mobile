@@ -26,7 +26,7 @@ const ContactUsScreen = () => {
     const renderItem = ({ item }: { item: Contact }) => (
         <TouchableOpacity style={styles.item} onPress={() => item.method(item.value)}>
             <View style={{ flexDirection: 'row' }}>
-                <Icon5 name={item.icon} size={30} color={configs.colors.primary} style={styles.arrow} />
+                <Icon5 name={item.icon} size={25} color={configs.colors.primary} style={styles.arrow} />
                 <View style={styles.verticleLine}></View>
                 <View style={{ paddingHorizontal: 20 }}>
                     <Text style={styles.contactTitle}>{item.text}</Text>
