@@ -9,11 +9,6 @@ import HomeScreen from '../../screens/HomeScreen';
 import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
-import SplashScreen from '../../screens/SplashScreen';
-import ProfileScreen from '../../screens/ProfileScreen';
-import {useTheme} from 'react-native-paper';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 
 const BottomTab = createBottomTabNavigator();
