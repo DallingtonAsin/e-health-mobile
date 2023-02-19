@@ -10,8 +10,9 @@ import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
+import CustomStackHeader from '../../components/CustomStackHeader';
 
-const BottomTab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 const tabIconFontSize = 22;
 
 const HomeStack = () => {
@@ -23,7 +24,7 @@ const HomeStack = () => {
       }}
       data={[]}
       initialExtrasVisible={false}>
-      <BottomTab.Navigator
+      <Tab.Navigator
         tabBar={props => (
           <BottomTabBarWrapper params={props.navigation}>
             <BottomTabBar {...props} />
@@ -42,7 +43,7 @@ const HomeStack = () => {
           },
           tabBarLabelPosition: 'below-icon',
         }}>
-        <BottomTab.Screen
+        <Tab.Screen
           name="HomeTabScreen"
         
           component={HomeScreen}
@@ -64,7 +65,7 @@ const HomeStack = () => {
           }}
         />
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="DoctorsTabScreen"
           component={SpecialityCategoryScreen}
           options={{
@@ -86,7 +87,7 @@ const HomeStack = () => {
         />
 
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="HelpTabScreen"
           component={ContactUsScreen}
           options={{
@@ -107,12 +108,12 @@ const HomeStack = () => {
           }}
         />
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="MoreTabScreen"
           component={MoreItemsScreen}
-          
-          options={{
-            tabBarIcon: ({color, size}) => (
+          options={({ route }: { route: any}) => ({
+             tabBarLabel: 'More',
+             tabBarIcon: ({color, size}) => (
               <Icon5
                 name="bars"
                 style={{
@@ -121,17 +122,16 @@ const HomeStack = () => {
                 }}
               />
             ),
-            headerShown: true,
-            title: 'Preferences',
+            headerShown: false,
+            title: 'More',
             tabBarLabelStyle: {
                fontSize: configs.fonts.normal
             }
-          
-          }}
+             })}
         />
 
 
-      </BottomTab.Navigator>
+      </Tab.Navigator>
     </MultiBarProvider>
   );
 };
