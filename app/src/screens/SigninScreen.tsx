@@ -158,6 +158,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         withShadow={true}
                         autoFocus={true}
                         disabled={false}
+                        placeholder={"phone number"}
                     />
                 </View>
 
@@ -222,9 +223,8 @@ const styles = StyleSheet.create({
     },
 
     ephoneTxt: {
-        fontSize: configs.fonts.extraLarge,
+        fontSize: configs.fonts.medium,
         top: 15,
-        textTransform: 'capitalize',
         textAlign: 'center',
         marginHorizontal: 20,
     },
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     },
 
     switchText: {
-        fontSize: configs.fonts.large
+        fontSize: configs.fonts.medium
     }
 
 });

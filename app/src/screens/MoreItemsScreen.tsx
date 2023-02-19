@@ -1,23 +1,20 @@
-import React, { useState, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity, Linking } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity, BackHandler } from 'react-native';
 import * as config from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
-import AppLoader from '../components/AppLoader';
 import { Context as AppContext } from '../context/appContext';
 import * as configs from '../configs';
-import { displayMessage } from '../components/common/SharedHelper';
 import { WebView } from 'react-native-webview';
 import CustomStackHeader from '../components/CustomStackHeader';
+import AppLoader from '../components/AppLoader';
 
 
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const { state, signout } = useContext(AppContext);
+    const { signout } = useContext(AppContext);
     const [screen, setScreen] = useState(0);
-    const user = state.user;
 
     const listItems = [
         { id: 1, name: 'Profile Information', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile') },
@@ -29,9 +26,31 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 7, name: 'Rate Us', icon: 'star', isIcon5: true, action: () => comingSoon() },
     ];
 
+
     const comingSoon = () => {
         Toast.show('Coming soon...', Toast.LONG);
     }
+
+    useEffect(() => {
+
+        const deviceBackAction = () => {
+            if (screen === 2 || screen === 5 || screen === 6) {
+                setScreen(0);
+            } else {
+                setScreen(0);
+                navigation.navigate("MoreTabScreen");
+            }
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            deviceBackAction
+        );
+
+        return () => backHandler.remove();
+    }, []);
+
 
     const Item = ({ item }: { item: any }) => (
         <TouchableOpacity style={styles.item} onPress={item.action}>
@@ -48,57 +67,63 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         <Item item={item} />
     );
 
-    const TermsConditionScreen = () => (
-        <SafeAreaView style={styles.container}>
-            <CustomStackHeader title={'Terms and Conditions'} onPress={() => { setScreen(0) }} />
-            <WebView source={{ uri: 'https://pivosoftltd.com' }} />
-        </SafeAreaView>
-    );
+    const TermsConditionScreen = () => {
+        const [isLoading, setIsLoading] = useState(true);
 
-    const AboutUsScreen = () => (
+        return (
+            <SafeAreaView style={styles.container}>
+                <CustomStackHeader title={'Terms and Conditions'} onPress={() => { setScreen(0) }} />
+                {isLoading && <AppLoader />}
+                <WebView source={{ uri: 'https://pivosoftltd.com' }} onLoad={() => setIsLoading(false)} />
+            </SafeAreaView>
+        )
+    }
+
+    const AboutUsScreen = () => {
+        const [isLoading, setIsLoading] = useState(true);
+
+        return (
+            <SafeAreaView style={styles.container}>
+                <CustomStackHeader title={'About Us'} onPress={() => { setScreen(0) }} />
+                {isLoading && <AppLoader />}
+                <WebView source={{ uri: 'https://www.tesla.com/' }} onLoad={() => setIsLoading(false)} />
+            </SafeAreaView>
+        )
+    }
+
+    const SettingsScreen = () => (
         <SafeAreaView style={styles.container}>
             <CustomStackHeader title={'About Us'} onPress={() => { setScreen(0) }} />
-            <WebView source={{ uri: 'https://www.tesla.com/' }} />
+            <TouchableOpacity style={styles.settingsItem} onPress={() => signout()}>
+                <Icon5 name={'power-off'} size={20} color={configs.colors.primary} />
+                <Text style={[styles.itemTitle]}>Sign out</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 
-    const SeetingsScreen = () => (
-        <SafeAreaView style={styles.container}>
-            <CustomStackHeader title={'About Us'} onPress={() => { setScreen(0) }} />
-            <TouchableOpacity style={styles.settingsItem} onPress={() => signout()}> 
-            <Icon5 name={'power-off'} size={20} color={configs.colors.primary} />
-            <Text style={[styles.itemTitle, { fontSize: config.fonts.large}]}>Sign out</Text>
-        </TouchableOpacity>
-        </SafeAreaView>
-    );
-
-    if (screen === 2) { return <SeetingsScreen /> }
+    if (screen === 2) { return <SettingsScreen /> }
     if (screen === 5) { return <TermsConditionScreen /> }
     if (screen === 6) { return <AboutUsScreen /> }
 
+    return (
+        <>
+            <SafeAreaView style={styles.container}>
+                <CustomStackHeader title={'Preferences'} onPress={() => { navigation.goBack() }} />
+                <View style={styles.body}>
+                    <FlatList
+                        data={listItems}
+                        renderItem={renderItem}
+                        keyExtractor={(item: any, index: number) => item.id.toString()}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEnabled={true}
+                        ListFooterComponent={<View style={{ height: 40 }} />}
+                    />
+                </View>
+            </SafeAreaView>
+        </>
+    )
 
-
-    if (screen === 0) {
-        return (
-            <>
-                <SafeAreaView style={styles.container}>
-                    <CustomStackHeader title={'Preferences'} onPress={() => { navigation.goBack() }} />
-                    <View style={styles.body}>
-                        <FlatList
-                            data={listItems}
-                            renderItem={renderItem}
-                            keyExtractor={(item: any, index: number) => item.id.toString()}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            scrollEnabled={true}
-                            ListFooterComponent={<View style={{ height: 40 }} />}
-                        />
-                    </View>
-                </SafeAreaView>
-                {isLoading && <AppLoader />}
-            </>
-        )
-    }
 
 }
 
@@ -142,7 +167,7 @@ const styles = StyleSheet.create({
     },
 
     itemTitle: {
-        color:  config.colors.black,
+        color: config.colors.black,
         fontSize: configs.fonts.medium,
         left: 12,
     },
