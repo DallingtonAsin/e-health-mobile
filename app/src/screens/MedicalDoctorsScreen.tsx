@@ -6,13 +6,18 @@ import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
+import { Searchbar } from 'react-native-paper';
+import CustomStackHeader from "../components/CustomStackHeader";
 
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { specialty_id, specialty_name } = route.params;
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
+    const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([]);
+
     const { state, getDoctorsBySpecialty } = useContext(AppContext);
     const user = state.user;
 
@@ -24,9 +29,25 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
         getDoctorsBySpecialty({ specialtyId: specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
     }, []);
 
-    const populateMedicalDoctors = (medicalSpecialties: DoctorsDetail[]) => {
-        setMedicalDoctors(medicalSpecialties)
+    const populateMedicalDoctors = (doctors: DoctorsDetail[]) => {
+        setMedicalDoctors(doctors);
+        setFilteredData(doctors);
     }
+
+    const handleSearch = (text: string) => {
+
+        setSearchQuery(text);
+        const newData = medicalDoctors.filter((item: DoctorsDetail) => {
+            const itemData = `${item.first_name} ${item.last_name}`;
+            const searchText = text.toLowerCase();
+            return itemData.toLowerCase().indexOf(searchText) > -1;
+        });
+        if (text.length > 0) {
+            setFilteredData(newData);
+        } else {
+            setFilteredData(medicalDoctors);
+        }
+    };
 
     const stopLoading = () => {
         setIsLoading(false);
@@ -87,25 +108,31 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     );
 
     if (isLoading) {
-        return (
-            <AppLoader bgColor={configs.colors.white} />
-        )
+        return  <AppLoader bgColor={configs.colors.white} />
     }
 
     return (
         <SafeAreaView style={styles.container}>
+            <CustomStackHeader title={`${specialty_name} doctors`} onPress={() => navigation.goBack()} />
             <View style={styles.subcontainer}>
+                {
+                    medicalDoctors.length > 0 && <Searchbar
+                        placeholder="Search for doctor"
+                        onChangeText={handleSearch}
+                        value={searchQuery}
+                        style={styles.searchbar}
+                        elevation={3}
+                        inputStyle={styles.searchbarInput}
+                    />
+                }
+
                 <FlatList
-                    data={medicalDoctors}
+                    data={filteredData}
                     renderItem={renderItem}
                     keyExtractor={(item: DoctorsDetail, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}
-                    ListHeaderComponent={() => (!medicalDoctors.length ?
-                        null
-                        : <Text style={styles.title}>Doctors in {specialty_name} specialty</Text>)}
-
                     ListEmptyComponent={EmptyListMessage}
                 />
             </View>
@@ -130,9 +157,8 @@ const styles = StyleSheet.create({
         fontSize: configs.fonts.large,
         textAlign: 'center',
         color: configs.colors.dark,
-        fontWeight: '600',
         marginVertical: 10,
-        opacity: 0.7
+        opacity: 0.7,
     },
 
     subcontainer: {
@@ -233,6 +259,17 @@ const styles = StyleSheet.create({
     amount: {
         color: configs.colors.primary,
         fontWeight: 'bold',
-    }
+    },
+
+    searchbar: {
+        marginHorizontal: 10,
+        paddingVertical: 0,
+        marginVertical: 8,
+        backgroundColor: configs.colors.white,
+    },
+
+    searchbarInput: {
+        fontSize: configs.fonts.large,
+    },
 
 });

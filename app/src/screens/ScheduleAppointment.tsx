@@ -77,8 +77,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 minDate={currentDate}
                 onPress={setPatientAppointmentDate}
                 dayComponent={({ date }: { date: any }) => {
-                    return <CustomDay date={date} selected={appointmentDate === date.dateString} 
-                    onPress={() => setPatientAppointmentDate(date)} scheduleDates={scheduleDates} />;
+                    return <CustomDay date={date} selected={appointmentDate === date.dateString}
+                        onPress={() => setPatientAppointmentDate(date)} scheduleDates={scheduleDates} />;
                 }}
                 disableAllTouchEventsForDisabledDays={true}
                 {...props}
@@ -163,13 +163,16 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         </View>
 
                         <View style={styles.contacts}>
-                            <TouchableOpacity onPress={() => contact.SendSms(doctorInfo.phone_number)} style={styles.sms}>
+
+                            <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
+                                <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => contact.SendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
                                 <Icon5 name="sms" size={22} style={styles.callBtn} />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => contact.callPhoneNumber(doctorInfo.phone_number)} style={styles.sms}>
-                                <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
-                            </TouchableOpacity>
+
                         </View>
                     </View>
 
@@ -288,6 +291,8 @@ const styles = StyleSheet.create({
 
     header: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: configs.colors.white,
         borderRadius: 5,
     },
@@ -351,6 +356,7 @@ const styles = StyleSheet.create({
     contacts: {
         flexDirection: 'row',
         alignItems: 'stretch'
+        
     },
 
     sms: {
@@ -387,9 +393,4 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 
-
-
-
-
-   
 });
