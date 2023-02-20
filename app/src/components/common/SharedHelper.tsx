@@ -1,4 +1,5 @@
 import Toast from 'react-native-simple-toast';
+import { MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
 
 const removeLeadingZeros = (number: string) => {
   if (number) {
@@ -122,6 +123,14 @@ const isValidDob = (birthdateStr: string) => {
   return age >= 18
 }
 
+const getAppVersion = () => {
+  let version = `${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
+  if (PRE_RELEASE) {
+    version = version.concat(`-${PRE_RELEASE}`);
+  }
+  return version;
+};
+
 export {
   removeLeadingZeros,
   getGreeting,
@@ -136,5 +145,6 @@ export {
   getDayMonth,
   isValidEmail,
   isValidDob,
-  getJsonObjByValue
+  getJsonObjByValue,
+  getAppVersion
 }

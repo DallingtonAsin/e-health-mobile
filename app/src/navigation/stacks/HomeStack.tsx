@@ -3,23 +3,22 @@ import {
   BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
-import * as configs from '../../configs'
+import { MultiBarProvider, BottomTabBarWrapper } from 'react-native-multibar';
+import * as configs from '../../configs';
 import HomeScreen from '../../screens/HomeScreen';
 import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
-import Icon5 from 'react-native-vector-icons/FontAwesome';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import MeetingRoomScreen from '../../screens/MeetingRoomScreen';
-import SplashScreen from '../../screens/SplashScreen';
-import ProfileScreen from '../../screens/ProfileScreen';
-import {useTheme} from 'react-native-paper';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
+import { useNavigation } from '@react-navigation/native';
+import { HeaderLeftComponent } from '../../components/HeaderLeftComponent';
+const Tab = createBottomTabNavigator();
 
-const BottomTab = createBottomTabNavigator();
-const tabIconFontSize = 22;
 
 const HomeStack = () => {
+
+  const navigation = useNavigation();
+
+  const navigateBack = () => { navigation.goBack() }
 
   return (
     <MultiBarProvider
@@ -28,7 +27,7 @@ const HomeStack = () => {
       }}
       data={[]}
       initialExtrasVisible={false}>
-      <BottomTab.Navigator
+      <Tab.Navigator
         tabBar={props => (
           <BottomTabBarWrapper params={props.navigation}>
             <BottomTabBar {...props} />
@@ -47,96 +46,34 @@ const HomeStack = () => {
           },
           tabBarLabelPosition: 'below-icon',
         }}>
-        <BottomTab.Screen
+
+        <Tab.Screen
           name="HomeTabScreen"
-        
           component={HomeScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="home"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Home',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
         />
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="DoctorsTabScreen"
           component={SpecialityCategoryScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="user-md"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Doctors',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Doctors', tabIcon: 'user-md', onPressBackButton: navigateBack })}
         />
 
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="HelpTabScreen"
           component={ContactUsScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="question-circle"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Help',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Contact Us', tabIcon: 'question-circle', onPressBackButton: navigateBack })}
         />
 
-        <BottomTab.Screen
+        <Tab.Screen
           name="MoreTabScreen"
           component={MoreItemsScreen}
-          
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="bars"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'More',
-            tabBarLabelStyle: {
-               fontSize: configs.fonts.normal
-            }
-          
-          }}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'More', tabIcon: 'bars', onPressBackButton: navigateBack })}
         />
 
 
-      </BottomTab.Navigator>
+      </Tab.Navigator>
     </MultiBarProvider>
   );
 };

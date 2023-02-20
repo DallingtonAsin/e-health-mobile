@@ -6,7 +6,6 @@ import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 import SpecialityListScreen from "../../screens/MedicalDoctorsScreen";
 import ContactUsScreen from "../../screens/ContactUsScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
-import MeetingRoomScreen from "../../screens/MeetingRoomScreen";
 import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
 import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
 import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
@@ -146,12 +145,6 @@ const SignedInStackNavigator = () => {
                 name="AppointmentConfirmation"
                 options={{ headerShown: false }}
                 component={AppointmentConfirmationScreen}
-            />
-
-            <Stack.Screen
-                name="MeetingRoom"
-                options={{ headerShown: false }}
-                component={MeetingRoomScreen}
             />
 
             <Stack.Screen

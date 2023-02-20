@@ -1,16 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import * as configs from '../configs';
+import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { navigateBack } from '../navigation/navigation';
 
-const CustomStackHeader = ({title}: {title: string}) => {
+const CustomStackHeader = ({ title, onPress }: { title: string, onPress: any }) => {
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigateBack()}>
-            <Icon5 name="arrow-left" size={20} color={configs.colors.primary} style={styles.arrowIcon}/>
+        <View style={styles.header}>
+            <TouchableOpacity onPress={onPress} style={{ position: 'absolute', left: 18 }}>
+                <Icon5 name="arrow-left" size={20} color={config.colors.primary} />
             </TouchableOpacity>
-            <Text style={styles.verifyTxt}>{title}</Text>
+            <Text style={styles.headerText}>{title}</Text>
         </View>
     );
 }
@@ -18,25 +17,20 @@ const CustomStackHeader = ({title}: {title: string}) => {
 export default CustomStackHeader
 
 const styles = StyleSheet.create({
-    container: {
-        height: 65,
-        alignItems: 'center',
-        borderTopColor: 'none',
-        backgroundColor: configs.colors.white,
-        borderBottomWidth: 0.5,
-        borderBottomColor: configs.colors.primary,
+    header: {
+        backgroundColor: config.colors.white,
+        height: 60,
         flexDirection: 'row',
-    
+        alignItems: 'center',
+        elevation: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 3 }
     },
 
-    verifyTxt: {
-        color: configs.colors.primary,
-        fontSize: 20,
-        paddingHorizontal: 80,
-        fontWeight: '400',
-    },
-
-    arrowIcon: {
-        left: 25,
+    headerText: {
+        fontSize: config.fonts.extraLarge,
+        fontWeight: '600',
+        color: config.colors.primary,
+        marginLeft: 70
     }
 });

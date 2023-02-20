@@ -12,14 +12,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
+        symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
     const [videoCall, setVideoCall] = useState(false);
 
-   
+
     const Separator = () => (
         <View style={styles.separator} />
     );
@@ -57,8 +57,12 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         navigation.navigate('MyAppointments');
     }
 
-    if(videoCall){
-        return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} connectionData={meeting_access} setVideoCall={setVideoCall}/>
+    if (videoCall) {
+        if (meeting_access && meeting_access.appId) {
+            return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} connectionData={meeting_access} setVideoCall={setVideoCall} />
+        } else {
+            displayMessage(`This meeting does not have meeting links, please contact admin`);
+        }
     }
 
     return (

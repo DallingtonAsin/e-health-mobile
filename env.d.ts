@@ -8,4 +8,8 @@ declare module '@env' {
     export const AGORA_APP_CUSTOMER_ID: string;
     export const AGORA_APP_SECRET_KEY: string;
     export const API_URL: string;
+    export const MAJOR_VERSION: string;
+    export const MINOR_VERSION: string;
+    export const PATCH_VERSION: string;
+    export const PRE_RELEASE: string;
 }

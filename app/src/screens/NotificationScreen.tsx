@@ -22,13 +22,13 @@ const NotificationScreen = () => {
         <Item item={item} />
     );
 
-    const EmptyListComponent = () =>  (
-            <View style={configs.styles.emptyViewContainer}>
-                <Image style={configs.styles.image} source={configs.images.no_notifications} />
-                <Text style={configs.styles.noInfoText}>No notifications found</Text>
-            </View>
-     );
-      
+    const EmptyListComponent = () => (
+        <View style={configs.styles.emptyViewContainer}>
+            <Icon5 name="bell-slash" size={60} color={configs.colors.silver} />
+            <Text style={configs.styles.noInfoText}>No notifications found</Text>
+        </View>
+    );
+
 
     return (
         <SafeAreaView style={styles.container}>

@@ -141,7 +141,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             }
 
             const imageData = await RNFetchBlob.fs.readFile(image.path, 'base64');
-            
+
             formData.append('id', user.id);
             formData.append('extension', fileExtension);
             formData.append('image', imageData);
@@ -199,38 +199,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         <>
             <SafeAreaView style={styles.container}>
 
-                <View style={styles.header}>
-                    {
-                        !isUpdatingImage ?
-                            <View style={{ position: 'relative' }}>
-                                {state.user.image
-                                    ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
-                                    : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
-                                }
-
-                                { !isDisabled && <IconButton
-                                    icon="pencil"
-                                    iconColor={config.colors.white}
-                                    size={15}
-                                    onPress={() => setVisible(!visible)}
-                                    style={styles.camera}
-                                /> }
-                            </View>
-                            :
-                            <View style={styles.profile_avatar}>
-                                <UIActivityIndicator color='black' size={27} />
-                            </View>
-
-                    }
-
-                    <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
-                    <Text style={[styles.headerText]}>
-                        {user.is_patient && <> <Icon5 name="map-marker-alt" size={16} color={config.colors.white} /><Text> {user.address} </Text></>}
-                        {!user.is_patient && <> <Icon5 name="user-md" size={18} color={config.colors.white} /><Text> {user.profession} </Text></>}
-                    </Text>
-
-                </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContainer}
@@ -238,97 +206,132 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     showsVerticalScrollIndicator={false}
                 >
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>First Name</Text>
-                        <TextInput
-                            mode='outlined'
-                            value={user.first_name}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
-                        />
+                    <View style={styles.header}>
+                        {
+                            !isUpdatingImage ?
+                                <View style={{ position: 'relative' }}>
+                                    {state.user.image
+                                        ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
+                                        : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                                    }
+
+                                    {!isDisabled && <IconButton
+                                        icon="pencil"
+                                        iconColor={config.colors.white}
+                                        size={15}
+                                        onPress={() => setVisible(!visible)}
+                                        style={styles.camera}
+                                    />}
+                                </View>
+                                :
+                                <View style={styles.profile_avatar}>
+                                    <UIActivityIndicator color='black' size={27} />
+                                </View>
+
+                        }
+
+                        <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
+                        <Text style={[styles.headerText]}>
+                            {user.is_patient && <> <Icon5 name="map-marker-alt" size={16} color={config.colors.white} /><Text> {user.address} </Text></>}
+                            {!user.is_patient && <> <Icon5 name="user-md" size={18} color={config.colors.white} /><Text> {user.profession} </Text></>}
+                        </Text>
+
                     </View>
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Last Name</Text>
-                        <TextInput
-                            mode='outlined'
-                            value={user.last_name}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            onChangeText={text => setUser(prev => ({ ...prev, last_name: text }))}
-                        />
-                    </View>
+                    <View style={styles.body}>
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Address</Text>
-                        <TextInput
-                            mode='outlined'
-                            value={user.address}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
-                        />
-                    </View>
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>First Name</Text>
+                            <TextInput
+                                mode='outlined'
+                                value={user.first_name}
+                                disabled={isDisabled}
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
+                            />
+                        </View>
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Email</Text>
-                        <TextInput
-                            mode='outlined'
-                            value={user.email}
-                            disabled={isDisabled}
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
-                        />
-                    </View>
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>Last Name</Text>
+                            <TextInput
+                                mode='outlined'
+                                value={user.last_name}
+                                disabled={isDisabled}
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                onChangeText={text => setUser(prev => ({ ...prev, last_name: text }))}
+                            />
+                        </View>
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Gender</Text>
-                        <SelectList
-                            setSelected={(val: string) => setUser(prev => ({ ...prev, gender: val }))}
-                            data={genderOptions}
-                            save="value"
-                            search={false}
-                            defaultOption={getJsonObjByValue(genderOptions, user.gender)}
-                            placeholder={"Select Gender"}
-                            inputStyles={{ color: config.colors.black }}
-                            boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
-                        />
-                    </View>
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>Address</Text>
+                            <TextInput
+                                mode='outlined'
+                                value={user.address}
+                                disabled={isDisabled}
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
+                            />
+                        </View>
+
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>Email</Text>
+                            <TextInput
+                                mode='outlined'
+                                value={user.email}
+                                disabled={isDisabled}
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
+                            />
+                        </View>
+
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>Gender</Text>
+                            <SelectList
+                                setSelected={(val: string) => setUser(prev => ({ ...prev, gender: val }))}
+                                data={genderOptions}
+                                save="value"
+                                search={false}
+                                defaultOption={getJsonObjByValue(genderOptions, user.gender)}
+                                placeholder={"Select Gender"}
+                                inputStyles={{ color: config.colors.black }}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                            />
+                        </View>
 
 
-                    <View style={styles.detailView}>
-                        <Text style={styles.infoText}>Date of Birth</Text>
+                        <View style={styles.detailView}>
+                            <Text style={styles.infoText}>Date of Birth</Text>
 
-                        <TextInput
-                            value={user.dob}
-                            disabled={isDisabled}
-                            mode="outlined"
-                            activeOutlineColor={config.colors.primary}
-                            style={isDisabled ? styles.disabledInput : styles.enabledInput}
-                            error={!user.dob}
-                            onFocus={showDatePicker}
-                            showSoftInputOnFocus={false}
-                            onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
-                        />
-                        <DateTimePickerModal
-                            isVisible={isDatePickerVisible}
-                            mode="date"
-                            onConfirm={handleConfirm}
-                            onCancel={hideDatePicker}
-                        />
-                    </View>
+                            <TextInput
+                                value={user.dob}
+                                disabled={isDisabled}
+                                mode="outlined"
+                                activeOutlineColor={config.colors.primary}
+                                style={isDisabled ? styles.disabledInput : styles.enabledInput}
+                                error={!user.dob}
+                                onFocus={showDatePicker}
+                                showSoftInputOnFocus={false}
+                                onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
+                            />
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                onConfirm={handleConfirm}
+                                onCancel={hideDatePicker}
+                            />
+                        </View>
 
-                    <View style={styles.footer}>
-                        <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => submitProfile()}>
-                            <Text style={config.styles.btnText}>
-                                {isDisabled ? 'Edit Profile' : 'Submit'}
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={styles.footer}>
+                            <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => submitProfile()}>
+                                <Text style={config.styles.btnText}>
+                                    {isDisabled ? 'Edit Profile' : 'Submit'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                 </ScrollView>
@@ -402,17 +405,22 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 0.35,
+        flex: 2,
         backgroundColor: config.colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingVertical: 20,
     },
 
+    body: {
+        flex: 4,
+        paddingHorizontal: 15,
+    },
 
     scrollContainer: {
         flexGrow: 1,
-        paddingBottom: 50,
-        paddingHorizontal: 15,
+        paddingBottom: 25,
+
     },
 
     scrollView: {
