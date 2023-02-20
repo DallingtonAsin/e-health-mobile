@@ -9,6 +9,7 @@ import * as configs from '../configs';
 import { WebView } from 'react-native-webview';
 import CustomStackHeader from '../components/CustomStackHeader';
 import AppLoader from '../components/AppLoader';
+import { getAppVersion } from '../components/common/SharedHelper';
 
 
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
@@ -36,9 +37,11 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         const deviceBackAction = () => {
             if (screen === 2 || screen === 5 || screen === 6) {
                 setScreen(0);
-            } else {
+            } else if (screen === 0) {
                 setScreen(0);
                 navigation.navigate("MoreTabScreen");
+            } else {
+                navigation.goBack();
             }
             return true;
         };
@@ -120,6 +123,9 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
                         ListFooterComponent={<View style={{ height: 40 }} />}
                     />
                 </View>
+                <View style={styles.footer}>
+                    <Text style={styles.versionText}>Current Version: {getAppVersion()}</Text>
+                </View>
             </SafeAreaView>
         </>
     )
@@ -143,8 +149,15 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 4.5,
+        flex: 4,
         backgroundColor: config.colors.white,
+    },
+
+    footer: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: config.colors.white,
+        marginBottom: 20,
     },
 
     headerText: {
@@ -159,12 +172,7 @@ const styles = StyleSheet.create({
         color: config.colors.white,
     },
 
-    footer: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: config.colors.white,
-        marginBottom: 20,
-    },
+
 
     itemTitle: {
         color: config.colors.black,
@@ -192,4 +200,9 @@ const styles = StyleSheet.create({
         elevation: 4,
         borderRadius: 5,
     },
+
+    versionText: {
+        fontSize: config.fonts.medium,
+        color: config.colors.primary
+    }
 });

@@ -3,19 +3,22 @@ import {
   BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {MultiBarProvider, BottomTabBarWrapper} from 'react-native-multibar';
-import * as configs from '../../configs'
+import { MultiBarProvider, BottomTabBarWrapper } from 'react-native-multibar';
+import * as configs from '../../configs';
 import HomeScreen from '../../screens/HomeScreen';
 import MoreItemsScreen from '../../screens/MoreItemsScreen';
 import ContactUsScreen from '../../screens/ContactUsScreen';
-import Icon5 from 'react-native-vector-icons/FontAwesome';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
-import CustomStackHeader from '../../components/CustomStackHeader';
-
+import { useNavigation } from '@react-navigation/native';
+import { HeaderLeftComponent } from '../../components/HeaderLeftComponent';
 const Tab = createBottomTabNavigator();
-const tabIconFontSize = 22;
+
 
 const HomeStack = () => {
+
+  const navigation = useNavigation();
+
+  const navigateBack = () => { navigation.goBack() }
 
   return (
     <MultiBarProvider
@@ -43,91 +46,30 @@ const HomeStack = () => {
           },
           tabBarLabelPosition: 'below-icon',
         }}>
+
         <Tab.Screen
           name="HomeTabScreen"
-        
           component={HomeScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="home"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Home',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
         />
 
         <Tab.Screen
           name="DoctorsTabScreen"
           component={SpecialityCategoryScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="user-md"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Doctors',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Doctors', tabIcon: 'user-md', onPressBackButton: navigateBack })}
         />
 
 
         <Tab.Screen
           name="HelpTabScreen"
           component={ContactUsScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="question-circle"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'Help',
-            tabBarLabelStyle: {
-              fontSize: configs.fonts.normal
-           }
-          }}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Contact Us', tabIcon: 'question-circle', onPressBackButton: navigateBack })}
         />
 
         <Tab.Screen
           name="MoreTabScreen"
           component={MoreItemsScreen}
-          options={({ route }: { route: any}) => ({
-             tabBarLabel: 'More',
-             tabBarIcon: ({color, size}) => (
-              <Icon5
-                name="bars"
-                style={{
-                  fontSize: tabIconFontSize,
-                  color: color,
-                }}
-              />
-            ),
-            headerShown: false,
-            title: 'More',
-            tabBarLabelStyle: {
-               fontSize: configs.fonts.normal
-            }
-             })}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'More', tabIcon: 'bars', onPressBackButton: navigateBack })}
         />
 
 
