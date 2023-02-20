@@ -10,27 +10,43 @@ import { MedicalSpecialty } from "../interfaces";
 
 const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const onChangeSearch = (query: string) => setSearchQuery(query);
+    const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([]);
+    const [filteredData, setFilteredData] = useState<MedicalSpecialty[]>([]);
+
     const { getMedicalSpecialties } = useContext(AppContext);
 
-
     useEffect(() => {
-        getMedicalSpecialties({ onSuccess: populateSpecialities, onFailure: displayMessage, onCompletion: stopLoading});
+        getMedicalSpecialties({ onSuccess: populateSpecialities, onFailure: displayMessage, onCompletion: stopLoading });
     }, []);
 
     const populateSpecialities = (medicalSpecialties: MedicalSpecialty[]) => {
-        setMedicalSpecialties(medicalSpecialties)
+        setMedicalSpecialties(medicalSpecialties);
+        setFilteredData(medicalSpecialties);
     }
+
+    const handleSearch = (text: string) => {
+
+        setSearchQuery(text);
+        const newData = medicalSpecialties.filter((item: MedicalSpecialty) => {
+            const itemData = `${item.name}`;
+            const searchText = text.toLowerCase();
+            return itemData.toLowerCase().indexOf(searchText) > -1;
+        });
+        if (text.length > 0) {
+            setFilteredData(newData);
+        } else {
+            setFilteredData(medicalSpecialties);
+        }
+    };
 
     const stopLoading = () => {
         setIsLoading(false);
     }
 
-    const Item = ({ item }: {item: MedicalSpecialty}) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList', {specialty_id: item.id, specialty_name: item.name})}>
+    const Item = ({ item }: { item: MedicalSpecialty }) => (
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList', { specialty_id: item.id, specialty_name: item.name })}>
             <Text style={styles.itemTitle}>{item.name}</Text>
             <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
         </TouchableOpacity>
@@ -40,9 +56,9 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
         <Item item={item} />
     );
 
-    if(isLoading){
+    if (isLoading) {
         return (
-            <AppLoader bgColor={configs.colors.white}/>
+            <AppLoader bgColor={configs.colors.white} />
         )
     }
 
@@ -51,22 +67,22 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
             <Text style={styles.title}>Find your doctor by speciality</Text>
             <View style={styles.subcontainer}>
                 <Searchbar
-                    placeholder="Search for doctor"
-                    onChangeText={onChangeSearch}
+                    placeholder="Search specialty"
+                    onChangeText={handleSearch}
                     value={searchQuery}
                     style={styles.searchbar}
                     elevation={3}
                     inputStyle={styles.searchbarInput}
                 />
                 <FlatList
-                    data={medicalSpecialties}
+                    data={filteredData}
                     renderItem={renderItem}
                     keyExtractor={(item: MedicalSpecialty, index: number) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={true}
                     style={{ top: 20 }}
-                    ListFooterComponent={<View style={{height: 100}}/>}
+                    ListFooterComponent={<View style={{ height: 100 }} />}
                 />
             </View>
         </SafeAreaView>
@@ -99,7 +115,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         top: 15,
     },
-    
+
     itemTitle: {
         color: '#000',
         fontSize: configs.fonts.medium,
@@ -123,19 +139,17 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
 
-
     searchbar: {
         marginHorizontal: 16,
-        paddingVertical: 3,
+        paddingVertical: 0,
         backgroundColor: configs.colors.white,
     },
 
-    searchbarInput:{
+    searchbarInput: {
         fontSize: configs.fonts.large,
     },
 
     arrow: {
         right: 0
     }
-})
-
+});

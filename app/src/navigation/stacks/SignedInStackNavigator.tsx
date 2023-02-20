@@ -54,8 +54,8 @@ const SignedInStackNavigator = () => {
                     },
                     headerTintColor: configs.colors.primary,
                     headerTitle: `List of specialists`,
-                    headerBackVisible: true,
-                    headerShown: true,
+                    headerBackVisible: false,
+                    headerShown: false,
                 }}
                 component={SpecialityListScreen} />
 
