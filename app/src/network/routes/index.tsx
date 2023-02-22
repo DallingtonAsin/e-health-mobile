@@ -26,6 +26,10 @@ const routes = {
       doctors_by_specialty: 'medical/doctors/specialty',
    },
 
+   drugs: {
+      index: 'drugs',
+   },
+
    appointments: {
       index: 'appointments',
       cancel: 'appointments/cancel',

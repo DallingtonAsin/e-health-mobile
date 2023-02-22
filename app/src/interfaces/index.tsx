@@ -118,9 +118,20 @@ interface agoraConnection{
     token: string
 }
 
+interface Drug{
+    id: number,
+    name: string,
+    description?: string,
+    price?: string,
+    image: string,
+    status: string
+
+}
+
 export type {
     AppAction,
     IUser,
+    Drug,
     LoginData,
     SignedinUser,
     Notification,

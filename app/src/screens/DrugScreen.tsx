@@ -1,0 +1,188 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TextInput, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import * as configs from '../configs';
+import { Drug } from '../interfaces';
+import { Searchbar } from 'react-native-paper';
+import { Context as AppContext } from '../context/appContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
+
+const screen = Dimensions.get("screen")
+const cardWidth = (screen.width - 30) / 2;
+
+const DrugScreen = () => {
+    const [search, setSearch] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [drugs, setDrugs] = useState<Drug[]>([]);
+    const [filteredData, setFilteredData] = useState<Drug[]>([]);
+
+
+    const { getDrugs } = useContext(AppContext);
+
+
+    useEffect(() => {
+        getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: stopLoading });
+    }, []);
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
+
+    const populateDrugs = (drugs: Drug[]) => {
+        setDrugs(drugs);
+        setFilteredData(drugs);
+    }
+
+    const renderDrug = ({ item }: { item: Drug }) => {
+        return (
+            <TouchableOpacity style={styles.drugCard} onPress={() => console.log('View drug details')}>
+                <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={styles.drugStatus}>{item.status}</Text>
+                </View>
+
+                <View style={styles.drugImageContainer}>
+                    <Image style={styles.drugImage} source={{ uri: item.image }} />
+                </View>
+
+                <Text style={styles.drugName}>{item.name}</Text>
+
+                <View style={styles.drugInfo}>
+                    <Text>{item.price}</Text>
+                    {/* <Text style={styles.drugStatus}>{item.status}</Text> */}
+                </View>
+            </TouchableOpacity>
+        );
+    };
+
+    const handleSearch = (text: string) => {
+
+        setSearch(text);
+        const newData = drugs.filter((item: Drug) => {
+            const itemData = `${item.name}`;
+            const searchText = text.toLowerCase();
+            return itemData.toLowerCase().indexOf(searchText) > -1;
+        });
+        if (text.length > 0) {
+            setFilteredData(newData);
+        } else {
+            setFilteredData(drugs);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <AppLoader bgColor={configs.colors.white} />
+        )
+    }
+
+    return (
+        <View style={styles.container}>
+            <Searchbar
+                placeholder="Search medicine"
+                placeholderTextColor={configs.colors.gray}
+                onChangeText={handleSearch}
+                value={search}
+                style={[configs.styles.searchbar, { marginHorizontal: 3, marginBottom: 10 }]}
+                elevation={3}
+                inputStyle={configs.styles.searchbarInput}
+            />
+
+
+            <FlatList
+                data={filteredData}
+                renderItem={renderDrug}
+                keyExtractor={(item) => item.id.toString()}
+                style={styles.drugList}
+                numColumns={2}
+                columnWrapperStyle={styles.drugRow}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    marginTop: 10,
+                    paddingBottom: 50,
+                }}
+            />
+
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 8,
+        backgroundColor: configs.colors.white,
+    },
+    searchBar: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 16,
+        marginBottom: 16,
+    },
+
+    drugList: {
+        flex: 1,
+    },
+
+    drugRow: {
+        justifyContent: 'space-between',
+    },
+
+    drugImageContainer: {
+        height: 100,
+        alignItems: 'center'
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // marginRight: 8,
+    },
+
+    drugCard: {
+        flex: 1,
+        height: 225,
+        backgroundColor: configs.colors.light,
+        width: cardWidth,
+        marginHorizontal: 2,
+        borderRadius: 10,
+        marginBottom: 20,
+        padding: 15,
+        borderWidth: 0.6,
+        borderColor: configs.colors.silver,
+    },
+
+    drugImage: {
+        flex: 1,
+        width: '100%',
+        height: 225,
+        resizeMode: 'contain'
+    },
+
+    drugInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5,
+    },
+    drugName: {
+        fontWeight: 'bold',
+        fontSize: 17,
+        marginTop: 10,
+        color: configs.colors.primary
+    },
+    drugStatus: {
+        color: configs.colors.white,
+        fontSize: 10,
+        backgroundColor: configs.colors.primary,
+        padding: 2,
+        borderRadius:3,
+        right: 0,
+        // position: 'absolute'
+
+
+    },
+});
+
+export default DrugScreen;

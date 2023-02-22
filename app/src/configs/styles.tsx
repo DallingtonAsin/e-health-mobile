@@ -95,6 +95,17 @@ export const styles = {
     color: colors.white
   },
 
+  searchbar: {
+    marginHorizontal: 16,
+    marginVertical:5,
+    paddingVertical: 0,
+    backgroundColor: colors.white,
+  },
+
+  searchbarInput: {
+    fontSize: fonts.large,
+  },
+
   registration: {
 
     doctor: {
@@ -164,11 +175,11 @@ export const styles = {
 
       selectBoxStyles: {
         borderColor: colors.gray,
-         borderWidth: 1,
-          borderRadius: 4,
-           marginTop: 6,
-            height: 49,
-             marginBottom: 10
+        borderWidth: 1,
+        borderRadius: 4,
+        marginTop: 6,
+        height: 49,
+        marginBottom: 10
       },
 
       selectInputStyles: {
