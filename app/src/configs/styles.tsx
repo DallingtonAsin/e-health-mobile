@@ -44,6 +44,12 @@ export const styles = {
     bottom: 35,
   },
 
+  footer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+
   btnText: {
     color: colors.primary,
     fontSize: fonts.large,
@@ -97,7 +103,7 @@ export const styles = {
 
   searchbar: {
     marginHorizontal: 16,
-    marginVertical:5,
+    marginVertical: 5,
     paddingVertical: 0,
     backgroundColor: colors.white,
   },
