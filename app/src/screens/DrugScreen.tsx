@@ -18,10 +18,7 @@ const DrugScreen = () => {
 
     const [drugs, setDrugs] = useState<Drug[]>([]);
     const [filteredData, setFilteredData] = useState<Drug[]>([]);
-
-
     const { getDrugs } = useContext(AppContext);
-
 
     useEffect(() => {
         getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: stopLoading });
@@ -40,7 +37,7 @@ const DrugScreen = () => {
         return (
             <TouchableOpacity style={styles.drugCard} onPress={() => console.log('View drug details')}>
                 <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={styles.drugStatus}>{item.status}</Text>
+                    <Text style={[styles.drugStatus, item.in_stock ?  { backgroundColor : configs.colors.primary }: {backgroundColor : configs.colors.danger }]}>{item.status}</Text>
                 </View>
 
                 <View style={styles.drugImageContainer}>
@@ -51,7 +48,6 @@ const DrugScreen = () => {
 
                 <View style={styles.drugInfo}>
                     <Text>{item.price}</Text>
-                    {/* <Text style={styles.drugStatus}>{item.status}</Text> */}
                 </View>
             </TouchableOpacity>
         );
@@ -173,15 +169,12 @@ const styles = StyleSheet.create({
         color: configs.colors.primary
     },
     drugStatus: {
-        color: configs.colors.white,
         fontSize: 10,
-        backgroundColor: configs.colors.primary,
         padding: 2,
         borderRadius:3,
         right: 0,
-        // position: 'absolute'
-
-
+        color: configs.colors.white,
+        fontWeight: 'bold',
     },
 });
 

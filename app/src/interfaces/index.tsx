@@ -124,7 +124,8 @@ interface Drug{
     description?: string,
     price?: string,
     image: string,
-    status: string
+    status: string,
+    in_stock: boolean
 
 }
 
