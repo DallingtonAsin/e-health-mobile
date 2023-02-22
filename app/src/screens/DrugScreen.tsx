@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import * as configs from '../configs';
 import { Drug } from '../interfaces';
 import { Searchbar } from 'react-native-paper';
 import { Context as AppContext } from '../context/appContext';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
