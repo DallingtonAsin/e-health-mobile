@@ -45,7 +45,7 @@ const DrugScreen = () => {
                 </View>
 
                 <View style={styles.textContainer}>
-                    <Text style={styles.drugName}>{item.name}</Text>
+                    <Text style={styles.drugName} numberOfLines={2} ellipsizeMode='tail'>{item.name}</Text>
                     <Text>{item.price}</Text>
 
                 </View>
@@ -157,8 +157,7 @@ const styles = StyleSheet.create({
     textContainer: {
         padding: 10,
         maxWidth: '100%',
-        maxHeight: '100%',
-        overflow: 'hidden',
+        maxHeight: '100%'
     },
 
     drugImage: {
@@ -178,8 +177,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: configs.colors.primary,
         fontSize: 17,
-        fontWeight: 'bold',
-        textOverflow: 'ellipsis',
+        fontWeight: 'bold'
     },
     drugStatus: {
         fontSize: 10,
