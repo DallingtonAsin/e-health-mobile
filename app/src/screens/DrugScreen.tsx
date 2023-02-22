@@ -10,7 +10,7 @@ import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 
 const screen = Dimensions.get("screen")
-const cardWidth = (screen.width - 30) / 2;
+const cardWidth = (screen.width - 25) / 2;
 
 const DrugScreen = () => {
     const [search, setSearch] = useState('');
@@ -37,18 +37,19 @@ const DrugScreen = () => {
         return (
             <TouchableOpacity style={styles.drugCard} onPress={() => console.log('View drug details')}>
                 <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={[styles.drugStatus, item.in_stock ?  { backgroundColor : configs.colors.primary }: {backgroundColor : configs.colors.danger }]}>{item.status}</Text>
+                    <Text style={[styles.drugStatus, item.in_stock ? { backgroundColor: configs.colors.primary } : { backgroundColor: configs.colors.danger }]}>{item.status}</Text>
                 </View>
 
                 <View style={styles.drugImageContainer}>
                     <Image style={styles.drugImage} source={{ uri: item.image }} />
                 </View>
 
-                <Text style={styles.drugName}>{item.name}</Text>
-
-                <View style={styles.drugInfo}>
+                <View style={styles.textContainer}>
+                    <Text style={styles.drugName}>{item.name}</Text>
                     <Text>{item.price}</Text>
+
                 </View>
+
             </TouchableOpacity>
         );
     };
@@ -132,22 +133,32 @@ const styles = StyleSheet.create({
     drugImageContainer: {
         height: 100,
         alignItems: 'center'
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // marginRight: 8,
     },
 
     drugCard: {
         flex: 1,
+        width: cardWidth,
         height: 225,
         backgroundColor: configs.colors.light,
-        width: cardWidth,
         marginHorizontal: 2,
         borderRadius: 10,
         marginBottom: 20,
         padding: 15,
-        borderWidth: 0.6,
-        borderColor: configs.colors.silver,
+        shadowColor: configs.colors.dark,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+
+    textContainer: {
+        padding: 10,
+        maxWidth: '100%',
+        maxHeight: '100%',
+        overflow: 'hidden',
     },
 
     drugImage: {
@@ -162,16 +173,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 5,
     },
+
     drugName: {
-        fontWeight: 'bold',
-        fontSize: 17,
         marginTop: 10,
-        color: configs.colors.primary
+        color: configs.colors.primary,
+        fontSize: 17,
+        fontWeight: 'bold',
+        textOverflow: 'ellipsis',
     },
     drugStatus: {
         fontSize: 10,
         padding: 2,
-        borderRadius:3,
+        borderRadius: 3,
         right: 0,
         color: configs.colors.white,
         fontWeight: 'bold',
