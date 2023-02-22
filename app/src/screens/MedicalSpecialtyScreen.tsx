@@ -70,9 +70,9 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
                     placeholder="Search specialty"
                     onChangeText={handleSearch}
                     value={searchQuery}
-                    style={styles.searchbar}
+                    style={configs.styles.searchbar}
                     elevation={3}
-                    inputStyle={styles.searchbarInput}
+                    inputStyle={configs.styles.searchbarInput}
                 />
                 <FlatList
                     data={filteredData}
@@ -137,16 +137,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 20,
         elevation: 5,
-    },
-
-    searchbar: {
-        marginHorizontal: 16,
-        paddingVertical: 0,
-        backgroundColor: configs.colors.white,
-    },
-
-    searchbarInput: {
-        fontSize: configs.fonts.large,
     },
 
     arrow: {
