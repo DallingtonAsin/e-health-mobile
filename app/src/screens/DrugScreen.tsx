@@ -11,6 +11,7 @@ const screen = Dimensions.get("screen")
 const cardWidth = (screen.width - 25) / 2;
 
 const DrugScreen = () => {
+    
     const [search, setSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -34,7 +35,7 @@ const DrugScreen = () => {
     const renderDrug = ({ item }: { item: Drug }) => {
         return (
             <TouchableOpacity style={styles.drugCard} onPress={() => console.log('View drug details')}>
-                <View style={{ alignItems: 'flex-end' }}>
+                <View style={{ position: 'absolute', top: 3, right: 2 }}>
                     <Text style={[styles.drugStatus, item.in_stock ? { backgroundColor: configs.colors.primary } : { backgroundColor: configs.colors.danger }]}>{item.status}</Text>
                 </View>
 
@@ -130,7 +131,8 @@ const styles = StyleSheet.create({
 
     drugImageContainer: {
         height: 100,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 12,
     },
 
     drugCard: {
