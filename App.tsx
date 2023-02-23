@@ -1,4 +1,5 @@
 import React from 'react';
+import type {PropsWithChildren} from 'react';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as AppProvider } from 'react-native-paper';
