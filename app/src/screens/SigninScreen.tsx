@@ -5,7 +5,7 @@ import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
-import { removeLeadingZeros } from '../components/common/SharedHelper';
+import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
 import { Context as AppContext } from '../context/appContext';
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
@@ -80,10 +80,11 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
         setIsLoading(true);
         
+        let current_version = getAppVersion();
         let payload: LoginData = {
             country_code: phoneObj.country_code,
             phone_number: phoneObj.phone_number,
-            current_version: '1.2',
+            current_version: current_version,
         }
 
           signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
@@ -92,6 +93,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const navigateMethod = (data: any) => {
         setValue("");
         setFormattedValue("");
+        console.log(`Got from backend`, data);
         navigation.navigate('OTP', {
             country_code: data.country_code,
             phone_number: data.phone_number,

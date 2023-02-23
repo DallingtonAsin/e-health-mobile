@@ -18,7 +18,7 @@ const signin = (dispatch: any) => {
             payload
         ).then(async (res) => {
             if (res && res.data) {
-
+                console.log(`Result from db`, res.data);
                 let data = res.data;
                 await storeAuthToken(data.access_token);
 
