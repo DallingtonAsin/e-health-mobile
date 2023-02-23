@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_URL } from '@env';
 import { getAuthToken } from './asyncStorageService';
 
+console.log(`API URL`, API_URL);
 
 class Service {
 
