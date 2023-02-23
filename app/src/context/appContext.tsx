@@ -12,6 +12,7 @@ const services = new Service();
 
 const signin = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        console.log("Is it working...", payload);
         services.post(
             routes.patient.signin,
             payload

@@ -10,7 +10,7 @@ const SplashScreen = ({navigation}: {navigation: any}) => {
         <View style={styles.container}> 
         <StatusBar backgroundColor={configs.colors.primary}/>
             <View style={styles.header}>
-            <Avatar.Image size={150} source={configs.images.otpImage} style={configs.styles.logo} />
+            <Avatar.Image size={150} source={configs.images.logo} style={configs.styles.logo} />
             <Text style={styles.drText}>Access doctor anytime anywhere</Text>
             </View>
             <View style={styles.footer}>

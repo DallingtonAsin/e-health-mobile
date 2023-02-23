@@ -1,6 +1,8 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
+import com.android.build.OutputFile
+
 // configure environment files 
 
 project.ext.envConfigFiles = [
@@ -14,7 +16,6 @@ project.ext.envConfigFiles = [
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" // <- add this line
 
-import com.android.build.OutputFile
 
 /* * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -106,17 +107,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-     namespace "com.vastel"
-      defaultConfig {
-        applicationId "com.vastel"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
-    }
-
-     // add this block
+       // add this block
     flavorDimensions "default"
     productFlavors {
 
@@ -143,6 +134,18 @@ android {
       
       
     }
+
+     namespace "com.vastel"
+      defaultConfig {
+        applicationId "com.vastel"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+  
 
       lintOptions {
          abortOnError false
