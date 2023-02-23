@@ -42,7 +42,7 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
 
                 </View>
 
-                {drug.in_stock && <View style={{flex: 1, flexDirection: 'row'}}>
+                {drug.in_stock && <View style={styles.footerBtns}>
                     <View style={styles.quantityContainer}>
                         <TouchableOpacity style={styles.quantityButton} onPress={decrementQuantity}>
                             <Text style={styles.quantityButtonText}>-</Text>
@@ -53,7 +53,7 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
                         </TouchableOpacity>
                     </View>
 
-                    <View style={[configs.styles.registration.doctor.viewContainer, { flex: 1 }]}>
+                    <View style={{ flex: 1 }}>
                         <TouchableOpacity style={[configs.styles.primaryBtn, { width: '100%' }]}
                             onPress={handleAddToCart}>
                             <Text style={[configs.styles.btnText, { color: configs.colors.white }]}>Add to cart</Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
+        // marginBottom: 10,
     },
 
     quantityButton: {
@@ -158,6 +158,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         fontWeight: 'bold'
     },
+
+    footerBtns: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    }
 });
 
 export default DrugDetailsScreen;
