@@ -2336,15 +2336,15 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-vector-icons@^6.4.12":
-  version "6.4.12"
-  resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.12.tgz"
-  integrity sha512-gSXtv3NMOsRwSXJ/gvGebm7CNjHbkeFKCse9h/Pvi+x2yjCLOkJR1FBfec06DhaFJpsK7Y8WRQpwOS0eLqx5Rg==
+"@types/react-native-vector-icons@^6.4.13":
+  version "6.4.13"
+  resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.13.tgz"
+  integrity sha512-1PqFoKuXTSzMHwGMAr+REdYJBQAbe9xrww3ecZR0FsHcD1K+vGS/rxuAriL4rsI6+p69sZQjDzpEVAbDQcjSwA==
   dependencies:
     "@types/react" "*"
-    "@types/react-native" "*"
+    "@types/react-native" "^0.70"
 
-"@types/react-native@*", "@types/react-native@^0.70.6":
+"@types/react-native@*", "@types/react-native@^0.70", "@types/react-native@^0.70.6":
   version "0.70.6"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.70.6.tgz"
   integrity sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==

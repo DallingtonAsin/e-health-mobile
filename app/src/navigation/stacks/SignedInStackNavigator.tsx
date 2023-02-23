@@ -15,6 +15,7 @@ import NotificationScreen from "../../screens/NotificationScreen";
 import MyScheduleScreen from "../../screens/Doctor/MyScheduleScreen";
 import DrugScreen from "../../screens/DrugScreen";
 import DrugDetailsScreen from "../../screens/DrugDetailsScreen";
+import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../../screens/common/index";
 
 
 const Stack = createNativeStackNavigator();
@@ -141,7 +142,8 @@ const SignedInStackNavigator = () => {
                     headerBackVisible: true,
                     headerShown: true,
                 }}
-                component={ContactUsScreen} />
+                component={ContactUsScreen}
+            />
 
             <Stack.Screen
                 name="AppointmentConfirmation"
@@ -177,7 +179,7 @@ const SignedInStackNavigator = () => {
                 component={DrugScreen}
             />
 
-           <Stack.Screen
+            <Stack.Screen
                 name="DrugDetails"
                 options={{
                     headerStyle: {
@@ -203,6 +205,45 @@ const SignedInStackNavigator = () => {
                     headerShown: true,
                 }}
                 component={MyScheduleScreen} />
+
+            <Stack.Screen
+                name="TermsConditions"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Terms and Condtions`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={TermsConditionScreen} />
+
+            <Stack.Screen
+                name="AboutUs"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `About Us`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={AboutUsScreen} />
+
+            <Stack.Screen
+                name="Settings"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Settings`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={SettingsScreen} />
 
         </Stack.Navigator>
     )

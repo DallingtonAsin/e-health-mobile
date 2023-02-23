@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react'
+import React, { useContext } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -19,22 +19,19 @@ import { getUserInitials } from '../components/common/SharedHelper';
 
 const iconSize = 40;
 
-
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const { state } = useContext(AppContext);
     const user = state.user;
 
-
     return (
         <SafeAreaView style={styles.container}>
 
-            <StatusBar backgroundColor={configs.colors.primary} />
+            <StatusBar backgroundColor={configs.colors.primary}/>
 
             <ScrollView
                 style={styles.scroll}
-                contentContainerStyle={styles.scrollContainerStyle}
-            >
+                contentContainerStyle={styles.scrollContainerStyle}>
 
                 <View style={styles.header}>
 
@@ -58,9 +55,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <Text style={styles.amazing}>Today is amazing!</Text>
                         </View>
                     </View>
-
                 </View>
-
 
 
                 <View style={styles.body}>
