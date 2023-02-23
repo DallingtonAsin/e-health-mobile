@@ -15,7 +15,6 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import ImagePicker from 'react-native-image-crop-picker';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { BottomSheet } from 'react-native-btr';
-import RNFetchBlob from 'rn-fetch-blob';
 var mime = require('mime-types');
 
 
@@ -131,6 +130,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const submitProfilePicture = async (image: any) => {
         try {
 
+            const imagePath = image.path;
             const mimeType = image.mime;
             const fileExtension = mime.extension(mimeType);
             let formData = new FormData();
@@ -140,8 +140,14 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 is_patient: user.is_patient
             }
 
-            const imageData = await RNFetchBlob.fs.readFile(image.path, 'base64');
-
+            const imageData = {
+                uri: imagePath,
+                type: mimeType,
+                size: image.size,
+                extension: fileExtension,
+                name: 'profile_pic',
+              }
+              
             formData.append('id', user.id);
             formData.append('extension', fileExtension);
             formData.append('image', imageData);

@@ -144,9 +144,12 @@ android {
       
     }
 
-    dexOptions {
-       javaMaxHeapSize "3g"
-    }
+      lintOptions {
+         abortOnError false
+         absolutePaths false
+         lintConfig file('lint.xml')
+         baseline file('lint-baseline.xml')
+      }
 
     splits {
         abi {
