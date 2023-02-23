@@ -146,8 +146,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 size: image.size,
                 extension: fileExtension,
                 name: 'profile_pic',
-              }
-              
+            }
+
             formData.append('id', user.id);
             formData.append('extension', fileExtension);
             formData.append('image', imageData);
