@@ -93,7 +93,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const navigateMethod = (data: any) => {
         setValue("");
         setFormattedValue("");
-        console.log(`Got from backend`, data);
+     
         navigation.navigate('OTP', {
             country_code: data.country_code,
             phone_number: data.phone_number,
