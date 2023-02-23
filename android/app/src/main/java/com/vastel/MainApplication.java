@@ -8,7 +8,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
-
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -44,14 +43,10 @@ public class MainApplication extends Application implements ReactApplication {
         }
       };
 
-  private final ReactNativeHost mNewArchitectureNativeHost =
-      new MainApplicationReactNativeHost(this);
-
   @Override
   public ReactNativeHost getReactNativeHost() {
 
       return mReactNativeHost;
-    
   }
 
  @Override

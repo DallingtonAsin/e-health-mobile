@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
 
 // configure environment files 
 
@@ -14,7 +15,6 @@ project.ext.envConfigFiles = [
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" // <- add this line
 
 import com.android.build.OutputFile
-import org.apache.tools.ant.taskdefs.condition.Os
 
 /* * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -96,11 +96,6 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * file and works together with the --active-arch-only flag of react-native run-android
  .
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
-
-/**
- * Architectures to build native code for.
- */
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -118,7 +113,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-    
+        multiDexEnabled true
     }
 
      // add this block
@@ -147,6 +142,10 @@ android {
         }
       
       
+    }
+
+    dexOptions {
+       javaMaxHeapSize "3g"
     }
 
     splits {
