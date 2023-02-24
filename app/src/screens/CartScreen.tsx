@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drug } from '../interfaces';
 import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/features/drugs/drugsSlice';
@@ -59,7 +59,7 @@ function CartScreen({ navigation }: { navigation: any }) {
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                     <CartDecrementButton onPress={() => { decrementQty(item) }} />
-                    <Text style={{ fontSize: 18 }}>{item.quantity}</Text>
+                    <Text style={styles.quantityText}>{item.quantity}</Text>
                     <CartIncrementButton onPress={() => { incrementQty(item) }} />
                 </View>
             </View>
@@ -74,7 +74,7 @@ function CartScreen({ navigation }: { navigation: any }) {
                 <Text style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>Subtotal</Text>
                 <Text style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>UGX {totalCost}</Text>
             </View>
-            <Text style={{ textTransform: 'uppercase', left: 5 }}>Cart ({totalQuantity})</Text>
+            <Text style={{ textTransform: 'uppercase', left:10 }}>Cart ({totalQuantity})</Text>
         </View>
     )
 
@@ -104,3 +104,12 @@ function CartScreen({ navigation }: { navigation: any }) {
 }
 
 export default CartScreen;
+
+const styles = StyleSheet.create({
+
+    quantityText: {
+        fontSize: 24,
+        marginHorizontal: 10,
+        fontWeight: 'normal'
+    },
+});
