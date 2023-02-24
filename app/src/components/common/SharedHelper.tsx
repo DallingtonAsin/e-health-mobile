@@ -112,6 +112,10 @@ const getJsonObjByValue = (arr: any, value: any) => {
   return result[0];
 }
 
+function numberWithCommas(x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 const isValidDob = (birthdateStr: string) => {
   const birthdate = new Date(birthdateStr);
   const today: any = new Date();
@@ -146,5 +150,6 @@ export {
   isValidEmail,
   isValidDob,
   getJsonObjByValue,
-  getAppVersion
+  getAppVersion,
+  numberWithCommas
 }

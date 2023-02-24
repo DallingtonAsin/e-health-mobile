@@ -6,6 +6,7 @@ import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from
 import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { CartIncrementButton, CartDecrementButton } from './common';
+import { numberWithCommas } from '../components/common/SharedHelper';
 
 
 function CartScreen({ navigation }: { navigation: any }) {
@@ -70,11 +71,11 @@ function CartScreen({ navigation }: { navigation: any }) {
     const CartHeader = () => (
         <View>
             <Text style={{ textTransform: 'uppercase' }}> cart summary</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: config.colors.white, padding:12 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: config.colors.white, padding: 12 }}>
                 <Text style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>Subtotal</Text>
-                <Text style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>UGX {totalCost}</Text>
+                <Text style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>UGX {numberWithCommas(totalCost)}</Text>
             </View>
-            <Text style={{ textTransform: 'uppercase', left:10 }}>Cart ({totalQuantity})</Text>
+            <Text style={{ textTransform: 'uppercase', left: 10 }}>Cart ({totalQuantity})</Text>
         </View>
     )
 
