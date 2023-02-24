@@ -1,19 +1,21 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon5 from 'react-native-vector-icons/FontAwesome'
 import { selectCart } from '../../redux/features/drugs/drugsSlice'
 import { Drug } from '../../interfaces';
 import * as config from '../../configs';
+import { useNavigation } from '@react-navigation/native';
 
 
 function CartIcon() {
 
+    const navigation = useNavigation();
   const cart = useSelector(selectCart);
   const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);
 
   return (
-    <View style={{ marginLeft: 10 }}>
+    <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Cart')}>
       <Icon5 name="shopping-cart" size={30} color={config.colors.gray} />
       {totalQuantity > 0 && (
         <View
@@ -35,7 +37,7 @@ function CartIcon() {
           </Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 

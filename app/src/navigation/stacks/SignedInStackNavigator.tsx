@@ -17,6 +17,7 @@ import DrugScreen from "../../screens/DrugScreen";
 import DrugDetailsScreen from "../../screens/DrugDetailsScreen";
 import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../../screens/common/index";
 import CartIcon from "../../screens/common/CartIcon";
+import CartScreen from "../../screens/CartScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -195,6 +196,21 @@ const SignedInStackNavigator = () => {
                 }}
                 component={DrugDetailsScreen}
             />
+
+            <Stack.Screen
+                name="Cart"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Cart`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={CartScreen}
+            />
+
 
             <Stack.Screen
                 name="DoctorsCalendar"

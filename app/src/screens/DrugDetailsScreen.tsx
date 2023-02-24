@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as configs from '../configs';
 import { useSelector, useDispatch } from 'react-redux';
+import { CartIncrementButton, CartDecrementButton } from './common';
 import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../redux/features/drugs/drugsSlice';
 import { Drug } from '../interfaces';
 
@@ -11,8 +12,6 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const cart = useSelector(selectCart);
-    console.log('cart items', cart);
-    console.log('cart items length', cart.length);
 
     const hasItemInCart = (itemId: number) => cart.some((item: Drug) => item.id === itemId);
 
@@ -38,31 +37,26 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
                 <View style={styles.imageContainer}>
                     <Image source={{ uri: drug.image }} style={styles.image} />
                 </View>
+
                 <View style={styles.detailsContainer}>
                     <Text style={styles.name}>{drug.name}</Text>
                     <Text style={styles.description}>{drug.description}</Text>
                     <View style={{ position: 'absolute', top: 3, right: 2, marginVertical: 5 }}>
                         <Text style={[styles.drugStatus, drug.in_stock ? { backgroundColor: configs.colors.success } : { backgroundColor: configs.colors.danger }]}>{drug.status}</Text>
                     </View>
-                    <Text style={styles.price}>{drug.price}</Text>
-
-
+                    <Text style={styles.price}>{drug.formatted_price}</Text>
                 </View>
 
                 {drug.in_stock && <View style={styles.footerBtns}>
 
                     {hasItemInCart(drug.id) &&
                         <View style={styles.quantityContainer}>
-                            <TouchableOpacity style={styles.quantityButton} onPress={decrementQty}>
-                                <Text style={styles.quantityButtonText}>-</Text>
-                            </TouchableOpacity>
+                            <CartDecrementButton onPress={decrementQty} />
                             <Text style={styles.quantityText}>{quantity}</Text>
-                            <TouchableOpacity style={styles.quantityButton} onPress={incrementQty}>
-                                <Text style={styles.quantityButtonText}>+</Text>
-                            </TouchableOpacity>
+                            <CartIncrementButton onPress={incrementQty} />
                         </View>
                     }
-                    
+
                     {!hasItemInCart(drug.id) &&
                         <View style={{ flex: 1 }}>
                             <TouchableOpacity style={[configs.styles.primaryBtn, { width: '100%' }]}
