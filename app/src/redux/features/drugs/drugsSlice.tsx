@@ -47,4 +47,6 @@ const drugSlice = createSlice({
 
 export const { addToCart,  removeFromCart, incrementQuantity, decrementQuantity} = drugSlice.actions;
 
+export const selectCart = (state: any) => state.drugs.cart;
+
 export default drugSlice.reducer;

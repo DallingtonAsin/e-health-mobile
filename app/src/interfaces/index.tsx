@@ -2,14 +2,14 @@
 interface AppAction {
     type: string;
     payload?: any;
-  }
+}
 
 interface IUser {
     id?: number,
     first_name: string,
     last_name: string,
-    specialty?:string,
-    specialty_id?:string,
+    specialty?: string,
+    specialty_id?: string,
     email?: string,
     phone_number?: string,
     dob: string,
@@ -104,7 +104,7 @@ interface AppointmentInfo {
     notes?: string,
 }
 
-interface DoctorCalendar{
+interface DoctorCalendar {
     id: number,
     doctor_id?: number,
     date: string,
@@ -112,17 +112,18 @@ interface DoctorCalendar{
     end_time: string
 }
 
-interface agoraConnection{
+interface agoraConnection {
     appId: string,
     channel: string,
     token: string
 }
 
-interface Drug{
+interface Drug {
     id: number,
     name: string,
     description?: string,
-    price?: string,
+    price: number,
+    formatted_price?: string,
     image: string,
     status: string,
     quantity: number | 0,

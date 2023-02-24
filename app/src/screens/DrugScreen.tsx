@@ -49,7 +49,7 @@ const DrugScreen = ({ navigation }: { navigation: any }) => {
 
                 <View style={styles.textContainer}>
                     <Text style={styles.drugName} numberOfLines={2} ellipsizeMode='tail'>{item.name}</Text>
-                    <Text>{item.price}</Text>
+                    <Text>{item.formatted_price}</Text>
 
                 </View>
 
