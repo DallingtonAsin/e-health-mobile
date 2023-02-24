@@ -76,10 +76,10 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 >
                     <View style={styles.header}>
                         <View>
-                            {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.image }} />}
+                            {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.thumbnail }} />}
                             {user.is_patient && !doctor.image && <Avatar.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
 
-                            {!user.is_patient && patient.image && <Avatar.Image size={80} source={{ uri: patient.image }} />}
+                            {!user.is_patient && patient.image && <Avatar.Image size={80} source={{ uri: patient.thumbnail }} />}
                             {!user.is_patient && !patient.image && <Avatar.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                         </View>
 

@@ -12,7 +12,7 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug",
-    "gar": "cd android && ./gradlew assembleRelease && cd ..",
+    "gar": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && rm -rf  android/app/src/main/res/drawable-* && cd android && ./gradlew assembleRelease",
     "gab": "cd android && ./gradlew bundleRelease && cd ..",
     "postinstall": "npx typesync",
     "android:dev": "react-native run-android --variant=developmentdebug",
