@@ -10,7 +10,7 @@ import AppLoader from '../components/AppLoader';
 const screen = Dimensions.get("screen")
 const cardWidth = (screen.width - 25) / 2;
 
-const DrugScreen = ({ navigation }: { navigation:any }) => {
+const DrugScreen = ({ navigation }: { navigation: any }) => {
 
     const [search, setSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -33,12 +33,12 @@ const DrugScreen = ({ navigation }: { navigation:any }) => {
     }
 
     const drugDetails = (drug: Drug) => {
-           navigation.navigate("DrugDetails", {drug: drug});
+        navigation.navigate("DrugDetails", { drug: drug });
     }
 
-    const renderDrug = ({ item }: { item: Drug }) => {
+    const DrugItem = ({ item }: { item: Drug }) => {
         return (
-            <TouchableOpacity style={styles.drugCard} onPress={() => drugDetails(item) }>
+            <TouchableOpacity style={styles.drugCard} onPress={() => drugDetails(item)}>
                 <View style={{ position: 'absolute', top: 3, right: 2 }}>
                     <Text style={[styles.drugStatus, item.in_stock ? { backgroundColor: configs.colors.success } : { backgroundColor: configs.colors.danger }]}>{item.status}</Text>
                 </View>
@@ -93,7 +93,7 @@ const DrugScreen = ({ navigation }: { navigation:any }) => {
 
             <FlatList
                 data={filteredData}
-                renderItem={renderDrug}
+                renderItem={DrugItem}
                 keyExtractor={(item) => item.id.toString()}
                 style={styles.drugList}
                 numColumns={2}

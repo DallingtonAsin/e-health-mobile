@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as configs from '../configs';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart, incrementQuantity, decrementQuantity } from '../redux/features/drugs/drugsSlice';
 
 const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { drug } = route.params;
     const [quantity, setQuantity] = useState(1);
-
-    const decrementQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
-
-    const incrementQuantity = () => {
-        setQuantity(quantity + 1);
-    };
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state: any) => state.drugs.cart);
+    console.log('cart items', cartItems);
 
     const handleAddToCart = () => {
-        console.log(`Drug ${drug.name} added to cart`);
+        dispatch(addToCart(drug));
+    };
+
+    const incrementQty = () => {
+        dispatch(incrementQuantity(drug));
+    };
+
+    const decrementQty = () => {
+        dispatch(decrementQuantity(drug));
     };
 
     return (
@@ -44,11 +47,11 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
 
                 {drug.in_stock && <View style={styles.footerBtns}>
                     <View style={styles.quantityContainer}>
-                        <TouchableOpacity style={styles.quantityButton} onPress={decrementQuantity}>
+                        <TouchableOpacity style={styles.quantityButton} onPress={decrementQty}>
                             <Text style={styles.quantityButtonText}>-</Text>
                         </TouchableOpacity>
                         <Text style={styles.quantityText}>{quantity}</Text>
-                        <TouchableOpacity style={styles.quantityButton} onPress={incrementQuantity}>
+                        <TouchableOpacity style={styles.quantityButton} onPress={incrementQty}>
                             <Text style={styles.quantityButtonText}>+</Text>
                         </TouchableOpacity>
                     </View>

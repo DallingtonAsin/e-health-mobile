@@ -12,7 +12,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-        symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
+            symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -72,8 +72,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     style={styles.scroll}
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
+                        
                     <View style={styles.header}>
                         <View>
                             {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.thumbnail }} />}

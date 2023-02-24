@@ -17,17 +17,17 @@ import { getGreeting } from '../components/common/SharedHelper';
 import { Context as AppContext } from '../context/appContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 
-const iconSize = 40;
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const { state } = useContext(AppContext);
     const user = state.user;
+    const iconSize = 40;
 
     return (
         <SafeAreaView style={styles.container}>
 
-            <StatusBar backgroundColor={configs.colors.primary}/>
+            <StatusBar backgroundColor={configs.colors.primary} />
 
             <ScrollView
                 style={styles.scroll}
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                     {user.is_patient &&
-                        <View style={styles.cardContainer}> 
+                        <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pharmacy')}>
                                 <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Pharmacy</Text>
