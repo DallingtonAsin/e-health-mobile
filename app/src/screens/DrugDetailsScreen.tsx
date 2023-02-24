@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as configs from '../configs';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, incrementQuantity, decrementQuantity } from '../redux/features/drugs/drugsSlice';
+import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../redux/features/drugs/drugsSlice';
+import { Drug } from '../interfaces';
 
 const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { drug } = route.params;
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
-    const cartItems = useSelector((state: any) => state.drugs.cart);
-    console.log('cart items', cartItems);
+    const cart = useSelector(selectCart);
+    console.log('cart items', cart);
+    console.log('cart items length', cart.length);
+
+    const hasItemInCart = (itemId: number) => cart.some((item: Drug) => item.id === itemId);
 
     const handleAddToCart = () => {
         dispatch(addToCart(drug));
@@ -46,22 +50,27 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
                 </View>
 
                 {drug.in_stock && <View style={styles.footerBtns}>
-                    <View style={styles.quantityContainer}>
-                        <TouchableOpacity style={styles.quantityButton} onPress={decrementQty}>
-                            <Text style={styles.quantityButtonText}>-</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.quantityText}>{quantity}</Text>
-                        <TouchableOpacity style={styles.quantityButton} onPress={incrementQty}>
-                            <Text style={styles.quantityButtonText}>+</Text>
-                        </TouchableOpacity>
-                    </View>
 
-                    <View style={{ flex: 1 }}>
-                        <TouchableOpacity style={[configs.styles.primaryBtn, { width: '100%' }]}
-                            onPress={handleAddToCart}>
-                            <Text style={[configs.styles.btnText, { color: configs.colors.white }]}>Add to cart</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {hasItemInCart(drug.id) &&
+                        <View style={styles.quantityContainer}>
+                            <TouchableOpacity style={styles.quantityButton} onPress={decrementQty}>
+                                <Text style={styles.quantityButtonText}>-</Text>
+                            </TouchableOpacity>
+                            <Text style={styles.quantityText}>{quantity}</Text>
+                            <TouchableOpacity style={styles.quantityButton} onPress={incrementQty}>
+                                <Text style={styles.quantityButtonText}>+</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    
+                    {!hasItemInCart(drug.id) &&
+                        <View style={{ flex: 1 }}>
+                            <TouchableOpacity style={[configs.styles.primaryBtn, { width: '100%' }]}
+                                onPress={handleAddToCart}>
+                                <Text style={[configs.styles.btnText, { color: configs.colors.white }]}>Add to cart</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                 </View>
                 }
 
@@ -71,7 +80,7 @@ const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any 
 };
 
 const styles = StyleSheet.create({
-    
+
     container: {
         flex: 1,
         backgroundColor: configs.colors.light,
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
     },
 
     quantityContainer: {
-        flex:1,
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         // marginBottom: 10,
@@ -146,7 +155,7 @@ const styles = StyleSheet.create({
     quantityButton: {
         width: 40,
         height: 40,
-        backgroundColor: '#eee',
+        backgroundColor: configs.colors.orange,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
@@ -154,6 +163,7 @@ const styles = StyleSheet.create({
 
     quantityButtonText: {
         fontSize: 24,
+        color: configs.colors.white
     },
 
     quantityText: {
