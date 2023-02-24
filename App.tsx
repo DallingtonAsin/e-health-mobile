@@ -1,5 +1,4 @@
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as AppProvider } from 'react-native-paper';
@@ -9,6 +8,8 @@ import { Provider as AuthProvider } from './app/src/context/appContext';
 import { Context as AppContext } from './app/src/context/appContext';
 import AppLoader from './app/src/components/AppLoader';
 import * as config from './app/src/configs';
+import store from './app/src/redux/PharmacyStore';
+import { Provider } from 'react-redux';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();
@@ -17,7 +18,7 @@ LogBox.ignoreAllLogs();
 function App() {
 
   const { state } = React.useContext(AppContext);
-  // console.log(`current app state is`, state.isAppLoading);
+
   if (state.isAppLoading) {
     return (
       <AppLoader bgColor={config.colors.white} />
@@ -26,9 +27,11 @@ function App() {
 
   return (
     <NavigationContainer>
-      {!state.token
-        ? <AuthFlow />
-        : <SignedInStackNavigator />
+      { !state.token && <AuthFlow/> }
+      { state.token &&
+         <Provider store={store}>
+            <SignedInStackNavigator/>
+         </Provider>
       }
     </NavigationContainer>
   );
