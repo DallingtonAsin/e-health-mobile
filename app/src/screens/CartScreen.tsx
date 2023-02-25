@@ -33,6 +33,18 @@ function CartScreen({ navigation }: { navigation: any }) {
         dispatch(removeFromCart(item));
     };
 
+    const confirmRemoveFromCart = (item: Drug) => {
+        Alert.alert(
+            'Remove from cart',
+            `Do you really want to remove item ${item.name} from cart?`,
+            [
+                { text: 'No', onPress: () => console.log('Cancel Pressed') },
+                { text: 'Yes', onPress: () => handleRemoveItem(item) },
+            ],
+            { cancelable: false }
+        );
+    }
+
     const renderItem = ({ item }: { item: Drug }) => (
         <View
             style={{
@@ -55,7 +67,7 @@ function CartScreen({ navigation }: { navigation: any }) {
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => handleRemoveItem(item)}>
+                <TouchableOpacity onPress={() => confirmRemoveFromCart(item)}>
                     <Text style={{ color: config.colors.orange, textTransform: 'uppercase', fontSize: 12 }}><Icon5 name="trash-alt" size={20} color={config.colors.orange} />  Remove</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
