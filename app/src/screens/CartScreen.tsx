@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drug } from '../interfaces';
@@ -7,6 +7,8 @@ import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { CartIncrementButton, CartDecrementButton } from './common';
 import { numberWithCommas } from '../components/common/SharedHelper';
+import BottomSheet from '@gorhom/bottom-sheet';
+import Checkout from './common/Checkout';
 
 
 function CartScreen({ navigation }: { navigation: any }) {
@@ -14,6 +16,8 @@ function CartScreen({ navigation }: { navigation: any }) {
     const cart = useSelector(selectCart);
     const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);
     const totalCost = cart.reduce((cost: number, item: Drug) => cost + (item.quantity * item.price), 0);
+
+    const checkoutCartRef = useRef<BottomSheet>(null);
 
     const dispatch = useDispatch();
 
@@ -32,6 +36,26 @@ function CartScreen({ navigation }: { navigation: any }) {
     const handleRemoveItem = (item: Drug) => {
         dispatch(removeFromCart(item));
     };
+
+    const confirmRemoveFromCart = (item: Drug) => {
+        Alert.alert(
+            'Remove from cart',
+            `Do you really want to remove item ${item.name} from cart?`,
+            [
+                { text: 'No', onPress: () => console.log('Cancel Pressed') },
+                { text: 'Yes', onPress: () => handleRemoveItem(item) },
+            ],
+            { cancelable: false }
+        );
+    }
+
+    const handleSnapPress = useCallback((index: number) => {
+        checkoutCartRef.current?.snapToIndex(index);
+    }, []);
+
+    const handleClosePress = useCallback(() => {
+        checkoutCartRef.current?.close();
+    }, []);
 
     const renderItem = ({ item }: { item: Drug }) => (
         <View
@@ -55,7 +79,7 @@ function CartScreen({ navigation }: { navigation: any }) {
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => handleRemoveItem(item)}>
+                <TouchableOpacity onPress={() => confirmRemoveFromCart(item)}>
                     <Text style={{ color: config.colors.orange, textTransform: 'uppercase', fontSize: 12 }}><Icon5 name="trash-alt" size={20} color={config.colors.orange} />  Remove</Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -88,18 +112,20 @@ function CartScreen({ navigation }: { navigation: any }) {
                 contentContainerStyle={{ padding: 10 }}
                 ListHeaderComponent={<CartHeader />}
             />
+
             <TouchableOpacity
                 style={{
                     backgroundColor: config.colors.primary,
-                    padding: 10,
+                    padding: 15,
                     borderRadius: 5,
                     margin: 10,
                     alignItems: 'center',
                 }}
-                onPress={handleCheckout}
+                onPress={() => handleSnapPress(1)}
             >
-                <Text style={{ color: 'white', fontSize: 18, textTransform: 'uppercase' }}>Checkout</Text>
+                <Text style={config.styles.primaryBtnText}>Checkout</Text>
             </TouchableOpacity>
+            <Checkout checkoutCartRef={checkoutCartRef} amount={totalCost}/>
         </View>
     );
 }

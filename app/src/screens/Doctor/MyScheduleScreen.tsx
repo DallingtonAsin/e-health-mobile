@@ -185,7 +185,7 @@ const MyScheduleScreen = () => {
     }
 
     return (
-        <>
+        <React.Fragment>
             <SafeAreaView style={styles.container}>
                 <HeaderComponent />
                 <FlatList
@@ -243,7 +243,7 @@ const MyScheduleScreen = () => {
 
             </BottomSheet>
             {isLoading && <AppLoader />}
-        </>
+        </React.Fragment>
     )
 
 }
