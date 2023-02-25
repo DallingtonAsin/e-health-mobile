@@ -372,7 +372,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                         }}>
                             <View style={styles.uploadOptions}>
                                 <TouchableOpacity onPress={() => setVisible(false)} style={[styles.icon, { borderColor: config.colors.danger, backgroundColor: config.colors.danger }]} >
-                                    <Icon name={"trash"} size={22} color={"#fff"} />
+                                    <Icon5 name={"trash-alt"} size={25} color={"#fff"} />
                                 </TouchableOpacity>
                                 <Text>Cancel</Text>
                             </View>

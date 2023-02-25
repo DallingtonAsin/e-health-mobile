@@ -22,7 +22,7 @@ export const styles = {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     alignItems: 'center',
-
+    alignSelf: 'center'
   },
 
   secondaryBtn: {
@@ -51,6 +51,16 @@ export const styles = {
   },
 
   btnText: {
+    color: colors.primary,
+    fontSize: fonts.large,
+  },
+
+  primaryBtnText: {
+    color: colors.white,
+    fontSize: fonts.large,
+  },
+
+  secondaryBtnText: {
     color: colors.primary,
     fontSize: fonts.large,
   },
