@@ -84,7 +84,8 @@ export const styles = {
   image: {
     width: 80,
     height: 80,
-    tintColor: colors.gray
+    tintColor: colors.silver,
+    borderWidth: 1,
   },
 
   noInfoText: {
