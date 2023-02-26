@@ -129,14 +129,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                             <View style={styles.footer}>
 
                                 {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, { bottom: 15, alignSelf: 'center', width: '100%' }]} onPress={() => setVideoCall(true)}>
+                                    <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%' }]} onPress={() => setVideoCall(true)}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
                                     </TouchableOpacity>
                                 }
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { alignSelf: 'center', width: '100%' }]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginBottom:5 }, !is_online && {position: 'absolute', bottom: 20} ]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
@@ -295,7 +295,8 @@ const styles = StyleSheet.create({
     footer: {
         flex: 1,
         flexDirection: 'column',
-        marginVertical: 15
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
 
     separator: {

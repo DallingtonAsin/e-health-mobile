@@ -41,7 +41,7 @@ const Checkout = ({ checkoutCartRef, amount }: { checkoutCartRef: any, amount: n
             enablePanDownToClose={true}
             backdropComponent={renderBackDrop}
             onChange={handleSheetChanges}
-            handleComponent={() => <BottomSheetHeader title='Checkout' onClose={handleClosePress} />}>
+            handleComponent={() => <BottomSheetHeader title='CHECKOUT' onClose={handleClosePress} />}>
             <Divider style={styles.divider} />
 
             <View style={styles.body}>
@@ -78,6 +78,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
     },
 
+    body: {
+        marginVertical: 20,
+        marginHorizontal: 15,
+        justifyContent: 'space-between'
+    },
+
     divider: {
         borderBottomColor: '#e2e2e2',
         borderBottomWidth: 1,
@@ -88,12 +94,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'left'
-    },
-
-    body: {
-        marginVertical: 20,
-        marginHorizontal: 15,
-        justifyContent: 'space-between'
     },
 
     phoneInput: {

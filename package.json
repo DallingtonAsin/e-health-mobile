@@ -20,7 +20,8 @@
     "android:staging": "react-native run-android --variant=stagingdebug",
     "android:staging-release": "react-native run-android --variant=stagingrelease",
     "android:prod": "react-native run-android --variant=productiondebug",
-    "android:prod-release": "react-native run-android --variant=productionrelease"
+    "android:prod-release": "react-native run-android --variant=productionrelease",
+    "android:release": "react-native run-android --variant=release"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",

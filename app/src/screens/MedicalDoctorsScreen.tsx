@@ -8,7 +8,8 @@ import { displayMessage, getUserInitials } from '../components/common/SharedHelp
 import AppLoader from "../components/AppLoader";
 import { Searchbar } from 'react-native-paper';
 import CustomStackHeader from "../components/CustomStackHeader";
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -102,13 +103,15 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     const EmptyListMessage = () => (
         <View style={configs.styles.emptyViewContainer}>
-            <Image style={configs.styles.image} source={configs.images.no_information} />
+            <View style={styles.iconContainer}>
+                <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
+            </View>
             <Text style={configs.styles.noInfoText}>No doctors found in {specialty_name} department.</Text>
         </View>
     );
 
     if (isLoading) {
-        return  <AppLoader bgColor={configs.colors.white} />
+        return <AppLoader bgColor={configs.colors.white} />
     }
 
     return (
@@ -271,5 +274,16 @@ const styles = StyleSheet.create({
     searchbarInput: {
         fontSize: configs.fonts.large,
     },
+
+    iconContainer: {
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+        borderWidth: 2,
+        borderColor: configs.colors.silver,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 
 });
