@@ -39,7 +39,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const validateForm = () => {
 
-        let validEmail: any = true;
+        let validEmail: boolean = true;
         if (user.email != '') {
             validEmail = isValidEmail(user.email);
         }
@@ -103,8 +103,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             gender: user.gender,
             dob: user.dob
         }
-        console.log(`patient info`, payload);
-        // signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+        // console.log(`patient info`, payload);
+        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
 
     }
 
@@ -127,12 +127,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const handleConfirm = (date: Date) => {
         hideDatePicker();
         let dob = formatDate(date);
-        setUser({
-            ...user,
-            dob: dob
-        });
-
-         validateForm();
+        handleTextInputChange('dob', dob);
     };
 
 
@@ -220,7 +215,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         </View>
 
                         <View style={styles.inputWrap}>
-                            <Text style={styles.labelTxt}>Date of Bith<Text style={styles.required}>*</Text></Text>
+                            <Text style={styles.labelTxt}>Date of Birth<Text style={styles.required}>*</Text></Text>
                             <TextInput
                                 label="Date of Birth"
                                 value={user.dob}
@@ -231,7 +226,6 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 onFocus={showDatePicker}
                                 showSoftInputOnFocus={false}
                                 onChangeText={(text) => handleTextInputChange('dob', text)}
-
                             />
                             <DateTimePickerModal
                                 isVisible={isDatePickerVisible}
@@ -246,7 +240,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={styles.viewContainer}>
                         <TouchableOpacity
-                            disabled={!isValidForm}
+                            // disabled={!isValidForm}
                             style={[isValidForm ? config.styles.primaryBtn : config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
                             <Text style={[config.styles.btnText, isValidForm ? { color: config.colors.white } : { color: config.colors.primary }]}>Continue</Text>
