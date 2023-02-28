@@ -125,10 +125,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const displaySuccessScreen = (appointmentDetails: any) => {
         resetAppointmentInfo();
         navigation.navigate('AppointmentConfirmation', {
-            src: doctorInfo.image,
-            name: `${doctorInfo.title} ${doctorInfo.first_name} ${doctorInfo.last_name}`,
-            phoneNumber: doctorInfo.phone_number,
-            title: doctorInfo.profession,
+            doctor: doctorInfo,
             appointmentInfo: appointmentDetails
         });
     }

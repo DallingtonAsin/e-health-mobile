@@ -136,7 +136,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginBottom: 5 }, !is_online && { position: 'absolute', bottom: 20 }]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginVertical: 10 }, !is_online && { position: 'absolute', bottom: 20 }]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
