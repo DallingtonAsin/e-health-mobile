@@ -27,15 +27,37 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const [user, setUser] = useState<IUser>(InitialUser);
+    const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [gender, setGender] = useState("");
     const { signup } = useContext(AppContext);
 
     const genderOptions = [
-        {key:'1', value:'Male'},
-        {key:'2', value:'Female'},
+        { key: '1', value: 'Male' },
+        { key: '2', value: 'Female' },
     ];
+
+    const validateForm = () => {
+
+        let validEmail: any = true;
+        if (user.email != '') {
+            validEmail = isValidEmail(user.email);
+        }
+
+        if (user.first_name !== '' && user.last_name !== '' && user.address !== '' && user.gender !== '' && user.dob !== '' && validEmail) {
+            setIsValidForm(true);
+        } else {
+            setIsValidForm(false);
+        }
+    };
+
+    const handleTextInputChange = (field: string, text: any) => {
+        setUser((prev) => ({
+            ...prev,
+            [field]: text,
+        }));
+        validateForm();
+    };
 
     const submitDetails = () => {
 
@@ -49,8 +71,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
-        if(user.email){
-            if(!isValidEmail(user.email)){
+        if (user.email) {
+            if (!isValidEmail(user.email)) {
                 Toast.show('Please enter a valid email', Toast.LONG);
                 return;
             }
@@ -61,7 +83,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
-        if (!gender) {
+        if (!user.gender) {
             Toast.show('Select your gender', Toast.LONG);
             return;
         }
@@ -78,12 +100,12 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             last_name: user.last_name,
             email: user?.email,
             address: user.address,
-            gender: gender,
+            gender: user.gender,
             dob: user.dob
         }
+        console.log(`patient info`, payload);
+        // signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
 
-        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
-  
     }
 
     const stopLoading = () => {
@@ -109,6 +131,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             ...user,
             dob: dob
         });
+
+         validateForm();
     };
 
 
@@ -116,9 +140,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         <>
             <SafeAreaView style={styles.container}>
 
-                <StatusBar
-                    backgroundColor={config.colors.primary}
-                />
+                <StatusBar backgroundColor={config.colors.primary} />
 
                 <ScrollView
                     style={styles.scrollView}
@@ -134,11 +156,9 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             dense={false}
                             activeOutlineColor={config.colors.primary}
                             numberOfLines={numberOfLines}
-                            // error={!user.first_name}
                             style={styles.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
-
+                            onChangeText={(text) => handleTextInputChange('first_name', text)}
                         />
                     </View>
 
@@ -151,9 +171,9 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
-                            // error={!user.last_name}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser({ ...user, last_name: text })}
+                            onChangeText={(text) => handleTextInputChange('last_name', text)}
+
                         />
                     </View>
 
@@ -166,7 +186,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
+                            onChangeText={(text) => handleTextInputChange('email', text)}
                         />
                     </View>
 
@@ -179,22 +199,22 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
-                            // error={!user.address}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
+                            onChangeText={(text) => handleTextInputChange('address', text)}
+
                         />
                     </View>
 
                     <View style={[styles.viewContainer, { flex: 1, flexDirection: 'row', justifyContent: 'space-between' }]}>
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
-                            <SelectList 
-                                setSelected={(val: string) => setGender(val)} 
-                                data={genderOptions} 
+                            <SelectList
+                                setSelected={(val: string) =>  handleTextInputChange('gender', val)}
+                                data={genderOptions}
                                 save="value"
                                 search={false}
                                 placeholder={"Select Gender"}
-                                inputStyles={{color: config.colors.black}}
+                                inputStyles={{ color: config.colors.black }}
                                 boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
                             />
                         </View>
@@ -207,11 +227,11 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                // error={!user.dob}
                                 textColor={config.colors.dark}
                                 onFocus={showDatePicker}
                                 showSoftInputOnFocus={false}
-                                onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
+                                onChangeText={(text) => handleTextInputChange('dob', text)}
+
                             />
                             <DateTimePickerModal
                                 isVisible={isDatePickerVisible}
@@ -219,15 +239,17 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 display='inline'
                                 onConfirm={handleConfirm}
                                 onCancel={hideDatePicker}
-                                
+
                             />
                         </View>
                     </View>
 
                     <View style={styles.viewContainer}>
-                        <TouchableOpacity style={[config.styles.secondaryBtn, {width: '100%'}]}
+                        <TouchableOpacity
+                            disabled={!isValidForm}
+                            style={[isValidForm ? config.styles.primaryBtn : config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
-                            <Text style={[config.styles.btnText]}>Continue</Text>
+                            <Text style={[config.styles.btnText, isValidForm ? { color: config.colors.white } : { color: config.colors.primary }]}>Continue</Text>
                         </TouchableOpacity>
                     </View>
 

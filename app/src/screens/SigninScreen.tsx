@@ -15,17 +15,16 @@ import { Switch } from 'react-native-paper';
 const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     const [value, setValue] = useState("");
-    const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const phoneInput = useRef<PhoneInput>(null);
+    const phoneInputRef = useRef<PhoneInput>(null);
     const { signin } = useContext(AppContext);
 
     const [isDoctor, setIsDoctor] = useState(false);
     const onToggleSwitch = () => setIsDoctor(!isDoctor);
-    const userType = isDoctor ? 'patient' : 'doctor';
-    const currentUserType = isDoctor ? 'Doctor' : 'Patient';
+    const userType = isDoctor ? 'patient' : 'healthcare provider';
+    const currentUserType = isDoctor ? 'healthcare provider' : 'patient';
     const actionType = isDoctor ? 'Disable' : 'Enable';
 
 
@@ -33,28 +32,28 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
         Keyboard.dismiss();
 
-        const checkValid = phoneInput.current?.isValidNumber(value);
+        const checkValid = phoneInputRef.current?.isValidNumber(value);
         setValid(checkValid ? checkValid : false);
 
         if (checkValid) {
 
-            const phoneObj: any = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+            const phoneObj: any = phoneInputRef.current?.getNumberAfterPossiblyEliminatingZero();
             let number = phoneObj.number;
             const startsWithZero = number.startsWith("0");
             if (startsWithZero) {
                 number = removeLeadingZeros(number);
             }
 
-            const formattedNumber = `+${phoneInput.current?.getCallingCode()}${number}`
+            const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
             Alert.alert(
-                `${isDoctor ? 'Doctor' : 'Patient'} Signup`,
+                `${isDoctor ? 'Healthcare Provider' : 'Patient'} Signup`,
                 `We will be verifying the phone number ${formattedNumber} as a ${isDoctor ? 'doctor' : 'patient'}'s number. is this ok or would like to edit the number?`,
                 [
                     { text: 'Edit', onPress: () => { } },
                     {
                         text: 'OK', onPress: async () => {
                             let obj = {
-                                country_code: `+${phoneInput.current?.getCallingCode()}`,
+                                country_code: `+${phoneInputRef.current?.getCallingCode()}`,
                                 phone_number: number
                             }
                             if(isDoctor){
@@ -92,7 +91,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     const navigateMethod = (data: any) => {
         setValue("");
-        setFormattedValue("");
+        if(phoneInputRef.current){
+            phoneInputRef.current?.setState({number: ''})
+        }
      
         navigation.navigate('OTP', {
             country_code: data.country_code,
@@ -135,8 +136,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     return (
         <>
             <KeyboardAvoidingView style={styles.container}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
+                behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
                     <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={{uri: `https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}}
                         style={configs.styles.logo} />
@@ -146,15 +146,12 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 <View style={styles.body}>
 
                     <PhoneInput
-                        ref={phoneInput}
+                        ref={phoneInputRef}
                         defaultValue={value}
                         defaultCode="UG"
                         layout="first"
                         onChangeText={(text) => {
                             onChangePhoneNumber(text);
-                        }}
-                        onChangeFormattedText={(text) => {
-                            setFormattedValue(text);
                         }}
                         withDarkTheme={false}
                         withShadow={true}
@@ -166,17 +163,14 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
                 <View style={styles.switchView}>
                         <Switch value={isDoctor} onValueChange={onToggleSwitch} color={configs.colors.primary} style={styles.switch} />
-                        <Text style={styles.switchText}>{actionType} switch to proceed with {userType} login</Text>
+                        <Text style={styles.switchText}>{actionType} switch to login as {userType}</Text>
                     </View>
 
                 <View style={styles.footer}>
-                   
-
                     <TouchableOpacity
                         disabled={false}
                         style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, configs.styles.bottomizedBtn]}
-                        onPress={() => Signin()}
-                    >
+                        onPress={() => Signin()}>
                         <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Continue</Text>
                     </TouchableOpacity>
                 </View>

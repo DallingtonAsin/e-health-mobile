@@ -157,14 +157,14 @@ const RegistrationForm1 = ({ user, setUser, setScreen }: {
                     </View>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Specialty
+                        <Text style={config.styles.registration.doctor.labelTxt}>Category
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <SelectList
                             setSelected={(val: string) => setUser(prev => ({ ...prev, specialty: val }))}
                             data={specialties}
                             save="value"
                             search={false}
-                            placeholder={"Select Specialty"}
+                            placeholder={"Select category"}
                             inputStyles={{ color: config.colors.black }}
                             boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
                         />

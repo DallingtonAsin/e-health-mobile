@@ -11,7 +11,7 @@ import MeetingRoomScreen from './MeetingRoomScreen';
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
+    const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
         symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
@@ -59,7 +59,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} connectionData={meeting_access} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} videoCall={videoCall} setVideoCall={setVideoCall}/>
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
