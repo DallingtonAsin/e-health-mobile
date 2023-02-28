@@ -118,15 +118,6 @@ android {
         multiDexEnabled true
     }
 
-  
-
-      lintOptions {
-         abortOnError false
-         absolutePaths false
-         lintConfig file('lint.xml')
-         baseline file('lint-baseline.xml')
-      }
-
     splits {
         abi {
             reset()

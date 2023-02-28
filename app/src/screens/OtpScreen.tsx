@@ -94,7 +94,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
             <StatusBar backgroundColor={configs.colors.primary} />
 
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 120 : 120} source={configs.images.otpImage} />
+                    <Avatar.Image size={isKeyboardVisible ? 120 : 120} source={{uri: 'https://thumbs.dreamstime.com/b/otp-one-time-password-step-authentication-data-protection-internet-security-concept-otp-one-time-password-step-authentication-data-254434939.jpg'}} />
                     <Text style={styles.otpTxt}>
                         { is_doctor
                             ? 'Enter the code assigned to you by the administrator, or contact the administrator.'

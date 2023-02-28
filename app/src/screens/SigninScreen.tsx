@@ -138,7 +138,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={configs.images.logo}
+                    <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={{uri: `https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}}
                         style={configs.styles.logo} />
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>

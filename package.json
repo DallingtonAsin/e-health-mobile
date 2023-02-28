@@ -15,6 +15,8 @@
     "gar": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && rm -rf  android/app/src/main/res/drawable-* && cd android && ./gradlew assembleRelease",
     "gab": "cd android && ./gradlew bundleRelease && cd ..",
     "postinstall": "npx typesync",
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd ..",
+    "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && rm -rf android/app/src/main/res/drawable-* && rm -rf android/app/src/main/res/raw/* && cd android && ./gradlew assembleRelease && cd ..",
     "android:dev": "react-native run-android --variant=developmentdebug",
     "android:dev-release": "react-native run-android --variant=developmentrelease",
     "android:staging": "react-native run-android --variant=stagingdebug",

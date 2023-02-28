@@ -7,7 +7,7 @@ class Service {
 
   request = () => {
     const client = axios.create({
-      baseURL: API_URL
+      baseURL: `${API_URL}/api/`
     });
 
     return client;

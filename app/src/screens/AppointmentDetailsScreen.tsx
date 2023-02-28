@@ -12,7 +12,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
+        symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -73,7 +73,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}>
-                        
+
                     <View style={styles.header}>
                         <View>
                             {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.thumbnail }} />}
@@ -136,7 +136,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginBottom:5 }, !is_online && {position: 'absolute', bottom: 20} ]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginBottom: 5 }, !is_online && { position: 'absolute', bottom: 20 }]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
