@@ -124,19 +124,20 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
                         {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
 
+                       
                         {
                             status == 'Pending' &&
                             <View style={styles.footer}>
 
                                 {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%' }]} onPress={() => setVideoCall(true)}>
+                                    <TouchableOpacity style={[config.styles.primaryBtn, {marginVertical: 10, width: '98%'}]} onPress={() => setVideoCall(true)}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
                                     </TouchableOpacity>
                                 }
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginVertical: 10 }, !is_online && { position: 'absolute', bottom: 20 }]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, {marginVertical: 10, width: '98%'}]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
@@ -144,6 +145,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         }
 
                     </View>
+
+                   
 
                 </ScrollView>
             </SafeAreaView>
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 4,
+        flex: 1,
         borderWidth: 0.5,
         borderColor: config.colors.primary,
         marginHorizontal: 10,
