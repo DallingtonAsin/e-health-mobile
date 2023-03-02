@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard, StatusBar, KeyboardAvoidingView } from 'react-native';
 import * as configs from '../configs';
 import Toast from 'react-native-simple-toast';
-import { Avatar } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
 import { Context as AppContext } from '../context/appContext';
@@ -28,19 +28,19 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         if (code && code.length == otpLength) {
             setIsLoading(true);
             Keyboard.dismiss();
-            if(is_doctor){
+            if (is_doctor) {
                 let payload = {
                     country_code: country_code,
                     phone_number: phone_number,
                     otp: code
                 }
-          
+
                 authenticateDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
-            }else{
+            } else {
                 verifyCode({ code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
             }
 
-            
+
         } else {
             Toast.show(`Please enter verification code`);
         }
@@ -91,12 +91,12 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         <>
             <KeyboardAvoidingView style={styles.container}>
 
-            <StatusBar backgroundColor={configs.colors.primary} />
+                <StatusBar backgroundColor={configs.colors.primary} />
 
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 120 : 120} source={{uri: 'https://thumbs.dreamstime.com/b/otp-one-time-password-step-authentication-data-protection-internet-security-concept-otp-one-time-password-step-authentication-data-254434939.jpg'}} />
+                    <Avatar size={120} borderRadius={75} source={`https://thumbs.dreamstime.com/b/otp-one-time-password-step-authentication-data-protection-internet-security-concept-otp-one-time-password-step-authentication-data-254434939.jpg`} />
                     <Text style={styles.otpTxt}>
-                        { is_doctor
+                        {is_doctor
                             ? 'Enter the code assigned to you by the administrator, or contact the administrator.'
                             : 'Enter the OTP that has been sent to your phone number'
                         }
@@ -124,13 +124,13 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                 <View style={styles.footer}>
                     <TouchableOpacity
                         disabled={!valid}
-                        style={[ configs.styles.secondaryBtn,  configs.styles.bottomizedBtn]}
+                        style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn]}
                         onPress={() => verifyOtp(otp)}>
-                        <Text style={[configs.styles.btnText,  { color: configs.colors.primary }]}>Verify OTP</Text>
+                        <Text style={[configs.styles.btnText, { color: configs.colors.primary }]}>Verify OTP</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
-            {isLoading && <AppLoader color={configs.colors.white}/>}
+            {isLoading && <AppLoader color={configs.colors.white} />}
 
         </>
     )

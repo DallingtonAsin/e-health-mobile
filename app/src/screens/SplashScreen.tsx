@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity,  StatusBar } from 'react-native'
 import * as configs from '../configs';
-import { Avatar } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 
 const SplashScreen = ({navigation}: {navigation: any}) => {
     return (
         <View style={styles.container}> 
         <StatusBar backgroundColor={configs.colors.primary}/>
             <View style={styles.header}>
-            <Avatar.Image size={150} source={{uri: `https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}} style={configs.styles.logo} />
+            <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}/>
             <Text style={styles.drText}>Access doctor anytime anywhere</Text>
             </View>
             <View style={styles.footer}>

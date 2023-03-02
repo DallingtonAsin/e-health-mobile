@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingVie
 import * as configs from '../configs';
 import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
-import { Avatar } from 'react-native-paper';
 import AppLoader from '../components/AppLoader';
 import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
 import { Context as AppContext } from '../context/appContext';
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 import { Switch } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
@@ -56,13 +56,13 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                                 country_code: `+${phoneInputRef.current?.getCallingCode()}`,
                                 phone_number: number
                             }
-                            if(isDoctor){
+                            if (isDoctor) {
                                 navigation.navigate('OTP', {
                                     ...obj,
                                     sent_otp: '',
                                     is_doctor: isDoctor
                                 });
-                            }else{
+                            } else {
                                 sendVerificationCode(obj);
                             }
                         }
@@ -78,7 +78,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const sendVerificationCode = (phoneObj: any) => {
 
         setIsLoading(true);
-        
+
         let current_version = getAppVersion();
         let payload: LoginData = {
             country_code: phoneObj.country_code,
@@ -86,15 +86,15 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             current_version: current_version,
         }
 
-          signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+        signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
     const navigateMethod = (data: any) => {
         setValue("");
-        if(phoneInputRef.current){
-            phoneInputRef.current?.setState({number: ''})
+        if (phoneInputRef.current) {
+            phoneInputRef.current?.setState({ number: '' })
         }
-     
+
         navigation.navigate('OTP', {
             country_code: data.country_code,
             phone_number: data.phone_number,
@@ -138,8 +138,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar.Image size={isKeyboardVisible ? 120 : 130} source={{uri: `https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}}
-                        style={configs.styles.logo} />
+                    <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`} />
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 
@@ -162,9 +161,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.switchView}>
-                        <Switch value={isDoctor} onValueChange={onToggleSwitch} color={configs.colors.primary} style={styles.switch} />
-                        <Text style={styles.switchText}>{actionType} switch to login as {userType}</Text>
-                    </View>
+                    <Switch value={isDoctor} onValueChange={onToggleSwitch} color={configs.colors.primary} style={styles.switch} />
+                    <Text style={styles.switchText}>{actionType} switch to login as {userType}</Text>
+                </View>
 
                 <View style={styles.footer}>
                     <TouchableOpacity
@@ -229,7 +228,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal:35
+        marginHorizontal: 35
     },
 
     switch: {
