@@ -10,6 +10,7 @@ import AppLoader from './app/src/components/AppLoader';
 import * as config from './app/src/configs';
 import store from './app/src/redux/PharmacyStore';
 import { Provider } from 'react-redux';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();
@@ -27,11 +28,11 @@ function App() {
 
   return (
     <NavigationContainer>
-      { !state.token && <AuthFlow/> }
-      { state.token &&
-         <Provider store={store}>
-            <SignedInStackNavigator/>
-         </Provider>
+      {!state.token && <AuthFlow />}
+      {state.token &&
+        <Provider store={store}>
+          <SignedInStackNavigator />
+        </Provider>
       }
     </NavigationContainer>
   );

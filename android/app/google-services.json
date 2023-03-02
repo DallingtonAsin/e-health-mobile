@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1055878956113",
+    "project_id": "vastel-a17ce",
+    "storage_bucket": "vastel-a17ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055878956113:android:a803b4d5f52f297f256470",
+        "android_client_info": {
+          "package_name": "com.vastel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055878956113-lhbee76f3tvq1hjmoa7q49ujj8j20g6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVQR29mmRT4yw7nl7PAt6Hks5nVlMcoP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055878956113-lhbee76f3tvq1hjmoa7q49ujj8j20g6a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

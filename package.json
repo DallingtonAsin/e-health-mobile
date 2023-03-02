@@ -23,7 +23,8 @@
     "android:staging-release": "react-native run-android --variant=stagingrelease",
     "android:prod": "react-native run-android --variant=productiondebug",
     "android:prod-release": "react-native run-android --variant=productionrelease",
-    "android:release": "react-native run-android --variant=release"
+    "android:release": "react-native run-android --variant=release",
+    "memory:clear": "free -h && sudo sysctl -w vm.drop_caches=3 && sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches && free -h"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",
@@ -31,6 +32,12 @@
     "@react-native-community/cli-platform-android": "^10.2.0",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "^6.7.1",
+    "@react-native-firebase/analytics": "^17.3.1",
+    "@react-native-firebase/app": "^17.3.1",
+    "@react-native-firebase/auth": "^17.3.1",
+    "@react-native-firebase/crashlytics": "^17.3.1",
+    "@react-native-firebase/firestore": "^17.3.1",
+    "@react-native-firebase/messaging": "^17.3.1",
     "@react-navigation/bottom-tabs": "^6.4.3",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
