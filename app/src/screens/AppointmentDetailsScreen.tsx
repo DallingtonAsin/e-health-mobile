@@ -11,8 +11,8 @@ import MeetingRoomScreen from './MeetingRoomScreen';
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
-    const { doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
+    const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
+        symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
 
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -59,7 +59,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen videoCall={videoCall} is_video={is_video} connectionData={meeting_access} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} videoCall={videoCall} setVideoCall={setVideoCall}/>
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
@@ -73,7 +73,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}>
-                        
+
                     <View style={styles.header}>
                         <View>
                             {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.thumbnail }} />}
@@ -124,19 +124,20 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
                         {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
 
+                       
                         {
                             status == 'Pending' &&
                             <View style={styles.footer}>
 
                                 {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%' }]} onPress={() => setVideoCall(true)}>
+                                    <TouchableOpacity style={[config.styles.primaryBtn, {marginVertical: 10, width: '98%'}]} onPress={() => setVideoCall(true)}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
                                     </TouchableOpacity>
                                 }
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { width: '100%', marginBottom:5 }, !is_online && {position: 'absolute', bottom: 20} ]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, {marginVertical: 10, width: '98%'}]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
@@ -144,6 +145,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         }
 
                     </View>
+
+                   
 
                 </ScrollView>
             </SafeAreaView>
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 4,
+        flex: 1,
         borderWidth: 0.5,
         borderColor: config.colors.primary,
         marginHorizontal: 10,

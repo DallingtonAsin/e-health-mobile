@@ -269,6 +269,23 @@ const getAppointmentTypes = () => {
     };
 };
 
+const getMeetingDetails = () => {
+    return ({ appointmentId, onSuccess, onFailure, onCompletion }: {appointmentId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.appointments.meeting}/${appointmentId}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const submitAppointment = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
@@ -485,7 +502,7 @@ const getDrugs = () => {
 export const { Provider, Context, } = createDataContext(
     appReducer,
     {
-        signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getDrugs,
+        signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getDrugs, getMeetingDetails,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor, deleteProfileImage,
          registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage
     },

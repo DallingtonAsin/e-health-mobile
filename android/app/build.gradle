@@ -1,5 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 import com.android.build.OutputFile
 
@@ -118,15 +120,6 @@ android {
         multiDexEnabled true
     }
 
-  
-
-      lintOptions {
-         abortOnError false
-         absolutePaths false
-         lintConfig file('lint.xml')
-         baseline file('lint-baseline.xml')
-      }
-
     splits {
         abi {
             reset()
@@ -166,6 +159,11 @@ android {
              minifyEnabled true
              signingConfig signingConfigs.release
              proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+             firebaseCrashlytics {
+                nativeSymbolUploadEnabled false
+                // unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+            }
         }
     }
 
@@ -174,14 +172,14 @@ android {
 
         development {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.vastel.development"
+            applicationId "com.vastel"
             targetSdkVersion rootProject.ext.targetSdkVersion
             resValue "string", "build_config_package", "com.vastel"
         }
 
         staging {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.vastel.staging"
+            applicationId "com.vastel"
             targetSdkVersion rootProject.ext.targetSdkVersion
             resValue "string", "build_config_package", "com.vastel"
         }
