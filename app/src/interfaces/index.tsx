@@ -41,8 +41,16 @@ interface LoginData {
 }
 
 interface Notification {
-    id: number,
-    message: string,
+    id: string,
+    notifiable_id: number,
+    data: any,
+    read_at: any
+}
+
+interface NotificationStats {
+    total: number,
+    readCount: number,
+    unreadCount: number
 }
 
 interface MedicalSpecialty {
@@ -138,6 +146,7 @@ export type {
     LoginData,
     SignedinUser,
     Notification,
+    NotificationStats,
     MedicalSpecialty,
     DoctorsDetail,
     PatientDetail,

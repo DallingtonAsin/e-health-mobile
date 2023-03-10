@@ -123,6 +123,18 @@ export const styles = {
     fontSize: fonts.large,
   },
 
+  supCount: {
+    position: 'absolute',
+    top: -5,
+    right: -7,
+    backgroundColor: colors.orange,
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   registration: {
 
     doctor: {
