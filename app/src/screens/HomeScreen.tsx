@@ -12,11 +12,12 @@ import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
-import { Avatar } from 'react-native-paper';
+import { Avatar as AvatarRP } from 'react-native-paper';
 import { displayMessage, getGreeting } from '../components/common/SharedHelper';
 import { Context as AppContext } from '../context/appContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
+import Avatar from '../components/Avatar';
 
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
@@ -54,8 +55,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.headerImageSection}>
                         <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
                             {user.image
-                                ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
-                                : <Avatar.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
+                                ? <Avatar size={80} source={user.image} />
+                                : <AvatarRP.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
                             }
                         </TouchableOpacity>
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import * as configs from '../configs';
-import { Avatar } from 'react-native-paper';
+import { Avatar as AvatarRP } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { getUserInitials, readableDate, readableTime } from '../components/common/SharedHelper';
 
@@ -9,7 +10,7 @@ import { getUserInitials, readableDate, readableTime } from '../components/commo
 const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const { doctor, appointmentInfo } = route.params;
-  const { src, first_name, last_name, country_code, phone_number, profession } = doctor;
+  const { image, first_name, last_name, profession } = doctor;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,9 +25,9 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navi
           <Text style={[styles.bookedTitle]}>Appointment number: <Text style={{ fontWeight: 'bold' }}>{appointmentInfo.appointment_number}</Text></Text>
           <View style={styles.details}>
 
-            {src
-              ? <Avatar.Image size={60} source={{ uri: src }} />
-              : <Avatar.Text size={60} label={getUserInitials(`${first_name} ${last_name}`)}
+            {image
+              ? <Avatar size={60} source={image} />
+              : <AvatarRP.Text size={60} label={getUserInitials(`${first_name} ${last_name}`)}
                 style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
             }
 

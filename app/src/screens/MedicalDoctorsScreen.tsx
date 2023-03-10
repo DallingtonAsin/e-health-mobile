@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView, FlatList, View, Image, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import * as configs from '../configs';
-import { Avatar } from 'react-native-paper';
+import { Avatar as AvatarRP } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
@@ -60,9 +61,8 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={styles.header}>
                 <View style={styles.image}>
                     {item.image
-                        ? <Avatar.Image size={80} source={{ uri: item.image }} />
-                        : <Avatar.Text size={80} label={getUserInitials(`${item.first_name} ${item.last_name}`)}
-                            style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
+                        ? <Avatar size={80} source={item.image} />
+                        : <AvatarRP.Text size={80} label={getUserInitials(`${item.first_name} ${item.last_name}`)} style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
                     }
                 </View>
                 <View style={styles.profile}>

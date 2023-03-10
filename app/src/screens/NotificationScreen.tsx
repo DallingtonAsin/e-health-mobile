@@ -1,13 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
-import { Notification, NotificationStats } from "../interfaces";
+import { Notification } from "../interfaces";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
-import { Avatar } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const NotificationScreen = () => {
@@ -19,8 +17,12 @@ const NotificationScreen = () => {
     const user = state.user;
 
     useEffect(() => {
-        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+        fetchNotifications();
     }, []);
+
+    const fetchNotifications = () => {
+        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+    }
 
     const populateNotifications = (data: any) => {
         setNotifications(data.notifications);
@@ -30,23 +32,26 @@ const NotificationScreen = () => {
         setIsLoading(false);
     }
 
+    const markNotificationAsRead = (item: Notification) => {
+        markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
+    }
+
+    const updateNotificationInRedux = () => {
+        fetchNotifications();
+    }
+
     const Item = ({ item }: { item: Notification }) => (
         <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
-            <Text style={styles.itemTitle}>{item.data.message}</Text>
+            <View style={item.read_at ? styles.dotRead : styles.dotUnread}></View>
+            <View style={styles.messageContainer}>
+                <Text style={styles.message}>{item.data.message}</Text>
+            </View>
         </TouchableOpacity>
     );
 
     const renderItem = ({ item }: { item: Notification }) => (
         <Item item={item} />
     );
-
-    const markNotificationAsRead = (item: Notification) => {
-        markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
-    }
-
-    const updateNotificationInRedux = () => {
-
-    }
 
     const EmptyListComponent = () => (
         <View style={configs.styles.emptyViewContainer}>
@@ -100,9 +105,30 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
 
-    itemTitle: {
+    messageContainer: {
+        flexGrow: 1,
+        maxWidth: '96.5%',
+    },
+
+    message: {
         color: '#000',
         fontSize: configs.fonts.medium,
+    },
+
+    dotRead: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: configs.colors.gray,
+        marginRight: 10,
+    },
+
+    dotUnread: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: configs.colors.orange,
+        marginRight: 10,
     },
 
 })

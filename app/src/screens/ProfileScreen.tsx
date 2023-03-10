@@ -2,7 +2,8 @@ import React, { useState, useContext } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import * as config from '../configs'
-import { Avatar, IconButton } from 'react-native-paper';
+import { Avatar as AvatarRP, IconButton } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-simple-toast';
@@ -217,8 +218,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             !isUpdatingImage ?
                                 <View style={{ position: 'relative' }}>
                                     {state.user.image
-                                        ? <Avatar.Image size={80} source={{ uri: user.image }}></Avatar.Image>
-                                        : <Avatar.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                                        ? <Avatar size={90} source={state.user.image} />
+                                        : <AvatarRP.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
                                     }
 
                                     {!isDisabled && <IconButton

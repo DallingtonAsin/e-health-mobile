@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import * as config from '../configs';
-import { Avatar } from 'react-native-paper';
+import { Avatar as AvatarRP } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
@@ -13,7 +14,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
         symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
-
+    
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} videoCall={videoCall} setVideoCall={setVideoCall}/>
+            return <MeetingRoomScreen appointment_id={id} videoCall={videoCall} setVideoCall={setVideoCall} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
@@ -76,11 +77,11 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                     <View style={styles.header}>
                         <View>
-                            {user.is_patient && doctor.image && <Avatar.Image size={80} source={{ uri: doctor.thumbnail }} />}
-                            {user.is_patient && !doctor.image && <Avatar.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                            {user.is_patient && doctor.thumbnail && <Avatar size={80} source={doctor.thumbnail} />}
+                            {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
 
-                            {!user.is_patient && patient.image && <Avatar.Image size={80} source={{ uri: patient.thumbnail }} />}
-                            {!user.is_patient && !patient.image && <Avatar.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                            {!user.is_patient && patient.thumbnail && <Avatar size={80} source={patient.thumbnail} />}
+                            {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                         </View>
 
                         {
@@ -124,20 +125,20 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
                         {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
 
-                       
+
                         {
                             status == 'Pending' &&
                             <View style={styles.footer}>
 
                                 {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, {marginVertical: 10, width: '98%'}]} onPress={() => setVideoCall(true)}>
+                                    <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => setVideoCall(true)}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
                                     </TouchableOpacity>
                                 }
 
 
                                 {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, {marginVertical: 10, width: '98%'}]} onPress={() => cancelMedicalAppointment()}>
+                                    <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
                                         <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
                                     </TouchableOpacity>
                                 }
@@ -146,7 +147,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                     </View>
 
-                   
+
 
                 </ScrollView>
             </SafeAreaView>
