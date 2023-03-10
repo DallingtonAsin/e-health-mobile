@@ -138,7 +138,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`} />
+                    <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`} resizeMode={'cover'}/>
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 

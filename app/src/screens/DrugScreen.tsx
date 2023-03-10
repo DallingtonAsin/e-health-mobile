@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import * as configs from '../configs';
 import { Drug } from '../interfaces';
 import { Searchbar } from 'react-native-paper';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
+import FastImage from 'react-native-fast-image';
 
 const screen = Dimensions.get("screen")
 const cardWidth = (screen.width - 25) / 2;
@@ -44,7 +45,7 @@ const DrugScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.drugImageContainer}>
-                    <Image style={styles.drugImage} source={{ uri: item.image }} />
+                    <FastImage style={styles.drugImage} source={{ uri: item.image }} />
                 </View>
 
                 <View style={styles.textContainer}>

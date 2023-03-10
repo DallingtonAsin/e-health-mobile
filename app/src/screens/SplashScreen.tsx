@@ -7,7 +7,7 @@ const SplashScreen = ({navigation}: {navigation: any}) => {
         <View style={styles.container}> 
         <StatusBar backgroundColor={configs.colors.primary}/>
             <View style={styles.header}>
-            <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`}/>
+            <Avatar size={125} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`} resizeMode={'cover'}/>
             <Text style={styles.drText}>Access doctor anytime anywhere</Text>
             </View>
             <View style={styles.footer}>

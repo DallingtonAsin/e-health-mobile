@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, TextInput } from 'react-native'
-import { Avatar } from 'react-native-paper';
+import { Avatar as AvatarRP } from 'react-native-paper';
+import Avatar from '../components/Avatar';
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
@@ -149,8 +150,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                     <View style={styles.header}>
                         <View style={styles.doctorInfo}>
                             {doctorInfo.image
-                                ? <Avatar.Image size={60} source={{ uri: doctorInfo.image }} />
-                                : <Avatar.Text size={60} label={getUserInitials(`${doctorInfo.first_name} ${doctorInfo.last_name}`)}
+                                ? <Avatar size={60} source={doctorInfo.image} />
+                                : <AvatarRP.Text size={60} label={getUserInitials(`${doctorInfo.first_name} ${doctorInfo.last_name}`)}
                                     style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
                             }
                             <View style={styles.personalInfo}>
