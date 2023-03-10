@@ -15,7 +15,7 @@ const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
-    const { state,  getNotifications } = useContext(AppContext);
+    const { state, getNotifications, markNotificationRead } = useContext(AppContext);
     const user = state.user;
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const NotificationScreen = () => {
     }
 
     const Item = ({ item }: { item: Notification }) => (
-        <TouchableOpacity style={styles.item} onPress={() => markNotificationRead(item)}>
+        <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
             <Text style={styles.itemTitle}>{item.data.message}</Text>
         </TouchableOpacity>
     );
@@ -40,8 +40,12 @@ const NotificationScreen = () => {
         <Item item={item} />
     );
 
-    const markNotificationRead = (item: Notification) => {
-        console.log(`Notification id`, item.id);
+    const markNotificationAsRead = (item: Notification) => {
+        markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
+    }
+
+    const updateNotificationInRedux = () => {
+
     }
 
     const EmptyListComponent = () => (
