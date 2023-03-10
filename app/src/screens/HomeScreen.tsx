@@ -21,7 +21,7 @@ import AppLoader from '../components/AppLoader';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state, getPatientNotifications } = useContext(AppContext);
+    const { state, getNotifications } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
     const [unreadNotifications, setUnreadNotificationsCount] = useState<number>(0);
 
@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const iconSize = 40;
 
     useEffect(() => {
-        getPatientNotifications({ onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
     }, []);
 
     const populateNotifications = (data: any) => {

@@ -15,10 +15,11 @@ const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
-    const { getPatientNotifications } = useContext(AppContext);
+    const { state,  getNotifications } = useContext(AppContext);
+    const user = state.user;
 
     useEffect(() => {
-        getPatientNotifications({ onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
     }, []);
 
     const populateNotifications = (data: any) => {

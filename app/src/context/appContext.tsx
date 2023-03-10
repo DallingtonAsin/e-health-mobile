@@ -499,10 +499,11 @@ const getDrugs = () => {
     };
 };
 
-const getPatientNotifications = () => {
-    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+const getNotifications = () => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.patient.notifications.all : routes.doctor.notifications.all;
         services.get(
-            routes.patient.notifications.all
+            endpoint
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;
@@ -516,10 +517,11 @@ const getPatientNotifications = () => {
     };
 };
 
-const markPatientNotificationRead = () => {
-    return ({ notification_id, onSuccess, onFailure, onCompletion }: { notification_id: string, onSuccess: any, onFailure: any, onCompletion: any }) => {
+const markNotificationRead = () => {
+    return ({ notification_id, is_patient, onSuccess, onFailure, onCompletion }: { notification_id: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? `${routes.patient.notifications.mark_as_read}/${notification_id}` : `${routes.doctor.notifications.mark_as_read}/${notification_id}`;
         services.post(
-            `${routes.patient.notifications.mark_as_read}/${notification_id}`,
+            endpoint,
             {}
         ).then(async (res) => {
             if (res && res.data) {
@@ -539,7 +541,7 @@ export const { Provider, Context, } = createDataContext(
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getDrugs, getMeetingDetails,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor, deleteProfileImage,
         registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage,
-        getPatientNotifications, markPatientNotificationRead
+        getNotifications, markNotificationRead
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );

@@ -25,6 +25,12 @@ const routes = {
       languages: 'doctor/languages',
       specialties: 'doctor/specialties',
       calendar: 'doctor/schedule',
+      notifications: {
+         all: 'doctor/notifications',
+         read: 'doctor/notifications/read',
+         unread: 'doctor/notifications/unread',
+         mark_as_read: 'doctor/notifications/mark-as-read',
+      }
    },
 
    medical: {
