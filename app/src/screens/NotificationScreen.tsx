@@ -1,26 +1,48 @@
-import { useState } from "react";
-import { SafeAreaView, Text, FlatList, View, StyleSheet, Image } from "react-native";
-import { Notification } from "../interfaces";
+import { useState, useContext, useEffect } from "react";
+import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Notification, NotificationStats } from "../interfaces";
 import * as configs from '../configs';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { Context as AppContext } from '../context/appContext';
+import { displayMessage } from "../components/common/SharedHelper";
+import AppLoader from "../components/AppLoader";
 import { Avatar } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const NotificationScreen = () => {
 
-    const initialMessages: any = []
-    const [notifications, setNotifications] = useState<Notification[]>(initialMessages);
+    const [isLoading, setIsLoading] = useState(true);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    const { state,  getNotifications } = useContext(AppContext);
+    const user = state.user;
+
+    useEffect(() => {
+        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+    }, []);
+
+    const populateNotifications = (data: any) => {
+        setNotifications(data.notifications);
+    }
+
+    const stopLoading = () => {
+        setIsLoading(false);
+    }
 
     const Item = ({ item }: { item: Notification }) => (
-        <View style={styles.item}>
-            <Text style={styles.itemTitle}>{item.message}</Text>
-        </View>
+        <TouchableOpacity style={styles.item} onPress={() => markNotificationRead(item)}>
+            <Text style={styles.itemTitle}>{item.data.message}</Text>
+        </TouchableOpacity>
     );
 
     const renderItem = ({ item }: { item: Notification }) => (
         <Item item={item} />
     );
+
+    const markNotificationRead = (item: Notification) => {
+        console.log(`Notification id`, item.id);
+    }
 
     const EmptyListComponent = () => (
         <View style={configs.styles.emptyViewContainer}>
@@ -29,6 +51,9 @@ const NotificationScreen = () => {
         </View>
     );
 
+    if (isLoading) {
+        return <AppLoader bgColor={configs.colors.white} />
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -39,7 +64,6 @@ const NotificationScreen = () => {
                 keyExtractor={(item: Notification, index: number) => item.id.toString()}
                 ListEmptyComponent={EmptyListComponent}
             />
-
         </SafeAreaView>
     );
 }

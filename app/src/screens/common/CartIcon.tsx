@@ -19,23 +19,8 @@ function CartIcon() {
         <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Cart')}>
             <Icon5 name="shopping-cart" size={30} color={config.colors.gray} />
             {totalQuantity > 0 && (
-                <View
-                    style={{
-                        position: 'absolute',
-                        top: -5,
-                        right: -7,
-                        backgroundColor: config.colors.orange,
-                        borderRadius: 10,
-                        width: 20,
-                        height: 20,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-
-                    }}
-                >
-                    <Text style={{ color: config.colors.white, fontSize: 12 }}>
-                        {totalQuantity}
-                    </Text>
+                <View style={[config.styles.supCount, { backgroundColor: config.colors.orange }]}>
+                    <Text style={{ color: config.colors.white, fontSize: 12 }}>{totalQuantity}</Text>
                 </View>
             )}
         </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -13,16 +13,32 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import { Avatar } from 'react-native-paper';
-import { getGreeting } from '../components/common/SharedHelper';
+import { displayMessage, getGreeting } from '../components/common/SharedHelper';
 import { Context as AppContext } from '../context/appContext';
 import { getUserInitials } from '../components/common/SharedHelper';
+import AppLoader from '../components/AppLoader';
 
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state } = useContext(AppContext);
+    const { state, getNotifications } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(true);
+    const [unreadNotifications, setUnreadNotificationsCount] = useState<number>(0);
+
     const user = state.user;
     const iconSize = 40;
+
+    useEffect(() => {
+        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+    }, []);
+
+    const populateNotifications = (data: any) => {
+        setUnreadNotificationsCount(data.stats.unreadCount);
+    }
+
+    if (isLoading) {
+        return <AppLoader bgColor={configs.colors.white} />
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -45,6 +61,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
+                            { unreadNotifications > 0 &&
+                                <View style={[configs.styles.supCount, { right: 2 }]}>
+                                    <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadNotifications}</Text>
+                                </View> }
                         </TouchableOpacity>
                     </View>
 

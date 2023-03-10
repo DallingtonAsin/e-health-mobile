@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import {AppAction, AppointmentInfo, IUser, LoginData } from '../interfaces';
+import { AppAction, AppointmentInfo, IUser, LoginData } from '../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as types from './actions'
 
@@ -31,8 +31,8 @@ export default (reducer: any, action: any, defaultValue: any) => {
         signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signout: () => { },
         updateProfile: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        updateProfileImage: ({ user, payload, onSuccess, onFailure, onCompletion }: { user:any,  payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        deleteProfileImage: ({ user, onSuccess, onFailure, onCompletion }: { user:any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        updateProfileImage: ({ user, payload, onSuccess, onFailure, onCompletion }: { user: any, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        deleteProfileImage: ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDrugs: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsBySpecialty: ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
@@ -42,11 +42,13 @@ export default (reducer: any, action: any, defaultValue: any) => {
         submitAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         cancelAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMyAppointments: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        getDoctorLanguages: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        getDoctorSpecialties: ({ onSuccess, onFailure, onCompletion }: {  onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorLanguages: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         registerDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorsCalendar: ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         submitDoctorSchedule: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getNotifications: ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        markNotificationRead: ({ notification_id, is_patient, onSuccess, onFailure, onCompletion }: { notification_id: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });
 
     const Provider = ({ children }: { children: any }) => {
