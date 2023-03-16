@@ -41,12 +41,15 @@ const MedicalHistoryScreen = () => {
     }
 
     const Item = ({ item }: { item: Notification }) => (
-        <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
-            <View style={item.read_at ? styles.dotRead : styles.dotUnread}></View>
-            <View style={styles.messageContainer}>
-                <Text style={styles.message}>{item.data.message}</Text>
+        <View style={styles.card}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}></Text>
             </View>
-        </TouchableOpacity>
+            <View style={styles.content}>
+              <Text style={styles.message}>{item.data.message}</Text>
+            </View>
+        </View>
+
     );
 
     const renderItem = ({ item }: { item: Notification }) => (
@@ -72,6 +75,7 @@ const MedicalHistoryScreen = () => {
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyExtractor={(item: Notification, index: number) => item.id.toString()}
                 ListEmptyComponent={EmptyListComponent}
+                showsVerticalScrollIndicator={false}
             />
         </SafeAreaView>
     );
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
     },
 
     item: {
+        // flex: 1,
         shadowColor: configs.colors.black,
         shadowOffset: {
             width: 0,
@@ -129,6 +134,32 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: configs.colors.orange,
         marginRight: 10,
+    },
+
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginVertical: 5,
+        elevation: 3,
+    },
+    header: {
+        backgroundColor: configs.colors.primary,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        paddingVertical: 1,
+        paddingHorizontal: 1,
+    },
+    headerText: {
+        fontSize: 9,
+        fontWeight: 'bold',
+        color: configs.colors.white,
+    },
+    content: {
+        padding: 25,
+    },
+    contentText: {
+        fontSize: 14,
     },
 
 })
