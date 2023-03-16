@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MedicalHistoryRecord } from "../interfaces";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
@@ -32,11 +32,6 @@ const MedicalHistoryScreen = () => {
         setIsLoading(false);
     }
 
-
-    const updateNotificationInRedux = () => {
-        fetchMedicalHistory();
-    }
-
     const VerticalLine = () => {
         return (
             <View style={styles.lineContainer}>
@@ -48,7 +43,6 @@ const MedicalHistoryScreen = () => {
 
 
     const Item = ({ item }: { item: MedicalHistoryRecord }) => (
-
         <View style={styles.itemContainer}>
             <VerticalLine />
             <View style={styles.card}>
@@ -63,7 +57,6 @@ const MedicalHistoryScreen = () => {
                 </View>
             </View>
         </View>
-
     );
 
     const renderItem = ({ item }: { item: MedicalHistoryRecord }) => (

@@ -32,6 +32,9 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [appointmentType, setAppointmentType] = useState<string>('');
 
     const [reason, setReason] = useState('');
+    const [pastMedicalHistory, setPastMedicalHistory] = useState('');
+    const [currentTreatment, setCurrentTreatment] = useState('');
+
     const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AppContext);
     const user = state.user;
     const [isFocused, setIsFocused] = useState(false);
@@ -108,7 +111,9 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 appointment_type: appointmentType,
                 appointment_date: appointmentDate,
                 appointment_time: appointmentTime,
-                reason: reason
+                reason: reason,
+                past_medical_history: pastMedicalHistory,
+                current_treatment: currentTreatment
             };
             setIsSubmitting(true);
             submitAppointment({ payload: appointmentDetails, onSuccess: displaySuccessScreen, onFailure: displayMessage, onCompletion: () => { setIsSubmitting(false) } });
@@ -161,27 +166,27 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         </View>
 
                         <View style={styles.contacts}>
-
                             <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
                                 <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
                             </TouchableOpacity>
-
                             <TouchableOpacity onPress={() => contact.SendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
                                 <Icon5 name="sms" size={22} style={styles.callBtn} />
                             </TouchableOpacity>
-
-
                         </View>
+
                     </View>
 
                     <View style={styles.fcontainer}>
                         <View>
-                            <Text style={styles.pickDate}>Select date</Text>
+                            <Text style={styles.titleText}>Select date <Text style={{ color: configs.colors.danger }}>*</Text></Text>
                             <AppointmentsCalendar onDaySelect={(day: any) => setPatientAppointmentDate(day)} />
                         </View>
                         <View>
-                            <Text style={styles.pickDate}>Select time</Text>
-                            <View style={{ margin: 0, flexDirection: 'row' }}>
+                            <Text style={styles.titleText}>Select time <Text style={{ color: configs.colors.danger }}>*</Text></Text>
+                            <ScrollView contentContainerStyle={{ flexDirection: 'row' }}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                            >
                                 {
                                     scheduleHours.map((hour) => {
                                         return (
@@ -195,11 +200,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                                         );
                                     })
                                 }
-                            </View>
+                            </ScrollView>
                         </View>
 
                         <View>
-                            <Text style={styles.pickDate}>Type</Text>
+                            <Text style={styles.titleText}>Choose appointment type <Text style={{ color: configs.colors.danger }}>*</Text></Text>
                             {
                                 appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
                                     return (
@@ -217,24 +222,49 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             }
                         </View>
 
-                        <View style={{ marginHorizontal: 0, marginVertical: 0 }}>
-                            <Text style={styles.pickDate}>Reason for appointment</Text>
+                        <View>
+                            <Text style={styles.titleText}>Reason for appointment <Text style={{ color: configs.colors.danger }}>*</Text></Text>
+
                             <TextInput
                                 editable
                                 value={reason}
                                 onChangeText={text => setReason(text)}
                                 multiline={true}
                                 numberOfLines={3}
-                                style={{
-                                    borderColor: isFocused ? configs.colors.primary : configs.colors.gray,
-                                    height: 80,
-                                    borderWidth: 1,
-                                    borderRadius: 4,
-                                    marginVertical: 3,
-                                    padding: 8,
-                                }}
+                                style={styles.textarea}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
+                                placeholder={"Enter reason for appointment"}
+                            />
+                        </View>
+
+                        <View>
+                            <Text style={styles.titleText}>Past medical history</Text>
+                            <TextInput
+                                editable
+                                value={pastMedicalHistory}
+                                onChangeText={text => setPastMedicalHistory(text)}
+                                multiline={true}
+                                numberOfLines={3}
+                                style={styles.textarea}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                                placeholder={"Enter past medical history (optional)"}
+                            />
+                        </View>
+
+                        <View>
+                            <Text style={styles.titleText}>Current treatment</Text>
+                            <TextInput
+                                editable
+                                value={currentTreatment}
+                                onChangeText={text => setCurrentTreatment(text)}
+                                multiline={true}
+                                numberOfLines={3}
+                                style={styles.textarea}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                                placeholder={"Enter current treatment (optional)"}
                             />
                         </View>
 
@@ -354,15 +384,15 @@ const styles = StyleSheet.create({
     contacts: {
         flexDirection: 'row',
         alignItems: 'stretch'
-        
+
     },
 
     sms: {
         paddingLeft: 10,
     },
 
-    pickDate: {
-        fontSize: 18,
+    titleText: {
+        fontSize: configs.fonts.large,
         paddingVertical: 10,
         marginLeft: 2,
     },
@@ -390,5 +420,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '400',
     },
+
+    textarea: {
+        height: 80,
+        borderWidth: 1,
+        borderRadius: 4,
+        marginVertical: 3,
+        padding: 8,
+        textAlignVertical: 'top',
+        borderColor: configs.colors.silver
+    }
 
 });

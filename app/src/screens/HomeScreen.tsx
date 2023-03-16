@@ -123,7 +123,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Help</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`MoreTabScreen`)}>
                                 <Icon name="gear" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Settings</Text>
                             </TouchableOpacity>
