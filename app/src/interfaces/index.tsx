@@ -95,7 +95,7 @@ interface MyAppointmentInfo {
     id: number,
     doctor: DoctorsDetail,
     patient: PatientDetail,
-    symptoms: string,
+    reason: string,
     appointment_type: AppointmentType,
     appointment_date: string,
     appointment_time: string,
@@ -108,7 +108,7 @@ interface AppointmentInfo {
     appointment_type: string,
     appointment_date: string,
     appointment_time: string,
-    symptoms: string,
+    reason: string,
     notes?: string,
 }
 
