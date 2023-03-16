@@ -141,7 +141,7 @@ const SignedInStackNavigator = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Contact Us`,
+                    headerTitle: `Help`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

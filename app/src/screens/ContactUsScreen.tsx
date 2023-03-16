@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, Linking } from "react-native";
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
@@ -13,8 +13,6 @@ interface Contact {
 }
 
 const ContactUsScreen = () => {
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const onChangeSearch = (query: string) => setSearchQuery(query);
 
     const contacts = [
         { id: 1, text: 'Telephone', value: `+256772409074`, icon: 'phone-alt', method: contact.callPhoneNumber },
