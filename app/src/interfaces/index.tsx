@@ -120,7 +120,8 @@ interface AppointmentInfo {
     appointment_date: string,
     appointment_time: string,
     reason: string,
-    notes?: string,
+    past_medical_history?: string,
+    current_treatment?: string,
 }
 
 interface DoctorCalendar {
