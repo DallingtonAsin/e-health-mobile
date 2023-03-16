@@ -8,7 +8,7 @@ import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
 
 
-const NotificationScreen = () => {
+const MedicalHistoryScreen = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -33,9 +33,7 @@ const NotificationScreen = () => {
     }
 
     const markNotificationAsRead = (item: Notification) => {
-        if (!item.read_at) {
-            markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
-        }
+        markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
     }
 
     const updateNotificationInRedux = () => {
@@ -79,7 +77,7 @@ const NotificationScreen = () => {
     );
 }
 
-export default NotificationScreen;
+export default MedicalHistoryScreen;
 
 const styles = StyleSheet.create({
     container: {
