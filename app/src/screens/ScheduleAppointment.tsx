@@ -31,7 +31,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [appointmentTime, setAppointmentTime] = useState<string>('');
     const [appointmentType, setAppointmentType] = useState<string>('');
 
-    const [symptoms, setSymptoms] = useState('');
+    const [reason, setReason] = useState('');
     const { state, getDoctorInfo, getAppointmentTypes, submitAppointment } = useContext(AppContext);
     const user = state.user;
     const [isFocused, setIsFocused] = useState(false);
@@ -98,17 +98,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         if (!appointmentType) {
             Toast.show(`Please select appointment type`); return;
         }
-        if (!symptoms) {
+        if (!reason) {
             Toast.show(`Please enter atleast one symptom`); return;
         }
-        if (appointmentDate && appointmentTime && appointmentType && symptoms) {
+        if (appointmentDate && appointmentTime && appointmentType && reason) {
             let appointmentDetails: AppointmentInfo = {
                 patient_id: user.id,
                 doctor_id: doctor_id,
                 appointment_type: appointmentType,
                 appointment_date: appointmentDate,
                 appointment_time: appointmentTime,
-                symptoms: symptoms
+                reason: reason
             };
             setIsSubmitting(true);
             submitAppointment({ payload: appointmentDetails, onSuccess: displaySuccessScreen, onFailure: displayMessage, onCompletion: () => { setIsSubmitting(false) } });
@@ -120,7 +120,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         setAppointmentDate('');
         setAppointmentTime('');
         setAppointmentType('');
-        setSymptoms('');
+        setReason('');
     }
 
     const displaySuccessScreen = (appointmentDetails: any) => {
@@ -218,11 +218,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         </View>
 
                         <View style={{ marginHorizontal: 0, marginVertical: 0 }}>
-                            <Text style={styles.pickDate}>Symptoms</Text>
+                            <Text style={styles.pickDate}>Reason for appointment</Text>
                             <TextInput
                                 editable
-                                value={symptoms}
-                                onChangeText={text => setSymptoms(text)}
+                                value={reason}
+                                onChangeText={text => setReason(text)}
                                 multiline={true}
                                 numberOfLines={3}
                                 style={{

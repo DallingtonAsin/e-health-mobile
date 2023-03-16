@@ -171,7 +171,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 {user.is_patient && <Text style={styles.doctorTxt}>{item.doctor.title} {item.doctor.first_name} {item.doctor.last_name}</Text>}
                 {!user.is_patient && <Text style={styles.doctorTxt}>{item.patient.first_name} {item.patient.last_name}</Text>}
 
-                <Text style={styles.info}>Reason: <Text style={[styles.info]}>{item.symptoms}</Text></Text>
+                <Text style={styles.info}>Reason: <Text style={[styles.info]}>{item.reason}</Text></Text>
                 <View style={styles.dateView}>
                     <Text style={[styles.info]}>Date: {item.appointment_date}</Text>
                     <Text style={[styles.info]}>Time: {item.appointment_time}</Text>

@@ -12,6 +12,7 @@ import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
 import AppointmentDetailsScreen from "../../screens/AppointmentDetailsScreen";
 import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
 import NotificationScreen from "../../screens/NotificationScreen";
+import MedicalHistoryScreen from "../../screens/MedicalHistoryScreen";
 import MyScheduleScreen from "../../screens/Doctor/MyScheduleScreen";
 import DrugScreen from "../../screens/DrugScreen";
 import DrugDetailsScreen from "../../screens/DrugDetailsScreen";
@@ -251,6 +252,7 @@ const SignedInStackNavigator = () => {
                 }}
                 component={AboutUsScreen} />
 
+
             <Stack.Screen
                 name="Settings"
                 options={{
@@ -263,6 +265,19 @@ const SignedInStackNavigator = () => {
                     headerShown: true,
                 }}
                 component={SettingsScreen} />
+
+            <Stack.Screen
+                name="MedicalHistory"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Medical History`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={MedicalHistoryScreen} />
 
         </Stack.Navigator>
     )

@@ -34,10 +34,8 @@ const initialDoctorInfo: DoctorsDetail = {
   service_fee: 0,
 }
 
-const commonSymptoms = ['cold', 'cough', 'flue', 'Nasal congestion', 'Sore throat', 'Allergies', 'Rash', 'Other'];
 
 export {
   initialUserState,
-  initialDoctorInfo,
-  commonSymptoms,
+  initialDoctorInfo
 }

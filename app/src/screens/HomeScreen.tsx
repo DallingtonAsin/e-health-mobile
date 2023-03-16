@@ -102,8 +102,6 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
 
-
-
                     </View>
 
                     {user.is_patient &&
@@ -112,7 +110,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Pharmacy</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => Toast.show(`coming soon...`, Toast.LONG)}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MedicalHistory')}>
                                 <Icon name="search" size={iconSize * 0.92} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Medical History</Text>
                             </TouchableOpacity>

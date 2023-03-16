@@ -63,7 +63,7 @@ const HomeStack = () => {
         <Tab.Screen
           name="HelpTabScreen"
           component={ContactUsScreen}
-          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Contact Us', tabIcon: 'info-circle', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Help', tabIcon: 'question-circle', onPressBackButton: navigateBack })}
         />
 
         <Tab.Screen

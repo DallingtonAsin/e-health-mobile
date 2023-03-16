@@ -12,7 +12,7 @@ const SplashScreen = ({navigation}: {navigation: any}) => {
             </View>
             <View style={styles.footer}>
              <TouchableOpacity style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn]} onPress={() => {navigation.navigate('Signin')}}>
-                <Text style={configs.styles.btnText}>Next</Text>
+                <Text style={configs.styles.btnText}>Get Started</Text>
              </TouchableOpacity>
             </View>
         </View>

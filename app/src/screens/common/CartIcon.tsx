@@ -15,15 +15,16 @@ function CartIcon() {
     const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);
 
     return (
-        cart.length > 0 &&
-        <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Cart')}>
-            <Icon5 name="shopping-cart" size={30} color={config.colors.gray} />
-            {totalQuantity > 0 && (
-                <View style={[config.styles.supCount, { backgroundColor: config.colors.orange }]}>
-                    <Text style={{ color: config.colors.white, fontSize: 12 }}>{totalQuantity}</Text>
-                </View>
-            )}
-        </TouchableOpacity>
+        cart.length > 0 ?
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => navigation.navigate('Cart')}>
+                <Icon5 name="shopping-cart" size={30} color={config.colors.gray} />
+                {totalQuantity > 0 && (
+                    <View style={[config.styles.supCount, { backgroundColor: config.colors.orange }]}>
+                        <Text style={{ color: config.colors.white, fontSize: 12 }}>{totalQuantity}</Text>
+                    </View>
+                )}
+            </TouchableOpacity>
+            : null
     );
 }
 

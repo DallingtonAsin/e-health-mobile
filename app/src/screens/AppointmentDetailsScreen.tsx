@@ -13,7 +13,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-        symptoms, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
+        reason, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
     
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
@@ -108,7 +108,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         <Separator />
                         <ContentItem title={"Appointment Type"} value={appointment_type.name} />
                         <Separator />
-                        <ContentItem title={"Sypmptoms"} value={symptoms} />
+                        <ContentItem title={"Reason"} value={reason} />
                         <Separator />
                         <ContentItem title={"Appointment Date"} value={appointment_date} />
                         <Separator />
