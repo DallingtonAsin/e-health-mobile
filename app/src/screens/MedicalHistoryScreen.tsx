@@ -1,8 +1,8 @@
 import { useState, useContext, useEffect } from "react";
 import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
-import { Notification } from "../interfaces";
+import { MedicalHistoryRecord } from "../interfaces";
 import * as configs from '../configs';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import Icon5 from 'react-native-vector-icons/FontAwesome';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
@@ -11,45 +11,62 @@ import AppLoader from "../components/AppLoader";
 const MedicalHistoryScreen = () => {
 
     const [isLoading, setIsLoading] = useState(true);
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryRecord[]>([]);
 
-    const { state, getNotifications, markNotificationRead } = useContext(AppContext);
+    const { state, getMedicalHistory } = useContext(AppContext);
     const user = state.user;
 
     useEffect(() => {
-        fetchNotifications();
+        fetchMedicalHistory();
     }, []);
 
-    const fetchNotifications = () => {
-        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+    const fetchMedicalHistory = () => {
+        getMedicalHistory({ patient_id: user.id, onSuccess: populateMedicalHistory, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
-    const populateNotifications = (data: any) => {
-        setNotifications(data.notifications);
+    const populateMedicalHistory = (data: MedicalHistoryRecord[]) => {
+        setMedicalHistory(data);
     }
 
     const stopLoading = () => {
         setIsLoading(false);
     }
 
-    const markNotificationAsRead = (item: Notification) => {
-        markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
-    }
 
     const updateNotificationInRedux = () => {
-        fetchNotifications();
+        fetchMedicalHistory();
     }
 
-    const Item = ({ item }: { item: Notification }) => (
-        <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
-            <View style={item.read_at ? styles.dotRead : styles.dotUnread}></View>
-            <View style={styles.messageContainer}>
-                <Text style={styles.message}>{item.data.message}</Text>
+    const VerticalLine = () => {
+        return (
+            <View style={styles.lineContainer}>
+                <Icon5 name="dot-circle-o" size={18} color="#999" style={styles.icon} />
+                <View style={styles.line} />
             </View>
-        </TouchableOpacity>
+        );
+    };
+
+
+    const Item = ({ item }: { item: MedicalHistoryRecord }) => (
+
+        <View style={styles.itemContainer}>
+            <VerticalLine />
+            <View style={styles.card}>
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>{item.diagnosis_date}</Text>
+                </View>
+                <View style={styles.content}>
+                    <Text style={styles.historyTitle}>Past Medical History:  <Text style={styles.message}>{item.past_medical_history}</Text> </Text>
+                    <Text style={styles.historyTitle}>Previous Treatment:  <Text style={styles.message}>{item.current_treatment}</Text> </Text>
+                    <Text style={styles.historyTitle}>illness:  <Text style={styles.message}>{item.illness}</Text> </Text>
+                    <Text style={styles.historyTitle}>Treatment:  <Text style={styles.message}>{item.treatment}</Text> </Text>
+                </View>
+            </View>
+        </View>
+
     );
 
-    const renderItem = ({ item }: { item: Notification }) => (
+    const renderItem = ({ item }: { item: MedicalHistoryRecord }) => (
         <Item item={item} />
     );
 
@@ -65,15 +82,19 @@ const MedicalHistoryScreen = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <FlatList
-                data={notifications}
-                renderItem={renderItem}
-                contentContainerStyle={{ flexGrow: 1 }}
-                keyExtractor={(item: Notification, index: number) => item.id.toString()}
-                ListEmptyComponent={EmptyListComponent}
-            />
-        </SafeAreaView>
+        <View style={styles.container}>
+            <View style={styles.listContainer}>
+                <FlatList
+                    data={medicalHistory}
+                    renderItem={renderItem}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyExtractor={(item: MedicalHistoryRecord, index: number) => item.id.toString()}
+                    ListEmptyComponent={EmptyListComponent}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
+        </View>
+
     );
 }
 
@@ -82,9 +103,13 @@ export default MedicalHistoryScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         backgroundColor: configs.colors.white
+    },
+
+    listContainer: {
+        width: '100%'
     },
 
     item: {
@@ -110,11 +135,6 @@ const styles = StyleSheet.create({
         maxWidth: '96.5%',
     },
 
-    message: {
-        color: '#000',
-        fontSize: configs.fonts.medium,
-    },
-
     dotRead: {
         width: 8,
         height: 8,
@@ -131,4 +151,75 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
 
+    card: {
+        width: '88%',
+        // height: 150,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginVertical: 5,
+        elevation: 3,
+    },
+    header: {
+        backgroundColor: configs.colors.primary,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        paddingVertical: 1,
+        paddingHorizontal: 1,
+    },
+    headerText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: configs.colors.white,
+        marginLeft: 10,
+    },
+
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 25,
+    },
+
+    contentText: {
+        fontSize: 14,
+    },
+
+    itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        marginVertical: 5,
+    },
+
+    iconContainer: {
+        alignItems: 'center',
+        marginRight: 5,
+    },
+
+    lineContainer: {
+        alignItems: 'center',
+
+    },
+
+    line: {
+        backgroundColor: configs.colors.primary,
+        width: 1,
+        height: 40,
+    },
+
+    icon: {
+        marginTop: -6,
+    },
+
+    historyTitle: {
+        color: configs.colors.primary,
+        fontWeight: '500'
+    },
+
+    message: {
+        color: configs.colors.dark,
+        fontSize: configs.fonts.medium,
+        fontWeight: 'normal'
+
+    },
 })

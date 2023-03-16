@@ -535,13 +535,30 @@ const markNotificationRead = () => {
     };
 };
 
+const getMedicalHistory = () => {
+    return ({ patient_id, onSuccess, onFailure, onCompletion }: {patient_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.medical.history}/${patient_id}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context, } = createDataContext(
     appReducer,
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getDrugs, getMeetingDetails,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor, deleteProfileImage,
         registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage,
-        getNotifications, markNotificationRead
+        getNotifications, markNotificationRead, getMedicalHistory
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },
 );
