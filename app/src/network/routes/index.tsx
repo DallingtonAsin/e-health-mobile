@@ -37,6 +37,7 @@ const routes = {
       specialties: 'medical/specialties',
       doctors: 'medical/doctors',
       doctors_by_specialty: 'medical/doctors/specialty',
+      history: 'medical-history/patient'
    },
 
    drugs: {

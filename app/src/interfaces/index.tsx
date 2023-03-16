@@ -47,6 +47,17 @@ interface Notification {
     read_at: any
 }
 
+interface MedicalHistoryRecord {
+    id: number,
+    patient_id: number,
+    appointment_id: number,
+    past_medical_history: string,
+    current_treatment: string,
+    illness: string,
+    diagnosis_date: string,
+    treatment: string,
+}
+
 interface NotificationStats {
     total: number,
     readCount: number,
@@ -154,5 +165,6 @@ export type {
     AppointmentInfo,
     DoctorCalendar,
     MyAppointmentInfo,
-    agoraConnection
+    agoraConnection,
+    MedicalHistoryRecord
 }
