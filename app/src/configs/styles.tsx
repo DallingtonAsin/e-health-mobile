@@ -146,6 +146,22 @@ export const styles = {
     alignItems: 'center',
   },
 
+  callBtn: {
+    color: colors.white,
+    backgroundColor: colors.primary,
+    padding: 8,
+    borderRadius: 3,
+  },
+
+  sms: {
+    paddingLeft: 10,
+  },
+
+  contacts: {
+    flexDirection: 'row',
+    alignItems: 'stretch'
+  },
+
   registration: {
 
     doctor: {

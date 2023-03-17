@@ -165,12 +165,12 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             </View>
                         </View>
 
-                        <View style={styles.contacts}>
-                            <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
-                                <Icon5 name="phone-alt" size={22} style={styles.callBtn} />
+                        <View style={configs.styles.contacts}>
+                            <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
+                                <Icon5 name="phone-alt" size={22} style={configs.styles.callBtn} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => contact.SendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={styles.sms}>
-                                <Icon5 name="sms" size={22} style={styles.callBtn} />
+                            <TouchableOpacity onPress={() => contact.sendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
+                                <Icon5 name="sms" size={22} style={configs.styles.callBtn} />
                             </TouchableOpacity>
                         </View>
 
@@ -372,23 +372,6 @@ const styles = StyleSheet.create({
         color: configs.colors.primary,
         fontWeight: 'bold',
         textTransform: 'capitalize',
-    },
-
-    callBtn: {
-        color: configs.colors.white,
-        backgroundColor: configs.colors.primary,
-        padding: 8,
-        borderRadius: 3,
-    },
-
-    contacts: {
-        flexDirection: 'row',
-        alignItems: 'stretch'
-
-    },
-
-    sms: {
-        paddingLeft: 10,
     },
 
     titleText: {

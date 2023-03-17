@@ -5,7 +5,7 @@ const callPhoneNumber = (phoneNumber: string) => {
     Communications.phonecall(phoneNumber, true);
 };
 
-const SendSms = (telephone_number: string) => {
+const sendSms = (telephone_number: string) => {
     Communications.text(telephone_number, '');
 }
 
@@ -13,8 +13,8 @@ const inboxWhatsappNumber = (whatsappNumber: string) => {
     Linking.openURL(`whatsapp://send?text=&phone=${whatsappNumber}`);
 }
 
-const SendEmail = (email: string) => {
+const sendEmail = (email: string) => {
     Linking.openURL(`mailto:${email}?subject=Message`);
 };
 
-export {callPhoneNumber, SendSms, inboxWhatsappNumber, SendEmail}
+export {callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail}

@@ -8,6 +8,8 @@ import { displayMessage, getUserInitials } from '../components/common/SharedHelp
 import AppLoader from '../components/AppLoader';
 import MeetingRoomScreen from './MeetingRoomScreen';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { callPhoneNumber, sendSms } from '../components/common/communications';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
@@ -74,34 +76,63 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         }
     }
 
-    const ProfileDetails = () => (
-        <View style={styles.header}>
-            <View>
-                {user.is_patient && doctor.thumbnail && <Avatar size={80} source={doctor.thumbnail} />}
-                {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
-
-                {!user.is_patient && patient.thumbnail && <Avatar size={80} source={patient.thumbnail} />}
-                {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+    const DoctorProfile = () => (
+        <React.Fragment>
+            <View style={styles.header}>
+                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} />}
+                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                <View style={config.styles.contacts}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => sendSms(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                </View>
             </View>
+            <ContentItem title={"Name"} value={`${doctor.first_name} ${doctor.last_name}`} />
+            <ContentItem title={"Phone Number"} value={`${doctor.country_code} ${doctor.phone_number}`} />
+            <ContentItem title={"Specialty"} value={doctor.specialty_id} />
+            <ContentItem title={"Profession"} value={doctor.profession} />
+            <ContentItem title={"Email"} value={doctor.email} />
+            <ContentItem title={"Experience"} value={doctor.experience} />
+            <ContentItem title={"Service fee"} value={doctor.service_fee} />
+        </React.Fragment>
+    );
 
-            {
-                user.is_patient &&
-                <View style={styles.userInfo}>
-                    <Text style={styles.name}>{doctor.title} {doctor.first_name} {doctor.last_name}</Text>
-                    <Text style={styles.titles}>{doctor.qualification}</Text>
-                    <Text style={styles.userTitle}>{doctor.profession}</Text>
+    const PatientProfile = () => (
+        <React.Fragment>
+            <View style={styles.header}>
+                {patient.thumbnail && <Avatar size={100} source={patient.thumbnail} />}
+                {!patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                <View style={config.styles.contacts}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => sendSms(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
                 </View>
-            }
+            </View>
+            <ContentItem title={"Name"} value={`${patient.first_name} ${patient.last_name}`} />
+            <ContentItem title={"Phone Number"} value={`${patient.country_code} ${patient.phone_number}`} />
+            <ContentItem title={"Address"} value={patient.address} />
+            <ContentItem title={"Email"} value={patient.email} />
+            <ContentItem title={"Date of Birth"} value={patient.dob} />
+        </React.Fragment>
+    );
 
-            {
-                !user.is_patient &&
-                <View>
-                    <Text style={styles.name}>{patient.first_name} {patient.last_name}</Text>
-                    <Text style={styles.titles}>{patient.country_code}{patient.phone_number}</Text>
-                    <Text style={styles.userTitle}>{patient.address}</Text>
-                </View>
-            }
-        </View>
+    const ProfileDetails = () => (
+        <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}>
+            <View style={[styles.body, { marginTop: 0 }]}>
+                {user.is_patient && <DoctorProfile />}
+                {!user.is_patient && <PatientProfile />}
+            </View>
+        </ScrollView>
     );
 
     const AppointmentDetails = () => (
@@ -112,30 +143,20 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             showsVerticalScrollIndicator={false}>
 
             <View style={styles.body}>
-                <ContentItem title={"Appointment number"} value={appointment_number} row={false} />
-                <Separator />
-                <ContentItem title={"Appointment type"} value={appointment_type.name} row={false} />
-                <Separator />
+                <ContentItem title={"Appointment number"} value={appointment_number} />
+                <ContentItem title={"Appointment type"} value={appointment_type.name} />
                 <ContentItem title={"Reason"} value={reason} />
-                <Separator />
                 <ContentItem title={"Medical history"} value={medical_history.past_medical_history} />
-                <Separator />
-
                 <ContentItem title={"Current treatment"} value={medical_history.current_treatment} />
-                <Separator />
-                <ContentItem title={"Appointment schedule"} value={`${appointment_date} ${appointment_time}`} row={false} />
-                <Separator />
-                <ContentItem title={"Service fee"} value={doctor.service_fee} row={false} />
-                <Separator />
-                <View style={[styles.appointmentInfo, { flexDirection: 'row' }]}>
+                <ContentItem title={"Appointment schedule"} value={`${appointment_date} ${appointment_time}`} />
+                <ContentItem title={"Service fee"} value={doctor.service_fee} />
+                <View style={styles.appointmentInfo}>
                     <Text style={styles.subtitle}>Status</Text>
                     <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
                 </View>
-                <Separator />
 
                 {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
                 {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
-
 
                 {
                     status == 'Pending' &&
@@ -186,9 +207,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     );
 
     return (
-        <>
+        <React.Fragment>
             <SafeAreaView style={styles.container}>
-
                 <TabView
                     navigationState={{ index, routes }}
                     renderTabBar={renderTabBar}
@@ -196,12 +216,9 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     onIndexChange={setIndex}
                     initialLayout={{ width: layout.width }}
                 />
-
-
             </SafeAreaView>
-
             {isLoading && <AppLoader />}
-        </>
+        </React.Fragment>
     );
 }
 
@@ -229,17 +246,17 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 1,
         flexDirection: 'row',
         marginVertical: 15,
-        marginHorizontal: 25,
+        marginHorizontal: 10,
         justifyContent: 'space-between'
     },
 
     body: {
         flex: 1,
-        borderRadius: 8,
+        borderRadius: 10,
         paddingHorizontal: 8,
+        marginTop: 10,
     },
 
     titles: {
@@ -257,7 +274,19 @@ const styles = StyleSheet.create({
     appointmentInfo: {
         justifyContent: 'space-between',
         paddingHorizontal: 8,
-        paddingVertical: 6,
+        paddingVertical: 5,
+        borderBottomWidth: 0.8,
+        borderBottomColor: config.colors.silver,
+        paddingBottom: 7,
+    },
+
+    separator: {
+        width: '90%',
+        height: 1,
+        marginTop: 5,
+        backgroundColor: '#e2e2e2',
+        marginHorizontal: 15,
+        alignSelf: 'center',
     },
 
     subtitle: {
@@ -270,6 +299,7 @@ const styles = StyleSheet.create({
         color: config.colors.primary,
         fontSize: config.fonts.large,
         fontWeight: '400',
+        marginVertical: 0,
     },
 
     bookedTitle: {
@@ -342,16 +372,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 15,
         marginBottom: 20,
     },
 
-    separator: {
-        width: '90%',
-        height: 1,
-        marginTop: 5,
-        backgroundColor: '#e2e2e2',
-        marginHorizontal: 15,
-        alignSelf: 'center',
-    }
+
 
 });
