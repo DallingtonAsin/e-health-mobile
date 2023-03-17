@@ -42,7 +42,8 @@ const RegistrationForm1 = ({ user, setUser, setScreen }: {
         setSpecialties(data);
     }
 
-    const submitDetails = () => {
+
+    const moveToNextScreen = () => {
 
         if (!user.first_name) {
             Toast.show('Enter your first name', Toast.LONG);
@@ -83,7 +84,7 @@ const RegistrationForm1 = ({ user, setUser, setScreen }: {
             return;
         }
 
-        if(!isValidDob(user.dob)){
+        if (!isValidDob(user.dob)) {
             Toast.show('Enter valid date of birth. Doctor must be atleast greater than 18', Toast.LONG);
             return;
         }
@@ -98,8 +99,6 @@ const RegistrationForm1 = ({ user, setUser, setScreen }: {
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
-
-
 
     const handleConfirm = (date: Date) => {
         hideDatePicker();
@@ -239,7 +238,7 @@ const RegistrationForm1 = ({ user, setUser, setScreen }: {
 
                     <View style={config.styles.registration.doctor.viewContainer}>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%' }]}
-                            onPress={() => submitDetails()}>
+                            onPress={() => moveToNextScreen()}>
                             <Text style={[config.styles.btnText]}>Next</Text>
                         </TouchableOpacity>
                     </View>
