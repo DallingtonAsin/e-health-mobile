@@ -4,13 +4,13 @@ import * as config from '../../configs';
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
-import { displayMessage } from '../../components/common/SharedHelper';
+import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 
-const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
+const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation: any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [languages, setLanguages] = useState([]);
@@ -25,6 +25,11 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
     const populateLanguages = (data: any) => {
         setLanguages(data);
+    }
+
+    const handleServiceFeeChange = (text: string) => {
+        const formattedValue = formatNumber(text.replace(/,/g, ''));
+        setUser(prev => ({ ...prev, service_fee: formattedValue }));
     }
 
     const submitDetails = () => {
@@ -58,6 +63,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
             return;
         }
 
+        let service_fee = removeCommas(user.service_fee);
 
         let payload: IUser = {
             first_name: user.first_name,
@@ -72,12 +78,12 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
             dob: user.dob,
             languages: selectedLanguages,
             experience: user.experience,
-            service_fee: user.service_fee
+            service_fee: service_fee
         }
         payload.phone_number && delete payload.phone_number;
-       
+
         setIsLoading(true);
-       registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
     const navigateMethod = async (data: any) => {
@@ -130,7 +136,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
                     <View style={config.styles.registration.doctor.inputWrap}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Profession
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="Profession"
                             value={user.profession}
@@ -144,21 +150,21 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
                     <View style={config.styles.registration.doctor.inputWrap}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Languages
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <MultipleSelectList
-                            setSelected={(val: string[]) => setSelectedLanguages(val)} 
+                            setSelected={(val: string[]) => setSelectedLanguages(val)}
                             data={languages}
                             save="value"
                             search={false}
                             placeholder={"Select Language(s)"}
-                            inputStyles={config.styles.registration.doctor.selectInputStyles} 
+                            inputStyles={config.styles.registration.doctor.selectInputStyles}
                             boxStyles={config.styles.registration.doctor.selectBoxStyles}
                         />
                     </View>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Experience
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="Experience"
                             value={user.experience}
@@ -172,7 +178,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
                     <View style={config.styles.registration.doctor.viewContainer}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Service Fee
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="Service Fee"
                             value={user.service_fee}
@@ -181,7 +187,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
                             keyboardType="numeric"
-                            onChangeText={text => setUser(prev => ({ ...prev, service_fee: text }))}
+                            onChangeText={text => handleServiceFeeChange(text)}
                         />
                     </View>
 
@@ -194,7 +200,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: {navigation:a
 
                 </ScrollView>
             </SafeAreaView>
-            { (isLoading || isFetchingLanguages) && <AppLoader />}
+            {(isLoading || isFetchingLanguages) && <AppLoader />}
         </>
     )
 }

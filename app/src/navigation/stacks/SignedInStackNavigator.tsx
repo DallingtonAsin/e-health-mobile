@@ -128,7 +128,7 @@ const SignedInStackNavigator = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Appointment Information`,
+                    headerTitle: `Appointment Details`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

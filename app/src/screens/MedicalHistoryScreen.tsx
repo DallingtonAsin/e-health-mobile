@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { MedicalHistoryRecord } from "../interfaces";
 import * as configs from '../configs';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from "../components/common/SharedHelper";
@@ -65,8 +66,10 @@ const MedicalHistoryScreen = () => {
 
     const EmptyListComponent = () => (
         <View style={configs.styles.emptyViewContainer}>
-            <Icon5 name="bell-slash" size={60} color={configs.colors.silver} />
-            <Text style={configs.styles.noInfoText}>No notifications found</Text>
+            <View style={configs.styles.emptyIconContainer}>
+                <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
+            </View>
+            <Text style={configs.styles.noInfoText}>No medical history found</Text>
         </View>
     );
 
@@ -76,7 +79,7 @@ const MedicalHistoryScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.listContainer}>
+            {/* <View style={styles.listContainer}> */}
                 <FlatList
                     data={medicalHistory}
                     renderItem={renderItem}
@@ -85,7 +88,7 @@ const MedicalHistoryScreen = () => {
                     ListEmptyComponent={EmptyListComponent}
                     showsVerticalScrollIndicator={false}
                 />
-            </View>
+            {/* </View> */}
         </View>
 
     );
@@ -96,9 +99,9 @@ export default MedicalHistoryScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        backgroundColor: configs.colors.white
+        backgroundColor: configs.colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     listContainer: {

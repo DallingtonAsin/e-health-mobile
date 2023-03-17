@@ -5,6 +5,7 @@ import CompleteRegistrationScreen from './CompleteRegistrationScreen';
 
 
 const DoctorRegistrationScreen = ({ navigation }: { navigation: any }) => {
+    
     const [screen, setScreen] = useState<number>(0);
     const [user, setUser] = useState<IUser>({
         first_name: '',

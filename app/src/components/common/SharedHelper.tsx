@@ -132,6 +132,14 @@ const getAppVersion = () => {
   return version;
 };
 
+const formatNumber = (num: any) => {
+  const regex = /(\d)(?=(\d{3})+(?!\d))/g;
+  return num.toString().replace(regex, '$1,');
+};
+const removeCommas = (num: any) => {
+  return num.toString().replace(/,/g, '');
+};
+
 export {
   removeLeadingZeros,
   getGreeting,
@@ -148,5 +156,7 @@ export {
   isValidDob,
   getJsonObjByValue,
   getAppVersion,
-  numberWithCommas
+  numberWithCommas,
+  formatNumber,
+  removeCommas
 }

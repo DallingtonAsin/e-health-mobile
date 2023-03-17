@@ -84,9 +84,9 @@ export default NotificationScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: configs.colors.white,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: configs.colors.white
     },
 
     item: {

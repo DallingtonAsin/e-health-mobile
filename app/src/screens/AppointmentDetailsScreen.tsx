@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity, useWindowDimensions } from 'react-native';
 import * as config from '../configs';
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../components/Avatar';
@@ -7,26 +7,36 @@ import { Context as AppContext } from '../context/appContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import MeetingRoomScreen from './MeetingRoomScreen';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
+import { callPhoneNumber, sendSms } from '../components/common/communications';
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-        reason, completed_at, cancelled_at, is_online, meeting_access, is_video, status } = appointmentInfo;
-    
+        reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
+
     const { state, cancelAppointment } = useContext(AppContext);
     const user = state.user;
     const [isLoading, setIsLoading] = useState(false);
     const [videoCall, setVideoCall] = useState(false);
+    const [index, setIndex] = React.useState(0);
+    const layout = useWindowDimensions();
 
+
+    const [routes] = React.useState([
+        { key: 'appointment', title: 'Details' },
+        { key: 'profile', title: user.is_patient ? 'Doctor Profile' : 'Patient Profile' },
+    ]);
 
     const Separator = () => (
         <View style={styles.separator} />
     );
 
-    const ContentItem = ({ title, value }: { title: any, value: any }) => (
-        <View style={styles.appointmentInfo}>
+    const ContentItem = ({ title, value, row = false }: { title: any, value: any, row?: boolean }) => (
+        <View style={[styles.appointmentInfo, row ? { flexDirection: 'row' } : { flexDirection: 'column' }]}>
             <Text style={styles.subtitle}>{title}</Text>
             <Text style={styles.info}>{value}</Text>
         </View>
@@ -66,94 +76,149 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         }
     }
 
+    const DoctorProfile = () => (
+        <React.Fragment>
+            <View style={styles.header}>
+                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} />}
+                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                <View style={config.styles.contacts}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => sendSms(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <ContentItem title={"Name"} value={`${doctor.first_name} ${doctor.last_name}`} />
+            <ContentItem title={"Phone Number"} value={`${doctor.country_code} ${doctor.phone_number}`} />
+            <ContentItem title={"Specialty"} value={doctor.specialty_id} />
+            <ContentItem title={"Profession"} value={doctor.profession} />
+            <ContentItem title={"Email"} value={doctor.email} />
+            <ContentItem title={"Experience"} value={doctor.experience} />
+            <ContentItem title={"Service fee"} value={doctor.service_fee} />
+        </React.Fragment>
+    );
+
+    const PatientProfile = () => (
+        <React.Fragment>
+            <View style={styles.header}>
+                {patient.thumbnail && <Avatar size={100} source={patient.thumbnail} />}
+                {!patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                <View style={config.styles.contacts}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => sendSms(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <ContentItem title={"Name"} value={`${patient.first_name} ${patient.last_name}`} />
+            <ContentItem title={"Phone Number"} value={`${patient.country_code} ${patient.phone_number}`} />
+            <ContentItem title={"Address"} value={patient.address} />
+            <ContentItem title={"Email"} value={patient.email} />
+            <ContentItem title={"Date of Birth"} value={patient.dob} />
+        </React.Fragment>
+    );
+
+    const ProfileDetails = () => (
+        <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}>
+            <View style={[styles.body, { marginTop: 0 }]}>
+                {user.is_patient && <DoctorProfile />}
+                {!user.is_patient && <PatientProfile />}
+            </View>
+        </ScrollView>
+    );
+
+    const AppointmentDetails = () => (
+        <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}>
+
+            <View style={styles.body}>
+                <ContentItem title={"Appointment number"} value={appointment_number} />
+                <ContentItem title={"Appointment type"} value={appointment_type.name} />
+                <ContentItem title={"Reason"} value={reason} />
+                <ContentItem title={"Medical history"} value={medical_history.past_medical_history} />
+                <ContentItem title={"Current treatment"} value={medical_history.current_treatment} />
+                <ContentItem title={"Appointment schedule"} value={`${appointment_date} ${appointment_time}`} />
+                <ContentItem title={"Service fee"} value={doctor.service_fee} />
+                <View style={styles.appointmentInfo}>
+                    <Text style={styles.subtitle}>Status</Text>
+                    <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
+                </View>
+
+                {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
+                {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
+
+                {
+                    status == 'Pending' &&
+                    <View style={styles.footer}>
+
+                        {is_online &&
+                            <TouchableOpacity style={[config.styles.primaryBtn, { width: '98%' }]} onPress={() => setVideoCall(true)}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
+                            </TouchableOpacity>
+                        }
+
+
+                        {user.is_patient &&
+                            <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
+                        {!user.is_patient &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
+                            </TouchableOpacity>
+                        }
+                    </View>
+                }
+
+            </View>
+        </ScrollView>
+    );
+
+    const renderScene = SceneMap({
+        appointment: AppointmentDetails,
+        profile: ProfileDetails
+    });
+
+
+    const renderTabBar = (props: any) => (
+        <TabBar
+            {...props}
+            renderLabel={({ route, focused, color }) => (
+                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.large, fontWeight: '400' }}>
+                    {route.title}
+                </Text>
+            )}
+            indicatorStyle={{ backgroundColor: config.colors.primary }}
+            style={{ backgroundColor: config.colors.white }}
+        />
+    );
+
     return (
-        <>
+        <React.Fragment>
             <SafeAreaView style={styles.container}>
-                <ScrollView
-                    style={styles.scroll}
-                    contentContainerStyle={styles.scrollContainer}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}>
-
-                    <View style={styles.header}>
-                        <View>
-                            {user.is_patient && doctor.thumbnail && <Avatar size={80} source={doctor.thumbnail} />}
-                            {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
-
-                            {!user.is_patient && patient.thumbnail && <Avatar size={80} source={patient.thumbnail} />}
-                            {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
-                        </View>
-
-                        {
-                            user.is_patient &&
-                            <View style={styles.userInfo}>
-                                <Text style={styles.name}>{doctor.title} {doctor.first_name} {doctor.last_name}</Text>
-                                <Text style={styles.titles}>{doctor.qualification}</Text>
-                                <Text style={styles.userTitle}>{doctor.profession}</Text>
-                            </View>
-                        }
-
-                        {
-                            !user.is_patient &&
-                            <View>
-                                <Text style={styles.name}>{patient.first_name} {patient.last_name}</Text>
-                                <Text style={styles.titles}>{patient.country_code}{patient.phone_number}</Text>
-                                <Text style={styles.userTitle}>{patient.address}</Text>
-                            </View>
-                        }
-                    </View>
-
-                    <View style={styles.body}>
-                        <ContentItem title={"Appointment Number"} value={appointment_number} />
-                        <Separator />
-                        <ContentItem title={"Appointment Type"} value={appointment_type.name} />
-                        <Separator />
-                        <ContentItem title={"Reason"} value={reason} />
-                        <Separator />
-                        <ContentItem title={"Appointment Date"} value={appointment_date} />
-                        <Separator />
-                        <ContentItem title={"Appointment Time"} value={appointment_time} />
-                        <Separator />
-                        <ContentItem title={"Service Fee"} value={doctor.service_fee} />
-                        <Separator />
-                        <View style={styles.appointmentInfo}>
-                            <Text style={styles.subtitle}>Status</Text>
-                            <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
-                        </View>
-                        <Separator />
-
-                        {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
-                        {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
-
-
-                        {
-                            status == 'Pending' &&
-                            <View style={styles.footer}>
-
-                                {is_online &&
-                                    <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => setVideoCall(true)}>
-                                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Join Meeting</Text>
-                                    </TouchableOpacity>
-                                }
-
-
-                                {user.is_patient &&
-                                    <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                                        <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                                    </TouchableOpacity>
-                                }
-                            </View>
-                        }
-
-                    </View>
-
-
-
-                </ScrollView>
+                <TabView
+                    navigationState={{ index, routes }}
+                    renderTabBar={renderTabBar}
+                    renderScene={renderScene}
+                    onIndexChange={setIndex}
+                    initialLayout={{ width: layout.width }}
+                />
             </SafeAreaView>
-
             {isLoading && <AppLoader />}
-        </>
+        </React.Fragment>
     );
 }
 
@@ -163,14 +228,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: config.colors.white,
-        marginVertical: 10,
-        marginHorizontal: 7,
         elevation: 8,
         borderRadius: 8,
         shadowColor: config.colors.primary,
         shadowOpacity: 0.5,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 0 },
+        margin: 8,
     },
 
     scroll: {
@@ -182,21 +246,17 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 1,
         flexDirection: 'row',
-        marginTop: 10,
-        justifyContent: 'space-around'
+        marginVertical: 15,
+        marginHorizontal: 10,
+        justifyContent: 'space-between'
     },
 
     body: {
         flex: 1,
-        borderWidth: 0.5,
-        borderColor: config.colors.primary,
-        marginHorizontal: 10,
-        borderRadius: 8,
+        borderRadius: 10,
         paddingHorizontal: 8,
-        marginTop: 12,
-        marginBottom: 15,
+        marginTop: 10,
     },
 
     titles: {
@@ -212,23 +272,34 @@ const styles = StyleSheet.create({
     },
 
     appointmentInfo: {
-        flexDirection: 'column',
         justifyContent: 'space-between',
         paddingHorizontal: 8,
-        paddingVertical: 6,
+        paddingVertical: 5,
+        borderBottomWidth: 0.8,
+        borderBottomColor: config.colors.silver,
+        paddingBottom: 7,
+    },
+
+    separator: {
+        width: '90%',
+        height: 1,
+        marginTop: 5,
+        backgroundColor: '#e2e2e2',
+        marginHorizontal: 15,
+        alignSelf: 'center',
     },
 
     subtitle: {
-        fontWeight: '400',
-        fontSize: config.fonts.medium,
+        fontWeight: 'normal',
+        fontSize: config.fonts.large,
         opacity: 0.9,
-        textTransform: 'uppercase',
     },
 
     info: {
         color: config.colors.primary,
         fontSize: config.fonts.large,
         fontWeight: '400',
+        marginVertical: 0,
     },
 
     bookedTitle: {
@@ -301,15 +372,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 15,
+        marginBottom: 20,
     },
 
-    separator: {
-        width: '90%',
-        height: 1,
-        marginTop: 5,
-        backgroundColor: '#e2e2e2',
-        marginHorizontal: 15,
-        alignSelf: 'center',
-    }
+
 
 });

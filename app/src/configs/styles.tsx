@@ -81,6 +81,17 @@ export const styles = {
     alignItems: 'center'
   },
 
+  emptyIconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.silver,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   image: {
     width: 80,
     height: 80,
@@ -133,6 +144,22 @@ export const styles = {
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  callBtn: {
+    color: colors.white,
+    backgroundColor: colors.primary,
+    padding: 8,
+    borderRadius: 3,
+  },
+
+  sms: {
+    paddingLeft: 10,
+  },
+
+  contacts: {
+    flexDirection: 'row',
+    alignItems: 'stretch'
   },
 
   registration: {
