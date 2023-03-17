@@ -62,10 +62,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
-                            { unreadNotifications > 0 &&
+                            {unreadNotifications > 0 &&
                                 <View style={[configs.styles.supCount, { right: 2 }]}>
                                     <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadNotifications}</Text>
-                                </View> }
+                                </View>}
                         </TouchableOpacity>
                     </View>
 
@@ -90,17 +90,17 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </TouchableOpacity>
                         }
 
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
+                            <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>My Appointments</Text>
+                        </TouchableOpacity>
+
                         {!user.is_patient &&
                             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DoctorsCalendar')}>
                                 <Icon5 name="clock" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>My Calendar</Text>
                             </TouchableOpacity>
                         }
-
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
-                            <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>My Appointments</Text>
-                        </TouchableOpacity>
 
                     </View>
 
