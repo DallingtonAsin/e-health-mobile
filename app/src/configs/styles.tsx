@@ -81,6 +81,17 @@ export const styles = {
     alignItems: 'center'
   },
 
+  emptyIconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.silver,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   image: {
     width: 80,
     height: 80,
