@@ -26,6 +26,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         diagnosis_date: '',
         treatment: '',
     }
+
     const [historyInfo, setHistoryInfo] = useState<MedicalHistoryRecord>(history);
     const { completeAppointment } = useContext(AppContext);
 
@@ -67,10 +68,11 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
             treatment: historyInfo.treatment
         }
         setIsLoading(true);
-        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: goToAppointments, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
-    const goToAppointments = () => {
+    const onSuccess = (message: string) => {
+        displayMessage(message);
         navigation.navigate('MyAppointments');
     }
 
