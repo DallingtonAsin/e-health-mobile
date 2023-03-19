@@ -11,7 +11,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import Checkout from './common/Checkout';
 
 
-function CartScreen({ navigation }: { navigation: any }) {
+function CartScreen() {
 
     const cart = useSelector(selectCart);
     const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);

@@ -6,42 +6,39 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNotifications, markAsRead, setNotifications, setIsLoading } from "../redux/features/notificationSlice";
+import { selectNotifications, selectIsLoading  } from "../redux/features/notificationSlice";
 
+const NotificationScreen: React.FC = () => {
 
-const NotificationScreen = () => {
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const notifications = useSelector(selectNotifications);
+    const isLoading = useSelector(selectIsLoading);
 
     const { state, getNotifications, markNotificationRead } = useContext(AppContext);
     const user = state.user;
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchNotifications();
-    }, []);
+        dispatch(fetchNotifications());
+      }, [dispatch]);
 
-    const fetchNotifications = () => {
-        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
+    const handleRefresh = () => {
+        getNotifications({ is_patient: user.is_patient, onFailure: displayMessage, onCompletion: setIsLoading(false) });
     }
 
     const populateNotifications = (data: any) => {
         setNotifications(data.notifications);
     }
 
-    const stopLoading = () => {
-        setIsLoading(false);
-    }
-
     const markNotificationAsRead = (item: Notification) => {
         if (!item.read_at) {
-            markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: updateNotificationInRedux, onFailure: displayMessage, onCompletion: () => { } });
+            let notificationId = item.id;
+           dispatch(markAsRead({notificationId}));
         }
     }
 
-    const updateNotificationInRedux = () => {
-        fetchNotifications();
-    }
-
+   
     const Item = ({ item }: { item: Notification }) => (
         <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
             <View style={item.read_at ? styles.dotRead : styles.dotUnread}></View>
@@ -74,6 +71,7 @@ const NotificationScreen = () => {
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyExtractor={(item: Notification, index: number) => item.id.toString()}
                 ListEmptyComponent={EmptyListComponent}
+                onRefresh={handleRefresh}
             />
         </SafeAreaView>
     );
