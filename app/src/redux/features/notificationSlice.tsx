@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { Notification } from "../../interfaces";
 import { Context as AppContext } from '../../context/appContext';
-import { AppThunk, RootState } from '../NotificationsStore';
+import { RootState } from '../NotificationsStore';
 import { displayMessage } from '../../components/common/SharedHelper';
 
 interface NotificationState {
@@ -47,38 +47,17 @@ const notificationsSlice = createSlice({
     }
 });
 
-export const { markAsRead, setNotifications, setIsLoading, setError } = notificationsSlice.actions;
 
-// export const fetchNotifications = (): AppThunk => async dispatch => {
-//     const { state, getNotifications } = useContext(AppContext);
-//     dispatch(setIsLoading(true));
-//     try {
-//         getNotifications({ is_patient: state.user.is_patient, onFailure: displayMessage, onCompletion: dispatch(setIsLoading(false)) });
-//     } catch (error: any) {
-//         dispatch(setError(error.message));
-//     } finally {
-//         dispatch(setIsLoading(false));
-//     }
-// };
-
-export const fetchNotifications = createAsyncThunk(
+export const fetchNotifications = (): any => createAsyncThunk(
     'notifications/fetchNotifications',
     async (_, { dispatch }) => {
-            const { state, getNotifications } = useContext(AppContext);
-            const user = state.user;
-            getNotifications({ is_patient: user.is_patient, onFailure: displayMessage, onCompletion: dispatch(setIsLoading(false)) });
+        const { state, getNotifications } = useContext(AppContext);
+        const user = state.user;
+        getNotifications({ is_patient: user.is_patient, onFailure: displayMessage, onCompletion: dispatch(setIsLoading(false)) });
     }
 );
 
-// export const markNotificationAsRead = (notificationId: string): AppThunk => async dispatch => {
-//     const { state, markNotificationRead } = useContext(AppContext);
-//     try {
-//         markNotificationRead({ notification_id: notificationId, is_patient: state.user.is_patient, onSuccess: {}, onFailure: displayMessage, onCompletion: () => { } });
-//         dispatch(markAsRead({ notificationId }));
-//     } catch (error: any) {
-//         dispatch(setError(error.message));
-//     }
-// };
+export const { markAsRead, setNotifications, setIsLoading, setError } = notificationsSlice.actions;
 
 export const selectIsLoading = (state: RootState) => state.notifications.isLoading;
 export const selectNotifications = (state: RootState) => state.notifications.notifications;

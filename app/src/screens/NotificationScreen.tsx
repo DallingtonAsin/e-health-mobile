@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Notification } from "../interfaces";
 import * as configs from '../configs';
@@ -7,38 +7,34 @@ import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchNotifications, markAsRead, setNotifications, setIsLoading } from "../redux/features/notificationSlice";
-import { selectNotifications, selectIsLoading  } from "../redux/features/notificationSlice";
+import { fetchNotifications, markAsRead, setIsLoading } from "../redux/features/notificationSlice";
+import { selectNotifications, selectIsLoading } from "../redux/features/notificationSlice";
 
 const NotificationScreen: React.FC = () => {
 
     const notifications = useSelector(selectNotifications);
     const isLoading = useSelector(selectIsLoading);
 
-    const { state, getNotifications, markNotificationRead } = useContext(AppContext);
+    const { state, getNotifications } = useContext(AppContext);
     const user = state.user;
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchNotifications());
-      }, [dispatch]);
+    }, [dispatch]);
+
 
     const handleRefresh = () => {
         getNotifications({ is_patient: user.is_patient, onFailure: displayMessage, onCompletion: setIsLoading(false) });
     }
 
-    const populateNotifications = (data: any) => {
-        setNotifications(data.notifications);
-    }
-
     const markNotificationAsRead = (item: Notification) => {
         if (!item.read_at) {
             let notificationId = item.id;
-           dispatch(markAsRead({notificationId}));
+            dispatch(markAsRead({ notificationId }));
         }
     }
 
-   
     const Item = ({ item }: { item: Notification }) => (
         <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
             <View style={item.read_at ? styles.dotRead : styles.dotUnread}></View>
