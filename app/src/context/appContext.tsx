@@ -321,6 +321,24 @@ const cancelAppointment = () => {
     };
 };
 
+const completeAppointment = () => {
+    return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            `${routes.appointments.index}/${appointment_id}/complete`,
+            payload
+        ).then(async (res: any) => {
+            if (res && res.data && res.data.message) {
+                let message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
         let endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments;
@@ -557,7 +575,7 @@ export const { Provider, Context, } = createDataContext(
     {
         signin, verifyCode, signup, updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDoctorInfo, getDrugs, getMeetingDetails,
         getAppointmentTypes, submitAppointment, getMyAppointments, cancelAppointment, signout, authenticateDoctor, deleteProfileImage,
-        registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage,
+        registerDoctor, getDoctorLanguages, getDoctorSpecialties, getDoctorsCalendar, submitDoctorSchedule, updateProfileImage, completeAppointment,
         getNotifications, markNotificationRead, getMedicalHistory
     },
     { user: initialUserState, token: '', authorization: '', isAppLoading: true },

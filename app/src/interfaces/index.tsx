@@ -50,6 +50,7 @@ interface Notification {
 interface MedicalHistoryRecord {
     id: number,
     patient_id: number,
+    patient_name?: number,
     appointment_id: number,
     past_medical_history: string,
     current_treatment: string,
