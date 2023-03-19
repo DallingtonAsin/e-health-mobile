@@ -63,6 +63,15 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         );
     }
 
+    const completeMedicalAppoitment = () => {
+        navigation.navigate('CompleteAppointment', {
+            appointment_id: id,
+            appointment_number: appointment_number,
+            patient: patient,
+            medical_history: medical_history
+        });
+    }
+
     const afterCancelling = () => {
         setIsLoading(false);
         navigation.navigate('MyAppointments');
@@ -92,7 +101,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             </View>
             <ContentItem title={"Name"} value={`${doctor.first_name} ${doctor.last_name}`} />
             <ContentItem title={"Phone Number"} value={`${doctor.country_code} ${doctor.phone_number}`} />
-            <ContentItem title={"Specialty"} value={doctor.specialty_id} />
+            <ContentItem title={"Specialty"} value={doctor.specialty} />
             <ContentItem title={"Profession"} value={doctor.profession} />
             <ContentItem title={"Email"} value={doctor.email} />
             <ContentItem title={"Experience"} value={doctor.experience} />
@@ -176,7 +185,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         }
 
                         {!user.is_patient &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
+                             onPress={() => completeMedicalAppoitment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
                             </TouchableOpacity>
                         }

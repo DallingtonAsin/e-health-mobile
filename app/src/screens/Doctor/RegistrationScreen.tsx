@@ -1,20 +1,21 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { IUser } from '../../interfaces';
 import RegistrationForm1 from './RegistrationForm1';
 import CompleteRegistrationScreen from './CompleteRegistrationScreen';
 
 
 const DoctorRegistrationScreen = ({ navigation }: { navigation: any }) => {
-    
-    const [screen, setScreen] = useState<number>(0);
-    const [user, setUser] = useState<IUser>({
+
+    const initialUser = {
         first_name: '',
         last_name: '',
         email: '',
         dob: '',
         gender: '',
         phone_number: '',
-    });
+    }
+    const [screen, setScreen] = useState<number>(0);
+    const [user, setUser] = useState<IUser>(initialUser);
 
     const ScreenDisplay = () => {
         if (screen === 0) {

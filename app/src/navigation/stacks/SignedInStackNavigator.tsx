@@ -19,6 +19,7 @@ import DrugDetailsScreen from "../../screens/DrugDetailsScreen";
 import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../../screens/common/index";
 import CartIcon from "../../screens/common/CartIcon";
 import CartScreen from "../../screens/CartScreen";
+import CompleteMedicalAppointmentScreen from "../../screens/Doctor/CompleteMedicalAppointmentScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -166,6 +167,20 @@ const SignedInStackNavigator = () => {
                     headerShown: true,
                 }}
                 component={ScheduleAppointmentScreen}
+            />
+
+            <Stack.Screen
+                name="CompleteAppointment"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Complete Appointment`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={CompleteMedicalAppointmentScreen}
             />
 
             <Stack.Screen

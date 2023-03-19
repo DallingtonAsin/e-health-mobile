@@ -196,6 +196,7 @@ export const styles = {
         fontSize: 18,
       },
 
+    
       viewContainer: {
         flex: 1,
         marginVertical: 5,
