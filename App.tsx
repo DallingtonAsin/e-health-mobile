@@ -10,8 +10,6 @@ import AppLoader from './app/src/components/AppLoader';
 import * as config from './app/src/configs';
 import store from './app/src/redux/store';
 import { Provider } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import { displayMessage } from './app/src/components/common/SharedHelper';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();
@@ -19,19 +17,13 @@ LogBox.ignoreAllLogs();
 
 function App() {
 
-  const { state, getNotifications } = React.useContext(AppContext);
+  const { state } = React.useContext(AppContext);
 
   if (state.isAppLoading) {
     return (
       <AppLoader bgColor={config.colors.white} />
     )
   }
-
-  // useEffect(() => {
-  //   if (state.user && state.user.is_patient) {
-  //     getNotifications({ is_patient: state.user.is_patient, onFailure: displayMessage, onCompletion: {} });
-  //   }
-  // }, []);
 
   return (
     <NavigationContainer>

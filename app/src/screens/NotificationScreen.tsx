@@ -13,9 +13,7 @@ const NotificationScreen = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const dispatch = useDispatch();
-    const notifications = useSelector(selectNotifications)
-    console.log(`notifications`, notifications)
-
+    const notifications = useSelector(selectNotifications);
 
     const { state, getNotifications, markNotificationRead } = useContext(AppContext);
     const user = state.user;

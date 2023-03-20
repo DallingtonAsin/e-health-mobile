@@ -21,7 +21,6 @@ import CartIcon from "../../screens/common/CartIcon";
 import CartScreen from "../../screens/CartScreen";
 import CompleteMedicalAppointmentScreen from "../../screens/Doctor/CompleteMedicalAppointmentScreen";
 
-
 const Stack = createNativeStackNavigator();
 
 
