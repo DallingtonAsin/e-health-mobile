@@ -1,7 +1,5 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CustomStackHeader from "../../components/CustomStackHeader";
-import * as configs from '../../configs';
 import SplashScreen from "../../screens/SplashScreen";
 import SigninScreen from "../../screens/SigninScreen";
 import OtpScreen from "../../screens/OtpScreen";

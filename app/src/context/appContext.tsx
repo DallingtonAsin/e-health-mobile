@@ -7,7 +7,6 @@ import { appReducer } from './appReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions';
-import { setNotifications } from '../redux/features/notificationSlice';
 
 const services = new Service();
 
@@ -519,14 +518,14 @@ const getDrugs = () => {
 };
 
 const getNotifications = (dispatch: any) => {
-    return ({ is_patient, onFailure, onCompletion }: { is_patient: boolean, onFailure: any, onCompletion: any }) => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
         const endpoint = is_patient ? routes.patient.notifications.all : routes.doctor.notifications.all;
         services.get(
             endpoint
         ).then(async (res) => {
             if (res && res.data) {
                 let data = res.data;
-                dispatch(setNotifications(data.notifications));
+                onSuccess(data);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);

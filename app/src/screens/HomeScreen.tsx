@@ -17,18 +17,19 @@ import { Context as AppContext } from '../context/appContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 import Avatar from '../components/Avatar';
 import { useSelector } from 'react-redux';
-import { selectNotifications  } from "../redux/features/notificationSlice";
+import { selectNotifications } from "../redux/reducers/notificationSlice";
+import { Notification } from '../interfaces';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const { state } = useContext(AppContext);
-    const [isLoading, setIsLoading] = useState(true);
     const notifications = useSelector(selectNotifications);
 
     const user = state.user;
     const iconSize = 40;
-    const unreadCount = notifications.filter((notification) => notification.status !== 'read').length;
 
+    const unreadCount = notifications.filter((notification: Notification) => !notification.read).length;
+    
     return (
         <SafeAreaView style={styles.container}>
 
@@ -50,7 +51,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
-                            {unreadCount > 0 && !isLoading &&
+                            {unreadCount > 0 &&
                                 <View style={[configs.styles.supCount, { right: 2 }]}>
                                     <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadCount}</Text>
                                 </View>}

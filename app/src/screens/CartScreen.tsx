@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drug } from '../interfaces';
-import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/features/drugs/drugsSlice';
+import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/reducers/drugsSlice';
 import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { CartIncrementButton, CartDecrementButton } from './common';
