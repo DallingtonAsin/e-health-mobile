@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as AppProvider } from 'react-native-paper';
@@ -8,9 +8,8 @@ import { Provider as AuthProvider } from './app/src/context/appContext';
 import { Context as AppContext } from './app/src/context/appContext';
 import AppLoader from './app/src/components/AppLoader';
 import * as config from './app/src/configs';
-import store from './app/src/redux/PharmacyStore';
+import store from './app/src/redux/store';
 import { Provider } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();

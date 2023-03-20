@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon5 from 'react-native-vector-icons/FontAwesome'
-import { selectCart } from '../../redux/features/drugs/drugsSlice'
+import { selectCart } from '../../redux/reducers/drugsSlice'
 import { Drug } from '../../interfaces';
 import * as config from '../../configs';
 import { useNavigation } from '@react-navigation/native';

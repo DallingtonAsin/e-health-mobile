@@ -3,7 +3,7 @@ import { SafeAreaView, ScrollView, View, Text, Image, StyleSheet, TouchableOpaci
 import * as configs from '../configs';
 import { useSelector, useDispatch } from 'react-redux';
 import { CartIncrementButton, CartDecrementButton } from './common';
-import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../redux/features/drugs/drugsSlice';
+import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../redux/reducers/drugsSlice';
 import { Drug } from '../interfaces';
 
 const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {

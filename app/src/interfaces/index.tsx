@@ -44,7 +44,8 @@ interface Notification {
     id: string,
     notifiable_id: number,
     data: any,
-    read_at: any
+    read_at: any,
+    read?:boolean,
 }
 
 interface MedicalHistoryRecord {

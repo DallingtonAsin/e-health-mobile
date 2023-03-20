@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drug } from '../interfaces';
-import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/features/drugs/drugsSlice';
+import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/reducers/drugsSlice';
 import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { CartIncrementButton, CartDecrementButton } from './common';
@@ -11,7 +11,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import Checkout from './common/Checkout';
 
 
-function CartScreen({ navigation }: { navigation: any }) {
+function CartScreen() {
 
     const cart = useSelector(selectCart);
     const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);

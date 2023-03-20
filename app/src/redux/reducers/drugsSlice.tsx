@@ -1,51 +1,55 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Drug } from "../../../interfaces";
+import { Drug } from "../../interfaces";
 
-interface CartState{
-  cart: Drug[];
+interface CartState {
+    cart: Drug[];
 }
 
 const initialState: CartState = {
-   cart: []
+    cart: []
 }
 
 const drugSlice = createSlice({
-   name: 'drugs',
-   initialState: initialState,
-   reducers: {
+    name: 'drugs',
+    initialState: initialState,
+    reducers: {
+
         addToCart: (state, action) => {
-           const itemPresent = state.cart.find((item: Drug) => item.id === action.payload.id);
-           if(itemPresent){
-              itemPresent.quantity++;
-           }else{
-             state.cart.push({...action.payload, quantity: 1});
-           }
+            const itemPresent = state.cart.find((item: Drug) => item.id === action.payload.id);
+            if (itemPresent) {
+                itemPresent.quantity++;
+            } else {
+                state.cart.push({ ...action.payload, quantity: 1 });
+            }
         },
+
         removeFromCart: (state, action) => {
-         const removeFromCart = state.cart.filter((item: Drug) => item.id !== action.payload.id);
-         state.cart = removeFromCart;
+            const removeFromCart = state.cart.filter((item: Drug) => item.id !== action.payload.id);
+            state.cart = removeFromCart;
         },
+
         incrementQuantity: (state, action) => {
             const itemPresent = state.cart.find((item: Drug) => item.id === action.payload.id);
-            if(itemPresent){
+            if (itemPresent) {
                 itemPresent.quantity++;
             }
         },
-        decrementQuantity: (state, action) =>{
+
+        decrementQuantity: (state, action) => {
             const itemPresent = state.cart.find((item: Drug) => item.id === action.payload.id);
-            if(itemPresent){
-                if(itemPresent.quantity == 1){
+            if (itemPresent) {
+                if (itemPresent.quantity == 1) {
                     const removeFromCart = state.cart.filter((item: Drug) => item.id !== action.payload.id);
                     state.cart = removeFromCart;
-                }else{
+                } else {
                     itemPresent.quantity--;
                 }
             }
         }
-   }
+    }
 });
 
-export const { addToCart,  removeFromCart, incrementQuantity, decrementQuantity} = drugSlice.actions;
+export const { addToCart, removeFromCart, incrementQuantity, decrementQuantity } = drugSlice.actions;
 
 export const selectCart = (state: any) => state.drugs.cart;
 
