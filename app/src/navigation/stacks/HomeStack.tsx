@@ -101,7 +101,7 @@ const HomeStack = () => {
         <Tab.Screen
           name="DoctorsTabScreen"
           component={SpecialityCategoryScreen}
-          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Doctors', tabIcon: 'user-md', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Specialties', tabIcon: 'user-md', onPressBackButton: navigateBack })}
         />
 
 

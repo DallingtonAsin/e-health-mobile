@@ -46,7 +46,7 @@ const SignedInStackNavigator = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Speciality`,
+                    headerTitle: `Specialties`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}
