@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity, TextInput } from 'react-native'
-import { Avatar as AvatarRP } from 'react-native-paper';
+import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import { Avatar as AvatarRP, TextInput } from 'react-native-paper';
 import Avatar from '../components/Avatar';
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
@@ -227,14 +227,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
                             <TextInput
                                 editable
+                                label={"Reason for appointment"}
+                                mode="outlined"
                                 value={reason}
                                 onChangeText={text => setReason(text)}
                                 multiline={true}
                                 numberOfLines={3}
-                                style={styles.textarea}
+                                activeOutlineColor={configs.colors.primary}
+                                style={configs.styles.registration.doctor.textInput}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
-                                placeholder={"Enter reason for appointment"}
+                                placeholder={""}
                             />
                         </View>
 
@@ -242,14 +245,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             <Text style={styles.titleText}>Past medical history</Text>
                             <TextInput
                                 editable
+                                mode="outlined"
+                                label={"Medical History"}
                                 value={pastMedicalHistory}
                                 onChangeText={text => setPastMedicalHistory(text)}
                                 multiline={true}
                                 numberOfLines={3}
-                                style={styles.textarea}
+                                activeOutlineColor={configs.colors.primary}
+                                style={configs.styles.registration.doctor.textInput}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
-                                placeholder={"Enter past medical history (optional)"}
+                                placeholder={""}
                             />
                         </View>
 
@@ -257,14 +263,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             <Text style={styles.titleText}>Current treatment</Text>
                             <TextInput
                                 editable
+                                label={"Current treatment"}
+                                mode="outlined"
                                 value={currentTreatment}
                                 onChangeText={text => setCurrentTreatment(text)}
                                 multiline={true}
                                 numberOfLines={3}
-                                style={styles.textarea}
+                                activeOutlineColor={configs.colors.primary}
+                                style={configs.styles.registration.doctor.textInput}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
-                                placeholder={"Enter current treatment (optional)"}
+                                placeholder={""}
                             />
                         </View>
 

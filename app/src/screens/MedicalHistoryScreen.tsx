@@ -79,7 +79,7 @@ const MedicalHistoryScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* <View style={styles.listContainer}> */}
+            <View>
                 <FlatList
                     data={medicalHistory}
                     renderItem={renderItem}
@@ -88,7 +88,7 @@ const MedicalHistoryScreen = () => {
                     ListEmptyComponent={EmptyListComponent}
                     showsVerticalScrollIndicator={false}
                 />
-            {/* </View> */}
+            </View>
         </View>
 
     );
@@ -102,10 +102,6 @@ const styles = StyleSheet.create({
         backgroundColor: configs.colors.white,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-
-    listContainer: {
-        width: '100%'
     },
 
     item: {
@@ -149,7 +145,6 @@ const styles = StyleSheet.create({
 
     card: {
         width: '88%',
-        // height: 150,
         backgroundColor: '#fff',
         borderRadius: 10,
         marginHorizontal: 20,

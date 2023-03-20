@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const iconSize = 40;
 
     const unreadCount = notifications.filter((notification: Notification) => !notification.read).length;
-    
+
     return (
         <SafeAreaView style={styles.container}>
 
@@ -106,18 +106,16 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                     }
 
-                    {user.is_patient &&
-                        <View style={styles.cardContainer}>
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
-                                <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Help</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`MoreTabScreen`)}>
-                                <Icon name="gear" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Settings</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
+                    <View style={styles.cardContainer}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
+                            <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>Help</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`MoreTabScreen`)}>
+                            <Icon name="gear" size={iconSize} color={configs.colors.primary} />
+                            <Text style={styles.subtitle}>Settings</Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
 
