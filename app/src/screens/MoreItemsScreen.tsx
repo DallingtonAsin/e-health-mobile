@@ -13,8 +13,8 @@ import { getAppVersion } from '../components/common/SharedHelper';
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
 
     const listItems = [
-        { id: 1, name: 'Profile Information', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile') },
-        { id: 2, name: 'Notification Inbox', icon: 'envelope', isIcon5: true, action: () => navigation.navigate('Notifications') },
+        { id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile') },
+        { id: 2, name: 'Notifications', icon: 'envelope', isIcon5: true, action: () => navigation.navigate('Notifications') },
         { id: 3, name: 'Help & Support', icon: 'question-circle', isIcon5: true, action: () => navigation.navigate('ContactUs') },
         { id: 4, name: 'Terms & Conditions', icon: 'files-o', isIcon5: false, action: () => navigation.navigate('TermsConditions') },
         { id: 5, name: 'About Us', icon: 'info-circle', isIcon5: false, action: () => navigation.navigate('AboutUs') },
