@@ -6,6 +6,8 @@ import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
+import { Context as DoctorContext } from '../../context/doctorContext';
+
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
@@ -17,7 +19,9 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
     const [isFetchingLanguages, setIsFetchingLanguages] = useState(true);
-    const { registerDoctor, getDoctorLanguages } = useContext(AppContext);
+    const { getDoctorLanguages } = useContext(AppContext);
+    const { registerDoctor } = useContext(DoctorContext);
+
 
     useEffect(() => {
         getDoctorLanguages({ onSuccess: populateLanguages, onFailure: displayMessage, onCompletion: () => { setIsFetchingLanguages(false) } });

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React from 'react';
 import {
   BottomTabBar,
   createBottomTabNavigator,
@@ -11,59 +11,14 @@ import ContactUsScreen from '../../screens/ContactUsScreen';
 import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderLeftComponent } from '../../components/HeaderLeftComponent';
-import { addNotification, selectNotifications } from "../../redux/reducers/notificationSlice";
-import { Notification } from "../../interfaces";
-import { displayMessage } from "../../components/common/SharedHelper";
-import { useDispatch, useSelector } from 'react-redux';
-import { Context as AppContext } from '../../context/appContext';
-import AppLoader from "../../components/AppLoader";
-const Tab = createBottomTabNavigator();
 
 
-const HomeStack = () => {
+const HomeStack: React.FC = () => {
 
   const navigation = useNavigation();
 
   const navigateBack = () => { navigation.goBack() }
-
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-  const notifications = useSelector(selectNotifications)
-  const { state, getNotifications } = useContext(AppContext);
-
-  const fetchNotifications = () => {
-    getNotifications({ is_patient: state.user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
-  }
-
-  const populateNotifications = (data: any) => {
-    try {
-      let messages = data.notifications;
-      if (messages.length > 0) {
-        messages.forEach((notification: Notification) => {
-          const existingNotification = notifications.find((n: Notification) => n.id === notification.id);
-          if (!existingNotification) {
-            dispatch(addNotification(notification));
-          }
-        });
-      }
-    } catch (error: any) {
-      console.log('error', error.message)
-    }
-  }
-
-  const stopLoading = () => {
-    setIsLoading(false)
-  }
-
-  useEffect(() => {
-    fetchNotifications()
-  }, []);
-
-  if (isLoading) {
-    return (
-      <AppLoader bgColor={configs.colors.white} />
-    )
-  }
+  const Tab = React.useRef<ReturnType<typeof createBottomTabNavigator>>(createBottomTabNavigator()).current;
 
   return (
     <MultiBarProvider
@@ -101,7 +56,7 @@ const HomeStack = () => {
         <Tab.Screen
           name="DoctorsTabScreen"
           component={SpecialityCategoryScreen}
-          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Specialties', tabIcon: 'user-md', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Doctors', tabIcon: 'user-md', onPressBackButton: navigateBack })}
         />
 
 

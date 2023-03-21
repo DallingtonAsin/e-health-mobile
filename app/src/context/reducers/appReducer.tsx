@@ -1,8 +1,8 @@
-import { AppAction } from '../interfaces';
-import * as types from './actions';
+import { AppAction } from '../../interfaces';
+import * as types from '../actions';
 
 
-const appReducer = (state: any, action: AppAction) => {
+const appReducer = (state: any, action: AppAction): any => {
    
     switch (action.type) {
         case types.USER_SIGNIN:

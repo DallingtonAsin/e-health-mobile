@@ -55,14 +55,13 @@ export default (reducer: any, action: any, defaultValue: any) => {
 
     const Provider = ({ children }: { children: any }) => {
 
-        const [state, dispatch] = useReducer(reducer, defaultValue);
+        const [state, dispatch] = useReducer<(state: any, actions: AppAction) => any>(reducer, defaultValue);
 
         useEffect(() => {
             async function rehydrate() {
                 const storedState = await getData();
 
                 if (storedState) {
-                    // console.log(`Stored state is available`);
                     dispatch({
                         type: types.HYDRATE,
                         payload: storedState

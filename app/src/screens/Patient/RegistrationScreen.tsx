@@ -6,7 +6,7 @@ import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, displayMessage, isValidEmail } from '../../components/common/SharedHelper';
-import { Context as AppContext } from '../../context/appContext';
+import { Context as PatientContext } from '../../context/patientContext';
 import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
@@ -30,7 +30,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const { signup } = useContext(AppContext);
+    const { signup } = useContext(PatientContext);
 
     const genderOptions = [
         { key: '1', value: 'Male' },

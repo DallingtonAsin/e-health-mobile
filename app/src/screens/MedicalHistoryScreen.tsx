@@ -5,6 +5,7 @@ import * as configs from '../configs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
 import { Context as AppContext } from '../context/appContext';
+import { Context as PatientContext } from '../context/patientContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
 
@@ -14,7 +15,9 @@ const MedicalHistoryScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryRecord[]>([]);
 
-    const { state, getMedicalHistory } = useContext(AppContext);
+    const { state } = useContext(AppContext);
+    const { getMedicalHistory } = useContext(PatientContext);
+
     const user = state.user;
 
     useEffect(() => {
