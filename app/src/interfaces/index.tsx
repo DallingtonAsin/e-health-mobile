@@ -2,6 +2,7 @@
 interface AppAction {
     type: string;
     payload?: any;
+    access_token?: string
 }
 
 interface IUser {

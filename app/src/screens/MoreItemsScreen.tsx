@@ -57,8 +57,6 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
             </View>
         </SafeAreaView>
     )
-
-
 }
 
 export default MoreItemsScreen;

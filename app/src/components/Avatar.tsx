@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import * as config from '../configs';
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
+import FastImage from 'react-native-fast-image'
+import * as config from '../configs'
 
 const Avatar = ({ source, size = 50, borderRadius = 50, resizeMode = FastImage.resizeMode.contain }: { source: string, size: number, borderRadius?: number, resizeMode?: any }) => {
     const styles = makeStyles(borderRadius);

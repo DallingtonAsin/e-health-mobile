@@ -5,6 +5,12 @@ import * as types from '../actions';
 const appReducer = (state: any, action: AppAction): any => {
    
     switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...state,
+            userToken: action.access_token,
+            isLoading: false,
+          };
         case types.USER_SIGNIN:
             return {
                 user: null,

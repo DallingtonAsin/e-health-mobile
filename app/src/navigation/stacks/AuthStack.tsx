@@ -6,45 +6,45 @@ import OtpScreen from "../../screens/OtpScreen";
 import PatientRegistrationScreen from "../../screens/Patient/RegistrationScreen";
 import DoctorRegistrationScreen from '../../screens/Doctor/RegistrationScreen';
 
-const AuthStack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
-const AuthFlow = () => {
+const AuthStack = () => {
 
     return (
-        <AuthStack.Navigator>
+        <Stack.Navigator>
 
-            <AuthStack.Screen
+            <Stack.Screen
                 name="SplashScreen"
                 component={SplashScreen}
                 options={{ headerShown: false }}
             />
 
-            <AuthStack.Screen
+            <Stack.Screen
                 name="Signin"
                 component={SigninScreen}
                 options={{ headerShown: false }}
             />
 
-            <AuthStack.Screen
+            <Stack.Screen
                 name="OTP"
                 component={OtpScreen}
                 options={{ headerShown: false }}
             />
 
-            <AuthStack.Screen
+            <Stack.Screen
                 name="PatientRegistration"
                 component={PatientRegistrationScreen}
                 options={{ headerShown: false }}
             />
 
-            <AuthStack.Screen
+            <Stack.Screen
                 name="DoctorRegistration"
                 component={DoctorRegistrationScreen}
                 options={{ headerShown: false }}
             />
 
-        </AuthStack.Navigator>
+        </Stack.Navigator>
     )
 }
 
-export default AuthFlow;
+export default AuthStack;

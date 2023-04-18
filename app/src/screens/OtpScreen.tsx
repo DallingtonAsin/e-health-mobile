@@ -5,8 +5,7 @@ import Toast from 'react-native-simple-toast';
 import Avatar from '../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
-import { Context as PatientContext } from '../context/patientContext';
-import { Context as DoctorContext } from '../context/doctorContext';
+import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
 
 const otpLength = 4;
@@ -18,8 +17,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const [otp, setOTP] = useState(sent_otp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const { verifyCode } = useContext(PatientContext);
-    const { authenticateDoctor } = useContext(DoctorContext);
+    const { authenticateDoctor, verifyCode } = useContext(AuthContext);
 
 
 

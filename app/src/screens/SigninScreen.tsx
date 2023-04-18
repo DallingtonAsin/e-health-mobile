@@ -5,7 +5,8 @@ import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
-import { Context as PatientContext } from '../context/patientContext';
+import { Context as AuthContext } from '../context/authContext';
+
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 import { Switch } from 'react-native-paper';
@@ -19,7 +20,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInputRef = useRef<PhoneInput>(null);
-    const { signin } = useContext(PatientContext);
+    const { signin } = useContext(AuthContext);
 
     const [isDoctor, setIsDoctor] = useState(false);
     const onToggleSwitch = () => setIsDoctor(!isDoctor);
@@ -71,7 +72,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showWithGravity(`Please enter a valid phone number`, Toast.LONG, Toast.TOP);
+            Toast.show(`Please enter a valid phone number`, Toast.LONG);
         }
     }
 
