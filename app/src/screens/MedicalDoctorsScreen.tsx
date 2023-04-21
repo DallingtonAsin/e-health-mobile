@@ -5,6 +5,7 @@ import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../components/Avatar';
 import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
 import { Searchbar } from 'react-native-paper';
@@ -20,7 +21,9 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
     const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([]);
 
-    const { state, getDoctorsBySpecialty } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
+    const { getDoctorsBySpecialty } = useContext(AppContext);
+
     const user = state.user;
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {

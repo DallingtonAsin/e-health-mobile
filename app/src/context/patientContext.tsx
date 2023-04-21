@@ -67,5 +67,5 @@ export const { Provider, Context } = createDataContext(
     {
          submitAppointment, cancelAppointment, getMedicalHistory
     },
-    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
+    { isAppLoading: true },
 );

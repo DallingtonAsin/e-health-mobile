@@ -1,31 +1,30 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeStack from "./HomeStack";
-import * as configs from '../../configs';
-import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
-import SpecialityListScreen from "../../screens/MedicalDoctorsScreen";
-import ContactUsScreen from "../../screens/ContactUsScreen";
-import ProfileScreen from "../../screens/ProfileScreen";
-import ScheduleAppointmentScreen from "../../screens/ScheduleAppointment";
-import AppointmentConfirmationScreen from "../../screens/AppointmentConfirmationScreen";
-import MyAppointmentScreen from "../../screens/MyAppointmentScreen";
-import AppointmentDetailsScreen from "../../screens/AppointmentDetailsScreen";
-import MedicalRecordScreen from "../../screens/MedicalRecordScreen";
-import NotificationScreen from "../../screens/NotificationScreen";
-import MedicalHistoryScreen from "../../screens/MedicalHistoryScreen";
-import MyScheduleScreen from "../../screens/Doctor/MyScheduleScreen";
-import DrugScreen from "../../screens/DrugScreen";
-import DrugDetailsScreen from "../../screens/DrugDetailsScreen";
-import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../../screens/common/index";
-import CartIcon from "../../screens/common/CartIcon";
-import CartScreen from "../../screens/CartScreen";
-import CompleteMedicalAppointmentScreen from "../../screens/Doctor/CompleteMedicalAppointmentScreen";
-import HomeScreen from "../../screens/HomeScreen";
+import * as configs from '../configs';
+import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
+import SpecialityListScreen from "../screens/MedicalDoctorsScreen";
+import ContactUsScreen from "../screens/ContactUsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import ScheduleAppointmentScreen from "../screens/ScheduleAppointment";
+import AppointmentConfirmationScreen from "../screens/AppointmentConfirmationScreen";
+import MyAppointmentScreen from "../screens/MyAppointmentScreen";
+import AppointmentDetailsScreen from "../screens/AppointmentDetailsScreen";
+import MedicalRecordScreen from "../screens/MedicalRecordScreen";
+import NotificationScreen from "../screens/NotificationScreen";
+import MedicalHistoryScreen from "../screens/MedicalHistoryScreen";
+import MyScheduleScreen from "../screens/Doctor/MyScheduleScreen";
+import DrugScreen from "../screens/DrugScreen";
+import DrugDetailsScreen from "../screens/DrugDetailsScreen";
+import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/common/index";
+import CartIcon from "../screens/common/CartIcon";
+import CartScreen from "../screens/CartScreen";
+import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen";
+import TabNavigator from "./TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
 
-const AppStack = () => {
+const AppStackScreen = () => {
 
     return (
 
@@ -33,7 +32,7 @@ const AppStack = () => {
 
             <Stack.Screen
                 name="Home"
-                component={HomeScreen}
+                component={TabNavigator}
                 options={{
                     headerShown: false,
                 }}
@@ -298,4 +297,4 @@ const AppStack = () => {
     )
 }
 
-export default AppStack;
+export default AppStackScreen;

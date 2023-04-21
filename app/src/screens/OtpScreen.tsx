@@ -7,6 +7,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
+import { useNavigation } from '@react-navigation/native';
 
 const otpLength = 6;
 
@@ -18,7 +19,6 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const { authenticateDoctor, verifyCode } = useContext(AuthContext);
-
 
 
     const onChangeOTP = (code: string) => {
@@ -50,7 +50,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const navigateMethod = async (data: any) => {
         setOTP("");
         if (data.profile_status == 1) {
-            navigation.navigate('Home');
+            navigation.navigate('SignedInStack', { screen: 'Home' });
         } else {
             if (is_doctor) {
                 navigation.navigate('DoctorRegistration');

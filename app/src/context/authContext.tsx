@@ -2,12 +2,11 @@ import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
-import { storeUser, storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
+import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions';
-
 const services = new Service();
 
 
@@ -167,9 +166,20 @@ const registerDoctor = (dispatch: any) => {
     };
 };
 
+const signout = (dispatch: any) => {
+    return async () => {
+        await removeAuthToken();
+        await removeAccessToken();
+        dispatch({
+            type: types.USER_SIGNOUT,
+            payload: { isAppLoading: false }
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
-    { signin, verifyCode, signup, authenticateDoctor, registerDoctor },
-    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
+    { signin, verifyCode, signup, authenticateDoctor, registerDoctor, signout },
+    { user: initialUserState, token: null, authorization: null, isAppLoading: true },
 );

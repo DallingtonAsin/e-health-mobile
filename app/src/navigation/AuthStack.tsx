@@ -1,14 +1,14 @@
 import React from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SplashScreen from "../../screens/SplashScreen";
-import SigninScreen from "../../screens/SigninScreen";
-import OtpScreen from "../../screens/OtpScreen";
-import PatientRegistrationScreen from "../../screens/Patient/RegistrationScreen";
-import DoctorRegistrationScreen from '../../screens/Doctor/RegistrationScreen';
+import SplashScreen from "../screens/SplashScreen";
+import SigninScreen from "../screens/SigninScreen";
+import OtpScreen from "../screens/OtpScreen";
+import PatientRegistrationScreen from "../screens/Patient/RegistrationScreen";
+import DoctorRegistrationScreen from '../screens/Doctor/RegistrationScreen';
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = () => {
+const AuthStack= () => {
 
     return (
         <Stack.Navigator>

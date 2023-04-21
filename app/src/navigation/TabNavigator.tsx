@@ -3,36 +3,39 @@ import {
   BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { MultiBarProvider, BottomTabBarWrapper } from 'react-native-multibar';
-import * as configs from '../../configs';
-import HomeScreen from '../../screens/HomeScreen';
-import MoreItemsScreen from '../../screens/MoreItemsScreen';
-import ContactUsScreen from '../../screens/ContactUsScreen';
-import SpecialityCategoryScreen from '../../screens/MedicalSpecialtyScreen';
+import * as configs from '../configs';
+import HomeScreen from '../screens/HomeScreen';
+import MoreItemsScreen from '../screens/MoreItemsScreen';
+import ContactUsScreen from '../screens/ContactUsScreen';
+import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
 import { useNavigation } from '@react-navigation/native';
-import { HeaderLeftComponent } from '../../components/HeaderLeftComponent';
+import { HeaderLeftComponent } from '../components/HeaderLeftComponent';
 
 
-const HomeStack: React.FC = () => {
+const TabNavigator: React.FC = () => {
 
   const navigation = useNavigation();
 
   const navigateBack = () => { navigation.goBack() }
   const Tab = React.useRef<ReturnType<typeof createBottomTabNavigator>>(createBottomTabNavigator()).current;
+  const Stack = createNativeStackNavigator();
+
+  const HomeStack = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    );
+  };
 
   return (
-    <MultiBarProvider
-      overlayProps={{
-        expandingMode: 'staging',
-      }}
-      data={[]}
-      initialExtrasVisible={false}>
       <Tab.Navigator
-        tabBar={props => (
-          <BottomTabBarWrapper params={props.navigation}>
-            <BottomTabBar {...props} />
-          </BottomTabBarWrapper>
-        )}
         screenOptions={{
           tabBarShowLabel: true,
           tabBarActiveTintColor: configs.colors.primary,
@@ -49,7 +52,7 @@ const HomeStack: React.FC = () => {
 
         <Tab.Screen
           name="HomeTabScreen"
-          component={HomeScreen}
+          component={HomeStack}
           options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
         />
 
@@ -72,9 +75,7 @@ const HomeStack: React.FC = () => {
           options={HeaderLeftComponent({ headerShown: false, headerTitle: 'More', tabIcon: 'bars', onPressBackButton: navigateBack })}
         />
 
-
       </Tab.Navigator>
-    </MultiBarProvider>
   );
 };
-export default HomeStack;
+export default TabNavigator;

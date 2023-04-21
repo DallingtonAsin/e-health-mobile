@@ -151,5 +151,5 @@ const submitDoctorSchedule = () => {
 export const { Provider, Context } = createDataContext(
     appReducer,
     { authenticateDoctor, registerDoctor, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment },
-    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
+    { isAppLoading: true },
 );
