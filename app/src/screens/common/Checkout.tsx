@@ -8,13 +8,13 @@ import { numberWithCommas } from '../../components/common/SharedHelper';
 import Toast from 'react-native-simple-toast';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../../redux/reducers/drugsSlice';
-import { Context as AppContext } from '../../context/appContext';
+import { Context as AuthContext } from '../../context/authContext';
 
 
 const Checkout = ({ checkoutCartRef, amount }: { checkoutCartRef: any, amount: number }) => {
 
     const snapPoints = useMemo(() => ['25%', '75%'], []);
-    const { state } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
     const user = state.user;
     const [phoneNumber, setPhoneNumber] = useState(`${user.country_code}${user.phone_number}`);
     const cart = useSelector(selectCart);

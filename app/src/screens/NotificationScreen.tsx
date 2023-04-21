@@ -4,6 +4,7 @@ import { Notification } from "../interfaces";
 import * as configs from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
 import { addNotification, markAsRead, selectNotifications } from "../redux/reducers/notificationSlice";
@@ -15,7 +16,8 @@ const NotificationScreen = () => {
     const dispatch = useDispatch();
     const notifications = useSelector(selectNotifications);
 
-    const { state, getNotifications, markNotificationRead } = useContext(AppContext);
+    const { state} = useContext(AuthContext);
+    const { getNotifications, markNotificationRead } = useContext(AppContext);
     const user = state.user;
 
     useEffect(() => {

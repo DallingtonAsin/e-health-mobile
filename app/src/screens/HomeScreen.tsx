@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar as AvatarRP } from 'react-native-paper';
 import { getGreeting } from '../components/common/SharedHelper';
-import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 import Avatar from '../components/Avatar';
 import { useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ import { Notification } from '../interfaces';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
     const notifications = useSelector(selectNotifications);
 
     const user = state.user;

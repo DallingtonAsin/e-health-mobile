@@ -5,7 +5,7 @@ import { TextInput } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, displayMessage } from '../../components/common/SharedHelper';
-import { Context as AppContext } from '../../context/appContext';
+import { Context as DoctorContext } from '../../context/doctorContext';
 import { MedicalHistoryRecord } from '../../interfaces';
 import Toast from 'react-native-simple-toast';
 
@@ -28,7 +28,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     }
 
     const [historyInfo, setHistoryInfo] = useState<MedicalHistoryRecord>(history);
-    const { completeAppointment } = useContext(AppContext);
+    const { completeAppointment } = useContext(DoctorContext);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);

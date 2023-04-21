@@ -1,27 +1,9 @@
 import React, { useReducer, useEffect } from 'react';
 import { AppAction, AppointmentInfo, IUser, LoginData } from '../interfaces';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as types from './actions'
+import { getUser} from '../network/services/asyncStorageService';
 
 export default (reducer: any, action: any, defaultValue: any) => {
-
-    const storeData = async (value: any) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('access_token', jsonValue)
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    const getData = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('access_token')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            throw e;
-        }
-    }
 
     const Context = React.createContext({
         state: defaultValue,
@@ -55,17 +37,15 @@ export default (reducer: any, action: any, defaultValue: any) => {
 
     const Provider = ({ children }: { children: any }) => {
 
-        const [state, dispatch] = useReducer(reducer, defaultValue);
+        const [state, dispatch] = useReducer<(state: any, actions: AppAction) => any>(reducer, defaultValue);
 
         useEffect(() => {
             async function rehydrate() {
-                const storedState = await getData();
-
-                if (storedState) {
-                    // console.log(`Stored state is available`);
+                const user = await getUser();
+                if (user && user.access_token) {
                     dispatch({
                         type: types.HYDRATE,
-                        payload: storedState
+                        payload: user
                     });
                 }
 
@@ -76,10 +56,6 @@ export default (reducer: any, action: any, defaultValue: any) => {
             }
             rehydrate()
         }, []);
-
-        useEffect(() => {
-            storeData(state);
-        }, [state])
 
         const boundActions: any = {};
 
@@ -93,8 +69,6 @@ export default (reducer: any, action: any, defaultValue: any) => {
             </Context.Provider>
         )
     };
-
-
 
     return { Context: Context, Provider: Provider };
 };

@@ -4,7 +4,8 @@ import { DataTable, Divider, Button } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import { displayMessage, getCurrentDate } from '../../components/common/SharedHelper';
 import * as config from '../../configs';
-import { Context as AppContext } from '../../context/appContext';
+import { Context as AuthContext } from '../../context/authContext';
+import { Context as DoctorContext } from '../../context/doctorContext';
 import { DoctorCalendar } from '../../interfaces';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -20,7 +21,9 @@ const MyScheduleScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
-    const { state, getDoctorsCalendar, submitDoctorSchedule } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
+    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext);
+
     const user = state.user;
 
     const addScheduleRef = useRef<BottomSheet>(null);

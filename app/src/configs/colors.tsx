@@ -7,7 +7,6 @@ export const colors = {
     light: '#F5F5F5',
     medium: '#F3F3F3',
     gray: '#4D4D4E',
-    light: '#F9F9F9',
     dark: '#0c0c0c',
     denger: '#E81A1A',
     pink: "#dc3545",
@@ -24,5 +23,7 @@ export const colors = {
     confirmedColor: '#4dc8bd',
     pendingBg: '#e8eef0',
     pendingColor: '#215d67',
-    orange: '#ff8414'
+    orange: '#ff8414',
+    grey: '#555',
+    terms: '#2196f3'
 }
