@@ -3,14 +3,15 @@ import * as types from '../actions';
 
 
 const appReducer = (state: any, action: AppAction): any => {
-   
+
     switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...state,
-            userToken: action.access_token,
-            isLoading: false,
-          };
+        case types.RESTORE_TOKEN:
+            return {
+                ...state,
+                authorization: action.access_token,
+                token: action.access_token,
+                isAppLoading: false,
+            };
         case types.USER_SIGNIN:
             return {
                 user: null,
@@ -43,12 +44,17 @@ const appReducer = (state: any, action: AppAction): any => {
                 token: null
             };
         case types.HYDRATE:
-            return action.payload;
+            return {
+                user: action.payload,
+                authorization: action.payload.access_token,
+                token: action.payload.access_token,
+                isAppLoading: false
+            };
         case types.STOP_SPINNER:
-                return {
-                    ...state,
-                    isAppLoading: false
-                };
+            return {
+                ...state,
+                isAppLoading: false
+            };
         default:
             return state;
     }
