@@ -10,6 +10,7 @@ import { Context as PatientContext } from '../../context/patientContext';
 import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
+import { Checkbox } from 'react-native-paper';
 
 const numberOfLines = 5;
 
@@ -29,6 +30,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const { signup } = useContext(PatientContext);
 
@@ -57,6 +59,10 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             [field]: text,
         }));
         validateForm();
+    };
+
+    const handleCheckTermsAndConditions = () => {
+        setHasAgreedTerms(!hasAgreedTerms);
     };
 
     const submitDetails = () => {
@@ -204,7 +210,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
                             <SelectList
-                                setSelected={(val: string) =>  handleTextInputChange('gender', val)}
+                                setSelected={(val: string) => handleTextInputChange('gender', val)}
                                 data={genderOptions}
                                 save="value"
                                 search={false}
@@ -234,6 +240,14 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 onConfirm={handleConfirm}
                                 onCancel={hideDatePicker}
 
+                            />
+                        </View>
+
+                        <View style={styles.inputWrap}>
+                            <Checkbox.Item
+                                label="I agree to the terms and conditions"
+                                status={hasAgreedTerms ? 'checked' : 'unchecked'}
+                                onPress={handleCheckTermsAndConditions}
                             />
                         </View>
                     </View>

@@ -107,7 +107,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                 <View style={styles.body}>
 
                     <OTPInputView
-                        style={{ width: '80%', height: 100 }}
+                        style={styles.otpContainer}
                         pinCount={otpLength}
                         code={otp ? otp : sent_otp}
                         onCodeChanged={code => { onChangeOTP(code) }}
@@ -142,7 +142,9 @@ export default OtpScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.primary
+        backgroundColor: configs.colors.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     header: {
@@ -163,6 +165,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: configs.colors.primary,
+    },
+
+    otpContainer: {
+        width: '80%',
+        height: 200,
+        alignSelf: 'center'
     },
 
     textSignin: {
@@ -191,8 +199,6 @@ const styles = StyleSheet.create({
     },
 
     underlineStyleBase: {
-        width: 65,
-        height: 65,
         borderWidth: 1,
         fontSize: 20,
         color: configs.colors.dark,
