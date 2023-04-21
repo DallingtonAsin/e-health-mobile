@@ -61,10 +61,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         validateForm();
     };
 
-    const handleCheckTermsAndConditions = () => {
-        setHasAgreedTerms(!hasAgreedTerms);
-    };
-
+    
     const submitDetails = () => {
 
         if (!user.first_name) {
@@ -141,6 +138,10 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         handleTextInputChange('dob', dob);
     };
 
+    const handleCheckTermsAndConditions = () => {
+        setHasAgreedTerms(!hasAgreedTerms);
+    };
+    
     const handlePrivacyPolicyPress = () => {
         Linking.openURL('https://example.com/privacy-policy');
     };

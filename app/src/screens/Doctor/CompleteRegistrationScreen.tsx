@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Linking, StatusBar } from 'react-native';
 import * as config from '../../configs';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Checkbox } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
@@ -14,6 +14,7 @@ import { MultipleSelectList } from 'react-native-dropdown-select-list';
 const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation: any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [languages, setLanguages] = useState([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
@@ -66,6 +67,11 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
             return;
         }
 
+        if (!hasAgreedTerms) {
+            Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
+            return;
+        }
+
         let service_fee = removeCommas(user.service_fee);
 
         let payload: IUser = {
@@ -92,6 +98,18 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
     const navigateMethod = async (data: any) => {
         navigation.navigate('Home');
     }
+
+    const handleCheckTermsAndConditions = () => {
+        setHasAgreedTerms(!hasAgreedTerms);
+    };
+
+    const handlePrivacyPolicyPress = () => {
+        Linking.openURL('https://example.com/privacy-policy');
+    };
+
+    const handleTermsPress = () => {
+        Linking.openURL('https://example.com/terms-and-conditions');
+    };
 
     return (
         <>
@@ -192,6 +210,26 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
                             keyboardType="numeric"
                             onChangeText={text => handleServiceFeeChange(text)}
                         />
+                    </View>
+
+                    <View style={[config.styles.registration.doctor.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                        <Checkbox
+                            status={hasAgreedTerms ? 'checked' : 'unchecked'}
+                            color={config.colors.primary}
+                            onPress={handleCheckTermsAndConditions}
+                        />
+                        <TouchableOpacity onPress={handlePrivacyPolicyPress}>
+                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
+                                I agree to the{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
+                                    privacy policy
+                                </Text>{' '}
+                                and{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleTermsPress}>
+                                    terms and conditions
+                                </Text>
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
