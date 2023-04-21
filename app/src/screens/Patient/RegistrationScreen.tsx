@@ -99,6 +99,11 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
+        if (!hasAgreedTerms) {
+            Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
+            return;
+        }
+
         setIsLoading(true);
 
         let payload: IUser = {
