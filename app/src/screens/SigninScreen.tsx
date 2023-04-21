@@ -6,7 +6,6 @@ import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
-
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 import { Switch } from 'react-native-paper';

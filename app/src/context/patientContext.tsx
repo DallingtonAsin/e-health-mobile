@@ -1,12 +1,9 @@
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, AppointmentInfo, LoginData } from '../interfaces';
-import { storeUser, storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
+import { AppointmentInfo } from '../interfaces';
 import { appReducer } from './reducers/appReducer';
-import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
-import * as types from './actions';
 
 const services = new Service();
 

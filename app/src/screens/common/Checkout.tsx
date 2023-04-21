@@ -8,7 +8,6 @@ import { numberWithCommas } from '../../components/common/SharedHelper';
 import Toast from 'react-native-simple-toast';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../../redux/reducers/drugsSlice';
-import { Context as AppContext } from '../../context/appContext';
 import { Context as AuthContext } from '../../context/authContext';
 
 
