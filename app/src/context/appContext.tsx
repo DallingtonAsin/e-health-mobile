@@ -2,7 +2,7 @@ import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser } from '../interfaces';
-import { storeUser, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
+import { storeUser, storeAccessToken } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
@@ -195,18 +195,6 @@ const getMyAppointments = () => {
     };
 };
 
-const signout = (dispatch: any) => {
-    return async () => {
-        await removeAuthToken();
-        await removeAccessToken();
-        dispatch({
-            type: types.USER_SIGNOUT,
-            payload: { isAppLoading: false }
-        });
-    };
-};
-
-
 const getDoctorSpecialties = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
@@ -300,8 +288,8 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
-        getAppointmentTypes, getMyAppointments, signout, deleteProfileImage, getDoctorSpecialties, updateProfileImage,
+        getAppointmentTypes, getMyAppointments, deleteProfileImage, getDoctorSpecialties, updateProfileImage,
         getDoctorLanguages, getNotifications, markNotificationRead
     },
-    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
+    { isAppLoading: true },
 );

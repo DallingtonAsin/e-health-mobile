@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpaci
 import * as config from '../configs';
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../components/Avatar';
-import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import { Context as PatientContext } from '../context/patientContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
@@ -19,7 +19,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
         reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
 
-    const { state } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
     const { cancelAppointment } = useContext(PatientContext);
 
     const user = state.user;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, StatusBar } from 'react-native';
 import * as config from '../../configs';
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
@@ -10,6 +10,7 @@ import { Context as PatientContext } from '../../context/patientContext';
 import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
+import { Checkbox } from 'react-native-paper';
 
 const numberOfLines = 5;
 
@@ -29,6 +30,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<IUser>(InitialUser);
     const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const { signup } = useContext(PatientContext);
 
@@ -59,6 +61,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         validateForm();
     };
 
+    
     const submitDetails = () => {
 
         if (!user.first_name) {
@@ -90,6 +93,11 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
         if (!user.dob) {
             Toast.show('Enter your date of birth', Toast.LONG);
+            return;
+        }
+
+        if (!hasAgreedTerms) {
+            Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
             return;
         }
 
@@ -130,6 +138,17 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         handleTextInputChange('dob', dob);
     };
 
+    const handleCheckTermsAndConditions = () => {
+        setHasAgreedTerms(!hasAgreedTerms);
+    };
+    
+    const handlePrivacyPolicyPress = () => {
+        Linking.openURL('https://example.com/privacy-policy');
+    };
+
+    const handleTermsPress = () => {
+        Linking.openURL('https://example.com/terms-and-conditions');
+    };
 
     return (
         <>
@@ -204,7 +223,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <View style={styles.inputWrap}>
                             <Text style={styles.labelTxt}>Gender<Text style={styles.required}>*</Text></Text>
                             <SelectList
-                                setSelected={(val: string) =>  handleTextInputChange('gender', val)}
+                                setSelected={(val: string) => handleTextInputChange('gender', val)}
                                 data={genderOptions}
                                 save="value"
                                 search={false}
@@ -236,6 +255,27 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                             />
                         </View>
+
+                    </View>
+
+                    <View style={[styles.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                        <Checkbox
+                            status={hasAgreedTerms ? 'checked' : 'unchecked'}
+                            color={config.colors.primary}
+                            onPress={handleCheckTermsAndConditions}
+                        />
+                        <TouchableOpacity onPress={handlePrivacyPolicyPress}>
+                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
+                                I agree to the{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
+                                    privacy policy
+                                </Text>{' '}
+                                and{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleTermsPress}>
+                                    terms and conditions
+                                </Text>
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.viewContainer}>

@@ -9,6 +9,7 @@ import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
 import { AppointmentInfo, DoctorsDetail } from '../interfaces';
 import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import { Context as PatientContext } from '../context/patientContext';
 import { Context as DoctorContext } from '../context/doctorContext';
 import { initialDoctorInfo } from '../configs/constants';
@@ -37,7 +38,8 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [pastMedicalHistory, setPastMedicalHistory] = useState('');
     const [currentTreatment, setCurrentTreatment] = useState('');
 
-    const { state, getAppointmentTypes } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
+    const { getAppointmentTypes } = useContext(AppContext);
     const { submitAppointment } = useContext(PatientContext);
     const { getDoctorInfo } = useContext(DoctorContext);
 

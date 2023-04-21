@@ -5,11 +5,11 @@ import Toast from 'react-native-simple-toast';
 import Avatar from '../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
-import { Context as PatientContext } from '../context/patientContext';
-import { Context as DoctorContext } from '../context/doctorContext';
+import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
+import { useNavigation } from '@react-navigation/native';
 
-const otpLength = 4;
+const otpLength = 6;
 
 const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -18,9 +18,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const [otp, setOTP] = useState(sent_otp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const { verifyCode } = useContext(PatientContext);
-    const { authenticateDoctor } = useContext(DoctorContext);
-
+    const { authenticateDoctor, verifyCode } = useContext(AuthContext);
 
 
     const onChangeOTP = (code: string) => {
@@ -52,7 +50,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const navigateMethod = async (data: any) => {
         setOTP("");
         if (data.profile_status == 1) {
-            navigation.navigate('Home');
+            navigation.navigate('SignedInStack', { screen: 'Home' });
         } else {
             if (is_doctor) {
                 navigation.navigate('DoctorRegistration');
@@ -109,7 +107,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                 <View style={styles.body}>
 
                     <OTPInputView
-                        style={{ width: '80%', height: 100 }}
+                        style={styles.otpContainer}
                         pinCount={otpLength}
                         code={otp ? otp : sent_otp}
                         onCodeChanged={code => { onChangeOTP(code) }}
@@ -144,7 +142,9 @@ export default OtpScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.primary
+        backgroundColor: configs.colors.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     header: {
@@ -165,6 +165,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: configs.colors.primary,
+    },
+
+    otpContainer: {
+        width: '80%',
+        height: 200,
+        alignSelf: 'center'
     },
 
     textSignin: {
@@ -193,8 +199,6 @@ const styles = StyleSheet.create({
     },
 
     underlineStyleBase: {
-        width: 65,
-        height: 65,
         borderWidth: 1,
         fontSize: 20,
         color: configs.colors.dark,

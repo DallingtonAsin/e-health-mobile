@@ -4,7 +4,7 @@ import * as config from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
-import { Context as AppContext } from '../context/appContext';
+import { Context as AuthContext } from '../context/authContext';
 import * as configs from '../configs';
 import CustomStackHeader from '../components/CustomStackHeader';
 import { getAppVersion } from '../components/common/SharedHelper';
@@ -22,7 +22,7 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 7, name: 'Signout', icon: 'power-off', isIcon5: true, action: () => signout() },
     ];
 
-    const { signout } = useContext(AppContext);
+    const { signout } = useContext(AuthContext);
 
     const Item = ({ item }: { item: any }) => (
         <TouchableOpacity style={styles.item} onPress={item.action}>
@@ -57,8 +57,6 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
             </View>
         </SafeAreaView>
     )
-
-
 }
 
 export default MoreItemsScreen;

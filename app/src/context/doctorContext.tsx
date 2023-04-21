@@ -4,7 +4,6 @@ import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
-import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions';
 
@@ -151,5 +150,5 @@ const submitDoctorSchedule = () => {
 export const { Provider, Context } = createDataContext(
     appReducer,
     { authenticateDoctor, registerDoctor, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment },
-    { user: initialUserState, token: '', authorization: '', isAppLoading: true },
+    { isAppLoading: true },
 );
