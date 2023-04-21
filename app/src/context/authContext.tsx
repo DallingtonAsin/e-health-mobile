@@ -2,7 +2,7 @@ import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
 import { IUser, LoginData } from '../interfaces';
-import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken } from '../network/services/asyncStorageService';
+import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken, removeUser } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { initialUserState } from '../configs/constants';
 import { displayErrorMessage } from '../components/common/SharedHelper';
@@ -168,6 +168,7 @@ const registerDoctor = (dispatch: any) => {
 
 const signout = (dispatch: any) => {
     return async () => {
+        await removeUser()
         await removeAuthToken();
         await removeAccessToken();
         dispatch({

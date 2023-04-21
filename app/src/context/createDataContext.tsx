@@ -1,8 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { AppAction, AppointmentInfo, IUser, LoginData } from '../interfaces';
 import * as types from './actions'
-import { getAccessToken, getUser, storeAccessToken, storeUser } from '../network/services/asyncStorageService';
-import { UserOffline } from 'agora-rn-uikit/src/Reducer';
+import { getUser} from '../network/services/asyncStorageService';
 
 export default (reducer: any, action: any, defaultValue: any) => {
 
@@ -56,7 +55,7 @@ export default (reducer: any, action: any, defaultValue: any) => {
                 });
             }
             rehydrate()
-        }, [state]);
+        }, []);
 
         const boundActions: any = {};
 
@@ -70,8 +69,6 @@ export default (reducer: any, action: any, defaultValue: any) => {
             </Context.Provider>
         )
     };
-
-
 
     return { Context: Context, Provider: Provider };
 };

@@ -63,6 +63,14 @@ const getUser = async () => {
     }
 }
 
+const removeUser = async () => {
+    try {
+        await AsyncStorage.removeItem("user");
+    } catch (err) {
+        throw err;
+    }
+}
+
 const removeAuthToken = async () => {
     try {
         await AsyncStorage.removeItem("authorization");
@@ -83,5 +91,5 @@ const removeAccessToken = async () => {
 
 export {
     storeAuthToken, getAuthToken, storeAccessToken, getAccessToken,
-    removeAuthToken, removeAccessToken, storeUser, getUser
+    removeAuthToken, removeAccessToken, storeUser, getUser, removeUser
 }
