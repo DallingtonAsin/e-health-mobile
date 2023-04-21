@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, StatusBar } from 'react-native';
 import * as config from '../../configs';
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
@@ -136,6 +136,13 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         handleTextInputChange('dob', dob);
     };
 
+    const handlePrivacyPolicyPress = () => {
+        Linking.openURL('https://example.com/privacy-policy');
+    };
+
+    const handleTermsPress = () => {
+        Linking.openURL('https://example.com/terms-and-conditions');
+    };
 
     return (
         <>
@@ -243,13 +250,26 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             />
                         </View>
 
-                        <View style={styles.inputWrap}>
-                            <Checkbox.Item
-                                label="I agree to the terms and conditions"
-                                status={hasAgreedTerms ? 'checked' : 'unchecked'}
-                                onPress={handleCheckTermsAndConditions}
-                            />
-                        </View>
+                    </View>
+
+                    <View style={[styles.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                        <Checkbox
+                            status={hasAgreedTerms ? 'checked' : 'unchecked'}
+                            color={config.colors.primary}
+                            onPress={handleCheckTermsAndConditions}
+                        />
+                        <TouchableOpacity onPress={handlePrivacyPolicyPress}>
+                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
+                                I agree to the{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
+                                    privacy policy
+                                </Text>{' '}
+                                and{' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleTermsPress}>
+                                    terms and conditions
+                                </Text>
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.viewContainer}>

@@ -24,5 +24,7 @@ export const colors = {
     confirmedColor: '#4dc8bd',
     pendingBg: '#e8eef0',
     pendingColor: '#215d67',
-    orange: '#ff8414'
+    orange: '#ff8414',
+    grey: '#555',
+    terms: '#2196f3'
 }
