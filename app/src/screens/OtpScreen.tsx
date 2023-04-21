@@ -8,7 +8,7 @@ import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
 
-const otpLength = 4;
+const otpLength = 6;
 
 const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
