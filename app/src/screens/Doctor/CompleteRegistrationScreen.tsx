@@ -198,7 +198,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Service Fee
+                        <Text style={config.styles.registration.doctor.labelTxt}>Service Fee per 15 minutes
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="Service Fee"

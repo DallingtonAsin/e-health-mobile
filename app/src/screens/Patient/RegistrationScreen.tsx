@@ -6,7 +6,7 @@ import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, displayMessage, isValidEmail } from '../../components/common/SharedHelper';
-import { Context as PatientContext } from '../../context/patientContext';
+import { Context as AuthContext } from '../../context/authContext';
 import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
@@ -32,7 +32,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const { signup } = useContext(PatientContext);
+    const { signup } = useContext(AuthContext);
 
     const genderOptions = [
         { key: '1', value: 'Male' },
@@ -61,7 +61,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         validateForm();
     };
 
-    
+
     const submitDetails = () => {
 
         if (!user.first_name) {
@@ -97,7 +97,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         }
 
         if (!hasAgreedTerms) {
-            Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
+            Toast.show('Please agree to the terms and conditions to proceed.', Toast.LONG);
             return;
         }
 
@@ -141,7 +141,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const handleCheckTermsAndConditions = () => {
         setHasAgreedTerms(!hasAgreedTerms);
     };
-    
+
     const handlePrivacyPolicyPress = () => {
         Linking.openURL('https://example.com/privacy-policy');
     };

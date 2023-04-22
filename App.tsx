@@ -21,7 +21,6 @@ LogBox.ignoreAllLogs();
 
 const App: React.FC = () => {
 
-  // const [state, dispatch] = React.useReducer(appReducer, {})
   const { state } = React.useContext(AuthContext);
   if (state.isAppLoading) {
     return (
