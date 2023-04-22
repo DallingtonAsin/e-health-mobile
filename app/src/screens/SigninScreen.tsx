@@ -44,6 +44,12 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 number = removeLeadingZeros(number);
             }
 
+            const country_code = phoneInputRef.current?.getCallingCode()
+            if(country_code != '256'){
+               Toast.show(`Please ensure the selected country is Uganda`, Toast.LONG)
+               return
+            }
+
             const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
             Alert.alert(
                 `${isDoctor ? 'Healthcare Provider' : 'Patient'} Signup`,
@@ -53,7 +59,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                     {
                         text: 'OK', onPress: async () => {
                             let obj = {
-                                country_code: `+${phoneInputRef.current?.getCallingCode()}`,
+                                country_code: `+${country_code}`,
                                 phone_number: number
                             }
                             if (isDoctor) {
@@ -138,7 +144,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={`https://www.coachcare.com/uploads/doctor-patient-relationships-in-telemedicine.png`} resizeMode={'cover'}/>
+                    <Avatar size={135} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false}/>
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 

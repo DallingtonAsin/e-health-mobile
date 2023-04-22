@@ -9,26 +9,42 @@ import { Context as AppContext } from '../../context/appContext';
 import { Context as AuthContext } from '../../context/authContext';
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
+import { initialUser } from '../../configs/constants';
+import { SelectList } from 'react-native-dropdown-select-list';
 
-
-const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation: any, user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser>> }) => {
+const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [languages, setLanguages] = useState([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-
+    const [user, setUser] = useState<IUser>(initialUser);
+    const [specialties, setSpecialties] = useState([]);
     const [isFetchingLanguages, setIsFetchingLanguages] = useState(true);
     const { getDoctorLanguages } = useContext(AppContext);
     const { registerDoctor } = useContext(AuthContext);
+    const { getDoctorSpecialties } = useContext(AppContext);
+
+    const titleOptions = [
+        { key: '1', value: 'Dr.' },
+        { key: '2', value: 'Mr.' },
+        { key: '3', value: 'Mrs.' },
+        { key: '4', value: 'Ms.' },
+    ];
 
 
     useEffect(() => {
+        getDoctorSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
         getDoctorLanguages({ onSuccess: populateLanguages, onFailure: displayMessage, onCompletion: () => { setIsFetchingLanguages(false) } });
     }, []);
 
     const populateLanguages = (data: any) => {
         setLanguages(data);
+    }
+
+    const populateSpecialties = (data: any) => {
+        setSpecialties(data);
     }
 
     const handleServiceFeeChange = (text: string) => {
@@ -37,6 +53,16 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
     }
 
     const submitDetails = () => {
+
+        if (!user.specialty) {
+            Toast.show('Select your specialty', Toast.LONG);
+            return;
+        }
+
+        if (!user.title) {
+            Toast.show('Select your title', Toast.LONG);
+            return;
+        }
 
         if (!user.address) {
             Toast.show('Enter your address', Toast.LONG);
@@ -99,18 +125,6 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
         navigation.navigate('Home');
     }
 
-    const handleCheckTermsAndConditions = () => {
-        setHasAgreedTerms(!hasAgreedTerms);
-    };
-
-    const handlePrivacyPolicyPress = () => {
-        Linking.openURL('https://example.com/privacy-policy');
-    };
-
-    const handleTermsPress = () => {
-        Linking.openURL('https://example.com/terms-and-conditions');
-    };
-
     return (
         <>
             <SafeAreaView style={config.styles.registration.doctor.container}>
@@ -121,8 +135,38 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
 
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
-                    contentContainerStyle={config.styles.registration.doctor.scrollContainer}>
-                    <Text style={config.styles.registration.doctor.title}>Complete Registration</Text>
+                    contentContainerStyle={config.styles.registration.doctor.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                    >
+
+
+                    <View style={config.styles.registration.doctor.inputWrap}>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Category
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <SelectList
+                            setSelected={(val: string) => setUser(prev => ({ ...prev, specialty: val }))}
+                            data={specialties}
+                            save="value"
+                            search={false}
+                            placeholder={"Select category"}
+                            inputStyles={{ color: config.colors.black }}
+                            boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                        />
+                    </View>
+
+                    <View style={config.styles.registration.doctor.inputWrap}>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Title
+                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <SelectList
+                            setSelected={(val: string) => setUser(prev => ({ ...prev, title: val }))}
+                            data={titleOptions}
+                            save="value"
+                            search={false}
+                            placeholder={"Select Title"}
+                            inputStyles={{ color: config.colors.black }}
+                            boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                        />
+                    </View>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Address<Text style={config.styles.registration.doctor.required}>*</Text></Text>
@@ -198,7 +242,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Service Fee
+                        <Text style={config.styles.registration.doctor.labelTxt}>Service Fee per 15 minutes
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="Service Fee"
@@ -212,27 +256,7 @@ const CompleteRegistrationScreen = ({ navigation, user, setUser }: { navigation:
                         />
                     </View>
 
-                    <View style={[config.styles.registration.doctor.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
-                        <Checkbox
-                            status={hasAgreedTerms ? 'checked' : 'unchecked'}
-                            color={config.colors.primary}
-                            onPress={handleCheckTermsAndConditions}
-                        />
-                        <TouchableOpacity onPress={handlePrivacyPolicyPress}>
-                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
-                                I agree to the{' '}
-                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
-                                    privacy policy
-                                </Text>{' '}
-                                and{' '}
-                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleTermsPress}>
-                                    terms and conditions
-                                </Text>
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={config.styles.registration.doctor.viewContainer}>
+                    <View style={[config.styles.registration.doctor.viewContainer, {marginBottom: 40 }]}>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
                             <Text style={[config.styles.btnText]}>Submit</Text>

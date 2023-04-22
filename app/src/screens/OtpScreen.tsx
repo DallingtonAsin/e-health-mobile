@@ -7,7 +7,6 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from '../components/common/SharedHelper';
-import { useNavigation } from '@react-navigation/native';
 
 const otpLength = 6;
 
@@ -95,7 +94,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                 <StatusBar backgroundColor={configs.colors.primary} />
 
                 <View style={styles.header}>
-                    <Avatar size={120} borderRadius={75} source={`https://thumbs.dreamstime.com/b/otp-one-time-password-step-authentication-data-protection-internet-security-concept-otp-one-time-password-step-authentication-data-254434939.jpg`} />
+                    <Avatar size={120} borderRadius={75} source={configs.images.otp} isURL={false} />
                     <Text style={styles.otpTxt}>
                         {is_doctor
                             ? 'Enter the code assigned to you by the administrator, or contact the administrator.'
