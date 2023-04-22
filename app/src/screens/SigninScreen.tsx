@@ -44,6 +44,12 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 number = removeLeadingZeros(number);
             }
 
+            const country_code = phoneInputRef.current?.getCallingCode()
+            if(country_code != '256'){
+               Toast.show(`Please ensure the selected country is Uganda`, Toast.LONG)
+               return
+            }
+
             const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
             Alert.alert(
                 `${isDoctor ? 'Healthcare Provider' : 'Patient'} Signup`,
@@ -53,7 +59,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                     {
                         text: 'OK', onPress: async () => {
                             let obj = {
-                                country_code: `+${phoneInputRef.current?.getCallingCode()}`,
+                                country_code: `+${country_code}`,
                                 phone_number: number
                             }
                             if (isDoctor) {

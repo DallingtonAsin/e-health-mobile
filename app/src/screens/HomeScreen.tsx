@@ -30,6 +30,18 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const unreadCount = notifications.filter((notification: Notification) => !notification.read).length;
 
+    const navigateScreen = (screen: string) => {
+        if (!user.is_patient) {
+            if (user.is_verified) {
+                navigation.navigate(screen)
+            } else {
+                navigation.navigate('CompleteRegistration')
+            }
+        } else {
+            navigation.navigate(screen)
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
 
@@ -42,14 +54,14 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 <View style={styles.header}>
 
                     <View style={styles.headerImageSection}>
-                        <TouchableOpacity style={styles.image} onPress={() => navigation.navigate('Profile')}>
+                        <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
                             {user.image
                                 ? <Avatar size={80} source={user.image} />
                                 : <AvatarRP.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
                             }
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.notificationView} onPress={() => navigation.navigate('Notifications')}>
+                        <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                             <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                             {unreadCount > 0 &&
                                 <View style={[configs.styles.supCount, { right: 2 }]}>
@@ -73,19 +85,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={styles.cardContainer}>
                         {user.is_patient &&
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('SpecialityCategories')}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
                                 <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Doctors</Text>
                             </TouchableOpacity>
                         }
 
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MyAppointments')}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MyAppointments')}>
                             <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>My Appointments</Text>
                         </TouchableOpacity>
 
                         {!user.is_patient &&
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DoctorsCalendar')}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
                                 <Icon5 name="clock" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>My Calendar</Text>
                             </TouchableOpacity>
@@ -95,11 +107,11 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                     {user.is_patient &&
                         <View style={styles.cardContainer}>
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pharmacy')}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('Pharmacy')}>
                                 <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Pharmacy</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MedicalHistory')}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
                                 <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Medical History</Text>
                             </TouchableOpacity>
@@ -107,11 +119,11 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     }
 
                     <View style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`ContactUs`)}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
                             <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Help</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(`MoreTabScreen`)}>
+                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`MoreTabScreen`)}>
                             <Icon name="gear" size={iconSize} color={configs.colors.primary} />
                             <Text style={styles.subtitle}>Settings</Text>
                         </TouchableOpacity>
