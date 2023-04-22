@@ -11,23 +11,13 @@ import { IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
 import { Checkbox } from 'react-native-paper';
+import { initialUser } from '../../configs/constants';
 
 const numberOfLines = 5;
 
 const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
-    const InitialUser = {
-        first_name: '',
-        last_name: '',
-        email: '',
-        dob: '',
-        gender: '',
-        address: '',
-        phone_number: '',
-        profile_status: false,
-    }
-
-    const [user, setUser] = useState<IUser>(InitialUser);
+    const [user, setUser] = useState<IUser>(initialUser);
     const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);

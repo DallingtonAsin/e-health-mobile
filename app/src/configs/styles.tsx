@@ -179,7 +179,7 @@ export const styles = {
       },
 
       scrollView: {
-        flex: 1,
+        flex: 1
       },
 
       scrollContainer: {

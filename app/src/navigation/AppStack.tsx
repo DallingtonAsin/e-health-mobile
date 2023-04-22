@@ -20,6 +20,7 @@ import CartIcon from "../screens/common/CartIcon";
 import CartScreen from "../screens/CartScreen";
 import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen";
 import TabNavigator from "./TabNavigator";
+import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -292,6 +293,20 @@ const AppStackScreen = () => {
                     headerShown: true,
                 }}
                 component={MedicalHistoryScreen} />
+
+            <Stack.Screen
+                name="CompleteRegistration"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Complete Registration`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={CompleteRegistrationScreen}
+            />
 
         </Stack.Navigator>
     )

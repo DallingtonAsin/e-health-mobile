@@ -1,6 +1,7 @@
 
 import { SignedinUser, DoctorsDetail } from "../interfaces";
 
+
 const initialUser = {
   first_name: '',
   last_name: '',
@@ -36,6 +37,7 @@ const initialDoctorInfo: DoctorsDetail = {
 
 
 export {
+  initialUser,
   initialUserState,
   initialDoctorInfo
 }
