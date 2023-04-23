@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -12,18 +12,22 @@ import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar as AvatarRP } from 'react-native-paper';
-import { getGreeting } from '../components/common/SharedHelper';
+import { displayMessage, getGreeting } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
+import { Context as DoctorContext } from '../context/doctorContext';
 import { getUserInitials } from '../components/common/SharedHelper';
 import Avatar from '../components/Avatar';
 import { useSelector } from 'react-redux';
 import { selectNotifications } from "../redux/reducers/notificationSlice";
 import { Notification } from '../interfaces';
 import Toast from 'react-native-simple-toast';
+import AppLoader from '../components/AppLoader';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state } = useContext(AuthContext);
+    const { state, updateUserState } = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
+    const { isVerified } = useContext(DoctorContext);
     const notifications = useSelector(selectNotifications);
 
     const user = state.user;
@@ -37,7 +41,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 if (user.is_verified) {
                     navigation.navigate(screen)
                 } else {
-                    Toast.show(`Thank you for registering with us. Please wait as your account is awaiting approval.`, Toast.LONG)
+                    setIsLoading(true);
+                    isVerified({ screen: screen, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
                 }
             } else {
                 navigation.navigate('CompleteRegistration')
@@ -47,97 +52,104 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
+    const onSuccess = async (screen: string) => {
+        updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: screen }) });
+    }
+
     return (
-        <SafeAreaView style={styles.container}>
+        <React.Fragment>
+            <SafeAreaView style={styles.container}>
 
-            <StatusBar backgroundColor={configs.colors.primary} />
+                <StatusBar backgroundColor={configs.colors.primary} />
 
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContainerStyle}>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.scrollContainerStyle}>
 
-                <View style={styles.header}>
+                    <View style={styles.header}>
 
-                    <View style={styles.headerImageSection}>
-                        <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
-                            {user.image
-                                ? <Avatar size={80} source={user.image} />
-                                : <AvatarRP.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
-                            }
-                        </TouchableOpacity>
+                        <View style={styles.headerImageSection}>
+                            <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
+                                {user.image
+                                    ? <Avatar size={80} source={user.image} />
+                                    : <AvatarRP.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
+                                }
+                            </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
-                            <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
-                            {unreadCount > 0 &&
-                                <View style={[configs.styles.supCount, { right: 2 }]}>
-                                    <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadCount}</Text>
-                                </View>}
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
+                                <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
+                                {unreadCount > 0 &&
+                                    <View style={[configs.styles.supCount, { right: 2 }]}>
+                                        <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadCount}</Text>
+                                    </View>}
+                            </TouchableOpacity>
+                        </View>
 
 
-                    <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
-                        <View style={{ left: 20 }}>
-                            <Text style={styles.greeting}>{getGreeting()}, {!user.is_patient && user.title} {user.first_name}!</Text>
-                            <Text style={styles.amazing}>Today is amazing!</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
+                            <View style={{ left: 20 }}>
+                                <Text style={styles.greeting}>{getGreeting()}, {!user.is_patient && user.title} {user.first_name}!</Text>
+                                <Text style={styles.amazing}>Today is amazing!</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
 
 
-                <View style={styles.body}>
-                    <Text style={styles.title}>Quick Actions</Text>
+                    <View style={styles.body}>
+                        <Text style={styles.title}>Quick Actions</Text>
 
-                    <View style={styles.cardContainer}>
-                        {user.is_patient &&
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
-                                <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Doctors</Text>
-                            </TouchableOpacity>
-                        }
-
-                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MyAppointments')}>
-                            <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>My Appointments</Text>
-                        </TouchableOpacity>
-
-                        {!user.is_patient &&
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
-                                <Icon name="calendar" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>My Calendar</Text>
-                            </TouchableOpacity>
-                        }
-
-                    </View>
-
-                    {user.is_patient &&
                         <View style={styles.cardContainer}>
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('Pharmacy')}>
-                                <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Pharmacy</Text>
+                            {user.is_patient &&
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                    <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Doctors</Text>
+                                </TouchableOpacity>
+                            }
+
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MyAppointments')}>
+                                <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>My Appointments</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
-                                <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Medical History</Text>
+
+                            {!user.is_patient &&
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
+                                    <Icon name="calendar" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>My Calendar</Text>
+                                </TouchableOpacity>
+                            }
+
+                        </View>
+
+                        {user.is_patient &&
+                            <View style={styles.cardContainer}>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('Pharmacy')}>
+                                    <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Pharmacy</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
+                                    <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Medical History</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+
+                        <View style={styles.cardContainer}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
+                                <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Help</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`MoreTabScreen`)}>
+                                <Icon name="gear" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Settings</Text>
                             </TouchableOpacity>
                         </View>
-                    }
 
-                    <View style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
-                            <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Help</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`MoreTabScreen`)}>
-                            <Icon name="gear" size={iconSize} color={configs.colors.primary} />
-                            <Text style={styles.subtitle}>Settings</Text>
-                        </TouchableOpacity>
                     </View>
 
-                </View>
-
-            </ScrollView>
-        </SafeAreaView>
+                </ScrollView>
+            </SafeAreaView>
+            {isLoading && <AppLoader />}
+        </React.Fragment>
     );
 }
 

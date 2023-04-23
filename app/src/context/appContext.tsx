@@ -30,7 +30,7 @@ const updateProfile = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess(user, message);
+                onSuccess(message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -63,7 +63,7 @@ const updateProfileImage = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess(user, message);
+                onSuccess(message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);
@@ -94,7 +94,7 @@ const deleteProfileImage = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess(user, message);
+                onSuccess(message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);

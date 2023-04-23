@@ -17,9 +17,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import RNFS from 'react-native-fs';
 
 
-
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
-
 
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
@@ -61,6 +59,8 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const submitDetails = () => {
 
+        console.log(`selected languages`, selectedLanguages)
+
         if (!user.specialty) {
             Toast.show('Select your specialty', Toast.LONG);
             return;
@@ -83,6 +83,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
         if (!user.profession) {
             Toast.show('Enter your profession', Toast.LONG);
+            return;
         }
 
         if (selectedLanguages.length < 0) {
@@ -111,9 +112,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         }
 
         let service_fee = removeCommas(user.service_fee);
-        delete frontImage.source
-        delete backImage.source
-
+       
         const formData = new FormData();
         formData.append('specialty', user.specialty);
         formData.append('title', user.title);
@@ -180,7 +179,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
 
     return (
-        <>
+        <React.Fragment>
             <SafeAreaView style={config.styles.registration.doctor.container}>
 
                 <StatusBar
@@ -334,7 +333,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                 </ScrollView>
             </SafeAreaView>
             {(isLoading || isFetchingSpecialties || isFetchingLanguages) && <AppLoader />}
-        </>
+        </React.Fragment>
     )
 }
 

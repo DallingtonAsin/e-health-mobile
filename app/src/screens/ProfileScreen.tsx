@@ -25,7 +25,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const [isDisabled, setIsDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { state } = useContext(AuthContext);
+    const { state, updateUserState } = useContext(AuthContext);
     const { updateProfile, updateProfileImage, deleteProfileImage } = useContext(AppContext);
 
     const [user, setUser] = useState<IUser>(state.user);
@@ -87,10 +87,13 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const onSuccess = async (message: string) => {
-        setUser(user);
-        displayMessage(message);
-        navigation.navigate('Profile');
-        setIsDisabled(true);
+        updateUserState({
+            onSuccess: () => {
+                displayMessage(message);
+                navigation.navigate('SignedInStack', { screen: 'Profile' });
+                setIsDisabled(true);
+            }
+        });
     }
 
     const showDatePicker = () => {

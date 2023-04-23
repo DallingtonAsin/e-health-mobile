@@ -19,7 +19,9 @@ const routes = {
 
    doctor: {
       signin: 'doctor/login',
+      verify: 'doctor/verify',
       register: 'doctor/register',
+      is_verified: 'doctor/is-verified',
       complete_registration: 'doctor/profile/complete',
       updateProfile: 'doctor/profile/update',
       updateProfilePicture: 'doctor',
