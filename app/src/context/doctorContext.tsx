@@ -46,10 +46,11 @@ const authenticateDoctor = (dispatch: any) => {
     };
 };
 
-const registerDoctor = (dispatch: any) => {
+
+const completeRegistration = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
-            routes.doctor.register,
+            routes.doctor.complete_registration,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -72,6 +73,7 @@ const registerDoctor = (dispatch: any) => {
         });
     };
 };
+
 
 const getDoctorInfo = () => {
     return ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -146,9 +148,8 @@ const submitDoctorSchedule = () => {
 
 
 
-
 export const { Provider, Context } = createDataContext(
     appReducer,
-    { authenticateDoctor, registerDoctor, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment },
+    { authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment },
     { isAppLoading: true },
 );

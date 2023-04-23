@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                         <View style={{ left: 20 }}>
-                            <Text style={styles.greeting}>{getGreeting()} {!user.is_patient && user.title} {user.first_name}</Text>
+                            <Text style={styles.greeting}>{getGreeting()}, {!user.is_patient && user.title} {user.first_name}!</Text>
                             <Text style={styles.amazing}>Today is amazing!</Text>
                         </View>
                     </View>
@@ -98,7 +98,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         {!user.is_patient &&
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
-                                <Icon5 name="clock" size={iconSize} color={configs.colors.primary} />
+                                <Icon name="calendar" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>My Calendar</Text>
                             </TouchableOpacity>
                         }
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        backgroundColor: configs.colors.white,
+        backgroundColor: '#f1f5ff',
         flex: 4,
     },
 
@@ -166,24 +166,27 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         marginHorizontal: 35,
+
     },
 
     card: {
         flex: 1,
-        borderRadius: 100 / 20,
-        borderWidth: 0.5,
-        borderColor: 'gray',
+        borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 6,
         paddingVertical: 25,
         paddingHorizontal: 5,
         alignItems: 'center',
-        textShadowColor: 'gray',
-        backgroundColor: configs.colors.white,
+        shadowColor: configs.colors.black,
         shadowOffset: {
-            height: 4,
-            width: 4
+            width: 0,
+            height: 3
         },
+        shadowRadius: 8,
+        shadowOpacity: 1.0,
+        backgroundColor: configs.colors.white,
+        padding: 20,
+        elevation: 8
     },
 
     title: {
@@ -193,8 +196,16 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         marginTop: 20,
         textTransform: 'capitalize',
-        color: configs.colors.dark,
+        color: configs.colors.darkBlue,
         opacity: 0.7,
+    },
+
+    subtitle: {
+        fontSize: configs.fonts.normal,
+        fontWeight: 'bold',
+        top: 10,
+        textAlign: 'center',
+        color: configs.colors.darkBlue
     },
 
     greeting: {
@@ -211,13 +222,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: configs.colors.white,
         fontWeight: '300',
-    },
-
-    subtitle: {
-        fontSize: configs.fonts.normal,
-        fontWeight: 'bold',
-        top: 10,
-        textAlign: 'center'
     },
 
     tinyLogo: {
