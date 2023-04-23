@@ -17,8 +17,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
     const [otp, setOTP] = useState(sent_otp);
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const { authenticateDoctor, verifyCode } = useContext(AuthContext);
-
+    const { verifyCode } = useContext(AuthContext);
 
     const onChangeOTP = (code: string) => {
         setOTP(code);
@@ -29,24 +28,16 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
             setIsLoading(true);
             Keyboard.dismiss();
             if (is_doctor) {
-                let payload = {
-                    country_code: country_code,
-                    phone_number: phone_number,
-                    otp: code
-                }
-
-                authenticateDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+                verifyCode({ code: code, is_patient: false, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
             } else {
-                verifyCode({ code: code, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+                verifyCode({ code: code, is_patient: true, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
             }
-
-
         } else {
             Toast.show(`Please enter verification code`);
         }
     }
 
-    const navigateMethod = async (data: any) => {
+    const onSuccess = async (data: any) => {
         setOTP("");
         if (data.profile_status == 1) {
             navigation.navigate('SignedInStack', { screen: 'Home' });
@@ -97,7 +88,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                     <Avatar size={120} borderRadius={75} source={configs.images.otp} isURL={false} />
                     <Text style={styles.otpTxt}>
                         {is_doctor
-                            ? 'Enter the code assigned to you by the administrator'
+                            ? 'Enter the OTP sent to your mobile number'
                             : 'Enter the OTP that has been sent to your phone number'
                         }
                     </Text>

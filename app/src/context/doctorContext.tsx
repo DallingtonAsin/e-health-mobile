@@ -146,11 +146,34 @@ const submitDoctorSchedule = () => {
     };
 };
 
+const isVerified = (dispatch: any) => {
+    return ({ screen, onSuccess, onFailure, onCompletion }: { screen: string, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.doctor.is_verified
+        ).then(async (res) => {
 
+            let user = res.data;
+            if (user && user.is_verified) {
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
+
+                onSuccess(screen);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
 
 
 export const { Provider, Context } = createDataContext(
     appReducer,
-    { authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment },
+    { authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment, isVerified },
     { isAppLoading: true },
 );
