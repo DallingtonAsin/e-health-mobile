@@ -19,6 +19,7 @@ import Avatar from '../components/Avatar';
 import { useSelector } from 'react-redux';
 import { selectNotifications } from "../redux/reducers/notificationSlice";
 import { Notification } from '../interfaces';
+import Toast from 'react-native-simple-toast';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
@@ -32,8 +33,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const navigateScreen = (screen: string) => {
         if (!user.is_patient) {
-            if (user.is_verified) {
-                navigation.navigate(screen)
+            if (user.is_registered) {
+                if (user.is_verified) {
+                    navigation.navigate(screen)
+                } else {
+                    Toast.show(`Thank you for registering with us. Please wait as your account is awaiting approval.`, Toast.LONG)
+                }
             } else {
                 navigation.navigate('CompleteRegistration')
             }
