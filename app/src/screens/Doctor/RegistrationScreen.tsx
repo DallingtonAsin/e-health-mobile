@@ -80,7 +80,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const navigateMethod = async (data: any) => {
-        navigation.navigate('Home');
+        navigation.navigate('SignedInStack', { screen: 'Home' });
     }
 
     const showDatePicker = () => {

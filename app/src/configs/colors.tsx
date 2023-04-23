@@ -25,5 +25,6 @@ export const colors = {
     pendingColor: '#215d67',
     orange: '#ff8414',
     grey: '#555',
-    terms: '#2196f3'
+    terms: '#2196f3',
+    darkBlue: '#17414a'
 }

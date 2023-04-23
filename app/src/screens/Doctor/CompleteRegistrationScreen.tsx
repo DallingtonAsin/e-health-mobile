@@ -7,6 +7,7 @@ import Toast from 'react-native-simple-toast';
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
 import { Context as AuthContext } from '../../context/authContext';
+import { Context as DoctorContext } from '../../context/doctorContext';
 import { IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import { initialUser } from '../../configs/constants';
@@ -22,9 +23,8 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<IUser>(initialUser);
     const [specialties, setSpecialties] = useState([]);
     const [isFetchingLanguages, setIsFetchingLanguages] = useState(true);
-    const { getDoctorLanguages } = useContext(AppContext);
-    const { registerDoctor } = useContext(AuthContext);
-    const { getDoctorSpecialties } = useContext(AppContext);
+    const { getDoctorLanguages, getDoctorSpecialties } = useContext(AppContext);
+    const { completeRegistration } = useContext(DoctorContext);
 
     const titleOptions = [
         { key: '1', value: 'Dr.' },
@@ -118,7 +118,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         payload.phone_number && delete payload.phone_number;
 
         setIsLoading(true);
-        registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        completeRegistration({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
     const navigateMethod = async (data: any) => {
@@ -137,7 +137,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={config.styles.registration.doctor.scrollContainer}
                     showsVerticalScrollIndicator={false}
-                    >
+                >
 
 
                     <View style={config.styles.registration.doctor.inputWrap}>
@@ -256,7 +256,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         />
                     </View>
 
-                    <View style={[config.styles.registration.doctor.viewContainer, {marginBottom: 40 }]}>
+                    <View style={[config.styles.registration.doctor.viewContainer, { marginBottom: 40 }]}>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
                             <Text style={[config.styles.btnText]}>Submit</Text>
