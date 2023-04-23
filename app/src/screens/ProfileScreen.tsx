@@ -78,7 +78,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 is_patient: user.is_patient
             }
 
-            updateProfile({ payload: payload, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+            updateProfile({ payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
 
 
         } else {
@@ -86,7 +86,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const onUpdatingProfile = async (user: IUser, message: string) => {
+    const onSuccess = async (message: string) => {
         setUser(user);
         displayMessage(message);
         navigation.navigate('Profile');
@@ -158,7 +158,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
             setIsUpdatingImage(true);
 
-            updateProfileImage({ user: user_obj, payload: formData, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: closeLoader });
+            updateProfileImage({ user: user_obj, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
 
         } catch (err: any) {
             Toast.show(err.message, Toast.LONG);
@@ -179,7 +179,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             }
             setIsUpdatingImage(true);
 
-            deleteProfileImage({ user: user_obj, onSuccess: onUpdatingProfile, onFailure: displayMessage, onCompletion: closeLoader });
+            deleteProfileImage({ user: user_obj, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
 
         } catch (err: any) {
             Toast.show(err.message, Toast.LONG);
