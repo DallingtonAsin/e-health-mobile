@@ -48,20 +48,21 @@ const authenticateDoctor = (dispatch: any) => {
 
 
 const completeRegistration = (dispatch: any) => {
-    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
             routes.doctor.complete_registration,
-            payload
+            payload,
+            true
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
-                await storeAccessToken(data.access_token);
-                await storeUser(data);
+                let user = res.data;
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
 
                 dispatch({
                     type: types.HOME,
-                    payload: data
+                    payload: user
                 });
 
                 onSuccess();
