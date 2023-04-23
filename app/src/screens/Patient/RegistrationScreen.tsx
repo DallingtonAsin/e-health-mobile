@@ -102,7 +102,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             dob: user.dob
         }
         // console.log(`patient info`, payload);
-        signup({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+        signup({ payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
 
     }
 
@@ -110,8 +110,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         setIsLoading(false);
     }
 
-    const navigateMethod = async (data: any) => {
-        navigation.navigate('Home');
+    const onSuccess = async (data: any) => {
+        navigation.navigate('SignedInStack', {screen: 'Home'});
     }
 
     const showDatePicker = () => {

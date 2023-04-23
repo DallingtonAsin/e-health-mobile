@@ -11,10 +11,10 @@ const services = new Service();
 
 
 const signin = (dispatch: any) => {
-    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-
+    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.patient.signin : routes.doctor.signin;
         services.post(
-            routes.patient.signin,
+            endpoint,
             payload
         ).then(async (res) => {
             if (res && res.data) {
@@ -39,9 +39,10 @@ const signin = (dispatch: any) => {
 
 
 const verifyCode = (dispatch: any) => {
-    return ({ code, onSuccess, onFailure, onCompletion }: { code: string, onSuccess: any, onFailure: any, onCompletion: any }) => {
+    return ({ code, is_patient, onSuccess, onFailure, onCompletion }: { code: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.patient.verify : routes.doctor.verify;
         services.post(
-            routes.patient.verify,
+            endpoint,
             { otp: code }
         ).then(async (res) => {
 

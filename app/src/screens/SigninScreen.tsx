@@ -23,8 +23,8 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     const [isDoctor, setIsDoctor] = useState(false);
     const onToggleSwitch = () => setIsDoctor(!isDoctor);
-    const userType = isDoctor ? 'patient' : 'healthcare provider';
-    const currentUserType = isDoctor ? 'healthcare provider' : 'patient';
+    const userType = isDoctor ? 'patient' : 'medical worker';
+    const currentUserType = isDoctor ? 'medical worker' : 'patient';
     const actionType = isDoctor ? 'Disable' : 'Enable';
 
 
@@ -52,7 +52,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
             const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
             Alert.alert(
-                `${isDoctor ? 'Healthcare Provider' : 'Patient'} Signup`,
+                `${isDoctor ? 'Medical Worker' : 'Patient'} Signup`,
                 `We will be verifying the phone number ${formattedNumber} as a ${isDoctor ? 'doctor' : 'patient'}'s number. is this ok or would like to edit the number?`,
                 [
                     { text: 'Edit', onPress: () => { } },
@@ -63,13 +63,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                                 phone_number: number
                             }
                             if (isDoctor) {
-                                navigation.navigate('OTP', {
-                                    ...obj,
-                                    sent_otp: '',
-                                    is_doctor: isDoctor
-                                });
+                                sendVerificationCode(obj, false);
                             } else {
-                                sendVerificationCode(obj);
+                                sendVerificationCode(obj, true);
                             }
                         }
                     },
@@ -81,7 +77,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const sendVerificationCode = (phoneObj: any) => {
+    const sendVerificationCode = (phoneObj: any, is_patient: boolean) => {
 
         setIsLoading(true);
 
@@ -92,7 +88,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             current_version: current_version,
         }
 
-        signin({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+        signin({ payload: payload, is_patient: is_patient, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
     const navigateMethod = (data: any) => {
