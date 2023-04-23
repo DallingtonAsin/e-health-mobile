@@ -45,9 +45,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             }
 
             const country_code = phoneInputRef.current?.getCallingCode()
-            if(country_code != '256'){
-               Toast.show(`Please ensure the selected country is Uganda`, Toast.LONG)
-               return
+            if (country_code != '256') {
+                Toast.show(`Sorry, only phone numbers with a country code from Uganda are accepted.`, Toast.LONG)
+                return
             }
 
             const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
@@ -120,6 +120,12 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         setValid(isValid);
     }
 
+    const onChangeCountry = (country: any) => {
+        const name = country.name;
+        const isValid = name.toString().toLowerCase() === 'uganda';
+        setValid(isValid);
+    }
+
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -144,7 +150,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false}/>
+                    <Avatar size={135} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false} />
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 
@@ -157,6 +163,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         layout="first"
                         onChangeText={(text) => {
                             onChangePhoneNumber(text);
+                        }}
+                        onChangeCountry={(country) => {
+                            onChangeCountry(country);
                         }}
                         withDarkTheme={false}
                         withShadow={true}

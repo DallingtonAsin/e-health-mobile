@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as configs from '../configs';
 import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
@@ -21,11 +21,16 @@ import CartScreen from "../screens/CartScreen";
 import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen";
 import TabNavigator from "./TabNavigator";
 import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen";
+import { Context as AuthContext } from '../context/authContext';
+import HomeScreen from "../screens/HomeScreen";
 
 const Stack = createNativeStackNavigator();
 
 
 const AppStackScreen = () => {
+
+    const { state } = useContext(AuthContext);
+    const user = state.user
 
     return (
 
@@ -33,7 +38,7 @@ const AppStackScreen = () => {
 
             <Stack.Screen
                 name="Home"
-                component={TabNavigator}
+                component={user.is_verified ? TabNavigator : HomeScreen}
                 options={{
                     headerShown: false,
                 }}
