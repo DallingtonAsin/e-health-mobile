@@ -47,7 +47,7 @@ interface Notification {
     notifiable_id: number,
     data: any,
     read_at: any,
-    read?:boolean,
+    read?: boolean,
 }
 
 interface MedicalHistoryRecord {
@@ -155,6 +155,13 @@ interface Drug {
 
 }
 
+interface FileUpload {
+    uri: any,
+    source: any,
+    name: any,
+    type: any
+}
+
 export type {
     AppAction,
     IUser,
@@ -171,5 +178,6 @@ export type {
     DoctorCalendar,
     MyAppointmentInfo,
     agoraConnection,
-    MedicalHistoryRecord
+    MedicalHistoryRecord,
+    FileUpload
 }

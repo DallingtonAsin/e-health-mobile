@@ -6,35 +6,31 @@ import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
 import { Context as AppContext } from '../../context/appContext';
+import { Context as AuthContext } from '../../context/authContext';
 import { Context as DoctorContext } from '../../context/doctorContext';
-import { IUser } from '../../interfaces';
+import { FileUpload, IUser } from '../../interfaces';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import { initialUser } from '../../configs/constants';
+import { initialFileUpload, initialUser } from '../../configs/constants';
 import { SelectList } from 'react-native-dropdown-select-list';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import RNFS from 'react-native-fs';
 
-interface FileUpload {
-    uri: any,
-    source: any,
-    name: any,
-    type: any
-}
+
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
 
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
-    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [languages, setLanguages] = useState([]);
-    const [frontImage, setFrontImage] = useState<FileUpload>({ uri: null, source: null, name: null, type: null });
-    const [backImage, setBackImage] = useState<FileUpload>({ uri: null,source: null, name: null, type: null });
+    const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload);
+    const [backImage, setBackImage] = useState<FileUpload>(initialFileUpload);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
     const [user, setUser] = useState<IUser>(initialUser);
     const [specialties, setSpecialties] = useState([]);
     const [isFetchingLanguages, setIsFetchingLanguages] = useState(true);
+    const { updateUserState } = useContext(AuthContext);
     const { getDoctorLanguages, getDoctorSpecialties } = useContext(AppContext);
     const { completeRegistration } = useContext(DoctorContext);
 
@@ -44,7 +40,6 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         { key: '3', value: 'Mrs.' },
         { key: '4', value: 'Ms.' },
     ];
-
 
     useEffect(() => {
         getDoctorSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
@@ -115,11 +110,6 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             return;
         }
 
-        // if (!hasAgreedTerms) {
-        //     Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
-        //     return;
-        // }
-
         let service_fee = removeCommas(user.service_fee);
         delete frontImage.source
         delete backImage.source
@@ -137,11 +127,11 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         formData.append('back_image', backImage);
 
         setIsLoading(true);
-        completeRegistration({ payload: formData, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
-    const navigateMethod = async (data: any) => {
-        navigation.navigate('SignedInStack', { screen: 'Home' });
+    const onSuccess = async () => {
+        updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: 'Home' }) });
     }
 
     const chooseImage = (num: number) => {
@@ -343,7 +333,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                 </ScrollView>
             </SafeAreaView>
-            {(isLoading || isFetchingLanguages) && <AppLoader />}
+            {(isLoading || isFetchingSpecialties || isFetchingLanguages) && <AppLoader />}
         </>
     )
 }

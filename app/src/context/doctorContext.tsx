@@ -56,14 +56,13 @@ const completeRegistration = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
-                console.log(`data`, data)
-                await storeAccessToken(data.access_token);
-                await storeUser(data);
+                let user = res.data;
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
 
                 dispatch({
                     type: types.HOME,
-                    payload: data
+                    payload: user
                 });
 
                 onSuccess();

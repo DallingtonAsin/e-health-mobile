@@ -1,5 +1,5 @@
 
-import { SignedinUser, DoctorsDetail } from "../interfaces";
+import { SignedinUser, DoctorsDetail, FileUpload } from "../interfaces";
 
 
 const initialUser = {
@@ -35,9 +35,17 @@ const initialDoctorInfo: DoctorsDetail = {
   service_fee: 0,
 }
 
+const initialFileUpload: FileUpload = {
+  uri: null,
+  source: null,
+  name: null,
+  type: null
+}
+
 
 export {
   initialUser,
   initialUserState,
-  initialDoctorInfo
+  initialDoctorInfo,
+  initialFileUpload
 }
