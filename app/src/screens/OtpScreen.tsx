@@ -97,7 +97,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                     <Avatar size={120} borderRadius={75} source={configs.images.otp} isURL={false} />
                     <Text style={styles.otpTxt}>
                         {is_doctor
-                            ? 'Enter the code assigned to you by the administrator, or contact the administrator.'
+                            ? 'Enter the code assigned to you by the administrator'
                             : 'Enter the OTP that has been sent to your phone number'
                         }
                     </Text>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     },
 
     otpTxt: {
-        fontSize: configs.fonts.large,
+        fontSize: configs.fonts.extraLarge,
         top: 15,
         color: configs.colors.white,
         textTransform: 'none',
