@@ -146,7 +146,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false} />
+                    <Avatar size={135} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} />
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 
     header: {
         flex: 2,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -229,10 +229,11 @@ const styles = StyleSheet.create({
     },
 
     ephoneTxt: {
-        fontSize: configs.fonts.medium,
+        fontSize: configs.fonts.large,
         top: 15,
         textAlign: 'center',
         marginHorizontal: 20,
+        color: configs.colors.white,
     },
 
     switchView: {

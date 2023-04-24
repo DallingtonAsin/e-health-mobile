@@ -7,8 +7,8 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor={configs.colors.primary} />
             <View style={styles.header}>
-                <Avatar size={125} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false} />
-                <Text style={styles.drText}>Access doctor anytime anywhere</Text>
+                <Avatar size={125} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} />
+                <Text style={styles.drText}>Bringing healthcare to your fingertips</Text>
             </View>
             <View style={styles.footer}>
                 <TouchableOpacity style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn]} onPress={() => { navigation.navigate('Signin') }}>
@@ -43,9 +43,8 @@ const styles = StyleSheet.create({
     drText: {
         fontSize: 20,
         color: configs.colors.white,
-        textTransform: 'capitalize',
         paddingVertical: 15,
-        fontWeight: 'bold',
+        fontWeight: '700',
         marginHorizontal: 80,
         textAlign: 'center'
     }
