@@ -3,10 +3,10 @@ import { View, StyleSheet, Image } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import * as config from '../configs'
 
-const Avatar = ({ source, size = 50, borderRadius = 50, resizeMode = FastImage.resizeMode.contain, isURL = true }: { source: any, size: number, borderRadius?: number, resizeMode?: any, isURL?: boolean }) => {
+const Avatar = ({ source, size = 50, borderRadius = 50, resizeMode = FastImage.resizeMode.contain, isURL = true, anyStyles  = null }: { source: any, size: number, borderRadius?: number, resizeMode?: any, isURL?: boolean, anyStyles? : any }) => {
     const styles = makeStyles(borderRadius);
     return (
-        <View style={[styles.container, { width: size, height: size }]}>
+        <View style={[styles.container, { width: size, height: size }, anyStyles ? anyStyles : null ]}>
             <FastImage
                 source={{ uri: isURL ? source : Image.resolveAssetSource(source).uri, priority: FastImage.priority.normal }}
                 resizeMode={resizeMode}

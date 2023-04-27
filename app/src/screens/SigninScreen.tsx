@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Keyboard, Alert } from 'react-native';
 import * as configs from '../configs';
 import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
@@ -8,30 +8,24 @@ import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHe
 import { Context as AuthContext } from '../context/authContext';
 import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
-import { Switch } from 'react-native-paper';
-import Avatar from '../components/Avatar';
 import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils';
+import TouchableImage from '../components/TouchableImage';
 
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     const [value, setValue] = useState("");
     const [valid, setValid] = useState(false);
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const phoneInputRef = useRef<PhoneInput>(null);
+    const [selectedImage, setSelectedImage] = useState<string>('image1');
     const { signin } = useContext(AuthContext);
 
     const [isDoctor, setIsDoctor] = useState(false);
-    const onToggleSwitch = () => setIsDoctor(!isDoctor);
-    const userType = isDoctor ? 'patient' : 'medical worker';
     const currentUserType = isDoctor ? 'medical worker' : 'patient';
-    const actionType = isDoctor ? 'Disable' : 'Enable';
 
 
     const Signin = () => {
-
-        Keyboard.dismiss();
 
         const checkValid = phoneInputRef.current?.isValidNumber(value);
         setValid(checkValid ? checkValid : false);
@@ -96,10 +90,10 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             ip_address: ip_address,
         }
 
-        signin({ payload: payload, is_patient: is_patient, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
+        signin({ payload: payload, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
-    const navigateMethod = (data: any) => {
+    const onSuccess = (data: any) => {
         setValue("");
         if (phoneInputRef.current) {
             phoneInputRef.current?.setState({ number: '' })
@@ -117,7 +111,6 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         setIsLoading(false);
     }
 
-
     const onChangePhoneNumber = (text: string) => {
         setValue(text);
         const isValid = text && text.length >= 9 ? true : false;
@@ -130,36 +123,58 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         setValid(isValid);
     }
 
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            () => {
-                setKeyboardVisible(true);
-            }
-        );
-        const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                setKeyboardVisible(false);
-            }
-        );
+    const handleImagePress = (image: string) => {
+        setSelectedImage(image);
+        if (image == 'image2') {
+            setIsDoctor(true);
+        } else {
+            setIsDoctor(false);
+        }
+    };
 
-        return () => {
-            keyboardDidHideListener.remove();
-            keyboardDidShowListener.remove();
-        };
-    }, []);
+
     return (
-        <>
-            <KeyboardAvoidingView style={styles.container}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <React.Fragment>
+            <SafeAreaView style={styles.container} >
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} />
-                    <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
+                    <View style={styles.imageContainer}>
+                        <Text style={{ color: configs.colors.gray, fontWeight: 'bold', fontSize: configs.fonts.large }}>Choose Account Type</Text>
+                        <View style={styles.row}>
+                            <TouchableImage
+                                onPress={() => handleImagePress('image1')}
+                                imageSource={configs.images.patient}
+                                containerStyle={[
+                                    styles.touchableContainer,
+                                    selectedImage === 'image1' && styles.activeContainer,
+                                ]}
+                                imageStyle={[
+                                    styles.image,
+                                    selectedImage === 'image1' && styles.activeImage,
+                                ]}
+                                text="Patient"
+                                textStyle={[styles.roleText, selectedImage === 'image1' && { color: configs.colors.primary }]}
+                            />
+                            <TouchableImage
+                                onPress={() => handleImagePress('image2')}
+                                imageSource={configs.images.doctor}
+                                containerStyle={[
+                                    styles.touchableContainer,
+                                    selectedImage === 'image2' && styles.activeContainer,
+                                ]}
+                                imageStyle={[
+                                    styles.image,
+                                    selectedImage === 'image2' && styles.activeImage,
+                                ]}
+                                text="Doctor"
+                                textStyle={[styles.roleText, selectedImage === 'image2' && { color: configs.colors.primary }]}
+                            />
+                        </View>
+                    </View>
+                    <Text style={[styles.ephoneTxt, { textTransform: 'capitalize' }]}>Hello {currentUserType}!</Text>
+                    <Text style={styles.ephoneTxt}>Enter your phone number to register with Vastel</Text>
                 </View>
 
                 <View style={styles.body}>
-
                     <PhoneInput
                         ref={phoneInputRef}
                         defaultValue={value}
@@ -174,29 +189,30 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         withDarkTheme={false}
                         withShadow={true}
                         autoFocus={true}
-                        // disableArrowIcon={true}
                         placeholder={"phone number"}
                     />
-                </View>
-
-                <View style={styles.switchView}>
-                    <Switch value={isDoctor} onValueChange={onToggleSwitch} color={configs.colors.primary} style={styles.switch} />
-                    <Text style={styles.switchText}>{actionType} switch to login as {userType}</Text>
                 </View>
 
                 <View style={styles.footer}>
                     <TouchableOpacity
                         disabled={false}
-                        style={[valid ? configs.styles.primaryBtn : configs.styles.secondaryBtn, configs.styles.bottomizedBtn]}
+                        style={configs.styles.primaryBtn}
                         onPress={() => Signin()}>
-                        <Text style={[configs.styles.btnText, valid ? { color: configs.colors.white } : { color: configs.colors.primary }]}>Continue</Text>
+                        <Text style={{ color: configs.colors.white }}>Continue</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        disabled={false}
+                        style={[valid ? configs.styles.secondaryBtn : configs.styles.secondaryBtn, { marginVertical: 10 }]}
+                        onPress={() => navigation.goBack()}>
+                        <Text style={configs.styles.btnText}>Back</Text>
                     </TouchableOpacity>
                 </View>
-            </KeyboardAvoidingView>
+            </SafeAreaView>
 
             {isLoading && <AppLoader />}
 
-        </>
+        </React.Fragment>
     )
 }
 
@@ -210,7 +226,7 @@ const styles = StyleSheet.create({
 
     header: {
         flex: 2,
-        backgroundColor: configs.colors.primary,
+        backgroundColor: configs.colors.white,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -226,38 +242,54 @@ const styles = StyleSheet.create({
     footer: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: configs.colors.white,
     },
 
-    textSignin: {
-        fontSize: 28,
-        color: configs.colors.white,
-        fontWeight: 'bold',
-        left: 20,
+    row: {
+        flexDirection: 'row',
+        marginTop: 10
+    },
+
+    imageContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    touchableContainer: {
+        borderWidth: 2,
+        borderColor: 'gray',
+        borderRadius: 10,
+        paddingHorizontal: 25,
+        paddingVertical: 12,
+        margin: 8,
+    },
+
+    image: {
+        width: 50,
+        height: 50,
+    },
+
+    activeContainer: {
+        borderColor: configs.colors.primary
+    },
+
+    activeImage: {
+
     },
 
     ephoneTxt: {
-        fontSize: configs.fonts.large,
-        top: 15,
+        fontSize: configs.fonts.normal,
         textAlign: 'center',
-        marginHorizontal: 20,
-        color: configs.colors.white,
+        color: configs.colors.black,
+        opacity: 0.5
     },
 
-    switchView: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: 35
-    },
-
-    switch: {
-        transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-        marginHorizontal: 10,
-    },
-
-    switchText: {
-        fontSize: configs.fonts.medium
+    roleText: {
+        color: configs.colors.gray,
+        fontWeight: 'bold',
+        marginTop: 15,
     }
 
 });
