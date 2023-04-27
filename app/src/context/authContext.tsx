@@ -1,7 +1,7 @@
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, LoginData } from '../interfaces';
+import { IUser, LoginData, PatientRegistrationPayload } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken, removeUser, getUser } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { initialUserState } from '../configs/constants';
@@ -77,7 +77,7 @@ const verifyCode = (dispatch: any) => {
 };
 
 const signup = (dispatch: any) => {
-    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: PatientRegistrationPayload, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
             routes.patient.register,
             payload

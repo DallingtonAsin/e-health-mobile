@@ -172,8 +172,46 @@ const isVerified = (dispatch: any) => {
 };
 
 
+const getMedicalDoctors = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.medical.doctors
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getMedicalFacilities = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.medical.facilities
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+
 export const { Provider, Context } = createDataContext(
     appReducer,
-    { authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, submitDoctorSchedule, completeAppointment, isVerified },
+    {
+        authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
+        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified
+    },
     { isAppLoading: true },
 );

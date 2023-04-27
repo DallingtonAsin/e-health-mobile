@@ -42,43 +42,45 @@ const updateProfile = (dispatch: any) => {
 
 const updateProfileImage = (dispatch: any) => {
     return ({ user, payload, onSuccess, onFailure, onCompletion }: { user: any, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = user.is_patient ? routes.patient.updateProfilePicture : routes.doctor.updateProfilePicture;
+        let endpoint = user.is_patient ? routes.doctor.complete_registration : routes.doctor.update_profile_pic;
+        console.log(`endpoint`, endpoint)
+        //  console.log(`endpoint`, endpoint)
 
-        services.post(
-            `${endpoint}/${user.id}/profile-picture`,
+        services.put(
+            endpoint,
             payload,
             true
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
-                let user = data.user;
-                let message = res.data.message;
+                let data = res.data
+                let user = data.user
+                let message = res.data.message
 
-                await storeAccessToken(user.access_token);
-                await storeUser(user);
+                await storeAccessToken(user.access_token)
+                await storeUser(user)
 
                 dispatch({
                     type: types.HOME,
                     payload: user
                 });
 
-                onSuccess(message);
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
+            onCompletion()
         });
     };
 };
 
 const deleteProfileImage = (dispatch: any) => {
     return ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = user.is_patient ? routes.patient.updateProfilePicture : routes.doctor.updateProfilePicture;
+        let endpoint = user.is_patient ? routes.patient.delete_profile_pic : routes.doctor.delete_profile_pic;
 
         services.delete(
-            `${endpoint}/${user.id}/profile-picture/delete`
+            endpoint
         ).then(async (res) => {
             if (res && res.data) {
 

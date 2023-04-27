@@ -70,10 +70,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <View style={styles.headerImageSection}>
                             <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
-                                {user.image
-                                    ? <Avatar size={80} source={user.image} />
-                                    : <AvatarRP.Text size={80} label={getUserInitials(`${user.first_name} ${user.last_name}`)} style={configs.styles.userAvatar} />
-                                }
+                                <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
@@ -100,9 +97,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <View style={styles.cardContainer}>
                             {user.is_patient &&
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialitiesList')}>
                                     <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
-                                    <Text style={styles.subtitle}>Doctors</Text>
+                                    <Text style={styles.subtitle}>Call Doctor</Text>
                                 </TouchableOpacity>
                             }
 
