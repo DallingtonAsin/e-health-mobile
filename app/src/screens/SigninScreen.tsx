@@ -62,35 +62,33 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 Toast.show(`Please enter a valid phone number`, Toast.LONG)
                 return
             }
+        }
 
-            if (!isPhoneLogin) {
-                if (!email) {
-                    Toast.show(`Please enter your email to login`, Toast.LONG)
-                    return
-                }
-                if (!isValidEmail(email)) {
-                    Toast.show(`Please enter valid email`, Toast.LONG)
-                    return
-                }
-                payload.email = email
-            }
-
-            if (!password) {
-                Toast.show(`Please enter your password`, Toast.LONG)
+        if (!isPhoneLogin) {
+            if (!email) {
+                Toast.show(`Please enter your email`, Toast.LONG)
                 return
             }
-
-            payload.password = password
-            console.log(`is doctor ${isDoctor} and payload is`, payload)
-            if (isDoctor) {
-                sendVerificationCode(payload, false);
-            } else {
-                sendVerificationCode(payload, true);
+            if (!isValidEmail(email)) {
+                Toast.show(`Please enter valid email`, Toast.LONG)
+                return
             }
-        } else {
-            Toast.show(`Please enter a valid phone number`, Toast.LONG);
+            payload.email = email
+        }
+
+        if (!password) {
+            Toast.show(`Please enter your password`, Toast.LONG)
             return
         }
+
+        payload.password = password
+        console.log(`is doctor ${isDoctor} and payload is`, payload)
+        if (isDoctor) {
+            sendVerificationCode(payload, false);
+        } else {
+            sendVerificationCode(payload, true);
+        }
+
     }
 
     const sendVerificationCode = async (phoneObj: any, is_patient: boolean) => {
