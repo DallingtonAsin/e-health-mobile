@@ -6,6 +6,7 @@ import Avatar from '../components/Avatar';
 import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
+import { Context as DoctorContext } from '../context/doctorContext';
 import { displayMessage, getUserInitials, truncateString } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
 import { Searchbar } from 'react-native-paper';
@@ -15,14 +16,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { specialty_id, specialty_name } = route.params;
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
     const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([]);
+    const [specialtyName, setSpecialtyName] = useState<string>('');
 
     const { state } = useContext(AuthContext);
     const { getDoctorsBySpecialty } = useContext(AppContext);
+    const { getMedicalDoctors } = useContext(DoctorContext);
 
     const user = state.user;
 
@@ -31,7 +33,15 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     useEffect(() => {
-        getDoctorsBySpecialty({ specialtyId: specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
+        if (route.params && route.params.specialty_id) {
+            getDoctorsBySpecialty({ specialtyId: route.params.specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
+        } else {
+            getMedicalDoctors({ onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
+        }
+
+        if (route.params && route.params.specialty_name) {
+            setSpecialtyName(route.params.specialty_name)
+        }
     }, []);
 
     const populateMedicalDoctors = (doctors: DoctorsDetail[]) => {
@@ -105,7 +115,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={configs.styles.emptyIconContainer}>
                 <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
             </View>
-            <Text style={configs.styles.noInfoText}>No doctors found in {specialty_name} department.</Text>
+            <Text style={configs.styles.noInfoText}> {
+                specialtyName ?
+                    `No doctors found in ${specialtyName} department.`
+                    : `No doctors found`}
+            </Text>
         </View>
     );
 
@@ -115,7 +129,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     return (
         <SafeAreaView style={styles.container}>
-            <CustomStackHeader title={`${specialty_name} doctors`} onPress={() => navigation.goBack()} />
+            <CustomStackHeader title={specialtyName ? `${specialtyName} doctors` : `List of doctors`} onPress={() => navigation.goBack()} />
             <View style={styles.subcontainer}>
                 {
                     medicalDoctors.length > 0 && <Searchbar
@@ -236,7 +250,7 @@ const styles = StyleSheet.create({
 
     title: {
         opacity: 0.8,
-        fontSize: configs.fonts.large*0.9,
+        fontSize: configs.fonts.large * 0.9,
     },
 
     values: {
