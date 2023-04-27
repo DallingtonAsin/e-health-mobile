@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import * as config from '../configs'
 import { Avatar as AvatarRP, IconButton } from 'react-native-paper';
@@ -10,14 +10,15 @@ import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
-import { IUser } from '../interfaces';
+import { FileUpload, IUser } from '../interfaces';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { formatDate, displayMessage, getUserInitials, getJsonObjByValue } from '../components/common/SharedHelper';
 import { SelectList } from 'react-native-dropdown-select-list';
 import ImagePicker from 'react-native-image-crop-picker';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { BottomSheet } from 'react-native-btr';
-var mime = require('mime-types');
+import RNFS from 'react-native-fs';
+const mime = require('mime-types');
 
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
@@ -120,7 +121,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             cropping: true,
             compressImageQuality: 0.7,
         }).then(async image => {
-            await submitProfilePicture(image);
+
+            // await submitProfilePicture(image);
         });
     }
 
@@ -129,38 +131,43 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             width: 300,
             height: 400,
             cropping: true,
-        }).then(async (image) => {
-            await submitProfilePicture(image);
+            includeBase64: false,
+            includeExif: true
+        }).then(async (image: any) => {
+            console.log(`image`, image)
+
+            const imagePath = Platform.OS === 'android' ? image.path : image.path.replace('file://', '');
+            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+            const fileType = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+            const uri = `${imagePath}`; // file://
+
+            RNFS.readFile(uri, 'base64').then((base64String) => {
+                const source: any = { uri: `data:image/jpeg;base64,${base64String}` };
+                const file_obj = {
+                    uri: "",
+                    source: '',
+                    name: '',
+                    type: '',
+                }
+                console.log(`image object`, file_obj)
+                submitProfilePicture(image);
+            });
+
+
         });
     }
 
-    const submitProfilePicture = async (image: any) => {
+    const submitProfilePicture = (imageData: FileUpload) => {
         try {
 
-            const imagePath = image.path;
-            const mimeType = image.mime;
-            const fileExtension = mime.extension(mimeType);
             let formData = new FormData();
-
             const user_obj = {
                 id: user.id,
                 is_patient: user.is_patient
             }
 
-            const imageData = {
-                uri: imagePath,
-                type: mimeType,
-                size: image.size,
-                extension: fileExtension,
-                name: 'profile_pic',
-            }
-
-            formData.append('id', user.id);
-            formData.append('extension', fileExtension);
             formData.append('image', imageData);
-
             setIsUpdatingImage(true);
-
             updateProfileImage({ user: user_obj, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
 
         } catch (err: any) {

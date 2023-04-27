@@ -8,7 +8,8 @@ const routes = {
       verify: 'patient/verify',
       register: 'patient/register',
       updateProfile: 'patient/profile/update',
-      updateProfilePicture: 'patient',
+      update_profile_pic: 'patient/profile-picture/update',
+      delete_profile_pic: 'patient/profile-picture/delete',
       notifications: {
          all: 'patient/notifications',
          read: 'patient/notifications/read',
@@ -24,7 +25,8 @@ const routes = {
       is_verified: 'doctor/is-verified',
       complete_registration: 'doctor/profile/complete',
       updateProfile: 'doctor/profile/update',
-      updateProfilePicture: 'doctor',
+      update_profile_pic: 'doctor/profile-picture/update',
+      delete_profile_pic: 'doctor/profile-picture/delete',
       languages: 'doctor/languages',
       specialties: 'doctor/specialties',
       calendar: 'doctor/schedule',
@@ -38,6 +40,7 @@ const routes = {
 
    medical: {
       specialties: 'medical/specialties',
+      facilities: 'medical/facilities',
       doctors: 'medical/doctors',
       doctors_by_specialty: 'medical/doctors/specialty',
       history: 'medical-history/patient'

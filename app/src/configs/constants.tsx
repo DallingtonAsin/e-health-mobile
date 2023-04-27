@@ -1,5 +1,5 @@
 
-import { SignedinUser, DoctorsDetail, FileUpload } from "../interfaces";
+import { SignedinUser, DoctorsDetail, FileUpload, Registration, PatientRegistrationPayload } from "../interfaces";
 
 
 const initialUser = {
@@ -25,14 +25,16 @@ const initialDoctorInfo: DoctorsDetail = {
   id: 0,
   first_name: '',
   last_name: '',
+  country_code: '',
   phone_number: '',
   qualification: '',
-  profession: '',
-  title: '',
-  experience: '',
-  languages: '',
+  training_institute: '',
+  facility: '',
+  lincense_number: '',
   image: '',
   service_fee: 0,
+  schedule_dates: [],
+  schedule: [],
 }
 
 const initialFileUpload: FileUpload = {
@@ -43,9 +45,25 @@ const initialFileUpload: FileUpload = {
 }
 
 
+
+const registrationState: Registration = {
+  patient: {
+    first_name: '',
+    last_name: '',
+    email: '',
+    address: '',
+    gender: '',
+    dob: '',
+    password: '',
+    password_confirmation: ''
+  },
+}
+
+
 export {
   initialUser,
   initialUserState,
   initialDoctorInfo,
-  initialFileUpload
+  initialFileUpload,
+  registrationState
 }

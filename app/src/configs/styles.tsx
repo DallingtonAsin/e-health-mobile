@@ -193,10 +193,9 @@ export const styles = {
       },
 
       labelTxt: {
-        fontSize: 18,
+        fontSize: 16,
       },
 
-    
       viewContainer: {
         flex: 1,
         marginVertical: 5,

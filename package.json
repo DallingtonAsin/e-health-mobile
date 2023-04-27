@@ -24,7 +24,8 @@
     "android:prod": "react-native run-android --variant=productiondebug",
     "android:prod-release": "react-native run-android --variant=productionrelease",
     "android:release": "react-native run-android --variant=release",
-    "memory:clear": "free -h && sudo sysctl -w vm.drop_caches=3 && sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches && free -h"
+    "memory:clear": "free -h && sudo sysctl -w vm.drop_caches=3 && sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches && free -h",
+    "upgrade-gradle": "cd android && ./gradlew wrapper --gradle-version=7.6.1 --distribution-type=bin && ./gradlew tasks && cd .."
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.5",
@@ -61,6 +62,7 @@
     "react-native-calendars": "^1.1275.0",
     "react-native-communications": "^2.2.1",
     "react-native-config": "^1.5.0",
+    "react-native-device-info": "^10.6.0",
     "react-native-dotenv": "^3.4.2",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-fast-image": "^8.6.3",
@@ -72,6 +74,7 @@
     "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-multibar": "^1.1.5",
     "react-native-multiple-select": "^0.5.12",
+    "react-native-network-info": "^5.2.1",
     "react-native-pager-view": "^6.1.1",
     "react-native-paper": "^5.1.2",
     "react-native-phone-number-input": "^2.1.0",

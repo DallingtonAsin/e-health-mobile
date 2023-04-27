@@ -1,5 +1,7 @@
 import Toast from 'react-native-simple-toast';
-import { MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION,PRE_RELEASE } from '@env';
+import { MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, PRE_RELEASE } from '@env';
+import { setPasswordError } from '../../interfaces';
+
 
 const removeLeadingZeros = (number: string) => {
   if (number) {
@@ -136,8 +138,25 @@ const formatNumber = (num: any) => {
   const regex = /(\d)(?=(\d{3})+(?!\d))/g;
   return num.toString().replace(regex, '$1,');
 };
+
 const removeCommas = (num: any) => {
   return num.toString().replace(/,/g, '');
+};
+
+const validatePassword = (password: string, setPasswordError: setPasswordError) => {
+  if (password.length < 8) {
+    setPasswordError('Password must be at least 8 characters long');
+  } else {
+    setPasswordError('');
+  }
+};
+
+const validateConfirmPassword = (password: string, confirmPassword: string, setPasswordError: setPasswordError) => {
+  if (confirmPassword !== password) {
+    setPasswordError('Passwords do not match');
+  } else {
+    setPasswordError('');
+  }
 };
 
 export {
@@ -158,5 +177,7 @@ export {
   getAppVersion,
   numberWithCommas,
   formatNumber,
-  removeCommas
+  removeCommas,
+  validatePassword,
+  validateConfirmPassword
 }

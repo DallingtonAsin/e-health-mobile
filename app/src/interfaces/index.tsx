@@ -1,3 +1,4 @@
+import React from 'react'
 
 interface AppAction {
     type: string;
@@ -17,16 +18,26 @@ interface IUser {
     dob: string,
     gender: string,
     address?: string,
-    title?: string,
+    facility?: string,
     qualification?: string,
-    profession?: string,
-    languages?: string[],
-    experience?: string,
+    training_institute?: string,
+    lincense_number?: string,
     service_fee?: string,
     otp?: string,
     profile_status?: boolean,
     image?: string,
     is_patient?: boolean,
+}
+
+interface PatientRegistrationPayload {
+    first_name: string,
+    last_name: string,
+    email?: string,
+    address: string,
+    gender: string,
+    dob: string,
+    password: string,
+    password_confirmation: string
 }
 
 interface SignedinUser {
@@ -40,6 +51,9 @@ interface LoginData {
     country_code: string,
     phone_number: string,
     current_version: string,
+    unique_device_id?: string,
+    device_token?: string,
+    ip_address?: string
 }
 
 interface Notification {
@@ -80,10 +94,9 @@ interface DoctorsDetail {
     country_code?: string,
     phone_number: string,
     qualification?: string,
-    profession: string,
-    title: string,
-    experience: string,
-    languages?: string,
+    training_institute: string,
+    facility: string,
+    lincense_number?: string,
     image?: string,
     service_fee: number,
     schedule_dates?: string[],
@@ -162,6 +175,13 @@ interface FileUpload {
     type: any
 }
 
+interface Registration {
+    patient: PatientRegistrationPayload
+}
+
+type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
+
+
 export type {
     AppAction,
     IUser,
@@ -179,5 +199,8 @@ export type {
     MyAppointmentInfo,
     agoraConnection,
     MedicalHistoryRecord,
-    FileUpload
+    FileUpload,
+    PatientRegistrationPayload,
+    Registration,
+    setPasswordError
 }
