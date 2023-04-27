@@ -213,6 +213,11 @@ interface LoginPayload {
     phone_number?: string,
     email?: string,
     password: string,
+    current_version?: string,
+    unique_device_id?: string,
+    device_token?: string,
+    ip_address?: string,
+    is_phone_number_login: boolean
 }
 
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;

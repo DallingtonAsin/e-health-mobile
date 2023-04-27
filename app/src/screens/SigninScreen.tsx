@@ -33,9 +33,9 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         setShowPassword(!showPassword);
     };
 
-    const Signin = () => {
+    const submit = async () => {
 
-        let payload: LoginPayload = { country_code: '', phone_number: '', email: '', password: '' }
+        let payload: LoginPayload = { country_code: '', phone_number: '', email: '', password: '', is_phone_number_login: isPhoneLogin }
 
         if (isPhoneLogin) {
             const checkValid = phoneInputRef.current?.isValidNumber(value);
@@ -82,33 +82,26 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         }
 
         payload.password = password
-        console.log(`is doctor ${isDoctor} and payload is`, payload)
-        if (isDoctor) {
-            sendVerificationCode(payload, false);
-        } else {
-            sendVerificationCode(payload, true);
-        }
-
-    }
-
-    const sendVerificationCode = async (phoneObj: any, is_patient: boolean) => {
-
-        setIsLoading(true);
-
         const current_version = getAppVersion()
         const device_id = await getDeviceId()
         const ip_address = await getIPAddress()
         const token = await getToken()
 
-        let payload: LoginData = {
-            country_code: phoneObj.country_code,
-            phone_number: phoneObj.phone_number,
-            current_version: current_version,
-            unique_device_id: device_id,
-            device_token: token,
-            ip_address: ip_address,
+        payload.current_version = current_version
+        payload.unique_device_id = device_id
+        payload.device_token = token
+        payload.ip_address = ip_address
+
+        if (isDoctor) {
+            login(payload, false);
+        } else {
+            login(payload, true);
         }
 
+    }
+
+    const login = (payload: LoginPayload, is_patient: boolean) => {
+        setIsLoading(true);
         signin({ payload: payload, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
@@ -156,8 +149,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         <React.Fragment>
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.header}>
                     <View style={styles.imageContainer}>
                         <Text style={{ color: configs.colors.gray, fontWeight: 'bold', fontSize: configs.fonts.large }}>Choose Account Type</Text>
@@ -258,7 +250,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                     <TouchableOpacity
                         disabled={false}
                         style={configs.styles.primaryBtn}
-                        onPress={() => Signin()}>
+                        onPress={() => submit()}>
                         <Text style={{ color: configs.colors.white }}>Continue</Text>
                     </TouchableOpacity>
 

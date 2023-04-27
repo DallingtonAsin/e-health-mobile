@@ -19,13 +19,13 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const phoneInputRef = useRef<PhoneInput>(null);
     const [selectedImage, setSelectedImage] = useState<string>('image1');
-    const { signin } = useContext(AuthContext);
+    const { sendVerificationCode } = useContext(AuthContext);
 
     const [isDoctor, setIsDoctor] = useState(false);
     const currentUserType = isDoctor ? 'doctor' : 'patient';
 
 
-    const Signin = () => {
+    const submit = () => {
 
         const checkValid = phoneInputRef.current?.isValidNumber(value);
         setValid(checkValid ? checkValid : false);
@@ -58,9 +58,9 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
                                 phone_number: number
                             }
                             if (isDoctor) {
-                                sendVerificationCode(obj, false);
+                                sendOTP(obj, false);
                             } else {
-                                sendVerificationCode(obj, true);
+                                sendOTP(obj, true);
                             }
                         }
                     },
@@ -72,7 +72,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const sendVerificationCode = async (phoneObj: any, is_patient: boolean) => {
+    const sendOTP = async (phoneObj: any, is_patient: boolean) => {
 
         setIsLoading(true);
 
@@ -90,7 +90,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
             ip_address: ip_address,
         }
 
-        signin({ payload: payload, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
+        sendVerificationCode({ payload: payload, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
     }
 
     const onSuccess = (data: any) => {
@@ -197,7 +197,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
                     <TouchableOpacity
                         disabled={false}
                         style={configs.styles.primaryBtn}
-                        onPress={() => Signin()}>
+                        onPress={() => submit()}>
                         <Text style={configs.styles.continueText}>Continue</Text>
                     </TouchableOpacity>
 

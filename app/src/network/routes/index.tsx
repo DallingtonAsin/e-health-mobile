@@ -5,6 +5,7 @@ const routes = {
    patient: {
       index: 'patient',
       signin: 'patient/login',
+      send_otp: 'patient/sms/verification-code',
       verify: 'patient/verify',
       register: 'patient/register',
       updateProfile: 'patient/profile/update',
@@ -20,6 +21,7 @@ const routes = {
 
    doctor: {
       signin: 'doctor/login',
+      send_otp: 'doctor/sms/verification-code',
       verify: 'doctor/verify',
       register: 'doctor/register',
       is_verified: 'doctor/is-verified',
