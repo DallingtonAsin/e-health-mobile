@@ -159,6 +159,17 @@ const validateConfirmPassword = (password: string, confirmPassword: string, setP
   }
 };
 
+const truncateString = (str: string, numWords: number) => {
+  const words = str.split(' ');
+  if (words.length <= numWords) {
+    return str;
+  } else {
+    const truncatedWords = words.slice(0, numWords);
+    return truncatedWords.join(' ') + '...';
+  }
+}
+
+
 export {
   removeLeadingZeros,
   getGreeting,
@@ -178,6 +189,7 @@ export {
   numberWithCommas,
   formatNumber,
   removeCommas,
+  truncateString,
   validatePassword,
   validateConfirmPassword
 }
