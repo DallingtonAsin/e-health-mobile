@@ -208,6 +208,13 @@ interface DrCompleteProfilePayload {
     back_image: any
 }
 
+interface LoginPayload {
+    country_code?: string,
+    phone_number?: string,
+    email?: string,
+    password: string,
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -233,5 +240,6 @@ export type {
     DoctorRegistrationPayload,
     Registration,
     setPasswordError,
+    LoginPayload,
     DrCompleteProfilePayload
 }

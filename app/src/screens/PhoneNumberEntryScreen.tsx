@@ -1,95 +1,74 @@
-import React, { useState, useRef, useContext } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
-import * as configs from '../configs'
-import PhoneNumberInput from "react-native-phone-number-input"
-import Toast from 'react-native-simple-toast'
-import { TextInput } from 'react-native-paper'
-import AppLoader from '../components/AppLoader'
-import { getAppVersion, isValidEmail, removeLeadingZeros } from '../components/common/SharedHelper'
-import { Context as AuthContext } from '../context/authContext'
-import { LoginData, LoginPayload } from '../interfaces'
-import { displayMessage } from '../components/common/SharedHelper'
-import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils'
-import TouchableImage from '../components/TouchableImage'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Keyboard, Alert } from 'react-native';
+import * as configs from '../configs';
+import PhoneInput from "react-native-phone-number-input";
+import Toast from 'react-native-simple-toast';
+import AppLoader from '../components/AppLoader';
+import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
+import { Context as AuthContext } from '../context/authContext';
+import { LoginData } from '../interfaces';
+import { displayMessage } from '../components/common/SharedHelper';
+import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils';
+import TouchableImage from '../components/TouchableImage';
 
-const SigninScreen = ({ navigation }: { navigation: any }) => {
+
+const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
 
     const [value, setValue] = useState("");
     const [valid, setValid] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isPhoneLogin, setIsPhoneLogin] = useState(true);
-    const phoneInputRef = useRef<PhoneNumberInput>(null);
+    const phoneInputRef = useRef<PhoneInput>(null);
     const [selectedImage, setSelectedImage] = useState<string>('image1');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const { signin } = useContext(AuthContext);
 
     const [isDoctor, setIsDoctor] = useState(false);
     const currentUserType = isDoctor ? 'doctor' : 'patient';
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
 
     const Signin = () => {
 
-        let payload: LoginPayload = { country_code: '', phone_number: '', email: '', password: '' }
+        const checkValid = phoneInputRef.current?.isValidNumber(value);
+        setValid(checkValid ? checkValid : false);
 
-        if (isPhoneLogin) {
-            const checkValid = phoneInputRef.current?.isValidNumber(value);
-            setValid(checkValid ? checkValid : false);
+        if (checkValid) {
 
-            if (checkValid) {
-                const phoneObj: any = phoneInputRef.current?.getNumberAfterPossiblyEliminatingZero();
-                let number = phoneObj.number;
-                const startsWithZero = number.startsWith("0");
-                if (startsWithZero) {
-                    number = removeLeadingZeros(number);
-                }
+            const phoneObj: any = phoneInputRef.current?.getNumberAfterPossiblyEliminatingZero();
+            let number = phoneObj.number;
+            const startsWithZero = number.startsWith("0");
+            if (startsWithZero) {
+                number = removeLeadingZeros(number);
+            }
 
-                const country_code = phoneInputRef.current?.getCallingCode()
-                if (country_code != '256') {
-                    Toast.show(`Sorry, only phone numbers with a country code from Uganda are accepted.`, Toast.LONG)
-                    return
-                }
-
-                payload.country_code = `+${country_code}`
-                payload.phone_number = number
-
-            } else {
-                Toast.show(`Please enter a valid phone number`, Toast.LONG)
+            const country_code = phoneInputRef.current?.getCallingCode()
+            if (country_code != '256') {
+                Toast.show(`Sorry, only phone numbers with a country code from Uganda are accepted.`, Toast.LONG)
                 return
             }
 
-            if (!isPhoneLogin) {
-                if (!email) {
-                    Toast.show(`Please enter your email to login`, Toast.LONG)
-                    return
-                }
-                if (!isValidEmail(email)) {
-                    Toast.show(`Please enter valid email`, Toast.LONG)
-                    return
-                }
-                payload.email = email
-            }
-
-            if (!password) {
-                Toast.show(`Please enter your password`, Toast.LONG)
-                return
-            }
-
-            payload.password = password
-            console.log(`is doctor ${isDoctor} and payload is`, payload)
-            if (isDoctor) {
-                sendVerificationCode(payload, false);
-            } else {
-                sendVerificationCode(payload, true);
-            }
+            const formattedNumber = `+${phoneInputRef.current?.getCallingCode()}${number}`
+            Alert.alert(
+                `${isDoctor ? 'Doctor' : 'Patient'} Signup`,
+                `We will be verifying the phone number ${formattedNumber} as a ${isDoctor ? 'doctor' : 'patient'}'s number. is this ok or would like to edit the number?`,
+                [
+                    { text: 'Edit', onPress: () => { } },
+                    {
+                        text: 'OK', onPress: async () => {
+                            let obj = {
+                                country_code: `+${country_code}`,
+                                phone_number: number
+                            }
+                            if (isDoctor) {
+                                sendVerificationCode(obj, false);
+                            } else {
+                                sendVerificationCode(obj, true);
+                            }
+                        }
+                    },
+                ],
+                { cancelable: false }
+            );
         } else {
             Toast.show(`Please enter a valid phone number`, Toast.LONG);
-            return
         }
     }
 
@@ -156,10 +135,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <React.Fragment>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
+            <SafeAreaView style={styles.container} >
                 <View style={styles.header}>
                     <View style={styles.imageContainer}>
                         <Text style={{ color: configs.colors.gray, fontWeight: 'bold', fontSize: configs.fonts.large }}>Choose Account Type</Text>
@@ -193,75 +169,36 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                                 textStyle={[styles.roleText, selectedImage === 'image2' && { color: configs.colors.primary }]}
                             />
                         </View>
-                        <View style={{ marginVertical: 10, alignItems: 'center' }}>
-                            <Text style={[styles.loginTxt, { textTransform: 'capitalize' }]}>{currentUserType} Login</Text>
-                            <Text style={styles.ephoneTxt}>Login if you have an existing account</Text>
-                        </View>
                     </View>
-
+                    <Text style={[styles.loginTxt, { textTransform: 'capitalize' }]}>{currentUserType} Registration</Text>
+                    <Text style={styles.ephoneTxt}>Enter your phone number to register with Vastel</Text>
                 </View>
 
                 <View style={styles.body}>
-                    {isPhoneLogin && <PhoneNumberInput
+                    <PhoneInput
                         ref={phoneInputRef}
                         defaultValue={value}
                         defaultCode="UG"
-
+                        layout="first"
                         onChangeText={(text) => {
                             onChangePhoneNumber(text);
                         }}
                         onChangeCountry={(country) => {
                             onChangeCountry(country);
                         }}
-                        withShadow
-                        layout='first'
-                        autoFocus={false}
                         withDarkTheme={false}
-                        placeholder={"774 014727"}
-                    />}
-
-                    {!isPhoneLogin &&
-                        <View style={styles.textInputContainer}>
-                            <TextInput
-                                mode='outlined'
-                                label="Email"
-                                style={styles.textInput}
-                                value={email}
-                                placeholder='Enter your email'
-                                onChangeText={(text) => setEmail(text)}
-                                activeOutlineColor={configs.colors.primary}
-                            />
-                        </View>}
-
-                    <View style={styles.textInputContainer}>
-                        <TextInput
-                            mode='outlined'
-                            label="Password"
-                            style={styles.textInput}
-                            secureTextEntry={!showPassword}
-                            value={password}
-                            placeholder='Enter your password'
-                            onChangeText={(text) => setPassword(text)}
-                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24} onPress={togglePasswordVisibility} />}
-                            activeOutlineColor={configs.colors.primary}
-                        />
-                    </View>
-                    <View>
-                        <TouchableOpacity onPress={() => setIsPhoneLogin(!isPhoneLogin)}>
-                            {isPhoneLogin && <Text style={styles.loginOption}>Use email instead to login</Text>}
-                            {!isPhoneLogin && <Text style={styles.loginOption}>Use phone number instead to login</Text>}
-                        </TouchableOpacity>
-                    </View>
+                        withShadow={true}
+                        autoFocus={true}
+                        placeholder={"phone number"}
+                    />
                 </View>
-
-
 
                 <View style={styles.footer}>
                     <TouchableOpacity
                         disabled={false}
                         style={configs.styles.primaryBtn}
                         onPress={() => Signin()}>
-                        <Text style={{ color: configs.colors.white }}>Continue</Text>
+                        <Text style={configs.styles.continueText}>Continue</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -271,9 +208,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={configs.styles.btnText}>Back</Text>
                     </TouchableOpacity>
                 </View>
-
-
-            </KeyboardAvoidingView>
+            </SafeAreaView>
 
             {isLoading && <AppLoader />}
 
@@ -281,33 +216,34 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     )
 }
 
-export default SigninScreen;
+export default PhoneNumberEntryScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.lighter,
+        backgroundColor: configs.colors.white
     },
 
     header: {
-        flex: 1,
-        flexDirection: 'row',
+        flex: 2,
+        backgroundColor: configs.colors.white,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 10,
-        marginTop: 25
     },
 
     body: {
         flex: 1,
-        paddingHorizontal: 5,
+        backgroundColor: configs.colors.white,
+        marginVertical: 15,
         alignItems: 'center',
+        justifyContent: 'center',
     },
 
     footer: {
+        flex: 1,
         alignItems: 'center',
-        width: '100%',
-        marginTop: 50.,
+        justifyContent: 'center',
+        backgroundColor: configs.colors.white,
     },
 
     row: {
@@ -319,7 +255,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        height: 200,
     },
 
     touchableContainer: {
@@ -364,27 +299,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 15,
     },
-
-    textInputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingBottom: 10,
-        marginHorizontal: 30,
-        marginTop: 15,
-
-    },
-
-    textInput: {
-        flex: 1,
-        fontSize: configs.fonts.large,
-        paddingLeft: 10,
-
-    },
-
-    loginOption: {
-        fontSize: configs.fonts.large,
-        color: configs.colors.terms,
-        textDecorationLine: 'underline',
-    }
 
 });

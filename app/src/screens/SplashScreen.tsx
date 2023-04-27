@@ -7,14 +7,14 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor={configs.colors.primary} />
             <View style={styles.header}>
-                <Avatar size={125} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} anyStyles={{ borderWidth: 6, borderColor: configs.colors.primary}}/>
-                <Text style={styles.drText}>Bringing healthcare to your fingertips</Text>
+                <Avatar size={125} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} anyStyles={{ borderWidth: 6, borderColor: configs.colors.primary }} />
+                <Text style={styles.slogan}>Bringing healthcare to your fingertips</Text>
             </View>
             <View style={styles.footer}>
-                <TouchableOpacity style={[configs.styles.primaryBtn, { marginVertical: 5 }]} onPress={() => { navigation.navigate('Signin') }}>
-                    <Text style={styles.btnText}>Login</Text>
+                <TouchableOpacity style={[configs.styles.secondaryBtn, { marginVertical: 5 }]} onPress={() => { navigation.navigate('Signin') }}>
+                    <Text style={[styles.btnText, { color: configs.colors.primary }]}>Login</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[configs.styles.primaryBtn]} onPress={() => { navigation.navigate('Signin') }}>
+                <TouchableOpacity style={[configs.styles.primaryBtn]} onPress={() => { navigation.navigate('EnterPhoneNumber') }}>
                     <Text style={styles.btnText}>Register</Text>
                 </TouchableOpacity>
             </View>
@@ -46,13 +46,14 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
 
-    drText: {
+    slogan: {
         fontSize: 20,
-        color: configs.colors.secondary,
+        color: configs.colors.primary,
         fontWeight: '700',
         textAlign: 'center',
         paddingVertical: 15,
         marginHorizontal: 80,
+        opacity: 0.9
     },
 
     btnText: {
@@ -62,8 +63,8 @@ const styles = StyleSheet.create({
     },
 
     logo: {
-      borderWidth: 1,
-      borderColor: configs.colors.primary
+        borderWidth: 1,
+        borderColor: configs.colors.primary
     }
 
 })
