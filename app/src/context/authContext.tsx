@@ -1,7 +1,7 @@
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, LoginData, PatientRegistrationPayload } from '../interfaces';
+import { IUser, LoginData, LoginPayload, PatientRegistrationPayload } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken, removeUser, getUser } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { initialUserState } from '../configs/constants';
@@ -11,8 +11,39 @@ const services = new Service();
 
 
 const signin = (dispatch: any) => {
-    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginPayload, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
         const endpoint = is_patient ? routes.patient.signin : routes.doctor.signin;
+        services.post(
+            endpoint,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+
+                let data = res.data;
+                let access_token = data.access_token;
+
+                await storeAuthToken(access_token);
+                await storeAccessToken(access_token);
+                await storeUser(data);
+
+                dispatch({
+                    type: types.HOME,
+                    payload: data
+                });
+
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const sendVerificationCode = (dispatch: any) => {
+    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.patient.send_otp : routes.doctor.send_otp;
         services.post(
             endpoint,
             payload
@@ -196,6 +227,6 @@ const updateUserState = (dispatch: any) => {
 
 export const { Provider, Context } = createDataContext(
     appReducer,
-    { signin, verifyCode, signup, authenticateDoctor, registerDoctor, updateUserState, signout },
+    { signin, sendVerificationCode, verifyCode, signup, authenticateDoctor, registerDoctor, updateUserState, signout },
     { user: initialUserState, token: null, authorization: null, isAppLoading: true },
 );

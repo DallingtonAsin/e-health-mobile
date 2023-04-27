@@ -254,6 +254,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onChangeText={(text) => handleTextInputChange('password', text)}
                             onBlur={() => validatePassword(user.password, setPasswordError)}
+                            placeholder='Enter your Password'
                             secureTextEntry={true}
                         />
                     </View>
@@ -271,6 +272,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onChangeText={(text) => handleTextInputChange('password_confirmation', text)}
                             onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
+                            placeholder='Re-Enter your Password'
                             secureTextEntry={true}
                         />
                     </View>

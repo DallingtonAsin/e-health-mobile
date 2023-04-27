@@ -39,6 +39,12 @@ export const styles = {
     alignItems: 'center',
   },
 
+  continueText: {
+    color: colors.white,
+    fontWeight: 'bold',
+    fontSize: fonts.extraLarge,
+  },
+
   bottomizedBtn: {
     position: 'absolute',
     bottom: 35,
