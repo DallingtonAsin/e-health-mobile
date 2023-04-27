@@ -5,18 +5,20 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, isValidEmail, isValidDob } from '../../components/common/SharedHelper';
-import { IUser } from '../../interfaces';
+import { formatDate, displayMessage, isValidEmail, isValidDob, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
+import { DoctorRegistrationPayload, IUser } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Context as AuthContext } from '../../context/authContext';
-import { initialUser } from '../../configs/constants';
+import { initialUser, registrationState } from '../../configs/constants';
+import { validateDoctorRegistration } from '../../components/common/validation';
 
 
 const RegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
-    const [user, setUser] = useState<IUser>(initialUser);
+    const [user, setUser] = useState<DoctorRegistrationPayload>(registrationState.doctor);
     const { registerDoctor } = useContext(AuthContext);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -25,54 +27,22 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
         { key: '2', value: 'Female' },
     ];
 
-
     const submit = () => {
 
-        if (!user.first_name) {
-            Toast.show('Enter your first name', Toast.LONG);
+        const validationError = validateDoctorRegistration(user, hasAgreedTerms);
+        if (validationError) {
+            Toast.show(validationError, Toast.LONG)
             return;
         }
 
-        if (!user.last_name) {
-            Toast.show('Enter your last name', Toast.LONG);
-            return;
-        }
-
-        if (!user.email) {
-            Toast.show('Enter your email address', Toast.LONG);
-        }
-
-        if (!isValidEmail(user.email)) {
-            Toast.show('Please enter a valid email', Toast.LONG);
-            return;
-        }
-
-        if (!user.gender) {
-            Toast.show('Select your gender', Toast.LONG);
-            return;
-        }
-
-        if (!user.dob) {
-            Toast.show('Enter your date of birth', Toast.LONG);
-            return;
-        }
-
-        if (!isValidDob(user.dob)) {
-            Toast.show('Enter valid date of birth. Doctor must be atleast greater than 18', Toast.LONG);
-            return;
-        }
-
-        if (!hasAgreedTerms) {
-            Toast.show('Please agree to our terms and conditions before signup', Toast.LONG);
-            return;
-        }
-
-        let payload: IUser = {
+        let payload: DoctorRegistrationPayload = {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user?.email,
             gender: user.gender,
             dob: user.dob,
+            password: user.password,
+            password_confirmation: user.password_confirmation,
         }
 
         setIsLoading(true);
@@ -98,18 +68,48 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
             ...user,
             dob: dob
         });
-    };
+    }
 
     const handleCheckTermsAndConditions = () => {
         setHasAgreedTerms(!hasAgreedTerms);
-    };
+    }
 
     const handlePrivacyPolicyPress = () => {
         Linking.openURL('https://example.com/privacy-policy');
-    };
+    }
 
     const handleTermsPress = () => {
         Linking.openURL('https://example.com/terms-and-conditions');
+    }
+
+    const setState = (field: string, text: any) => {
+        setUser((prev) => ({
+            ...prev,
+            [field]: text,
+        }));
+    }
+
+    const handleTextInputChange = (field: string, text: any) => {
+
+        if (field == 'password' && user.password_confirmation) {
+            if (text !== user.password_confirmation) {
+                setPasswordError('Passwords do not match')
+            } else {
+                setPasswordError('');
+                setState(field, text)
+            }
+        }
+
+        if (field == 'password_confirmation' && user.password) {
+            if (text !== user.password) {
+                setPasswordError('Passwords do not match')
+            } else {
+                setPasswordError('');
+                setState(field, text)
+            }
+        }
+        setState(field, text)
+        // validateForm();
     };
 
 
@@ -117,13 +117,12 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
         <>
             <SafeAreaView style={config.styles.registration.doctor.container}>
 
-                <StatusBar
-                    backgroundColor={config.colors.primary}
-                />
-
+                <StatusBar backgroundColor={config.colors.primary} />
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
-                    contentContainerStyle={config.styles.registration.doctor.scrollContainer}>
+                    contentContainerStyle={config.styles.registration.doctor.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                    >
                     <Text style={config.styles.registration.doctor.title}>Medical Doctor Registration</Text>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
@@ -138,8 +137,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             numberOfLines={5}
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser(prev => ({ ...prev, first_name: text }))}
-
+                            onChangeText={text => handleTextInputChange('first_name', text)}
                         />
                     </View>
 
@@ -154,7 +152,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             activeOutlineColor={config.colors.primary}
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser({ ...user, last_name: text })}
+                            onChangeText={text => handleTextInputChange('last_name', text)}
                         />
                     </View>
 
@@ -169,7 +167,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             activeOutlineColor={config.colors.primary}
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser(prev => ({ ...prev, email: text }))}
+                            onChangeText={text => handleTextInputChange('email', text)}
                         />
                     </View>
 
@@ -177,7 +175,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={config.styles.registration.doctor.labelTxt}>Gender
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <SelectList
-                            setSelected={(val: string) => setUser(prev => ({ ...prev, gender: val }))}
+                            setSelected={(text: string) => handleTextInputChange('gender', text)}
                             data={genderOptions}
                             save="value"
                             search={false}
@@ -199,7 +197,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onFocus={showDatePicker}
                             showSoftInputOnFocus={false}
-                            onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
+                            onChangeText={text => handleTextInputChange('dob', text)}
                         />
                         <DateTimePickerModal
                             isVisible={isDatePickerVisible}
@@ -207,18 +205,49 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             display='inline'
                             onConfirm={handleConfirm}
                             onCancel={hideDatePicker}
-
                         />
                     </View>
 
-                    <View style={[config.styles.registration.doctor.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                    <View style={config.styles.registration.doctor.viewContainer}>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Password<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <TextInput
+                            label="Password"
+                            value={user.password}
+                            mode="outlined"
+                            activeOutlineColor={config.colors.primary}
+                            style={config.styles.registration.doctor.textInput}
+                            textColor={config.colors.dark}
+                            onChangeText={(text) => handleTextInputChange('password', text)}
+                            onBlur={() => validatePassword(user.password, setPasswordError)}
+                            secureTextEntry={true}
+                        />
+                    </View>
+
+                    { passwordError !== '' && <Text style={{ color: config.colors.danger }}>{passwordError}</Text> }
+
+                    <View style={config.styles.registration.doctor.viewContainer}>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Confirm Password<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <TextInput
+                            label="Confirm Password"
+                            value={user.password_confirmation}
+                            mode="outlined"
+                            activeOutlineColor={config.colors.primary}
+                            style={config.styles.registration.doctor.textInput}
+                            textColor={config.colors.dark}
+                            onChangeText={(text) => handleTextInputChange('password_confirmation', text)}
+                            onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
+                            secureTextEntry={true}
+                        />
+                    </View>
+
+                    <View style={[config.styles.registration.doctor.viewContainer, { flexDirection: 'row' }]}>
                         <Checkbox
                             status={hasAgreedTerms ? 'checked' : 'unchecked'}
                             color={config.colors.primary}
                             onPress={handleCheckTermsAndConditions}
                         />
                         <TouchableOpacity onPress={handlePrivacyPolicyPress}>
-                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
+                            <Text style={{ color: config.colors.grey, fontSize: 16 }}>
                                 I agree to the{' '}
                                 <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
                                     privacy policy
@@ -230,7 +259,6 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-
 
                     <View style={config.styles.registration.doctor.viewContainer}>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%' }]}

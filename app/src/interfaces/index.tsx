@@ -33,7 +33,18 @@ interface PatientRegistrationPayload {
     first_name: string,
     last_name: string,
     email?: string,
-    address: string,
+    address?: string,
+    gender: string,
+    dob: string,
+    password: string,
+    password_confirmation: string
+}
+
+interface DoctorRegistrationPayload {
+    first_name: string,
+    last_name: string,
+    email: string,
+    address?: string,
     gender: string,
     dob: string,
     password: string,
@@ -176,7 +187,22 @@ interface FileUpload {
 }
 
 interface Registration {
-    patient: PatientRegistrationPayload
+    patient: PatientRegistrationPayload,
+    doctor: DoctorRegistrationPayload
+}
+
+interface DrCompleteProfilePayload {
+    specialty: string,
+    facility: string,
+    other_facilities: number[],
+    address: string,
+    bio_summary: string,
+    qualification: string,
+    training_institute: string,
+    lincense_number: string,
+    service_fee: string,
+    front_image: any,
+    back_image: any
 }
 
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
@@ -201,6 +227,8 @@ export type {
     MedicalHistoryRecord,
     FileUpload,
     PatientRegistrationPayload,
+    DoctorRegistrationPayload,
     Registration,
-    setPasswordError
+    setPasswordError,
+    DrCompleteProfilePayload
 }

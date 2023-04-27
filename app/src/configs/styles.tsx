@@ -184,7 +184,7 @@ export const styles = {
 
       scrollContainer: {
         flexGrow: 1,
-        margin: 15,
+        padding: 10,
       },
 
       inputWrap: {

@@ -11,8 +11,11 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
                 <Text style={styles.drText}>Bringing healthcare to your fingertips</Text>
             </View>
             <View style={styles.footer}>
-                <TouchableOpacity style={[configs.styles.secondaryBtn, configs.styles.bottomizedBtn]} onPress={() => { navigation.navigate('Signin') }}>
-                    <Text style={configs.styles.btnText}>Get Started</Text>
+                <TouchableOpacity style={[configs.styles.secondaryBtn, { marginVertical: 5 }]} onPress={() => { navigation.navigate('Signin') }}>
+                    <Text style={styles.btnText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[configs.styles.secondaryBtn]} onPress={() => { navigation.navigate('Signin') }}>
+                    <Text style={styles.btnText}>Register</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -24,29 +27,38 @@ export default SplashScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: configs.colors.primary,
+        alignItems: 'center',
     },
 
     header: {
-        flex: 1,
-        backgroundColor: configs.colors.primary,
+        flex: 0.5,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     footer: {
-        flex: 1,
-        backgroundColor: configs.colors.primary,
-        alignItems: 'center'
-
+        flex: 0.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 0,
+        position: 'absolute',
+        marginBottom: 40,
     },
 
     drText: {
         fontSize: 20,
         color: configs.colors.white,
-        paddingVertical: 15,
         fontWeight: '700',
+        textAlign: 'center',
+        paddingVertical: 15,
         marginHorizontal: 80,
-        textAlign: 'center'
-    }
+    },
+
+    btnText: {
+        color: configs.colors.primary,
+        fontSize: configs.fonts.extraLarge,
+        fontWeight: 'bold'
+    },
 
 })

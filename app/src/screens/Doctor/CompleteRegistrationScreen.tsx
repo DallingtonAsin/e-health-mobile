@@ -1,35 +1,35 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar } from 'react-native';
-import * as config from '../../configs';
-import { TextInput } from 'react-native-paper';
-import AppLoader from '../../components/AppLoader';
-import Toast from 'react-native-simple-toast';
-import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper';
-import { Context as AppContext } from '../../context/appContext';
-import { Context as AuthContext } from '../../context/authContext';
-import { Context as DoctorContext } from '../../context/doctorContext';
-import { FileUpload, IUser } from '../../interfaces';
-import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import { initialFileUpload, initialUser } from '../../configs/constants';
-import { SelectList } from 'react-native-dropdown-select-list';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
-import RNFS from 'react-native-fs';
+import React, { useState, useContext, useEffect } from 'react'
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar } from 'react-native'
+import * as config from '../../configs'
+import { TextInput } from 'react-native-paper'
+import AppLoader from '../../components/AppLoader'
+import Toast from 'react-native-simple-toast'
+import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper'
+import { Context as AppContext } from '../../context/appContext'
+import { Context as AuthContext } from '../../context/authContext'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { DrCompleteProfilePayload, FileUpload, IUser } from '../../interfaces'
+import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
+import { DrCompleteProfileInitialState, initialFileUpload, initialUser } from '../../configs/constants'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import ImageResizer from '@bam.tech/react-native-image-resizer'
+import RNFS from 'react-native-fs'
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
-    const [facilities, setFacilities] = useState([]);
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload);
     const [backImage, setBackImage] = useState<FileUpload>(initialFileUpload);
-    const [user, setUser] = useState<IUser>(initialUser);
+    const [user, setUser] = useState<DrCompleteProfilePayload>(DrCompleteProfileInitialState);
     const [specialties, setSpecialties] = useState([]);
+    const [facilities, setFacilities] = useState([]);
     const [isFetchingFacilities, setIsFetchingFacilities] = useState(true);
     const { updateUserState } = useContext(AuthContext);
     const { getDoctorSpecialties } = useContext(AppContext);
     const { completeRegistration, getMedicalFacilities } = useContext(DoctorContext);
+
 
     useEffect(() => {
         getDoctorSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
@@ -171,15 +171,12 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         <React.Fragment>
             <SafeAreaView style={config.styles.registration.doctor.container}>
 
-                <StatusBar
-                    backgroundColor={config.colors.primary}
-                />
+                <StatusBar backgroundColor={config.colors.primary} />
 
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={config.styles.registration.doctor.scrollContainer}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Speciality
@@ -188,7 +185,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             setSelected={(val: string) => setUser(prev => ({ ...prev, specialty: val }))}
                             data={specialties}
                             save="value"
-                            search={false}
+                            search={true}
                             placeholder={"Select specialty"}
                             inputStyles={{ color: config.colors.black }}
                             boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
@@ -202,8 +199,8 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             setSelected={(val: string) => setUser(prev => ({ ...prev, facility: val }))}
                             data={facilities}
                             save="value"
-                            search={false}
-                            placeholder={"Select Primary Facility"}
+                            search={true}
+                            placeholder={"Select primary facility"}
                             inputStyles={{ color: config.colors.black }}
                             boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
                         />
@@ -234,6 +231,22 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             placeholder='E.g plot 45, Kafumbe Road Mengo'
                             onChangeText={text => setUser(prev => ({ ...prev, address: text }))}
+                        />
+                    </View>
+
+                    <View style={config.styles.registration.doctor.inputWrap}>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Bio Summary<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <TextInput
+                            editable
+                            mode="outlined"
+                            label={"Bio Summary"}
+                            value={user.bio_summary}
+                            onChangeText={text => setUser(prev => ({ ...prev, bio_summary: text }))}
+                            multiline={true}
+                            numberOfLines={4}
+                            activeOutlineColor={config.colors.primary}
+                            style={config.styles.registration.doctor.textInput}
+                            placeholder={""}
                         />
                     </View>
 
@@ -298,7 +311,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         />
                     </View>
 
-                    <View>
+                    <View style={config.styles.registration.doctor.viewContainer}>
                         <Text style={config.styles.registration.doctor.labelTxt}>National ID
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <View style={{ marginVertical: 10 }}>
@@ -312,7 +325,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                     </View>
 
-                    <View style={[config.styles.registration.doctor.viewContainer, { marginBottom: 40 }]}>
+                    <View style={[config.styles.registration.doctor.viewContainer]}>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
                             <Text style={[config.styles.btnText]}>Submit</Text>
