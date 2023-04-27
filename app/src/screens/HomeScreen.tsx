@@ -11,16 +11,13 @@ import {
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { Avatar as AvatarRP } from 'react-native-paper';
 import { displayMessage, getGreeting } from '../components/common/SharedHelper';
 import { Context as AuthContext } from '../context/authContext';
 import { Context as DoctorContext } from '../context/doctorContext';
-import { getUserInitials } from '../components/common/SharedHelper';
 import Avatar from '../components/Avatar';
 import { useSelector } from 'react-redux';
 import { selectNotifications } from "../redux/reducers/notificationSlice";
 import { Notification } from '../interfaces';
-import Toast from 'react-native-simple-toast';
 import AppLoader from '../components/AppLoader';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
