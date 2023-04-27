@@ -2129,26 +2129,26 @@
   integrity sha512-HrxsBcJZk1MA7V6zFlYNl/8G0Er5gQm+ChD8kmvaReKWrN8HlvnrZpGa1dTJ/Bg6Z0dCaWE+3a/UJQ4Vt0qAPg==
 
 "@react-native-firebase/app@^17.3.1":
-  version "17.4.2"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-17.4.2.tgz"
-  integrity sha512-8oj29shxA2lxwmOxpxJ/nHVSEqK5ebHJW1WUKIBwcLTvfi+EFI7CKzPG+BFpYtdapH5BuK+yQjuReRNBy+oQjQ==
+  version "17.3.1"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-17.3.1.tgz"
+  integrity sha512-iZsxp9kgL3O544v5U8rIm5qcpp7yO9k//dBCXZByWzhumwVAn/TvgTrXCs60leCAJxNr9seXTSBHrToFabF+Gw==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
 "@react-native-firebase/auth@^17.3.1":
-  version "17.4.2"
-  resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-17.4.2.tgz"
-  integrity sha512-JF6e7vMdHJelos42DqtlPurzzhFBb3OtYeCjhaOmyWwToD1tvCGGO1GkiXbWZcZIOuL6SCXBwvtvCHac+9YZXA==
+  version "17.3.1"
+  resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-17.3.1.tgz"
+  integrity sha512-chMBDaNZ3vZjGdP0gsaR8ChnVZmwEUYGZpLthL0tc8ZOJN12fr113tSSOKSufri3LlksAAvMZNIne6NPFcUgGA==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     plist "^3.0.5"
 
 "@react-native-firebase/crashlytics@^17.3.1":
-  version "17.4.2"
-  resolved "https://registry.npmjs.org/@react-native-firebase/crashlytics/-/crashlytics-17.4.2.tgz"
-  integrity sha512-0ES3DLyKTDIPHFKfSVlIuQmyWFNvwGhT45IG6rSqjweGBjIOr3zhmgeLHIJAGwO8FBnmnxVpk66MURQoM7qvhA==
+  version "17.3.1"
+  resolved "https://registry.npmjs.org/@react-native-firebase/crashlytics/-/crashlytics-17.3.1.tgz"
+  integrity sha512-aij5Nca3/D3xGJ29p9G7Cd9JBxiD82gkGqFnqp3pcsF+vfXehvYJPkmAfy2nUVxgcetDW+bnc8UJLQEvmrSMdg==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     stacktrace-js "^2.0.0"
@@ -7824,6 +7824,11 @@ react-native-country-picker-modal@^2.0.0:
     prop-types "15.7.2"
     react-async-hook "3.6.1"
 
+react-native-device-info@^10.6.0:
+  version "10.6.0"
+  resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-10.6.0.tgz"
+  integrity sha512-/MmINdojWdw2/9rwYpH/dX+1gFP0o78p8yYPjwxiPhoySSL2rZaNi+Mq9VwC+zFi/yQmJUvHntkKSw2KUc7rFw==
+
 react-native-dotenv@^3.4.2:
   version "3.4.2"
   resolved "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-3.4.2.tgz"
@@ -7908,6 +7913,11 @@ react-native-multiple-select@^0.5.12:
   integrity sha512-lFw0u798/2qHr4TwDdxMtReRtsNOCC2SWPzWHRGKE4XcBiUll0hHhke7iqQg4xJdfo46C/h69f1ZXphDOjZY3A==
   dependencies:
     prop-types "^15.7.2"
+
+react-native-network-info@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.npmjs.org/react-native-network-info/-/react-native-network-info-5.2.1.tgz"
+  integrity sha512-iam74xXtrSqqZurCl1/bSjZ9jXcsJY84g7brx1/4uVGCY26c6m+4CArHNSHOsz5ATg2NQT+81sjNy0KlCPyK4g==
 
 react-native-pager-view@^6.1.1:
   version "6.1.1"

@@ -3,24 +3,25 @@ import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Lin
 import * as config from '../../configs';
 import { TextInput } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
-import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, isValidEmail } from '../../components/common/SharedHelper';
+import { formatDate, displayMessage, isValidEmail, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
 import { Context as AuthContext } from '../../context/authContext';
-import { IUser } from '../../interfaces';
+import { PatientRegistrationPayload } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { HOSPITAL_NAME } from '@env';
 import { Checkbox } from 'react-native-paper';
-import { initialUser } from '../../configs/constants';
+import { registrationState } from '../../configs/constants';
+import { validatePatientRegistration } from '../../components/common/validation';
+import Toast from 'react-native-simple-toast';
 
-const numberOfLines = 5;
 
 const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
-    const [user, setUser] = useState<IUser>(initialUser);
+    const [user, setUser] = useState<PatientRegistrationPayload>(registrationState.patient);
     const [isValidForm, setIsValidForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const { signup } = useContext(AuthContext);
 
@@ -43,65 +44,57 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         }
     };
 
-    const handleTextInputChange = (field: string, text: any) => {
+    const setState = (field: string, text: any) => {
         setUser((prev) => ({
             ...prev,
             [field]: text,
         }));
+    }
+
+    const handleTextInputChange = (field: string, text: any) => {
+
+        if (field == 'password' && user.password_confirmation) {
+            if (text !== user.password_confirmation) {
+                setPasswordError('Passwords do not match')
+            } else {
+                setPasswordError('');
+                setState(field, text)
+            }
+        }
+
+        if (field == 'password_confirmation' && user.password) {
+            if (text !== user.password) {
+                setPasswordError('Passwords do not match')
+            } else {
+                setPasswordError('');
+                setState(field, text)
+            }
+        }
+        setState(field, text)
         validateForm();
     };
 
 
     const submitDetails = () => {
 
-        if (!user.first_name) {
-            Toast.show('Enter your first name', Toast.LONG);
+        const validationError = validatePatientRegistration(user, hasAgreedTerms);
+        if (validationError) {
+            Toast.show(validationError, Toast.LONG)
             return;
         }
-
-        if (!user.last_name) {
-            Toast.show('Enter your last name', Toast.LONG);
-            return;
-        }
-
-        if (user.email) {
-            if (!isValidEmail(user.email)) {
-                Toast.show('Please enter a valid email', Toast.LONG);
-                return;
-            }
-        }
-
-        if (!user.address) {
-            Toast.show('Enter your address', Toast.LONG);
-            return;
-        }
-
-        if (!user.gender) {
-            Toast.show('Select your gender', Toast.LONG);
-            return;
-        }
-
-        if (!user.dob) {
-            Toast.show('Enter your date of birth', Toast.LONG);
-            return;
-        }
-
-        if (!hasAgreedTerms) {
-            Toast.show('Please agree to the terms and conditions to proceed.', Toast.LONG);
-            return;
-        }
-
         setIsLoading(true);
 
-        let payload: IUser = {
+        let payload: PatientRegistrationPayload = {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user?.email,
             address: user.address,
             gender: user.gender,
-            dob: user.dob
+            dob: user.dob,
+            password: user.password,
+            password_confirmation: user.password_confirmation,
         }
-        // console.log(`patient info`, payload);
+
         signup({ payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
 
     }
@@ -111,7 +104,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const onSuccess = async (data: any) => {
-        navigation.navigate('SignedInStack', {screen: 'Home'});
+        navigation.navigate('SignedInStack', { screen: 'Home' });
     }
 
     const showDatePicker = () => {
@@ -148,8 +141,10 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                 <ScrollView
                     style={styles.scrollView}
-                    contentContainerStyle={styles.scrollContainer}>
-                    <Text style={styles.title}>Create a {HOSPITAL_NAME} Medical Services Account</Text>
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <Text style={styles.title}>Create a {HOSPITAL_NAME} Medical Online Services Patient Account</Text>
 
                     <View style={styles.inputWrap}>
                         <Text style={styles.labelTxt}>First Name<Text style={styles.required}>*</Text></Text>
@@ -159,7 +154,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             mode="outlined"
                             dense={false}
                             activeOutlineColor={config.colors.primary}
-                            numberOfLines={numberOfLines}
+                            numberOfLines={5}
                             style={styles.textInput}
                             textColor={config.colors.dark}
                             onChangeText={(text) => handleTextInputChange('first_name', text)}
@@ -248,21 +243,53 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                     </View>
 
-                    <View style={[styles.viewContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                    <View style={styles.viewContainer}>
+                        <Text style={styles.labelTxt}>Password<Text style={styles.required}>*</Text></Text>
+                        <TextInput
+                            label="Password"
+                            value={user.password}
+                            mode="outlined"
+                            activeOutlineColor={config.colors.primary}
+                            style={styles.textInput}
+                            textColor={config.colors.dark}
+                            onChangeText={(text) => handleTextInputChange('password', text)}
+                            onBlur={() => validatePassword(user.password, setPasswordError)}
+                            secureTextEntry={true}
+                        />
+                    </View>
+
+                    {passwordError !== '' && <Text style={{ color: config.colors.danger }}>{passwordError}</Text>}
+
+                    <View style={styles.viewContainer}>
+                        <Text style={styles.labelTxt}>Confirm Password<Text style={styles.required}>*</Text></Text>
+                        <TextInput
+                            label="Confirm Password"
+                            value={user.password_confirmation}
+                            mode="outlined"
+                            activeOutlineColor={config.colors.primary}
+                            style={styles.textInput}
+                            textColor={config.colors.dark}
+                            onChangeText={(text) => handleTextInputChange('password_confirmation', text)}
+                            onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
+                            secureTextEntry={true}
+                        />
+                    </View>
+
+                    <View style={[styles.viewContainer, { flexDirection: 'row' }]}>
                         <Checkbox
                             status={hasAgreedTerms ? 'checked' : 'unchecked'}
                             color={config.colors.primary}
                             onPress={handleCheckTermsAndConditions}
                         />
                         <TouchableOpacity onPress={handlePrivacyPolicyPress}>
-                            <Text style={{ marginLeft: 8, color: config.colors.grey, fontSize: 16 }}>
+                            <Text style={{ color: config.colors.grey, fontSize: 16 }}>
                                 I agree to the{' '}
                                 <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handlePrivacyPolicyPress}>
                                     privacy policy
                                 </Text>{' '}
                                 and{' '}
                                 <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleTermsPress}>
-                                    terms and conditions
+                                    terms & conditions
                                 </Text>
                             </Text>
                         </TouchableOpacity>
@@ -307,7 +334,8 @@ const styles = StyleSheet.create({
 
     scrollContainer: {
         flexGrow: 1,
-        margin: 15,
+        padding: 12,
+        marginBottom: 40,
     },
 
     inputWrap: {
@@ -329,8 +357,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: config.colors.dark,
-        paddingLeft: 30,
-        paddingRight: 30,
         fontWeight: '900',
         opacity: 0.6,
         textTransform: 'uppercase',

@@ -6,7 +6,8 @@ import Avatar from '../components/Avatar';
 import { DoctorsDetail } from "../interfaces";
 import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
-import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
+import { Context as DoctorContext } from '../context/doctorContext';
+import { displayMessage, getUserInitials, truncateString } from '../components/common/SharedHelper';
 import AppLoader from "../components/AppLoader";
 import { Searchbar } from 'react-native-paper';
 import CustomStackHeader from "../components/CustomStackHeader";
@@ -15,14 +16,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { specialty_id, specialty_name } = route.params;
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([]);
     const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([]);
+    const [specialtyName, setSpecialtyName] = useState<string>('');
 
     const { state } = useContext(AuthContext);
     const { getDoctorsBySpecialty } = useContext(AppContext);
+    const { getMedicalDoctors } = useContext(DoctorContext);
 
     const user = state.user;
 
@@ -31,7 +33,15 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     useEffect(() => {
-        getDoctorsBySpecialty({ specialtyId: specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
+        if (route.params && route.params.specialty_id) {
+            getDoctorsBySpecialty({ specialtyId: route.params.specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
+        } else {
+            getMedicalDoctors({ onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading });
+        }
+
+        if (route.params && route.params.specialty_name) {
+            setSpecialtyName(route.params.specialty_name)
+        }
     }, []);
 
     const populateMedicalDoctors = (doctors: DoctorsDetail[]) => {
@@ -69,26 +79,22 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     }
                 </View>
                 <View style={styles.profile}>
-                    <Text style={styles.name}>{item.title} {item.first_name} {item.last_name}</Text>
-                    <Text style={styles.titles}>{item.qualification}</Text>
-                    <Text style={styles.userTitle}>{item.profession}</Text>
+                    <Text style={styles.name}>{`Dr.`} {item.first_name} {item.last_name}</Text>
+                    <Text style={styles.title}>{item.facility}</Text>
+                    <Text style={styles.title}>{item.qualification}</Text>
                 </View>
             </View>
 
             <View style={styles.body}>
                 <View>
-                    <Text style={styles.titles}>Experience</Text>
-                    <Text style={styles.values}>{item.experience}</Text>
-                </View>
-                <View>
-                    <Text style={styles.titles}>Languages</Text>
-                    <Text style={styles.values}>{item.languages}</Text>
+                    <Text style={styles.title}>Bio Summary</Text>
+                    <Text style={styles.values}>{truncateString(item.bio_summary, 25)}</Text>
                 </View>
             </View>
 
             {user.is_patient && <View style={styles.footer}>
                 <View>
-                    <Text style={styles.fees}>Fee:  <Text style={styles.amount}>{item.service_fee}</Text></Text>
+                    <Text style={styles.fees}>Fee/15 mins:  <Text style={styles.amount}>{item.service_fee}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity
@@ -109,7 +115,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={configs.styles.emptyIconContainer}>
                 <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
             </View>
-            <Text style={configs.styles.noInfoText}>No doctors found in {specialty_name} department.</Text>
+            <Text style={configs.styles.noInfoText}> {
+                specialtyName ?
+                    `No doctors found in ${specialtyName} department.`
+                    : `No doctors found`}
+            </Text>
         </View>
     );
 
@@ -119,7 +129,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     return (
         <SafeAreaView style={styles.container}>
-            <CustomStackHeader title={`${specialty_name} doctors`} onPress={() => navigation.goBack()} />
+            <CustomStackHeader title={specialtyName ? `${specialtyName} doctors` : `List of doctors`} onPress={() => navigation.goBack()} />
             <View style={styles.subcontainer}>
                 {
                     medicalDoctors.length > 0 && <Searchbar
@@ -157,14 +167,6 @@ const styles = StyleSheet.create({
 
     scrollContainerStyle: {
         flexGrow: 1,
-    },
-
-    title: {
-        fontSize: configs.fonts.large,
-        textAlign: 'center',
-        color: configs.colors.dark,
-        marginVertical: 10,
-        opacity: 0.7,
     },
 
     subcontainer: {
@@ -243,19 +245,19 @@ const styles = StyleSheet.create({
 
     userTitle: {
         fontSize: configs.fonts.large,
-        color: configs.colors.primary,
+        color: configs.colors.black,
     },
 
-    titles: {
+    title: {
         opacity: 0.8,
-        fontSize: configs.fonts.normal,
+        fontSize: configs.fonts.large * 0.9,
     },
 
     values: {
-        fontWeight: 'bold',
+        fontWeight: '300',
         color: configs.colors.black,
         opacity: 0.6,
-        fontSize: configs.fonts.normal,
+        fontSize: configs.fonts.large,
     },
 
     fees: {
@@ -278,6 +280,6 @@ const styles = StyleSheet.create({
         fontSize: configs.fonts.large,
     },
 
-   
+
 
 });

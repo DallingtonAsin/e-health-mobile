@@ -184,7 +184,7 @@ export const styles = {
 
       scrollContainer: {
         flexGrow: 1,
-        margin: 15,
+        padding: 10,
       },
 
       inputWrap: {
@@ -193,10 +193,9 @@ export const styles = {
       },
 
       labelTxt: {
-        fontSize: 18,
+        fontSize: 16,
       },
 
-    
       viewContainer: {
         flex: 1,
         marginVertical: 5,

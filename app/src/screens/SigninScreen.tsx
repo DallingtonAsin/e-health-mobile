@@ -10,6 +10,7 @@ import { LoginData } from '../interfaces';
 import { displayMessage } from '../components/common/SharedHelper';
 import { Switch } from 'react-native-paper';
 import Avatar from '../components/Avatar';
+import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils';
 
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
@@ -77,15 +78,22 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
         }
     }
 
-    const sendVerificationCode = (phoneObj: any, is_patient: boolean) => {
+    const sendVerificationCode = async (phoneObj: any, is_patient: boolean) => {
 
         setIsLoading(true);
 
-        let current_version = getAppVersion();
+        const current_version = getAppVersion()
+        const device_id = await getDeviceId()
+        const ip_address = await getIPAddress()
+        const token = await getToken()
+
         let payload: LoginData = {
             country_code: phoneObj.country_code,
             phone_number: phoneObj.phone_number,
             current_version: current_version,
+            unique_device_id: device_id,
+            device_token: token,
+            ip_address: ip_address,
         }
 
         signin({ payload: payload, is_patient: is_patient, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: stopLoading });
@@ -146,7 +154,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
             <KeyboardAvoidingView style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={styles.header}>
-                    <Avatar size={135} borderRadius={75} source={configs.images.splash} resizeMode={'cover'} isURL={false} />
+                    <Avatar size={135} borderRadius={75} source={configs.images.logo} resizeMode={'cover'} isURL={false} />
                     <Text style={styles.ephoneTxt}>Enter your phone number to login or register as {currentUserType}</Text>
                 </View>
 
@@ -202,7 +210,7 @@ const styles = StyleSheet.create({
 
     header: {
         flex: 2,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -229,10 +237,11 @@ const styles = StyleSheet.create({
     },
 
     ephoneTxt: {
-        fontSize: configs.fonts.medium,
+        fontSize: configs.fonts.large,
         top: 15,
         textAlign: 'center',
         marginHorizontal: 20,
+        color: configs.colors.white,
     },
 
     switchView: {
