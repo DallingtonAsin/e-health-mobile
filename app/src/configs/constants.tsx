@@ -32,7 +32,7 @@ const initialDoctorInfo: DoctorsDetail = {
   primary_facility: '',
   training_institute: '',
   facility: '',
-  lincense_number: '',
+  license_number: '',
   bio_summary: '',
   image: '',
   service_fee: 0,
@@ -60,16 +60,16 @@ const _initialRegistrationData = {
 
 const DrCompleteProfileInitialState: DrCompleteProfilePayload = {
   specialty: '',
-  facility: '',
+  primary_facility: '',
   other_facilities: [],
   address: '',
   bio_summary: '',
   qualification: '',
   training_institute: '',
-  lincense_number: '',
+  license_number: '',
   service_fee: '',
-  front_image: '',
-  back_image: ''
+  front_image: {uri: '', source: '', name: '', type: ''},
+  back_image: {uri: '', source: '', name: '', type: ''},
 }
 
 

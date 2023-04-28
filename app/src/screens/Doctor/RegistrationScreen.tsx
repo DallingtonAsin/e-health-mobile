@@ -5,12 +5,13 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import AppLoader from '../../components/AppLoader';
 import Toast from 'react-native-simple-toast';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, isValidEmail, isValidDob, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
-import { DoctorRegistrationPayload, IUser } from '../../interfaces';
+import { formatDate, displayMessage, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
+import { DoctorRegistrationPayload } from '../../interfaces';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Context as AuthContext } from '../../context/authContext';
-import { initialUser, registrationState } from '../../configs/constants';
+import { registrationState } from '../../configs/constants';
 import { validateDoctorRegistration } from '../../components/common/validation';
+import { togglePasswordVisibility } from '../../components/common/AppUtils';
 
 
 const RegistrationScreen = ({ navigation }: { navigation: any }) => {
@@ -21,6 +22,8 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [user, setUser] = useState<DoctorRegistrationPayload>(registrationState.doctor);
     const { registerDoctor } = useContext(AuthContext);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const genderOptions = [
         { key: '1', value: 'Male' },
@@ -122,7 +125,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={config.styles.registration.doctor.scrollContainer}
                     showsVerticalScrollIndicator={false}
-                    >
+                >
                     <Text style={config.styles.registration.doctor.title}>Medical Doctor Registration</Text>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
@@ -171,41 +174,43 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                         />
                     </View>
 
-                    <View style={config.styles.registration.doctor.inputWrap}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Gender
-                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                        <SelectList
-                            setSelected={(text: string) => handleTextInputChange('gender', text)}
-                            data={genderOptions}
-                            save="value"
-                            search={false}
-                            inputStyles={{ color: config.colors.black }}
-                            boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
-                        />
-                    </View>
+                    <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }]}>
+                        <View style={config.styles.registration.doctor.inputWrap}>
+                            <Text style={config.styles.registration.doctor.labelTxt}>Gender
+                                <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <SelectList
+                                setSelected={(text: string) => handleTextInputChange('gender', text)}
+                                data={genderOptions}
+                                save="value"
+                                search={false}
+                                inputStyles={{ color: config.colors.black }}
+                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                            />
+                        </View>
 
 
-                    <View style={config.styles.registration.doctor.viewContainer}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Date of Bith
-                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                        <TextInput
-                            label="Date of Birth"
-                            value={user.dob}
-                            mode="outlined"
-                            activeOutlineColor={config.colors.primary}
-                            style={config.styles.registration.doctor.textInput}
-                            textColor={config.colors.dark}
-                            onFocus={showDatePicker}
-                            showSoftInputOnFocus={false}
-                            onChangeText={text => handleTextInputChange('dob', text)}
-                        />
-                        <DateTimePickerModal
-                            isVisible={isDatePickerVisible}
-                            mode="date"
-                            display='inline'
-                            onConfirm={handleConfirm}
-                            onCancel={hideDatePicker}
-                        />
+                        <View style={config.styles.registration.doctor.inputWrap}>
+                            <Text style={config.styles.registration.doctor.labelTxt}>Date of Bith
+                                <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                            <TextInput
+                                label="Date of Birth"
+                                value={user.dob}
+                                mode="outlined"
+                                activeOutlineColor={config.colors.primary}
+                                style={config.styles.registration.doctor.textInput}
+                                textColor={config.colors.dark}
+                                onFocus={showDatePicker}
+                                showSoftInputOnFocus={false}
+                                onChangeText={text => handleTextInputChange('dob', text)}
+                            />
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                display='inline'
+                                onConfirm={handleConfirm}
+                                onCancel={hideDatePicker}
+                            />
+                        </View>
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
@@ -219,11 +224,15 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onChangeText={(text) => handleTextInputChange('password', text)}
                             onBlur={() => validatePassword(user.password, setPasswordError)}
-                            secureTextEntry={true}
+                            secureTextEntry={!showPassword}
+                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24}
+                                onPress={() => togglePasswordVisibility(showPassword, setShowPassword)}
+                            />
+                            }
                         />
                     </View>
 
-                    { passwordError !== '' && <Text style={{ color: config.colors.danger }}>{passwordError}</Text> }
+                    {passwordError !== '' && <Text style={{ color: config.colors.danger }}>{passwordError}</Text>}
 
                     <View style={config.styles.registration.doctor.viewContainer}>
                         <Text style={config.styles.registration.doctor.labelTxt}>Confirm Password<Text style={config.styles.registration.doctor.required}>*</Text></Text>
@@ -236,7 +245,11 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             textColor={config.colors.dark}
                             onChangeText={(text) => handleTextInputChange('password_confirmation', text)}
                             onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
-                            secureTextEntry={true}
+                            secureTextEntry={!showConfirmPassword}
+                            right={
+                                <TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                                    size={24} onPress={() => togglePasswordVisibility(showConfirmPassword, setShowConfirmPassword)} />
+                            }
                         />
                     </View>
 

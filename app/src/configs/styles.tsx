@@ -239,9 +239,9 @@ export const styles = {
         borderColor: colors.gray,
         borderWidth: 1,
         borderRadius: 4,
-        marginTop: 6,
-        height: 49,
-        marginBottom: 10
+        // height: 50,
+        // marginTop: 6,
+        // marginBottom: 10
       },
 
       selectInputStyles: {
