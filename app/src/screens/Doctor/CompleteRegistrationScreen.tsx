@@ -71,7 +71,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         formData.append('service_fee', service_fee);
         formData.append('front_image', frontImage);
         formData.append('back_image', backImage);
-        // console.log(`Payload`, formData)
+     
         setIsLoading(true);
         completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
