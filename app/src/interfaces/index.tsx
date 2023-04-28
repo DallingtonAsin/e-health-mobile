@@ -105,6 +105,7 @@ interface DoctorsDetail {
     country_code?: string,
     phone_number: string,
     gender: string,
+    specialty?: string,
     primary_facility?: string,
     bio_summary: string,
     qualification: string,
