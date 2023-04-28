@@ -3,6 +3,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, Touchable
 import { Avatar as AvatarRP, TextInput } from 'react-native-paper';
 import Avatar from '../components/Avatar';
 import * as configs from '../configs';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { Calendar } from 'react-native-calendars';
@@ -174,10 +175,10 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
                         <View style={configs.styles.contacts}>
                             <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
-                                <Icon5 name="phone-alt" size={22} style={configs.styles.callBtn} />
+                                <Icon5 name="phone-alt" size={18} style={configs.styles.callBtn} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => contact.sendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
-                                <Icon5 name="sms" size={22} style={configs.styles.callBtn} />
+                                <Icon name="envelope" size={18} style={configs.styles.callBtn} />
                             </TouchableOpacity>
                         </View>
 
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
 
     footer: {
         flex: 1,
-        marginVertical: 5
+        marginTop: 15
     },
 
     name: {
@@ -384,15 +385,14 @@ const styles = StyleSheet.create({
 
 
     confirmText: {
-        fontSize: 18,
+        fontSize: configs.fonts.extraLarge,
         color: configs.colors.primary,
-        fontWeight: 'bold',
-        textTransform: 'capitalize',
+        fontWeight: '500'
     },
 
     titleText: {
         fontSize: configs.fonts.large,
-        paddingVertical: 10,
+        paddingVertical: 4,
         marginLeft: 2,
     },
 

@@ -167,7 +167,7 @@ const AppStackScreen = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Schedule Appointment`,
+                    headerTitle: `Book your Appointment`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

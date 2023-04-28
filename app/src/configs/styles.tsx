@@ -155,8 +155,8 @@ export const styles = {
   callBtn: {
     color: colors.white,
     backgroundColor: colors.primary,
-    padding: 8,
-    borderRadius: 3,
+    padding: 12,
+    borderRadius: 25,
   },
 
   sms: {
