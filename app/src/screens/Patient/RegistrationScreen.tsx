@@ -13,6 +13,7 @@ import { Checkbox } from 'react-native-paper';
 import { registrationState } from '../../configs/constants';
 import { validatePatientRegistration } from '../../components/common/validation';
 import Toast from 'react-native-simple-toast';
+import { togglePasswordVisibility } from '../../components/common/AppUtils';
 
 
 const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
@@ -32,14 +33,6 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
         { key: '1', value: 'Male' },
         { key: '2', value: 'Female' },
     ];
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(!showConfirmPassword);
-    };
 
     const validateForm = () => {
 
@@ -267,7 +260,10 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onBlur={() => validatePassword(user.password, setPasswordError)}
                             placeholder='Enter your Password'
                             secureTextEntry={!showPassword}
-                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24} onPress={togglePasswordVisibility} />}
+                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24}
+                                onPress={() => togglePasswordVisibility(showPassword, setShowPassword)}
+                            />
+                            }
                         />
                     </View>
 
@@ -286,7 +282,10 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
                             placeholder='Re-Enter your Password'
                             secureTextEntry={!showConfirmPassword}
-                            right={<TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'} size={24} onPress={toggleConfirmPasswordVisibility} />}
+                            right={
+                                <TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                                    size={24} onPress={() => togglePasswordVisibility(showConfirmPassword, setShowConfirmPassword)} />
+                            }
                         />
                     </View>
 
@@ -312,7 +311,6 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={styles.viewContainer}>
                         <TouchableOpacity
-                            // disabled={!isValidForm}
                             style={[isValidForm ? config.styles.primaryBtn : config.styles.secondaryBtn, { width: '100%' }]}
                             onPress={() => submitDetails()}>
                             <Text style={[config.styles.btnText, isValidForm ? { color: config.colors.white } : { color: config.colors.primary }]}>Continue</Text>
