@@ -251,7 +251,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         disabled={false}
                         style={configs.styles.primaryBtn}
                         onPress={() => submit()}>
-                        <Text style={{ color: configs.colors.white }}>Continue</Text>
+                        <Text style={configs.styles.continueText}>Continue</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity

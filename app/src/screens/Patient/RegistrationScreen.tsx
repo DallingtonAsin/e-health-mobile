@@ -23,12 +23,23 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const { signup } = useContext(AuthContext);
 
     const genderOptions = [
         { key: '1', value: 'Male' },
         { key: '2', value: 'Female' },
     ];
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     const validateForm = () => {
 
@@ -255,7 +266,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onChangeText={(text) => handleTextInputChange('password', text)}
                             onBlur={() => validatePassword(user.password, setPasswordError)}
                             placeholder='Enter your Password'
-                            secureTextEntry={true}
+                            secureTextEntry={!showPassword}
+                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24} onPress={togglePasswordVisibility} />}
                         />
                     </View>
 
@@ -273,7 +285,8 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onChangeText={(text) => handleTextInputChange('password_confirmation', text)}
                             onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
                             placeholder='Re-Enter your Password'
-                            secureTextEntry={true}
+                            secureTextEntry={!showConfirmPassword}
+                            right={<TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'} size={24} onPress={toggleConfirmPasswordVisibility} />}
                         />
                     </View>
 
