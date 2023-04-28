@@ -21,7 +21,7 @@ interface IUser {
     facility?: string,
     qualification?: string,
     training_institute?: string,
-    lincense_number?: string,
+    license_number?: string,
     service_fee?: string,
     otp?: string,
     profile_status?: boolean,
@@ -110,7 +110,7 @@ interface DoctorsDetail {
     qualification: string,
     training_institute: string,
     facility: string,
-    lincense_number?: string,
+    license_number?: string,
     image?: string,
     service_fee: number,
     schedule_dates?: string[],
@@ -184,7 +184,7 @@ interface Drug {
 
 interface FileUpload {
     uri: any,
-    source: any,
+    source?: any,
     name: any,
     type: any
 }
@@ -196,16 +196,16 @@ interface Registration {
 
 interface DrCompleteProfilePayload {
     specialty: string,
-    facility: string,
+    primary_facility: string,
     other_facilities: number[],
     address: string,
     bio_summary: string,
     qualification: string,
     training_institute: string,
-    lincense_number: string,
+    license_number: string,
     service_fee: string,
-    front_image: any,
-    back_image: any
+    front_image: FileUpload,
+    back_image: FileUpload
 }
 
 interface LoginPayload {

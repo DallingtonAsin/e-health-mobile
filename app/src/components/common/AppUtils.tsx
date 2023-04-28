@@ -1,3 +1,4 @@
+import React from 'react'
 import { getUniqueId } from 'react-native-device-info';
 import { NetworkInfo } from "react-native-network-info";
 import messaging from '@react-native-firebase/messaging';
@@ -17,4 +18,8 @@ const getToken = async () => {
     return token
 }
 
-export { getDeviceId, getIPAddress, getToken }
+const togglePasswordVisibility = (showPassword: boolean, setShowPassword: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setShowPassword(!showPassword);
+  };
+
+export { getDeviceId, getIPAddress, getToken, togglePasswordVisibility }

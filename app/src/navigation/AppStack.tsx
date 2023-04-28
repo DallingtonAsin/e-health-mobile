@@ -306,7 +306,7 @@ const AppStackScreen = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Complete Registration`,
+                    headerTitle: `Complete Profile`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

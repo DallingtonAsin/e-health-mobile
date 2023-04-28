@@ -1,4 +1,4 @@
-import { DoctorRegistrationPayload, PatientRegistrationPayload } from '../../interfaces';
+import { DoctorRegistrationPayload, DrCompleteProfilePayload, FileUpload, PatientRegistrationPayload } from '../../interfaces';
 import { isValidDob, isValidEmail } from './SharedHelper';
 
 const validatePatientRegistration = (user: PatientRegistrationPayload, hasAgreedTerms: boolean) => {
@@ -69,7 +69,7 @@ const validateDoctorRegistration = (user: DoctorRegistrationPayload, hasAgreedTe
     }
 
     if (!user.dob) {
-        return 'Enter your date of birth' 
+        return 'Enter your date of birth'
     }
 
     if (!isValidDob(user.dob)) {
@@ -96,4 +96,54 @@ const validateDoctorRegistration = (user: DoctorRegistrationPayload, hasAgreedTe
 }
 
 
-export { validatePatientRegistration, validateDoctorRegistration }
+const ValidateDrCompleteProfile = (doctor: DrCompleteProfilePayload, selectedFacilities: string[], frontImage: FileUpload, backImage: FileUpload) => {
+    if (!doctor.specialty) {
+        return 'Select your specialty'
+    }
+
+    if (!doctor.primary_facility) {
+        return 'Select your primary facility or workplace'
+    }
+
+    if (selectedFacilities && selectedFacilities.length > 0) {
+        if (selectedFacilities.indexOf(doctor.primary_facility) !== -1) {
+            return 'Please remove your primary facility from the selected other facilities.'
+        }
+    }
+
+    if (!doctor.address) {
+        return 'Enter your address'
+    }
+
+    if (!doctor.bio_summary) {
+        return 'Enter your brief biography'
+    }
+
+    if (!doctor.qualification) {
+        return 'Enter your qualification'
+    }
+
+    if (!doctor.training_institute) {
+        return 'Enter your latest training institute'
+    }
+
+    if (!doctor.license_number) {
+        return 'Enter your UMDP license number'
+    }
+
+    if (!doctor.service_fee) {
+        return 'Enter your service fee'
+    }
+
+    if (!frontImage.uri) {
+        return 'Please upload your front image of ID'
+    }
+
+    if (!backImage.uri) {
+        return 'Please upload your back image of ID'
+    }
+
+    return undefined;
+}
+
+export { validatePatientRegistration, validateDoctorRegistration, ValidateDrCompleteProfile }
