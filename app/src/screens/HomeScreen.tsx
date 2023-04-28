@@ -118,9 +118,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         {user.is_patient &&
                             <View style={styles.cardContainer}>
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('Pharmacy')}>
-                                    <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
-                                    <Text style={styles.subtitle}>Pharmacy</Text>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                    <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Specialties</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
                                     <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
