@@ -6,7 +6,8 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Pressable
 } from 'react-native';
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -66,9 +67,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.header}>
 
                         <View style={styles.headerImageSection}>
-                            <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
+                            <Pressable style={styles.image} onPress={() => navigateScreen('Profile')}>
                                 <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
-                            </TouchableOpacity>
+                            </Pressable>
 
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />

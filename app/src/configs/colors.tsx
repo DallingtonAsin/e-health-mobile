@@ -27,5 +27,6 @@ export const colors = {
     orange: '#ff8414',
     grey: '#555',
     terms: '#2196f3',
-    darkBlue: '#17414a'
+    darkBlue: '#17414a',
+    disabled: '#757575'
 }
