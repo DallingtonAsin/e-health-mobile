@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar } from 'react-native'
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar, StyleSheet } from 'react-native'
 import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
@@ -8,12 +8,14 @@ import { displayMessage, formatNumber, removeCommas } from '../../components/com
 import { Context as AppContext } from '../../context/appContext'
 import { Context as AuthContext } from '../../context/authContext'
 import { Context as DoctorContext } from '../../context/doctorContext'
-import { DrCompleteProfilePayload, FileUpload, IUser } from '../../interfaces'
+import { DrCompleteProfilePayload, FileUpload } from '../../interfaces'
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
-import { DrCompleteProfileInitialState, initialFileUpload, initialUser } from '../../configs/constants'
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import { DrCompleteProfileInitialState, initialFileUpload } from '../../configs/constants'
+import { launchImageLibrary } from 'react-native-image-picker'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
 import RNFS from 'react-native-fs'
+import { ValidateDrCompleteProfile } from '../../components/common/validation'
+
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
@@ -29,7 +31,6 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const { updateUserState } = useContext(AuthContext);
     const { getDoctorSpecialties } = useContext(AppContext);
     const { completeRegistration, getMedicalFacilities } = useContext(DoctorContext);
-
 
     useEffect(() => {
         getDoctorSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
@@ -51,65 +52,26 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const submitDetails = () => {
 
-        if (!user.specialty) {
-            Toast.show('Select your specialty', Toast.LONG);
+        const validationError = ValidateDrCompleteProfile(user, selectedFacilities, frontImage, backImage);
+        if (validationError) {
+            Toast.show(validationError, Toast.LONG)
             return;
         }
-
-        if (!user.facility) {
-            Toast.show('Select your primary facility or workplace', Toast.LONG);
-            return;
-        }
-
-        if (!user.address) {
-            Toast.show('Enter your address', Toast.LONG);
-            return;
-        }
-
-        if (!user.qualification) {
-            Toast.show('Enter your qualification', Toast.LONG);
-            return;
-        }
-
-        if (!user.training_institute) {
-            Toast.show('Enter your latest training institute', Toast.LONG);
-            return;
-        }
-
-        if (!user.lincense_number) {
-            Toast.show('Select your UMDP lincense number', Toast.LONG);
-            return;
-        }
-
-        if (!user.service_fee) {
-            Toast.show('Enter your service fee', Toast.LONG);
-            return;
-        }
-
-        if (!frontImage.uri) {
-            Toast.show('Please upload your front image of ID', Toast.LONG);
-            return;
-        }
-
-        if (!backImage.uri) {
-            Toast.show('Please upload your back image of ID', Toast.LONG);
-            return;
-        }
-
         let service_fee = removeCommas(user.service_fee);
 
         const formData = new FormData();
         formData.append('specialty', user.specialty);
-        formData.append('facility', user.facility);
+        formData.append('primary_facility', user.primary_facility);
+        formData.append('other_facilities', JSON.stringify(selectedFacilities));
         formData.append('address', user.address);
+        formData.append('bio_summary', user.bio_summary);
         formData.append('qualification', user.qualification);
         formData.append('training_institute', user.training_institute);
-        formData.append('lincense_number', user.lincense_number,);
+        formData.append('license_number', user.license_number,);
         formData.append('service_fee', service_fee);
-        formData.append('other_facilities', selectedFacilities);
         formData.append('front_image', frontImage);
         formData.append('back_image', backImage);
-
+        // console.log(`Payload`, formData)
         setIsLoading(true);
         completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
@@ -170,9 +132,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
     return (
         <React.Fragment>
             <SafeAreaView style={config.styles.registration.doctor.container}>
-
                 <StatusBar backgroundColor={config.colors.primary} />
-
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={config.styles.registration.doctor.scrollContainer}
@@ -196,7 +156,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={config.styles.registration.doctor.labelTxt}>Primary Facility (Latest)
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <SelectList
-                            setSelected={(val: string) => setUser(prev => ({ ...prev, facility: val }))}
+                            setSelected={(val: string) => setUser(prev => ({ ...prev, primary_facility: val }))}
                             data={facilities}
                             save="value"
                             search={true}
@@ -207,8 +167,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>Other facilities
-                            <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                        <Text style={config.styles.registration.doctor.labelTxt}>Other facilities</Text>
                         <MultipleSelectList
                             setSelected={(val: string[]) => setSelectedFacilities(val)}
                             data={facilities}
@@ -283,16 +242,16 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>UMDP Lincense Number
+                        <Text style={config.styles.registration.doctor.labelTxt}>UMDP license Number
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
-                            label="UMDP Lincense number"
-                            value={user.lincense_number}
+                            label="UMDP license number"
+                            value={user.license_number}
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser({ ...user, lincense_number: text })}
+                            onChangeText={text => setUser({ ...user, license_number: text })}
                         />
                     </View>
 
@@ -340,4 +299,4 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 }
 
 
-export default CompleteRegistrationScreen;
+export default CompleteRegistrationScreen
