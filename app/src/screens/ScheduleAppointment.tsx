@@ -126,7 +126,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
             Toast.show(`Please select appointment type`); return;
         }
         if (!reason) {
-            Toast.show(`Please enter atleast one symptom`); return;
+            Toast.show(`Please enter reason for appointment`); return;
         }
         if (appointmentDate && appointmentTime && appointmentType && reason) {
             let appointmentDetails: AppointmentInfo = {
