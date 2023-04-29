@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, ViewStyle, Pressable } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import * as config from '../configs'
 import { Avatar as AvatarRP, IconButton } from 'react-native-paper';
@@ -216,23 +216,20 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     }
 
     return (
-        <>
+        <React.Fragment>
             <SafeAreaView style={styles.container}>
-
                 <ScrollView
                     style={styles.scrollView}
-                    contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
 
                     <View style={styles.header}>
                         {
                             !isUpdatingImage ?
                                 <View style={{ position: 'relative' }}>
                                     {state.user.image
-                                        ? <Avatar size={90} source={state.user.image} />
-                                        : <AvatarRP.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} />
+                                        ? <Pressable onPress={() => setVisible(!visible)}><Avatar size={100} source={state.user.image}/></Pressable>
+                                        : <Pressable onPress={() => setVisible(!visible)}><AvatarRP.Text size={100} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar}/></Pressable>
                                     }
 
                                     {!isDisabled && <IconButton
@@ -250,11 +247,13 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
                         }
 
-                        <Text style={[styles.usernameText]}>{!user.is_patient && user.title} {user.first_name} {user.last_name}</Text>
-                        <Text style={[styles.headerText]}>
-                            {user.is_patient && <> <Icon5 name="map-marker-alt" size={16} color={config.colors.white} /><Text> {user.address} </Text></>}
-                            {!user.is_patient && <> <Icon5 name="user-md" size={18} color={config.colors.white} /><Text> {user.profession} </Text></>}
-                        </Text>
+                        <View style={{ alignItems: 'center', marginTop: 10 }}>
+                            {user.is_patient && <Text style={[styles.usernameText]}>{user.first_name} {user.last_name}</Text>}
+                            {!user.is_patient && <Text style={[styles.usernameText]}>{`Dr.`} {user.first_name} {user.last_name}</Text>}
+                            <Text style={[styles.headerText]}>
+                                {<><Icon5 name="user-circle" size={14} /><Text> {user.is_patient ? `Patient Account` : `Doctor Account`} </Text></>}
+                            </Text>
+                        </View>
 
                     </View>
 
@@ -317,8 +316,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 search={false}
                                 defaultOption={getJsonObjByValue(genderOptions, user.gender)}
                                 placeholder={"Select Gender"}
-                                inputStyles={{ color: config.colors.black }}
-                                boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
+                                inputStyles={isDisabled ? { color: config.colors.disabled } : { color: config.colors.black }}
+                                boxStyles={isDisabled ? styles.disabledBoxStyle : styles.enabledBoxStyle}
                             />
                         </View>
 
@@ -344,17 +343,19 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 onCancel={hideDatePicker}
                             />
                         </View>
+                    </View>
 
-                        <View style={styles.footer}>
-                            <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => submitProfile()}>
-                                <Text style={config.styles.btnText}>
-                                    {isDisabled ? 'Edit Profile' : 'Submit'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={styles.footer}>
+                        <TouchableOpacity style={config.styles.secondaryBtn} onPress={() => submitProfile()}>
+                            <Text style={config.styles.btnText}>
+                                {isDisabled ? 'Edit Profile' : 'Submit'}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                 </ScrollView>
+
+
 
                 <BottomSheet
                     visible={visible}
@@ -376,7 +377,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             }
 
                         </View>
-
 
                         <View style={{
                             flexDirection: 'row',
@@ -404,20 +404,27 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 </TouchableOpacity>
                                 <Text>Camera</Text>
                             </View>
-
                         </View>
-
                     </View>
                 </BottomSheet>
-
             </SafeAreaView>
             {isLoading && <AppLoader />}
-        </>
+        </React.Fragment>
     )
 
 }
 
 export default ProfileScreen;
+
+
+const boxStyle: ViewStyle = {
+    borderColor: config.colors.black,
+    borderWidth: 1,
+    borderRadius: 4,
+    marginTop: 6,
+    height: 49,
+    marginBottom: 10
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -425,7 +432,7 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 2,
+        flex: 1,
         backgroundColor: config.colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
@@ -433,7 +440,7 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        flex: 4,
+        flex: 1,
         paddingHorizontal: 15,
     },
 
@@ -444,7 +451,7 @@ const styles = StyleSheet.create({
     },
 
     scrollView: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: config.colors.white,
     },
 
@@ -464,9 +471,10 @@ const styles = StyleSheet.create({
     },
 
     headerText: {
-        fontSize: 16,
-        color: config.colors.white,
-        paddingVertical: 5
+        fontSize: 14,
+        color: config.colors.silver,
+        paddingVertical: 5,
+        opacity: 1
     },
 
     usernameText: {
@@ -483,10 +491,10 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: config.colors.white,
-        marginBottom: 20,
+        marginBottom: 10,
     },
 
     uploadOptions: {
@@ -538,8 +546,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: config.colors.white,
         position: 'absolute',
-        left: 58,
-        bottom: 10,
+        left: 77,
+        bottom: 18,
         right: 0
     },
+
+    enabledBoxStyle: {
+        ...boxStyle,
+    },
+
+    disabledBoxStyle: {
+        ...boxStyle,
+        opacity: 0.6,
+        borderColor: config.colors.disabled,
+    },
+
 });

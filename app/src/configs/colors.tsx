@@ -15,7 +15,7 @@ export const colors = {
     success: '#5cb85c',
     warning: '#f0ad4e',
     info: "#5bc0de",
-    danger:  '#d9534f', // '#A94442',
+    danger:  '#a50d12', // '#d9534f', // '#A94442',
     purple: '#800080',
     inverse: '#292b2c',
     faded: "#f7f7f7",
@@ -27,5 +27,6 @@ export const colors = {
     orange: '#ff8414',
     grey: '#555',
     terms: '#2196f3',
-    darkBlue: '#17414a'
+    darkBlue: '#17414a',
+    disabled: '#757575'
 }

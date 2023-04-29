@@ -148,7 +148,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
     return (
         <React.Fragment>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.header}>
                     <View style={styles.imageContainer}>
@@ -273,10 +273,12 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
 export default SigninScreen;
 
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.lighter,
+        backgroundColor: configs.colors.white, 
     },
 
     header: {
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 10,
-        marginTop: 25
+        marginTop: 25,
     },
 
     body: {
@@ -368,6 +370,9 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: configs.fonts.large,
         paddingLeft: 10,
+        animationDuration: '1s',
+        animationName: 'blink',
+        animationIterationCount: 'infinite',
 
     },
 

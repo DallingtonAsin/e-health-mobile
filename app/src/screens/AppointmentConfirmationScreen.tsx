@@ -10,7 +10,7 @@ import { getUserInitials, readableDate, readableTime } from '../components/commo
 const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const { doctor, appointmentInfo } = route.params;
-  const { image, first_name, last_name, profession } = doctor;
+  const { image, first_name, last_name, specialty } = doctor;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,14 +26,14 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navi
           <View style={styles.details}>
 
             {image
-              ? <Avatar size={60} source={image} />
-              : <AvatarRP.Text size={60} label={getUserInitials(`${first_name} ${last_name}`)}
+              ? <Avatar size={70} source={image} />
+              : <AvatarRP.Text size={70} label={getUserInitials(`${first_name} ${last_name}`)}
                 style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
             }
 
             <View style={styles.personalInfo}>
-              <Text style={styles.name}>{`${doctor.title} ${doctor.first_name} ${doctor.last_name}`}</Text>
-              <Text style={styles.infoTitle}>{profession}</Text>
+              <Text style={styles.name}>{`${`Dr.`} ${doctor.first_name} ${doctor.last_name}`}</Text>
+              <Text style={styles.infoTitle}>{specialty}</Text>
             </View>
           </View>
         </View>
@@ -90,11 +90,11 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: 'row',
     backgroundColor: configs.colors.white,
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
     paddingVertical: 10,
-    width: '90%',
+    width: '95%',
     borderRadius: 5,
-    marginVertical: 35
+    marginVertical: 35,
   },
 
   name: {
