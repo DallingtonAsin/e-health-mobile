@@ -18,7 +18,6 @@ const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();
 
-
 const App: React.FC = () => {
 
   const { state } = React.useContext(AuthContext);
