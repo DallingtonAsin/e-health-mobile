@@ -225,7 +225,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onChangeText={(text) => handleTextInputChange('password', text)}
                             onBlur={() => validatePassword(user.password, setPasswordError)}
                             secureTextEntry={!showPassword}
-                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24}
+                            right={<TextInput.Icon icon={showPassword ? 'eye' : 'eye-off'} size={24}
                                 onPress={() => togglePasswordVisibility(showPassword, setShowPassword)}
                             />
                             }
