@@ -6,7 +6,8 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Pressable
 } from 'react-native';
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -66,9 +67,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.header}>
 
                         <View style={styles.headerImageSection}>
-                            <TouchableOpacity style={styles.image} onPress={() => navigateScreen('Profile')}>
+                            <Pressable style={styles.image} onPress={() => navigateScreen('Profile')}>
                                 <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
-                            </TouchableOpacity>
+                            </Pressable>
 
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
@@ -117,9 +118,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         {user.is_patient &&
                             <View style={styles.cardContainer}>
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('Pharmacy')}>
-                                    <Icon5 name="pills" size={iconSize} color={configs.colors.primary} />
-                                    <Text style={styles.subtitle}>Pharmacy</Text>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                    <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Specialties</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
                                     <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />

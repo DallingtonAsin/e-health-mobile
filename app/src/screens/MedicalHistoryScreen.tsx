@@ -71,7 +71,7 @@ const MedicalHistoryScreen = () => {
     const EmptyListComponent = () => (
         <View style={configs.styles.emptyViewContainer}>
             <View style={configs.styles.emptyIconContainer}>
-                <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
+                <Icon name="exclamation" size={45} color={configs.colors.disabled} />
             </View>
             <Text style={configs.styles.noInfoText}>No medical history found</Text>
         </View>

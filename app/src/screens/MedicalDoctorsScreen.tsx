@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { SafeAreaView, FlatList, View, Image, StyleSheet, Text, TouchableOpacity, TouchableHighlight } from "react-native";
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, Pressable } from "react-native";
 import * as configs from '../configs';
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../components/Avatar';
@@ -70,7 +70,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
 
-        <View style={styles.item}>
+        <Pressable style={styles.item} onPress={() => bookMedicalDoctor(item)}>
             <View style={styles.header}>
                 <View style={styles.image}>
                     {item.image
@@ -80,14 +80,14 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                 </View>
                 <View style={styles.profile}>
                     <Text style={styles.name}>{`Dr.`} {item.first_name} {item.last_name}</Text>
-                    <Text style={styles.title}>{item.facility}</Text>
+                    <Text style={[styles.title, { color: configs.colors.secondary }]}>{item.specialty}</Text>
                     <Text style={styles.title}>{item.qualification}</Text>
                 </View>
             </View>
 
             <View style={styles.body}>
                 <View>
-                    <Text style={styles.title}>Bio Summary</Text>
+                    <Text style={[styles.title, { fontWeight: 'bold' }]}>Bio Summary</Text>
                     <Text style={styles.values}>{truncateString(item.bio_summary, 25)}</Text>
                 </View>
             </View>
@@ -107,18 +107,18 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             </View>
             }
 
-        </View>
+        </Pressable>
     );
 
     const EmptyListMessage = () => (
         <View style={configs.styles.emptyViewContainer}>
             <View style={configs.styles.emptyIconContainer}>
-                <Icon name="exclamation-triangle" size={35} color={configs.colors.orange} />
+                <Icon name="exclamation" size={45} color={configs.colors.silver} />
             </View>
             <Text style={configs.styles.noInfoText}> {
                 specialtyName ?
-                    `No doctors found in ${specialtyName} department.`
-                    : `No doctors found`}
+                    `No doctor found in ${specialtyName}`
+                    : `No doctor found`}
             </Text>
         </View>
     );
@@ -133,11 +133,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={styles.subcontainer}>
                 {
                     medicalDoctors.length > 0 && <Searchbar
-                        placeholder="Search for doctor"
+                        placeholder="Search your doctor"
                         onChangeText={handleSearch}
                         value={searchQuery}
                         style={styles.searchbar}
-                        elevation={3}
+                        elevation={2}
                         inputStyle={styles.searchbarInput}
                     />
                 }
@@ -249,7 +249,6 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        opacity: 0.8,
         fontSize: configs.fonts.large * 0.9,
     },
 
