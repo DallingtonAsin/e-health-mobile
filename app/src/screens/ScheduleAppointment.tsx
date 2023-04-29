@@ -6,7 +6,6 @@ import * as configs from '../configs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
-import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
 import { AppointmentInfo, DoctorsDetail } from '../interfaces';
 import { Context as AppContext } from '../context/appContext';
@@ -18,6 +17,7 @@ import { displayMessage, getCurrentDate, getUserInitials } from '../components/c
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
+import { Calendar, Agenda } from 'react-native-calendars';
 import { CustomDay } from '../components/CustomDay';
 
 const screen = Dimensions.get('screen');
@@ -29,8 +29,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isAppointmentTypeLoading, setAppointmentTypeLoading] = useState(true);
 
-    const currentDate = getCurrentDate();
-
+    const currentDate = getCurrentDate()
     const [appointmentDate, setAppointmentDate] = useState<string>(currentDate);
     const [appointmentTime, setAppointmentTime] = useState<string>('');
     const [appointmentType, setAppointmentType] = useState<string>('');
@@ -59,14 +58,16 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
-
         setDoctorInfo(doctorInfo);
-        if (doctorInfo.schedule_dates) {
+        if (doctorInfo.schedule_dates && doctorInfo.schedule_dates.length > 0) {
+            const initialDate = doctorInfo.schedule_dates[0]
             setScheduleDates(doctorInfo.schedule_dates);
-        }
-
-        if (doctorInfo.schedule) {
-            setSchedule(doctorInfo.schedule);
+            setAppointmentDate(initialDate)
+            if (doctorInfo.schedule) {
+                const doc_schedule: any = doctorInfo.schedule
+                setSchedule(doc_schedule);
+                setScheduleHours(doc_schedule[`${initialDate}`]);
+            }
         }
     }
 
@@ -94,6 +95,21 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                 }}
                 disableAllTouchEventsForDisabledDays={true}
                 {...props}
+                theme={{
+                    backgroundColor: '#ffffff',
+                    calendarBackground: '#ffffff',
+                    textSectionTitleColor: '#b6c1cd',
+                    selectedDayBackgroundColor: '#00adf5',
+                    selectedDayTextColor: '#ffffff',
+                    todayTextColor: '#00adf5',
+                    dayTextColor: '#2d4150',
+                    textDisabledColor: '#d9e',
+                }}
+                style={{
+                    borderWidth: 1,
+                    borderColor: configs.colors.silver,
+                    borderRadius: 5,
+                }}
             />
         );
     }
@@ -193,8 +209,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                             <Text style={styles.titleText}>Select time <Text style={{ color: configs.colors.danger }}>*</Text></Text>
                             <ScrollView contentContainerStyle={{ flexDirection: 'row' }}
                                 horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                            >
+                                showsHorizontalScrollIndicator={false}>
                                 {
                                     scheduleHours.map((hour) => {
                                         return (
@@ -213,21 +228,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
                         <View>
                             <Text style={styles.titleText}>Choose appointment type <Text style={{ color: configs.colors.danger }}>*</Text></Text>
-                            {
-                                appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
+                            <RadioButton.Group onValueChange={newValue => setAppointmentType(newValue)} value={appointmentType}>
+                                {appointmentTypes.map(({ id, name }: { id: number, name: string }) => {
                                     return (
-                                        <View style={{ flexDirection: 'row', marginHorizontal: 1 }} key={id}>
-                                            <RadioButton
-                                                value={name}
-                                                status={appointmentType === name ? 'checked' : 'unchecked'}
-                                                onPress={() => setAppointmentType(name)}
-                                                color={configs.colors.primary}
-                                            />
-                                            <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>{name}</Text>
+                                        <View style={{ flexDirection: 'row' }} key={id}>
+                                            <RadioButton value={name} color={configs.colors.primary} />
+                                            <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large, marginTop: 5 }}>{name}</Text>
                                         </View>
                                     );
                                 })
-                            }
+                                }
+                            </RadioButton.Group>
                         </View>
 
                         <View>
