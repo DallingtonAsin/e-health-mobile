@@ -61,4 +61,6 @@ yarn-error.log
 .env.development
 .env.staging
 .env.production
+package-lock.json
+yarn.lock
 
