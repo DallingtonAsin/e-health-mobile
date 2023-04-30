@@ -70,7 +70,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
 
-        <Pressable style={styles.item} onPress={() => bookMedicalDoctor(item)}>
+        <View style={styles.item}>
             <View style={styles.header}>
                 <View style={styles.image}>
                     {item.image
@@ -107,7 +107,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             </View>
             }
 
-        </Pressable>
+        </View>
     );
 
     const EmptyListMessage = () => (

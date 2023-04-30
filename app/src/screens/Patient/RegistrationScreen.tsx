@@ -260,7 +260,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onBlur={() => validatePassword(user.password, setPasswordError)}
                             placeholder='Enter your Password'
                             secureTextEntry={!showPassword}
-                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24}
+                            right={<TextInput.Icon icon={showPassword ? 'eye' : 'eye-off'} size={24}
                                 onPress={() => togglePasswordVisibility(showPassword, setShowPassword)}
                             />
                             }
@@ -283,7 +283,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             placeholder='Re-Enter your Password'
                             secureTextEntry={!showConfirmPassword}
                             right={
-                                <TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                                <TextInput.Icon icon={showConfirmPassword ? 'eye' : 'eye-off'}
                                     size={24} onPress={() => togglePasswordVisibility(showConfirmPassword, setShowConfirmPassword)} />
                             }
                         />

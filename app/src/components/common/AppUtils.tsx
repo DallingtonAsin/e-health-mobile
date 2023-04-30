@@ -21,5 +21,6 @@ const getToken = async () => {
 const togglePasswordVisibility = (showPassword: boolean, setShowPassword: React.Dispatch<React.SetStateAction<boolean>>) => {
     setShowPassword(!showPassword);
   };
+  
 
 export { getDeviceId, getIPAddress, getToken, togglePasswordVisibility }

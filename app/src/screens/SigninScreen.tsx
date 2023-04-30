@@ -232,7 +232,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                             value={password}
                             placeholder='Enter your password'
                             onChangeText={(text) => setPassword(text)}
-                            right={<TextInput.Icon icon={showPassword ? 'eye-off' : 'eye'} size={24} onPress={togglePasswordVisibility} />}
+                            right={<TextInput.Icon icon={showPassword ? 'eye' : 'eye-off'} size={24} onPress={togglePasswordVisibility} />}
                             activeOutlineColor={configs.colors.primary}
                         />
                     </View>

@@ -57,9 +57,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     return (
         <React.Fragment>
             <SafeAreaView style={styles.container}>
-
                 <StatusBar backgroundColor={configs.colors.primary} />
-
                 <ScrollView
                     style={styles.scroll}
                     contentContainerStyle={styles.scrollContainerStyle}>
