@@ -17,7 +17,7 @@ import { displayMessage, getCurrentDate, getUserInitials } from '../components/c
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
 import Toast from 'react-native-simple-toast';
-import { Calendar, Agenda } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import { CustomDay } from '../components/CustomDay';
 
 const screen = Dimensions.get('screen');

@@ -30,7 +30,6 @@ const routes = {
       update_profile_pic: 'doctor/profile-picture/update',
       delete_profile_pic: 'doctor/profile-picture/delete',
       languages: 'doctor/languages',
-      specialties: 'doctor/specialties',
       calendar: 'doctor/schedule',
       notifications: {
          all: 'doctor/notifications',

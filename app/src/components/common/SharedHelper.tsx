@@ -1,6 +1,6 @@
 import Toast from 'react-native-simple-toast';
 import { MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, PRE_RELEASE } from '@env';
-import { setPasswordError } from '../../interfaces';
+import { FacilityJson, setPasswordError } from '../../interfaces';
 
 
 const removeLeadingZeros = (number: string) => {
@@ -170,6 +170,33 @@ const truncateString = (str: string, numWords: number) => {
   }
 }
 
+const getPairByKey = (arr: FacilityJson[], key: any) => {
+  if (arr.length > 0) {
+    const pair = arr.find(obj => obj.key === key);
+    return pair
+  }
+}
+
+const getPairByValue = (arr: FacilityJson[], value: any) => {
+  if (arr.length > 0) {
+    const pair = arr.find(obj => obj.value === value);
+    console.log(`pair 1`, pair)
+    return pair
+  }
+}
+function getPairsByKeys(arr: FacilityJson[], keys: any) {
+  if (arr.length > 0) {
+    const pairs: any = [];
+    arr.forEach((obj: FacilityJson) => {
+      if (keys.includes(obj.key)) {
+        const key = parseInt(obj.key.toString())
+        const json = { key: key, value: obj.value }
+        pairs.push(json);
+      }
+    });
+    return pairs;
+  }
+}
 
 export {
   removeLeadingZeros,
@@ -185,6 +212,9 @@ export {
   getDayMonth,
   isValidEmail,
   isValidDob,
+  getPairByKey,
+  getPairByValue,
+  getPairsByKeys,
   getJsonObjByValue,
   getAppVersion,
   numberWithCommas,

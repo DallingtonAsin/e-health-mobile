@@ -28,5 +28,5 @@ export const colors = {
     grey: '#555',
     terms: '#2196f3',
     darkBlue: '#17414a',
-    disabled: '#757575'
+    disabled: '#D3D3D3'
 }

@@ -29,20 +29,26 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
     const [facilities, setFacilities] = useState([]);
     const [isFetchingFacilities, setIsFetchingFacilities] = useState(true);
     const { updateUserState } = useContext(AuthContext);
-    const { getDoctorSpecialties } = useContext(AppContext);
+    const { getMedicalSpecialties } = useContext(AppContext);
     const { completeRegistration, getMedicalFacilities } = useContext(DoctorContext);
 
     useEffect(() => {
-        getDoctorSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
+        getMedicalSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
         getMedicalFacilities({ onSuccess: populateFacilities, onFailure: displayMessage, onCompletion: () => { setIsFetchingFacilities(false) } });
     }, []);
 
-    const populateFacilities = (data: any) => {
-        setFacilities(data);
+    const populateSpecialties = (data: any) => {
+        const arr = data.map((item: { id: number, name: string }) => {
+            return { key: item.id, value: item.name }
+        })
+        setSpecialties(arr);
     }
 
-    const populateSpecialties = (data: any) => {
-        setSpecialties(data);
+    const populateFacilities = (data: any) => {
+        const newArr = data.map((item: { id: number, name: string }) => {
+            return { key: item.id, value: item.name }
+        })
+        setFacilities(newArr);
     }
 
     const handleServiceFeeChange = (text: string) => {
@@ -67,11 +73,11 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         formData.append('bio_summary', user.bio_summary);
         formData.append('qualification', user.qualification);
         formData.append('training_institute', user.training_institute);
-        formData.append('license_number', user.license_number,);
+        formData.append('umdp_license_id', user.umdp_license_id,);
         formData.append('service_fee', service_fee);
         formData.append('front_image', frontImage);
         formData.append('back_image', backImage);
-     
+
         setIsLoading(true);
         completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
@@ -246,12 +252,12 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
                             label="UMDP license number"
-                            value={user.license_number}
+                            value={user.umdp_license_id}
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={config.styles.registration.doctor.textInput}
                             textColor={config.colors.dark}
-                            onChangeText={text => setUser({ ...user, license_number: text })}
+                            onChangeText={text => setUser({ ...user, umdp_license_id: text })}
                         />
                     </View>
 

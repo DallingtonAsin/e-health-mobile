@@ -10,11 +10,14 @@ import * as types from './actions';
 const services = new Service();
 
 const updateProfile = (dispatch: any) => {
-    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = payload.is_patient ? routes.patient.updateProfile : routes.doctor.updateProfile;
+    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = is_patient ? routes.patient.updateProfile : routes.doctor.updateProfile
+        console.log(`endpoint`, endpoint)
+        console.log(`payload`, payload)
         services.post(
             endpoint,
-            payload
+            payload,
+            true
         ).then(async (res) => {
             if (res && res.data) {
 
@@ -46,7 +49,7 @@ const updateProfileImage = (dispatch: any) => {
         console.log(`endpoint`, endpoint)
         //  console.log(`endpoint`, endpoint)
 
-        services.put(
+        services.post(
             endpoint,
             payload,
             true
@@ -196,23 +199,6 @@ const getMyAppointments = () => {
     };
 };
 
-const getDoctorSpecialties = () => {
-    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
-        services.get(
-            `${routes.doctor.specialties}`
-        ).then(async (res) => {
-            if (res && res.data) {
-                let data = res.data;
-                onSuccess(data);
-            }
-        }).catch((error) => {
-            displayErrorMessage(error, onFailure);
-        }).finally(() => {
-            onCompletion();
-        });
-    };
-};
-
 
 const getDrugs = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -290,7 +276,7 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
-        getAppointmentTypes, getMyAppointments, deleteProfileImage, getDoctorSpecialties, updateProfileImage,
+        getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage,
         getDoctorLanguages, getNotifications, markNotificationRead
     },
     { isAppLoading: true },
