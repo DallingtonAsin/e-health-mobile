@@ -12,16 +12,19 @@ interface IUser {
     first_name: string,
     last_name: string,
     specialty?: string,
-    specialty_id?: string,
+    specialty_id?: number,
     email?: string,
     phone_number?: string,
     dob: string,
     gender: string,
     address?: string,
-    facility?: string,
+    primary_facility?: string,
+    primary_facility_id?: number,
+    other_facilities?: number[],
     qualification?: string,
     training_institute?: string,
-    license_number?: string,
+    umdp_license_id?: string,
+    bio_summary?: string,
     service_fee?: string,
     otp?: string,
     profile_status?: boolean,
@@ -203,7 +206,7 @@ interface DrCompleteProfilePayload {
     bio_summary: string,
     qualification: string,
     training_institute: string,
-    license_number: string,
+    umdp_license_id: string,
     service_fee: string,
     front_image: FileUpload,
     back_image: FileUpload
@@ -221,6 +224,12 @@ interface LoginPayload {
     is_phone_number_login: boolean
 }
 
+interface FacilityJson{
+    key: number,
+    value: string
+}
+
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -229,6 +238,7 @@ export type {
     IUser,
     Drug,
     LoginData,
+    FacilityJson,
     SignedinUser,
     Notification,
     NotificationStats,

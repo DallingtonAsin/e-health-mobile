@@ -247,7 +247,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                             onBlur={() => validateConfirmPassword(user.password, user.password_confirmation, setPasswordError)}
                             secureTextEntry={!showConfirmPassword}
                             right={
-                                <TextInput.Icon icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                                <TextInput.Icon icon={showConfirmPassword ? 'eye' : 'eye-off'}
                                     size={24} onPress={() => togglePasswordVisibility(showConfirmPassword, setShowConfirmPassword)} />
                             }
                         />
