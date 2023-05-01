@@ -15,7 +15,7 @@ const createContext = (defaultValue: any) => {
 
         // general api methods
         updateProfile: ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        updateProfileImage: ({ user, payload, onSuccess, onFailure, onCompletion }: { user: any, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        updateProfileImage: ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         deleteProfileImage: ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalSpecialties: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDrugs: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },

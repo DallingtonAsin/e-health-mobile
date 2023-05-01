@@ -44,11 +44,8 @@ const updateProfile = (dispatch: any) => {
 };
 
 const updateProfileImage = (dispatch: any) => {
-    return ({ user, payload, onSuccess, onFailure, onCompletion }: { user: any, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = user.is_patient ? routes.doctor.complete_registration : routes.doctor.update_profile_pic;
-        console.log(`endpoint`, endpoint)
-        //  console.log(`endpoint`, endpoint)
-
+    return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        let endpoint = is_patient ? routes.patient.update_profile_pic : routes.doctor.update_profile_pic;
         services.post(
             endpoint,
             payload,
