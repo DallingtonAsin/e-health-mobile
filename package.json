@@ -47,7 +47,7 @@
     "@twotalltotems/react-native-otp-input": "^1.3.11",
     "agora-react-native-rtm": "^1.5.1",
     "agora-rn-uikit": "^5.0.1",
-    "axios": "^1.2.2",
+    "axios": "^1.4.0",
     "deprecated-react-native-prop-types": "^2.2.0",
     "i": "^0.3.7",
     "mime-types": "^2.1.35",

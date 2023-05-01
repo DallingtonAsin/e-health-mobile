@@ -5,11 +5,16 @@ import { getAuthToken } from './asyncStorageService';
 
 class Service {
 
+  private baseUrl: string = '';
+
+  constructor() {
+    this.baseUrl = `${API_URL}/api/`
+  }
+
   request = () => {
     const client = axios.create({
-      baseURL: `${API_URL}/api/`
+      baseURL: this.baseUrl
     });
-
     return client;
   }
 
@@ -76,10 +81,11 @@ class Service {
     try {
 
       const bearerToken = await getAuthToken();
+      const contentType = isMultipart ? 'multipart/form-data' : 'application/json'
       const headers = {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': isMultipart ?  'multipart/form-data' : 'application/json',
+          'Content-Type': contentType,
           'Authorization': 'Bearer ' + bearerToken
         },
       }
@@ -89,7 +95,6 @@ class Service {
       throw err;
     }
   }
-
 }
 
 export default Service;
