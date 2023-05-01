@@ -11,13 +11,12 @@ import AppLoader from '../components/AppLoader';
 import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
 import { Context as DoctorContext } from '../context/doctorContext';
-import { FileUpload, IUser } from '../interfaces';
+import { IUser } from '../interfaces';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByValue, getPairByKey, getPairsByKeys } from '../components/common/SharedHelper';
+import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey, getPairsByKeys } from '../components/common/SharedHelper';
 import ImagePicker from 'react-native-image-crop-picker';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { BottomSheet } from 'react-native-btr';
-import RNFS from 'react-native-fs';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
 import { validateProfileUpdate } from '../components/common/validation';
 const mime = require('mime-types');
@@ -49,7 +48,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         if (!user.is_patient) {
             const otherFacilities: number[] | undefined = user.other_facilities
             if (otherFacilities !== undefined && otherFacilities.length > 0) {
-                console.log(`other facilities`, otherFacilities)
                 setSelectedFacilities(otherFacilities)
             }
             setIsFetchingFacilities(true)
@@ -89,6 +87,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             }
 
             const formData = new FormData()
+
             formData.append('_method', 'put');
             formData.append('first_name', user.first_name)
             formData.append('last_name', user.last_name)
@@ -98,8 +97,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             formData.append('dob', user.dob)
             formData.append('specialty', user.specialty)
 
-
             if (!user.is_patient) {
+
                 const service_fee = removeCommas(user.service_fee);
                 formData.append('specialty', user.specialty)
                 formData.append('primary_facility', user.primary_facility)
@@ -154,8 +153,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             cropping: true,
             compressImageQuality: 0.7,
         }).then(async image => {
-
-            // await submitProfilePicture(image);
+            await submitProfilePicture(image);
         });
     }
 
@@ -165,41 +163,36 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             height: 400,
             cropping: true,
             includeBase64: false,
-            includeExif: true
+            includeExif: true,
+            mediaType: 'photo',
         }).then(async (image: any) => {
-            const imagePath = Platform.OS === 'android' ? image.path : image.path.replace('file://', '');
-            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
-            const fileType = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-            const uri = `${imagePath}`; // file://
-
-            RNFS.readFile(uri, 'base64').then((base64String) => {
-                const source: any = { uri: `data:image/jpeg;base64,${base64String}` };
-                const file_obj = {
-                    uri: "",
-                    source: '',
-                    name: '',
-                    type: '',
-                }
-                console.log(`image object`, file_obj)
-                submitProfilePicture(image);
-            });
-
-
+            await submitProfilePicture(image);
         });
     }
 
-    const submitProfilePicture = (imageData: FileUpload) => {
+    const submitProfilePicture = async (image: any) => {
         try {
 
+            const imagePath = image.path;
+            const mimeType = image.mime;
+            const fileExtension = mime.extension(mimeType);
             let formData = new FormData();
-            const user_obj = {
-                id: user.id,
-                is_patient: user.is_patient
+
+            const is_patient = user.is_patient || false
+            const imageData = {
+                uri: imagePath,
+                type: mimeType,
+                size: image.size,
+                extension: fileExtension,
+                name: 'profile_picture',
             }
 
+            formData.append('id', user.id);
+            formData.append('extension', fileExtension);
             formData.append('image', imageData);
+
             setIsUpdatingImage(true);
-            updateProfileImage({ user: user_obj, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
+            updateProfileImage({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
 
         } catch (err: any) {
             Toast.show(err.message, Toast.LONG);
@@ -227,7 +220,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
 
     const confirmRemovePicture = () => {
-
         Alert.alert(
             "Warning",
             "Are you sure you want to remove your profile picture?",
