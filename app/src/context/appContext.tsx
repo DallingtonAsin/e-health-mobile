@@ -53,9 +53,9 @@ const updateProfileImage = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data
-                let user = data.user
-                let message = res.data.message
+                const data = res.data
+                const user = data.user
+                const message = data.message
 
                 await storeAccessToken(user.access_token)
                 await storeUser(user)

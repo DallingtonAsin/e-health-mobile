@@ -56,7 +56,10 @@ const completeRegistration = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let user = res.data;
+                const data = res.data
+                const user = data.user
+                const message = data.message
+                
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
 
@@ -65,7 +68,7 @@ const completeRegistration = (dispatch: any) => {
                     payload: user
                 });
 
-                onSuccess();
+                onSuccess(message);
             }
         }).catch((error) => {
             displayErrorMessage(error, onFailure);

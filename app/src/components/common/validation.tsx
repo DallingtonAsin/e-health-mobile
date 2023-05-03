@@ -96,7 +96,7 @@ const validateDoctorRegistration = (user: DoctorRegistrationPayload, hasAgreedTe
 }
 
 
-const ValidateDrCompleteProfile = (doctor: DrCompleteProfilePayload, selectedFacilities: string[], frontImage: FileUpload, backImage: FileUpload) => {
+const ValidateDrCompleteProfile = (doctor: DrCompleteProfilePayload, selectedFacilities: string[], hasAgreedTerms: boolean, frontImage: FileUpload, backImage: FileUpload) => {
     if (!doctor.specialty) {
         return 'Select your specialty'
     }
@@ -143,6 +143,10 @@ const ValidateDrCompleteProfile = (doctor: DrCompleteProfilePayload, selectedFac
         return 'Please upload your back image of ID'
     }
 
+    if (!hasAgreedTerms) {
+        return 'Please agree to our medical worker agreement to continue.'
+    }
+
     return undefined;
 }
 
@@ -168,7 +172,7 @@ const validateProfileUpdate = (user: IUser, selectedFacilities: number[],) => {
     }
 
     if (!user.is_patient) {
-        
+
         if (!isValidDob(user.dob)) {
             return 'Enter valid date of birth. Doctor must be atleast greater than 18'
         }

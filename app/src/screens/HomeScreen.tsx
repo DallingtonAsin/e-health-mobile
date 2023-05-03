@@ -1,14 +1,5 @@
 import React, { useState, useContext } from 'react'
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Pressable
-} from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
@@ -81,8 +72,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                             <View style={{ left: 20 }}>
-                                {user.is_patient && <Text style={styles.greeting}>{getGreeting()}, {user.first_name}</Text>}
-                                {!user.is_patient && <Text style={styles.greeting}>{getGreeting()}, {`Dr.`} {user.first_name}</Text>}
+                                <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
                                 <Text style={styles.amazing}>Today is amazing!</Text>
                             </View>
                         </View>
@@ -137,6 +127,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 <Text style={styles.subtitle}>Settings</Text>
                             </TouchableOpacity>
                         </View>
+
+                        {
+                            !user.patient && (!user.is_verified ?
+                                <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>
+                                : null
+                            )
+                        }
 
                     </View>
 
@@ -265,4 +262,12 @@ const styles = StyleSheet.create({
         top: 10,
         left: 20,
     },
+
+    underReviewTxt: {
+        textAlign: 'center',
+        color: configs.colors.orange,
+        fontWeight: '500',
+        marginTop: 20,
+        fontSize: configs.fonts.normal
+    }
 });

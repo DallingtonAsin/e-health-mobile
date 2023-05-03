@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar, StyleSheet } from 'react-native'
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, StatusBar, Linking, Alert } from 'react-native'
 import * as config from '../../configs'
-import { TextInput } from 'react-native-paper'
+import { TextInput, Checkbox } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
 import Toast from 'react-native-simple-toast'
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper'
@@ -20,6 +20,7 @@ import { ValidateDrCompleteProfile } from '../../components/common/validation'
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
     const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload);
@@ -56,9 +57,13 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         setUser(prev => ({ ...prev, service_fee: formattedValue }));
     }
 
+    const handleMWorkerTermsPress = () => {
+        Linking.openURL('https://example.com/terms-and-conditions');
+    }
+
     const submitDetails = () => {
 
-        const validationError = ValidateDrCompleteProfile(user, selectedFacilities, frontImage, backImage);
+        const validationError = ValidateDrCompleteProfile(user, selectedFacilities, hasAgreedTerms, frontImage, backImage);
         if (validationError) {
             Toast.show(validationError, Toast.LONG)
             return;
@@ -82,8 +87,19 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
     }
 
-    const onSuccess = async () => {
-        updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: 'Home' }) });
+    const onSuccess = async (message: string) => {
+        updateUserState({
+            onSuccess: () => {
+                Alert.alert(
+                    `Message`,
+                    `${message}`,
+                    [{
+                        text: 'OK', onPress: () => { navigation.navigate('SignedInStack', { screen: 'Home' }) }
+                    }],
+                    { cancelable: false }
+                )
+            }
+        })
     }
 
     const chooseImage = (num: number) => {
@@ -265,7 +281,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={config.styles.registration.doctor.labelTxt}>Consultation fee (per 15min)
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <TextInput
-                            label="Service Fee"
+                            label="Consultation Fee"
                             value={user.service_fee}
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
@@ -277,7 +293,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
-                        <Text style={config.styles.registration.doctor.labelTxt}>National ID
+                        <Text style={config.styles.registration.doctor.labelTxt}>National ID / Passport ID
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <View style={{ marginVertical: 10 }}>
                             {frontImage && frontImage.source && <Image source={frontImage.source} style={{ width: 150, height: 150 }} />}
@@ -288,6 +304,23 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                             {backImage && backImage.source && <Image source={backImage.source} style={{ width: 150, height: 150 }} />}
                             <Button title="Choose Back Image (ID)" onPress={() => chooseImage(2)} color={config.colors.primary} />
                         </View>
+                    </View>
+
+
+                    <View style={[config.styles.registration.doctor.viewContainer, { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }]}>
+                        <Checkbox
+                            status={hasAgreedTerms ? 'checked' : 'unchecked'}
+                            color={config.colors.primary}
+                            onPress={() => setHasAgreedTerms(!hasAgreedTerms)}
+                        />
+                        <TouchableOpacity onPress={handleMWorkerTermsPress}>
+                            <Text style={{ color: config.colors.grey, fontSize: 16 }}>
+                                I agree to {' '}
+                                <Text style={{ textDecorationLine: 'underline', color: config.colors.terms }} onPress={handleMWorkerTermsPress}>
+                                    Vastel medical worker agreement
+                                </Text>
+                            </Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={[config.styles.registration.doctor.viewContainer]}>

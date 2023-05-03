@@ -38,7 +38,7 @@ const AppStackScreen = () => {
 
             <Stack.Screen
                 name="Home"
-                component={user.is_verified ? TabNavigator : HomeScreen}
+                component={user.is_registered ? TabNavigator : HomeScreen}
                 options={{
                     headerShown: false,
                 }}
