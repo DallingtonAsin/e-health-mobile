@@ -1,14 +1,5 @@
 import React, { useState, useContext } from 'react'
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Pressable
-} from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
@@ -137,6 +128,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </TouchableOpacity>
                         </View>
 
+                        {
+                            !user.patient && (!user.is_verified ?
+                                <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>
+                                : null
+                            )
+                        }
+
                     </View>
 
                 </ScrollView>
@@ -264,4 +262,12 @@ const styles = StyleSheet.create({
         top: 10,
         left: 20,
     },
+
+    underReviewTxt: {
+        textAlign: 'center',
+        color: configs.colors.orange,
+        fontWeight: '500',
+        marginTop: 20,
+        fontSize: configs.fonts.normal
+    }
 });

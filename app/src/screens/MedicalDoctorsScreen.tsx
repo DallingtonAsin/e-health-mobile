@@ -53,9 +53,10 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
 
         setSearchQuery(text);
         const newData = medicalDoctors.filter((item: DoctorsDetail) => {
-            const itemData = `${item.first_name} ${item.last_name}`;
             const searchText = text.toLowerCase();
-            return itemData.toLowerCase().indexOf(searchText) > -1;
+            const doctorNames = `${item.first_name} ${item.last_name}`;
+            const specialtyName = `${item.specialty}`;
+            return doctorNames.toLowerCase().indexOf(searchText) > -1 || specialtyName.toLowerCase().indexOf(searchText) > -1;
         });
         if (text.length > 0) {
             setFilteredData(newData);
@@ -133,7 +134,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={styles.subcontainer}>
                 {
                     medicalDoctors.length > 0 && <Searchbar
-                        placeholder="Search your doctor"
+                        placeholder="Search doctor or specialty"
                         onChangeText={handleSearch}
                         value={searchQuery}
                         style={styles.searchbar}
