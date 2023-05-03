@@ -13,7 +13,7 @@ import { getAppVersion } from '../components/common/SharedHelper';
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
 
     const listItems = [
-        { id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => navigation.navigate('Profile') },
+        { id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => gotoProfile() },
         { id: 2, name: 'Notifications', icon: 'envelope', isIcon5: true, action: () => navigation.navigate('Notifications') },
         { id: 3, name: 'Help & Support', icon: 'question-circle', isIcon5: true, action: () => navigation.navigate('ContactUs') },
         { id: 4, name: 'Terms & Conditions', icon: 'files-o', isIcon5: false, action: () => navigation.navigate('TermsConditions') },
@@ -22,7 +22,21 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 7, name: 'Signout', icon: 'power-off', isIcon5: true, action: () => signout() },
     ];
 
-    const { signout } = useContext(AuthContext);
+    const { state, signout } = useContext(AuthContext);
+    const user = state.user
+
+
+    const gotoProfile = () => {
+        if (!user.is_patient) {
+            if (!user.is_registered) {
+                navigation.navigate('CompleteRegistration')
+            } else {
+                navigation.navigate('Profile')
+            }
+        } else {
+            navigation.navigate('Profile')
+        }
+    }
 
     const Item = ({ item }: { item: any }) => (
         <TouchableOpacity style={styles.item} onPress={item.action}>

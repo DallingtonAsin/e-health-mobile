@@ -7,11 +7,10 @@ import { TextInput } from 'react-native-paper'
 import AppLoader from '../components/AppLoader'
 import { getAppVersion, isValidEmail, removeLeadingZeros } from '../components/common/SharedHelper'
 import { Context as AuthContext } from '../context/authContext'
-import { LoginData, LoginPayload } from '../interfaces'
+import {  LoginPayload } from '../interfaces'
 import { displayMessage } from '../components/common/SharedHelper'
 import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils'
 import TouchableImage from '../components/TouchableImage'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
 

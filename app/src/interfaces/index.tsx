@@ -27,9 +27,11 @@ interface IUser {
     bio_summary?: string,
     service_fee?: string,
     otp?: string,
-    profile_status?: boolean,
     image?: string,
     is_patient?: boolean,
+    profile_status?: boolean,
+    is_registered?: boolean,
+    is_verified?: boolean,
 }
 
 interface PatientRegistrationPayload {

@@ -46,9 +46,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
     useEffect(() => {
         if (!user.is_patient) {
-            const otherFacilities: number[] | undefined = user.other_facilities
-            if (otherFacilities !== undefined && otherFacilities.length > 0) {
-                setSelectedFacilities(otherFacilities)
+            const otherFacilities: number[] | any = user.other_facilities
+            if (otherFacilities != undefined || otherFacilities != null) {
+                if (otherFacilities.length > 0) {
+                    setSelectedFacilities(otherFacilities)
+                }
             }
             setIsFetchingFacilities(true)
             setIsFetchingSpecialties(true)
@@ -377,8 +379,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             />
                         </View>
 
-                        {!user.is_patient &&
-                            <>
+
+                        {!user.is_patient && (user.is_registered ?
+                            <React.Fragment>
                                 <View style={styles.detailView}>
                                     <Text style={styles.infoText}>Speciality
                                         {!isDisabled && <Text style={config.styles.registration.doctor.required}>*</Text>}
@@ -411,19 +414,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     />
                                 </View>
 
-                                {/* <View style={styles.detailView}>
-                                    <Text style={styles.infoText}>Other facilities</Text>
-                                    <MultipleSelectList
-                                        setSelected={(val: number[]) => setSelectedFacilities(val)}
-                                        data={facilities}
-                                        save="key"
-                                        search={false}
-                                        placeholder={"Select other facilities(s)"}
-                                        defaultOption={{ key: 1, value: "Mulango Hospital" }}
-                                        inputStyles={isDisabled ? styles.disabledSelectTextStyle : styles.enabledSelectTextStyle}
-                                        boxStyles={isDisabled ? styles.disabledSelectBoxStyles : styles.enabledSelectBoxStyles}
-                                    />
-                                </View> */}
 
                                 <View style={styles.detailView}>
                                     <Text style={styles.infoText}>Qualification
@@ -504,7 +494,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                         onChangeText={text => handleServiceFeeChange(text)}
                                     />
                                 </View>
-                            </>
+                            </React.Fragment>
+                            : null)
                         }
 
                     </View>
