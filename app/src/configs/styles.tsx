@@ -200,6 +200,7 @@ export const styles = {
 
       labelTxt: {
         fontSize: 16,
+        color: colors.black,
       },
 
       viewContainer: {
