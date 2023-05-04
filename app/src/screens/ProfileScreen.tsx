@@ -1,48 +1,52 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, ViewStyle, Pressable, TextStyle } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import React, { useState, useEffect, useContext } from 'react'
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Button, Image, StatusBar, Alert, ViewStyle, Pressable, TextStyle } from 'react-native'
+import { TextInput } from 'react-native-paper'
 import * as config from '../configs'
-import { Avatar as AvatarRP, IconButton } from 'react-native-paper';
-import Avatar from '../components/Avatar';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-simple-toast';
-import AppLoader from '../components/AppLoader';
-import { Context as AppContext } from '../context/appContext';
-import { Context as AuthContext } from '../context/authContext';
-import { Context as DoctorContext } from '../context/doctorContext';
-import { IUser } from '../interfaces';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey, getPairsByKeys } from '../components/common/SharedHelper';
-import ImagePicker from 'react-native-image-crop-picker';
-import { UIActivityIndicator } from 'react-native-indicators';
-import { BottomSheet } from 'react-native-btr';
-import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
-import { validateProfileUpdate } from '../components/common/validation';
-const mime = require('mime-types');
+import { Avatar as AvatarRP, IconButton } from 'react-native-paper'
+import Avatar from '../components/Avatar'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Toast from 'react-native-simple-toast'
+import AppLoader from '../components/AppLoader'
+import { Context as AppContext } from '../context/appContext'
+import { Context as AuthContext } from '../context/authContext'
+import { Context as DoctorContext } from '../context/doctorContext'
+import { FileUpload, IUser } from '../interfaces'
+import DateTimePickerModal from "react-native-modal-datetime-picker"
+import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey } from '../components/common/SharedHelper'
+import { UIActivityIndicator } from 'react-native-indicators'
+import { BottomSheet } from 'react-native-btr'
+import { SelectList } from 'react-native-dropdown-select-list'
+import { validateProfileUpdate } from '../components/common/validation'
+import { initialFileUpload } from '../configs/constants'
+import { choosePhotoFromLibrary, getImageData, takePhotoFromCamera } from '../components/common/FileHelper'
 
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isFetchingFacilities, setIsFetchingFacilities] = useState(false);
-    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [isUpdatingImage, setIsUpdatingImage] = useState(false);
-    const [facilities, setFacilities] = useState([]);
-    const [specialties, setSpecialties] = useState([]);
-    const [selectedFacilities, setSelectedFacilities] = useState<number[]>([]);
-    const { state, updateUserState } = useContext(AuthContext);
-    const { getMedicalFacilities } = useContext(DoctorContext);
-    const { getMedicalSpecialties, updateProfile, updateProfileImage, deleteProfileImage } = useContext(AppContext);
-    const [user, setUser] = useState<IUser>(state.user);
+    const [isDisabled, setIsDisabled] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isFetchingFacilities, setIsFetchingFacilities] = useState(false)
+    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [updateFrontID, setUpdateFrontID] = useState(false)
+    const [updateBackID, setUpdateBackID] = useState(false)
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+    const [isUpdatingImage, setIsUpdatingImage] = useState(false)
+    const [facilities, setFacilities] = useState([])
+    const [frontImage, setFrontImage] = useState<FileUpload | any>(initialFileUpload)
+    const [backImage, setBackImage] = useState<FileUpload | any>(initialFileUpload)
+    const [specialties, setSpecialties] = useState([])
+    const [selectedFacilities, setSelectedFacilities] = useState<number[]>([])
+    const { state, updateUserState } = useContext(AuthContext)
+    const { getMedicalFacilities } = useContext(DoctorContext)
+    const { getMedicalSpecialties, updateProfile, updateProfileImage, deleteProfileImage } = useContext(AppContext)
+    const [user, setUser] = useState<IUser>(state.user)
 
     const genderOptions = [
         { key: '1', value: 'Male' },
         { key: '2', value: 'Female' },
-    ];
+    ]
 
     useEffect(() => {
         if (!user.is_patient) {
@@ -54,43 +58,43 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             }
             setIsFetchingFacilities(true)
             setIsFetchingSpecialties(true)
-            getMedicalSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
-            getMedicalFacilities({ onSuccess: populateFacilities, onFailure: displayMessage, onCompletion: () => { setIsFetchingFacilities(false) } });
+            getMedicalSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } })
+            getMedicalFacilities({ onSuccess: populateFacilities, onFailure: displayMessage, onCompletion: () => { setIsFetchingFacilities(false) } })
         }
-    }, []);
+    }, [])
 
     const populateSpecialties = (data: any) => {
         const arr = data.map((item: { id: number, name: string }) => {
             return { key: item.id, value: item.name }
         })
-        setSpecialties(arr);
+        setSpecialties(arr)
     }
 
     const populateFacilities = (data: any) => {
         const newArr = data.map((item: { id: number, name: string }) => {
             return { key: item.id, value: item.name }
         })
-        setFacilities(newArr);
+        setFacilities(newArr)
     }
 
     const handleServiceFeeChange = (text: string) => {
-        const formattedValue = formatNumber(text.replace(/,/g, ''));
-        setUser(prev => ({ ...prev, service_fee: formattedValue }));
+        const formattedValue = formatNumber(text.replace(/,/g, ''))
+        setUser(prev => ({ ...prev, service_fee: formattedValue }))
     }
 
     const submitProfile = () => {
 
         if (!isDisabled) {
 
-            const validationError = validateProfileUpdate(user, selectedFacilities);
+            const validationError = validateProfileUpdate(user, selectedFacilities)
             if (validationError) {
                 Toast.show(validationError, Toast.LONG)
-                return;
+                return
             }
 
             const formData = new FormData()
 
-            formData.append('_method', 'put');
+            formData.append('_method', 'put')
             formData.append('first_name', user.first_name)
             formData.append('last_name', user.last_name)
             formData.append('email', user?.email)
@@ -101,7 +105,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
             if (!user.is_patient) {
 
-                const service_fee = removeCommas(user.service_fee);
+                const service_fee = removeCommas(user.service_fee)
+
                 formData.append('specialty', user.specialty)
                 formData.append('primary_facility', user.primary_facility)
                 formData.append('qualification', user.qualification)
@@ -110,116 +115,126 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 formData.append('umdp_license_id', user.umdp_license_id)
                 formData.append('bio_summary', user.bio_summary)
                 formData.append('service_fee', service_fee)
+                formData.append('update_front_id', updateFrontID)
+                formData.append('update_back_id', updateBackID)
+
+                if (updateFrontID) {
+                    formData.append('front_image', frontImage)
+                }
+                if (updateBackID) {
+                    formData.append('back_image', backImage)
+                }
             }
 
-            setIsLoading(true);
-            const is_patient = user.is_patient || false;
-            updateProfile({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+            setIsLoading(true)
+            const is_patient = user.is_patient || false
+            updateProfile({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
 
         } else {
-            setIsDisabled(!isDisabled);
+            setIsDisabled(!isDisabled)
         }
     }
 
     const onSuccess = async (message: string) => {
         updateUserState({
             onSuccess: () => {
-                displayMessage(message);
-                navigation.navigate('SignedInStack', { screen: 'Profile' });
-                setIsDisabled(true);
+                displayMessage(message)
+                navigation.navigate('SignedInStack', { screen: 'Profile' })
+                setIsDisabled(true)
             }
-        });
+        })
     }
 
     const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
+        setDatePickerVisibility(true)
+    }
 
     const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
+        setDatePickerVisibility(false)
+    }
 
     const handleConfirm = (date: Date) => {
-        hideDatePicker();
-        let dob = formatDate(date);
+        hideDatePicker()
+        let dob = formatDate(date)
         setUser({
             ...user,
             dob: dob
-        });
-    };
-
-    const takePhotoFromCamera = async () => {
-        ImagePicker.openCamera({
-            width: 300,
-            height: 400,
-            cropping: true,
-            compressImageQuality: 0.7,
-        }).then(async image => {
-            await submitProfilePicture(image);
-        });
+        })
     }
 
-    const choosePhotoFromLibrary = async () => {
-        ImagePicker.openPicker({
-            width: 300,
-            height: 400,
-            cropping: true,
-            includeBase64: false,
-            includeExif: true,
-            mediaType: 'photo',
-        }).then(async (image: any) => {
-            await submitProfilePicture(image);
-        });
+    const uploadFrontImage = () => {
+        choosePhotoFromLibrary().then((image: any) => {
+            const imageData = getImageData(image)
+            console.log(`front image id`, imageData)
+            setFrontImage(imageData)
+            setUpdateFrontID(true)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
     }
 
-    const submitProfilePicture = async (image: any) => {
+    const uploadBackImage = () => {
+        choosePhotoFromLibrary().then((image: any) => {
+            const imageData = getImageData(image)
+            console.log(`back image id`, imageData)
+            setBackImage(imageData)
+            setUpdateBackID(true)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
+    }
+
+    const uploadImageByCamera = () => {
+        takePhotoFromCamera().then((image: any) => {
+            const imageData = getImageData(image)
+            submitProfilePicture(imageData)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
+    }
+
+    const uploadImageFromGallery = () => {
+        choosePhotoFromLibrary().then((image: any) => {
+            const imageData = getImageData(image)
+            submitProfilePicture(imageData)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
+    }
+
+
+    const submitProfilePicture = async (imageData: FileUpload) => {
         try {
-
-            const imagePath = image.path;
-            const mimeType = image.mime;
-            const fileExtension = mime.extension(mimeType);
-            let formData = new FormData();
-
+            const formData = new FormData()
             const is_patient = user.is_patient || false
-            const imageData = {
-                uri: imagePath,
-                type: mimeType,
-                size: image.size,
-                extension: fileExtension,
-                name: 'profile_picture',
-            }
+            formData.append('id', user.id)
+            formData.append('image', imageData)
 
-            formData.append('id', user.id);
-            formData.append('extension', fileExtension);
-            formData.append('image', imageData);
-
-            setIsUpdatingImage(true);
-            updateProfileImage({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
+            setIsUpdatingImage(true)
+            updateProfileImage({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader })
 
         } catch (err: any) {
-            Toast.show(err.message, Toast.LONG);
+            Toast.show(err.message, Toast.LONG)
         }
     }
 
     const closeLoader = () => {
-        setIsUpdatingImage(false);
-        setVisible(false);
+        setIsUpdatingImage(false)
+        setVisible(false)
     }
 
     const deleteProfilePicture = async () => {
         try {
-
             const user_obj = {
                 id: user.id,
                 is_patient: user.is_patient
             }
-            setIsUpdatingImage(true);
-            deleteProfileImage({ user: user_obj, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader });
+            setIsUpdatingImage(true)
+            deleteProfileImage({ user: user_obj, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader })
         } catch (err: any) {
-            Toast.show(err.message, Toast.LONG);
+            Toast.show(err.message, Toast.LONG)
         }
     }
-
 
     const confirmRemovePicture = () => {
         Alert.alert(
@@ -235,7 +250,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             {
                 cancelable: true,
             }
-        );
+        )
     }
 
     return (
@@ -485,7 +500,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     </Text>
                                     <TextInput
                                         mode="outlined"
-                                        label="Service Fee"
+                                        label="Consultation Fee"
                                         value={formatNumber(user.service_fee)}
                                         disabled={isDisabled}
                                         activeOutlineColor={config.colors.primary}
@@ -494,6 +509,33 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                         onChangeText={text => handleServiceFeeChange(text)}
                                     />
                                 </View>
+
+                                <View style={config.styles.registration.doctor.viewContainer}>
+                                    <Text style={config.styles.registration.doctor.labelTxt}>National ID / Passport ID
+                                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                                    <View style={{ marginVertical: 10 }}>
+                                        {!updateFrontID && user.identification_document && user.identification_document.front && <Image source={{ uri: user.identification_document.front }} style={styles.documentId} />}
+                                        {updateFrontID && frontImage && frontImage.uri && <Image source={{ uri: frontImage.uri }} style={styles.documentId} />}
+                                        <Button
+                                            color={config.colors.primary}
+                                            title="Choose Front Image (ID)"
+                                            onPress={() => uploadFrontImage()}
+                                            disabled={isDisabled}
+                                        />
+                                    </View>
+
+                                    <View style={{ marginVertical: 10 }}>
+                                        {!updateBackID && user.identification_document && user.identification_document.back && <Image source={{ uri: user.identification_document.back }} style={styles.documentId} />}
+                                        {updateBackID && backImage && backImage.uri && <Image source={{ uri: backImage.uri }} style={styles.documentId} />}
+                                        <Button
+                                            color={config.colors.primary}
+                                            title="Choose Back Image (ID)"
+                                            onPress={() => uploadBackImage()}
+                                            disabled={isDisabled}
+                                        />
+                                    </View>
+                                </View>
+
                             </React.Fragment>
                             : null)
                         }
@@ -547,13 +589,13 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
                             <View style={styles.uploadOptions}>
                                 <TouchableOpacity style={[styles.icon, { borderColor: config.colors.purple, backgroundColor: config.colors.purple }]}>
-                                    <Icon name={"photo"} size={25} color={"#fff"} onPress={() => choosePhotoFromLibrary()} />
+                                    <Icon name={"photo"} size={25} color={"#fff"} onPress={() => uploadImageFromGallery()} />
                                 </TouchableOpacity>
                                 <Text>Gallery</Text>
                             </View>
 
                             <View style={styles.uploadOptions}>
-                                <TouchableOpacity onPress={() => takePhotoFromCamera()} style={[styles.icon, { borderColor: config.colors.primary, backgroundColor: config.colors.primary }]}>
+                                <TouchableOpacity onPress={() => uploadImageByCamera()} style={[styles.icon, { borderColor: config.colors.primary, backgroundColor: config.colors.primary }]}>
                                     <Icon name={"camera"} size={25} color={"#fff"} />
                                 </TouchableOpacity>
                                 <Text>Camera</Text>
@@ -568,7 +610,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
 }
 
-export default ProfileScreen;
+export default ProfileScreen
 
 
 const boxStyle: ViewStyle = {
@@ -744,4 +786,9 @@ const styles = StyleSheet.create({
         color: config.colors.disabled,
     },
 
-});
+    documentId: {
+        width: 150,
+        height: 150
+    }
+
+})

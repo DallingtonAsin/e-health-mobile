@@ -146,9 +146,9 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             });
         }).catch((err: unknown) => {
             console.log(`Error`, err);
-        });;
+        })
 
-    };
+    }
 
 
     return (

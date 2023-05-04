@@ -1,30 +1,50 @@
-import ImageResizer from '@bam.tech/react-native-image-resizer';
-import RNFS from 'react-native-fs';
+import ImagePicker from 'react-native-image-crop-picker'
+import { FileUpload } from '../../interfaces'
+const mime = require('mime-types')
 
-const resizeImage = (response: any) => {
-
-    const assest_obj = response.assets
-    const uri = assest_obj[0].uri
-    const file_name = assest_obj[0].fileName
-    const type = assest_obj[0].type
-
+const takePhotoFromCamera = (): Promise<any> => {
     return new Promise((resolve, reject) => {
-        ImageResizer.createResizedImage(uri, 500, 500, 'JPEG', 80).then((resizedImage: any) => {
-            const filePath = resizedImage.uri
-            RNFS.readFile(filePath, 'base64').then((base64String) => {
-                const source: any = { uri: `data:image/jpeg;base64,${base64String}` };
-                const file_obj = {
-                    uri: uri,
-                    source: source,
-                    name: file_name,
-                    type: type
-                }
-                resolve(file_obj)
-            });
-        }).catch((err: unknown) => {
-            reject(err)
-        });
-    });
-};
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+            compressImageQuality: 0.7,
+        }).then(image => {
+            resolve(image)
+        }).catch(error => reject(error))
+    })
+}
 
-export { resizeImage }
+const choosePhotoFromLibrary = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: false,
+            includeExif: true,
+            mediaType: 'photo',
+        }).then(image => {
+            resolve(image)
+        }).catch(error => reject(error))
+    })
+}
+
+const getImageData = (image: any): FileUpload => {
+
+    const imagePath = image.path
+    const mimeType = image.mime
+    const fileName = image.path.split('/').pop()
+    const fileExtension = mime.extension(mimeType)
+
+    const imageData: FileUpload = {
+        uri: imagePath,
+        type: mimeType,
+        size: image.size,
+        name: fileName,
+        extension: fileExtension
+    }
+    return imageData
+}
+
+export { takePhotoFromCamera, choosePhotoFromLibrary, getImageData }

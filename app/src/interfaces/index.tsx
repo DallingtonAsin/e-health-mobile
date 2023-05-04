@@ -7,6 +7,11 @@ interface AppAction {
     access_token?: string
 }
 
+interface DoctorIdentification {
+    front: string,
+    back: string
+}
+
 interface IUser {
     id?: number,
     first_name: string,
@@ -28,6 +33,7 @@ interface IUser {
     service_fee?: string,
     otp?: string,
     image?: string,
+    identification_document?: DoctorIdentification | null
     is_patient?: boolean,
     profile_status?: boolean,
     is_registered?: boolean,
@@ -191,8 +197,10 @@ interface Drug {
 interface FileUpload {
     uri: any,
     source?: any,
-    name: any,
-    type: any
+    name?: any,
+    type: any,
+    size?: number,
+    extension?: any,
 }
 
 interface Registration {
@@ -226,7 +234,7 @@ interface LoginPayload {
     is_phone_number_login: boolean
 }
 
-interface FacilityJson{
+interface FacilityJson {
     key: number,
     value: string
 }
