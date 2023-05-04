@@ -11,6 +11,7 @@ import ContactUsScreen from '../screens/ContactUsScreen';
 import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderLeftComponent } from '../components/HeaderLeftComponent';
+import ProfileScreen from '../screens/ProfileScreen';
 
 
 const TabNavigator: React.FC = () => {
@@ -53,9 +54,9 @@ const TabNavigator: React.FC = () => {
         />
 
         <Tab.Screen
-          name="DoctorsTabScreen"
-          component={SpecialityCategoryScreen}
-          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Doctors', tabIcon: 'user-md', onPressBackButton: navigateBack })}
+          name="ProfileTabScreen"
+          component={ProfileScreen}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'My Profile', tabIcon: 'user-circle', onPressBackButton: navigateBack })}
         />
 
 
