@@ -168,6 +168,11 @@ export const styles = {
     alignItems: 'stretch'
   },
 
+  documentId: {
+    width: 150,
+    height: 150
+  },
+
   registration: {
 
     doctor: {

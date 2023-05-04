@@ -34,8 +34,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [isUpdatingImage, setIsUpdatingImage] = useState(false)
     const [facilities, setFacilities] = useState([])
-    const [frontImage, setFrontImage] = useState<FileUpload | any>(initialFileUpload)
-    const [backImage, setBackImage] = useState<FileUpload | any>(initialFileUpload)
+    const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload)
+    const [backImage, setBackImage] = useState<FileUpload>(initialFileUpload)
     const [specialties, setSpecialties] = useState([])
     const [selectedFacilities, setSelectedFacilities] = useState<number[]>([])
     const { state, updateUserState } = useContext(AuthContext)
@@ -165,7 +165,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const uploadFrontImage = () => {
         choosePhotoFromLibrary().then((image: any) => {
             const imageData = getImageData(image)
-            console.log(`front image id`, imageData)
             setFrontImage(imageData)
             setUpdateFrontID(true)
         }).catch((error: any) => {
@@ -176,7 +175,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const uploadBackImage = () => {
         choosePhotoFromLibrary().then((image: any) => {
             const imageData = getImageData(image)
-            console.log(`back image id`, imageData)
             setBackImage(imageData)
             setUpdateBackID(true)
         }).catch((error: any) => {
@@ -267,7 +265,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             !isUpdatingImage ?
                                 <View style={{ position: 'relative' }}>
                                     {state.user.image
-                                        ? <Pressable onPress={() => setVisible(!visible)}><Avatar size={100} source={state.user.image} /></Pressable>
+                                        ? <Pressable onPress={() => setVisible(!visible)}><Avatar size={100} source={state.user.image} resizeMode={'cover'} /></Pressable>
                                         : <Pressable onPress={() => setVisible(!visible)}><AvatarRP.Text size={100} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} /></Pressable>
                                     }
 
@@ -514,8 +512,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     <Text style={config.styles.registration.doctor.labelTxt}>National ID / Passport ID
                                         <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                                     <View style={{ marginVertical: 10 }}>
-                                        {!updateFrontID && user.identification_document && user.identification_document.front && <Image source={{ uri: user.identification_document.front }} style={styles.documentId} />}
-                                        {updateFrontID && frontImage && frontImage.uri && <Image source={{ uri: frontImage.uri }} style={styles.documentId} />}
+                                        {!updateFrontID && user.identification_document && user.identification_document.front && <Image source={{ uri: user.identification_document.front }} style={config.styles.documentId} />}
+                                        {updateFrontID && frontImage && frontImage.uri && <Image source={{ uri: frontImage.uri }} style={config.styles.documentId} />}
                                         <Button
                                             color={config.colors.primary}
                                             title="Choose Front Image (ID)"
@@ -525,8 +523,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     </View>
 
                                     <View style={{ marginVertical: 10 }}>
-                                        {!updateBackID && user.identification_document && user.identification_document.back && <Image source={{ uri: user.identification_document.back }} style={styles.documentId} />}
-                                        {updateBackID && backImage && backImage.uri && <Image source={{ uri: backImage.uri }} style={styles.documentId} />}
+                                        {!updateBackID && user.identification_document && user.identification_document.back && <Image source={{ uri: user.identification_document.back }} style={config.styles.documentId} />}
+                                        {updateBackID && backImage && backImage.uri && <Image source={{ uri: backImage.uri }} style={config.styles.documentId} />}
                                         <Button
                                             color={config.colors.primary}
                                             title="Choose Back Image (ID)"
@@ -785,10 +783,5 @@ const styles = StyleSheet.create({
         ...selectInputStyles,
         color: config.colors.disabled,
     },
-
-    documentId: {
-        width: 150,
-        height: 150
-    }
 
 })

@@ -129,10 +129,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         </View>
 
                         {
-                            !user.patient && (!user.is_verified ?
-                                <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>
-                                : null
-                            )
+                            !user.patient && user.is_registered && !user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>
                         }
 
                     </View>

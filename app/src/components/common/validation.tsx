@@ -132,7 +132,7 @@ const ValidateDrCompleteProfile = (doctor: DrCompleteProfilePayload, selectedFac
     }
 
     if (!doctor.service_fee) {
-        return 'Enter your service fee'
+        return 'Enter your consultation fee'
     }
 
     if (!frontImage.uri) {

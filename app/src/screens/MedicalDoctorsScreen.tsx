@@ -75,7 +75,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             <View style={styles.header}>
                 <View style={styles.image}>
                     {item.image
-                        ? <Avatar size={80} source={item.image} />
+                        ? <Avatar size={80} source={item.image} resizeMode={'cover'}/>
                         : <AvatarRP.Text size={80} label={getUserInitials(`${item.first_name} ${item.last_name}`)} style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
                     }
                 </View>
