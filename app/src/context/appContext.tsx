@@ -12,8 +12,6 @@ const services = new Service();
 const updateProfile = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
         let endpoint = is_patient ? routes.patient.updateProfile : routes.doctor.updateProfile
-        console.log(`endpoint`, endpoint)
-        console.log(`payload`, payload)
         services.post(
             endpoint,
             payload,

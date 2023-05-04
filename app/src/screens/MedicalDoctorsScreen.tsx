@@ -13,7 +13,6 @@ import { Searchbar } from 'react-native-paper';
 import CustomStackHeader from "../components/CustomStackHeader";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +69,6 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
-
         <View style={styles.item}>
             <View style={styles.header}>
                 <View style={styles.image}>

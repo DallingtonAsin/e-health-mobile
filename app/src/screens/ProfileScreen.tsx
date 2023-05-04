@@ -164,9 +164,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
     const uploadFrontImage = () => {
         choosePhotoFromLibrary().then((image: any) => {
+            setUpdateFrontID(true)
             const imageData = getImageData(image)
             setFrontImage(imageData)
-            setUpdateFrontID(true)
         }).catch((error: any) => {
             Toast.show(`Error while uploading image ${error.message}`)
         })
@@ -174,9 +174,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
     const uploadBackImage = () => {
         choosePhotoFromLibrary().then((image: any) => {
+            setUpdateBackID(true)
             const imageData = getImageData(image)
             setBackImage(imageData)
-            setUpdateBackID(true)
         }).catch((error: any) => {
             Toast.show(`Error while uploading image ${error.message}`)
         })

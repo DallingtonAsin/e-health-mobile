@@ -13,9 +13,6 @@ import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-lis
 import { DrCompleteProfileInitialState, initialFileUpload } from '../../configs/constants'
 import { ValidateDrCompleteProfile } from '../../components/common/validation'
 import { choosePhotoFromLibrary, getImageData } from '../../components/common/FileHelper'
-import { launchImageLibrary } from 'react-native-image-picker'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import RNFS from 'react-native-fs'
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 

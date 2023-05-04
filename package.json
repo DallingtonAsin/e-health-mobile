@@ -28,7 +28,6 @@
     "upgrade-gradle": "cd android && ./gradlew wrapper --gradle-version=7.6.1 --distribution-type=bin && ./gradlew tasks && cd .."
   },
   "dependencies": {
-    "@bam.tech/react-native-image-resizer": "^3.0.5",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/cli-platform-android": "^10.2.0",
@@ -66,10 +65,8 @@
     "react-native-dotenv": "^3.4.2",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-fast-image": "^8.6.3",
-    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-image-crop-picker": "^0.37.2",
-    "react-native-image-picker": "^5.3.1",
     "react-native-indicators": "^0.17.0",
     "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-multibar": "^1.1.5",
