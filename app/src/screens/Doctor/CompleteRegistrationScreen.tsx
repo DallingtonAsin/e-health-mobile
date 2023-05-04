@@ -11,11 +11,8 @@ import { Context as DoctorContext } from '../../context/doctorContext'
 import { DrCompleteProfilePayload, FileUpload } from '../../interfaces'
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
 import { DrCompleteProfileInitialState, initialFileUpload } from '../../configs/constants'
-import { launchImageLibrary } from 'react-native-image-picker'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import RNFS from 'react-native-fs'
 import { ValidateDrCompleteProfile } from '../../components/common/validation'
-
+import { choosePhotoFromLibrary, getImageData } from '../../components/common/FileHelper'
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
@@ -102,53 +99,23 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         })
     }
 
-    const chooseImage = (num: number) => {
-        try {
-            launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-                if (response.didCancel) {
-                    console.log('User cancelled image picker');
-                } else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                } else {
-                    resizeImage(response, num);
-                }
-            });
-        } catch (error) {
-            console.log(`error on choosing image`, error);
-        }
-    };
+    const uploadFrontImage = () => {
+        choosePhotoFromLibrary().then((image: any) => {
+            const imageData = getImageData(image)
+            setFrontImage(imageData)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
+    }
 
-    const resizeImage = (response: any, num: number) => {
-        let assest_obj = response.assets
-        let uri = assest_obj[0].uri
-        let file_name = assest_obj[0].fileName
-        let type = assest_obj[0].type
-        // console.log(`file uri`, uri)
-
-        ImageResizer.createResizedImage(uri, 500, 500, 'JPEG', 80).then((resizedImage: any) => {
-            const filePath = resizedImage.uri;
-            console.log(`resized image uri`, filePath)
-
-            RNFS.readFile(filePath, 'base64').then((base64String) => {
-                const source: any = { uri: `data:image/jpeg;base64,${base64String}` };
-                const file_obj = {
-                    uri: uri,
-                    source: source,
-                    name: file_name,
-                    type: type,
-                }
-                // console.log(`file obj`, file_obj)
-                if (num == 1) {
-                    setFrontImage(file_obj);
-                } else {
-                    setBackImage(file_obj)
-                }
-            });
-        }).catch((err: unknown) => {
-            console.log(`Error`, err);
-        });;
-
-    };
+    const uploadBackImage = () => {
+        choosePhotoFromLibrary().then((image: any) => {
+            const imageData = getImageData(image)
+            setBackImage(imageData)
+        }).catch((error: any) => {
+            Toast.show(`Error while uploading image ${error.message}`)
+        })
+    }
 
 
     return (
@@ -296,13 +263,13 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
                         <Text style={config.styles.registration.doctor.labelTxt}>National ID / Passport ID
                             <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                         <View style={{ marginVertical: 10 }}>
-                            {frontImage && frontImage.source && <Image source={frontImage.source} style={{ width: 150, height: 150 }} />}
-                            <Button title="Choose Front Image (ID)" onPress={() => chooseImage(1)} color={config.colors.primary} />
+                            {frontImage && frontImage.uri && <Image source={{ uri: frontImage.uri }} style={config.styles.documentId} />}
+                            <Button title="Choose Front Image (ID)" onPress={() => uploadFrontImage()} color={config.colors.primary} />
                         </View>
 
                         <View style={{ marginVertical: 10 }}>
-                            {backImage && backImage.source && <Image source={backImage.source} style={{ width: 150, height: 150 }} />}
-                            <Button title="Choose Back Image (ID)" onPress={() => chooseImage(2)} color={config.colors.primary} />
+                            {backImage && backImage.uri && <Image source={{ uri: backImage.uri }} style={config.styles.documentId} />}
+                            <Button title="Choose Back Image (ID)" onPress={() => uploadBackImage()} color={config.colors.primary} />
                         </View>
                     </View>
 
@@ -336,6 +303,5 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
         </React.Fragment>
     )
 }
-
 
 export default CompleteRegistrationScreen

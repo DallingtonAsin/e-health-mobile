@@ -107,7 +107,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             <ContentItem title={"Profession"} value={doctor.profession} />
             <ContentItem title={"Email"} value={doctor.email} />
             <ContentItem title={"Experience"} value={doctor.experience} />
-            <ContentItem title={"Service fee"} value={doctor.service_fee} />
+            <ContentItem title={"Consultation fee"} value={doctor.service_fee} />
         </React.Fragment>
     );
 
@@ -160,7 +160,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 <ContentItem title={"Medical history"} value={medical_history.past_medical_history} />
                 <ContentItem title={"Current treatment"} value={medical_history.current_treatment} />
                 <ContentItem title={"Appointment schedule"} value={`${appointment_date} ${appointment_time}`} />
-                <ContentItem title={"Service fee"} value={doctor.service_fee} />
+                <ContentItem title={"Consultation fee"} value={doctor.service_fee} />
                 <View style={styles.appointmentInfo}>
                     <Text style={styles.subtitle}>Status</Text>
                     <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>

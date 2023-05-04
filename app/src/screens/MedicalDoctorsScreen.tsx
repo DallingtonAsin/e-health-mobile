@@ -13,7 +13,6 @@ import { Searchbar } from 'react-native-paper';
 import CustomStackHeader from "../components/CustomStackHeader";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(true);
@@ -70,12 +69,11 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
-
         <View style={styles.item}>
             <View style={styles.header}>
                 <View style={styles.image}>
                     {item.image
-                        ? <Avatar size={80} source={item.image} />
+                        ? <Avatar size={80} source={item.image} resizeMode={'cover'}/>
                         : <AvatarRP.Text size={80} label={getUserInitials(`${item.first_name} ${item.last_name}`)} style={[configs.styles.userAvatar, { borderWidth: 0.5, borderColor: configs.colors.gray }]} />
                     }
                 </View>
