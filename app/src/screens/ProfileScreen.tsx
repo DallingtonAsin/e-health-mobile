@@ -617,6 +617,7 @@ const styles = StyleSheet.create({
 
     scrollView: {
         flexGrow: 1,
+        marginBottom: 50
     },
 
     profileTxt: {
