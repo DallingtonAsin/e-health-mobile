@@ -7,10 +7,8 @@ import * as configs from '../../configs';
 import { WebView } from 'react-native-webview';
 import AppLoader from '../../components/AppLoader';
 
-
 const TermsConditionScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
-
     return (
         <SafeAreaView style={styles.container}>
             {isLoading && <AppLoader />}
@@ -21,11 +19,10 @@ const TermsConditionScreen = () => {
 
 const AboutUsScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
-
     return (
         <SafeAreaView style={styles.container}>
             {isLoading && <AppLoader />}
-            <WebView source={{ uri: 'https://www.tesla.com/' }} onLoad={() => setIsLoading(false)} />
+            <WebView source={{ uri: 'https://pivosoftltd.com' }} onLoad={() => setIsLoading(false)} />
         </SafeAreaView>
     )
 }
@@ -98,6 +95,4 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         fontWeight: 'bold'
     },
-
-
 });
