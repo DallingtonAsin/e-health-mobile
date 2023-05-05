@@ -1,8 +1,9 @@
 
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import * as configs from '../configs';
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import * as configs from '../configs'
 
-const HeaderLeftComponent = ({ headerShown = false, headerTitle, tabIcon, onPressBackButton, }: { headerShown?: boolean, headerTitle: string, tabIcon: string, onPressBackButton: any }): any => ({
+const HeaderLeftComponent = ({ headerShown = false, headerTitle, tabBarLabel, tabIcon, onPressBackButton, }:
+  { headerShown?: boolean, tabBarLabel: string, headerTitle: string, tabIcon: string, onPressBackButton: any }): any => ({
     tabBarIcon: ({ color, size }: { color: string, size: number }) => (
       <Icon5
         name={tabIcon}
@@ -32,9 +33,10 @@ const HeaderLeftComponent = ({ headerShown = false, headerTitle, tabIcon, onPres
     title: headerTitle,
     headerTitleAlign: 'left',
     headerTitleStyle: { color: configs.colors.primary, marginLeft: 20, fontWeight: 'normal' },
+    tabBarLabel: tabBarLabel,
     tabBarLabelStyle: {
       fontSize: configs.fonts.normal
     }
-  });
+  })
 
-  export { HeaderLeftComponent }
+export { HeaderLeftComponent }

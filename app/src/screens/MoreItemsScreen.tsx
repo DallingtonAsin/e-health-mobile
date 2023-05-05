@@ -1,16 +1,18 @@
-import React, { useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useContext } from 'react'
+import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import * as config from '../configs'
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import Toast from 'react-native-simple-toast';
-import { Context as AuthContext } from '../context/authContext';
-import * as configs from '../configs';
-import CustomStackHeader from '../components/CustomStackHeader';
-import { getAppVersion } from '../components/common/SharedHelper';
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import Toast from 'react-native-simple-toast'
+import { Context as AuthContext } from '../context/authContext'
+import * as configs from '../configs'
+import { getAppVersion } from '../components/common/SharedHelper'
 
 
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
+
+    const { state, signout } = useContext(AuthContext)
+    const user = state.user
 
     const listItems = [
         { id: 1, name: 'My Profile', icon: 'user-circle', isIcon5: true, action: () => gotoProfile() },
@@ -20,11 +22,7 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 5, name: 'About Us', icon: 'info-circle', isIcon5: false, action: () => navigation.navigate('AboutUs') },
         { id: 6, name: 'Rate Us', icon: 'star', isIcon5: true, action: () => Toast.show('Coming soon...', Toast.LONG) },
         { id: 7, name: 'Signout', icon: 'power-off', isIcon5: true, action: () => signout() },
-    ];
-
-    const { state, signout } = useContext(AuthContext);
-    const user = state.user
-
+    ]
 
     const gotoProfile = () => {
         if (!user.is_patient) {
@@ -46,15 +44,14 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
             }
             <Text style={styles.itemTitle}>{item.name}</Text>
         </TouchableOpacity>
-    );
+    )
 
     const renderItem = ({ item }: { item: any }) => (
         <Item item={item} />
-    );
+    )
 
     return (
         <SafeAreaView style={styles.container}>
-            <CustomStackHeader title={'Preferences'} onPress={() => { navigation.goBack() }} />
             <View style={styles.body}>
                 <FlatList
                     data={listItems}
@@ -73,7 +70,7 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
     )
 }
 
-export default MoreItemsScreen;
+export default MoreItemsScreen
 
 const styles = StyleSheet.create({
 
@@ -112,4 +109,4 @@ const styles = StyleSheet.create({
         fontSize: config.fonts.medium,
         color: config.colors.primary
     }
-});
+})
