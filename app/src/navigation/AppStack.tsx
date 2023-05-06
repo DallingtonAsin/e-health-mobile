@@ -23,6 +23,7 @@ import TabNavigator from "./TabNavigator";
 import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen";
 import { Context as AuthContext } from '../context/authContext';
 import HomeScreen from "../screens/HomeScreen";
+import SpecialitiesListScreen from '../screens/MedicalDoctorsScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -65,11 +66,24 @@ const AppStackScreen = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `List of specialists`,
-                    headerBackVisible: false,
-                    headerShown: false,
+                    headerTitle: `Doctors & Specialties`,
+                    headerBackVisible: true,
+                    headerShown: true,
                 }}
                 component={SpecialityListScreen} />
+
+            <Stack.Screen
+                name="MedicalSpecialitiesList"
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.white,
+                    },
+                    headerTintColor: configs.colors.primary,
+                    headerTitle: `Doctors & Specialties`,
+                    headerBackVisible: true,
+                    headerShown: true,
+                }}
+                component={SpecialitiesListScreen} />
 
             <Stack.Screen
                 name="Notifications"
@@ -120,7 +134,7 @@ const AppStackScreen = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Appointments`,
+                    headerTitle: `My Appointments`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}
