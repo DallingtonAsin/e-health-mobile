@@ -1,60 +1,65 @@
-import React, { useContext, useState, useEffect } from "react";
-import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import * as configs from '../configs';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { Searchbar } from 'react-native-paper';
-import { Context as AppContext } from '../context/appContext';
-import { displayMessage } from '../components/common/SharedHelper';
-import AppLoader from '../components/AppLoader';
-import { MedicalSpecialty } from "../interfaces";
+import React, { useContext, useState, useEffect } from "react"
+import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native"
+import * as configs from '../configs'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import { Searchbar } from 'react-native-paper'
+import { Context as AppContext } from '../context/appContext'
+import { displayMessage } from '../components/common/SharedHelper'
+import AppLoader from '../components/AppLoader'
+import { MedicalSpecialty } from "../interfaces"
 
 const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([]);
-    const [filteredData, setFilteredData] = useState<MedicalSpecialty[]>([]);
+    const [searchQuery, setSearchQuery] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+    const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([])
+    const [filteredData, setFilteredData] = useState<MedicalSpecialty[]>([])
 
-    const { getMedicalSpecialties } = useContext(AppContext);
+    const { getMedicalSpecialties } = useContext(AppContext)
 
     useEffect(() => {
-        getMedicalSpecialties({ onSuccess: populateSpecialities, onFailure: displayMessage, onCompletion: stopLoading });
-    }, []);
+        getMedicalSpecialties({ onSuccess: populateSpecialities, onFailure: displayMessage, onCompletion: stopLoading })
+    }, [])
 
     const populateSpecialities = (medicalSpecialties: MedicalSpecialty[]) => {
-        setMedicalSpecialties(medicalSpecialties);
-        setFilteredData(medicalSpecialties);
+        setMedicalSpecialties(medicalSpecialties)
+        setFilteredData(medicalSpecialties)
     }
 
     const handleSearch = (text: string) => {
 
-        setSearchQuery(text);
+        setSearchQuery(text)
         const newData = medicalSpecialties.filter((item: MedicalSpecialty) => {
-            const itemData = `${item.name}`;
-            const searchText = text.toLowerCase();
-            return itemData.toLowerCase().indexOf(searchText) > -1;
-        });
+            const itemData = `${item.name}`
+            const searchText = text.toLowerCase()
+            return itemData.toLowerCase().indexOf(searchText) > -1
+        })
         if (text.length > 0) {
-            setFilteredData(newData);
+            setFilteredData(newData)
         } else {
-            setFilteredData(medicalSpecialties);
+            setFilteredData(medicalSpecialties)
         }
-    };
+    }
 
     const stopLoading = () => {
-        setIsLoading(false);
+        setIsLoading(false)
+    }
+
+    const moveToDoctorsScreen = (item: MedicalSpecialty) => {
+        const data = { specialty_id: item.id, specialty_name: item.name, tab: "doctors" }
+        navigation.navigate('MedicalSpecialitiesList', data)
     }
 
     const Item = ({ item }: { item: MedicalSpecialty }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('SpecialitiesList', { specialty_id: item.id, specialty_name: item.name })}>
+        <TouchableOpacity style={styles.item} onPress={() => moveToDoctorsScreen(item)}>
             <Text style={styles.itemTitle}>{item.name}</Text>
             <Icon5 name="angle-right" size={20} color={configs.colors.primary} style={styles.arrow} />
         </TouchableOpacity>
-    );
+    )
 
     const renderItem = ({ item }: { item: MedicalSpecialty }) => (
         <Item item={item} />
-    );
+    )
 
     if (isLoading) {
         return (
@@ -64,7 +69,6 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Find your doctor by speciality</Text>
             <View style={styles.subcontainer}>
                 <Searchbar
                     placeholder="Search specialty"
@@ -89,7 +93,7 @@ const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
     )
 }
 
-export default MedicalSpecialtyScreen;
+export default MedicalSpecialtyScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -142,4 +146,4 @@ const styles = StyleSheet.create({
     arrow: {
         right: 0
     }
-});
+})

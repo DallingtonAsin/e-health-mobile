@@ -1,77 +1,75 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useWindowDimensions } from 'react-native';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import * as config from '../configs';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { MyAppointmentInfo } from '../interfaces';
-import { Context as AppContext } from '../context/appContext';
-import { Context as AuthContext } from '../context/authContext';
-import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper';
-import AppLoader from '../components/AppLoader';
-
+import React, { useState, useEffect, useContext } from 'react'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useWindowDimensions } from 'react-native'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import * as config from '../configs'
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { MyAppointmentInfo } from '../interfaces'
+import { Context as AppContext } from '../context/appContext'
+import { Context as AuthContext } from '../context/authContext'
+import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper'
+import AppLoader from '../components/AppLoader'
 
 const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
-    const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>();
-    const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>();
-    const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>();
+    const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>()
+    const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>()
+    const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>()
+    const [isCompletedLoading, setIsCompletedLoading] = useState(true)
+    const [isPendingLoading, setIsPendingLoading] = useState(true)
+    const [isCancelledLoading, setIsCancelledLoading] = useState(true)
 
-    const [isCompletedLoading, setIsCompletedLoading] = useState(true);
-    const [isPendingLoading, setIsPendingLoading] = useState(true);
-    const [isCancelledLoading, setIsCancelledLoading] = useState(true);
+    const { state } = useContext(AuthContext)
+    const { getMyAppointments } = useContext(AppContext)
+    const user = state.user
 
-    const { state } = useContext(AuthContext);
-    const { getMyAppointments } = useContext(AppContext);
-    const user = state.user;
+    const layout = useWindowDimensions()
 
-    const layout = useWindowDimensions();
-
-    const [index, setIndex] = React.useState(0);
+    const [index, setIndex] = React.useState(0)
     const [routes] = React.useState([
         { key: 'pending', title: 'Pending' },
         { key: 'completed', title: 'Completed' },
         { key: 'cancelled', title: 'Cancelled' }
-    ]);
+    ])
 
-    let payload = { user_id: user.id, is_patient: user.is_patient };
+    let payload = { user_id: user.id, is_patient: user.is_patient }
 
     const fetchPendingAppointments = () => {
-        getMyAppointments({ payload: { ...payload, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'pending' }, onSuccess: setPendingAppoinments, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) })
     }
 
     const fetchCompletedAppointments = () => {
-        getMyAppointments({ payload: { ...payload, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'completed' }, onSuccess: setCompletedAppoinments, onFailure: displayMessage, onCompletion: () => setIsCompletedLoading(false) })
     }
 
     const fetchCancelledAppointments = () => {
-        getMyAppointments({ payload: { ...payload, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) });
+        getMyAppointments({ payload: { ...payload, path: 'cancelled' }, onSuccess: setCancelledAppoinments, onFailure: displayMessage, onCompletion: () => setIsCancelledLoading(false) })
     }
 
-    const setPendingAppoinments = (data: MyAppointmentInfo[]) => { setPendingAppointments(data); }
-    const setCompletedAppoinments = (data: MyAppointmentInfo[]) => { setCompletedAppointments(data); }
-    const setCancelledAppoinments = (data: MyAppointmentInfo[]) => { setCancelledAppointments(data); }
+    const setPendingAppoinments = (data: MyAppointmentInfo[]) => { setPendingAppointments(data) }
+    const setCompletedAppoinments = (data: MyAppointmentInfo[]) => { setCompletedAppointments(data) }
+    const setCancelledAppoinments = (data: MyAppointmentInfo[]) => { setCancelledAppointments(data) }
 
     useEffect(() => {
-        fetchPendingAppointments();
-        fetchCompletedAppointments();
-        fetchCancelledAppointments();
-    }, []);
+        fetchPendingAppointments()
+        fetchCompletedAppointments()
+        fetchCancelledAppointments()
+    }, [])
 
     const EmptyListComponent = ({ message }: { message: string }) => (
         <View style={config.styles.emptyViewContainer}>
             <Icon5 name="calendar-alt" size={60} />
             <Text style={config.styles.noInfoText}>{message}</Text>
         </View>
-    );
+    )
 
     const PendingAppointmentsScreen = () => {
-        const [refreshing, setRefreshing] = useState(false);
+        const [refreshing, setRefreshing] = useState(false)
 
         const onRefresh = () => {
-            setRefreshing(true);
-            fetchPendingAppointments();
-            setRefreshing(false);
-        };
+            setRefreshing(true)
+            fetchPendingAppointments()
+            setRefreshing(false)
+        }
 
         return (
             <>
@@ -91,18 +89,18 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </SafeAreaView>
                 {isPendingLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
-        );
+        )
     }
 
     const CompletedAppointmentsScreen = () => {
 
-        const [refreshing, setRefreshing] = useState(false);
+        const [refreshing, setRefreshing] = useState(false)
 
         const onRefresh = () => {
-            setRefreshing(true);
-            fetchCompletedAppointments();
-            setRefreshing(false);
-        };
+            setRefreshing(true)
+            fetchCompletedAppointments()
+            setRefreshing(false)
+        }
 
         return (
             <>
@@ -122,17 +120,17 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </SafeAreaView>
                 {isCompletedLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
-        );
+        )
     }
 
     const CancelledAppointmentsScreen = () => {
-        const [refreshing, setRefreshing] = useState(false);
+        const [refreshing, setRefreshing] = useState(false)
 
         const onRefresh = () => {
-            setRefreshing(true);
-            fetchCancelledAppointments();
-            setRefreshing(false);
-        };
+            setRefreshing(true)
+            fetchCancelledAppointments()
+            setRefreshing(false)
+        }
 
         return (
             <>
@@ -152,14 +150,14 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </SafeAreaView>
                 {isCancelledLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
             </>
-        );
+        )
     }
 
     const renderScene = SceneMap({
         pending: PendingAppointmentsScreen,
         cancelled: CancelledAppointmentsScreen,
         completed: CompletedAppointmentsScreen
-    });
+    })
 
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
@@ -170,7 +168,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             </View>
             <View style={styles.main}>
 
-                {user.is_patient && <Text style={styles.doctorTxt}>{item.doctor.title} {item.doctor.first_name} {item.doctor.last_name}</Text>}
+                {user.is_patient && <Text style={styles.doctorTxt}>{item.doctor.first_name} {item.doctor.last_name}</Text>}
                 {!user.is_patient && <Text style={styles.doctorTxt}>{item.patient.first_name} {item.patient.last_name}</Text>}
 
                 <Text style={styles.info}>Reason: <Text style={[styles.info]}>{item.reason}</Text></Text>
@@ -193,7 +191,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
             </View>
         </TouchableOpacity>
-    );
+    )
 
     const renderTabBar = (props: any) => (
         <TabBar
@@ -206,7 +204,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             indicatorStyle={{ backgroundColor: config.colors.primary }}
             style={{ backgroundColor: config.colors.white }}
         />
-    );
+    )
 
     return (
         <TabView
@@ -216,10 +214,10 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             onIndexChange={setIndex}
             initialLayout={{ width: layout.width }}
         />
-    );
+    )
 }
 
-export default MyAppointmentScreen;
+export default MyAppointmentScreen
 
 
 const styles = StyleSheet.create({
@@ -315,4 +313,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-});
+})

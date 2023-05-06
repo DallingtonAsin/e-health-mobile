@@ -288,8 +288,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             {user.is_patient && <Text style={[styles.usernameText]}>{user.first_name} {user.last_name}</Text>}
                             {!user.is_patient && <Text style={[styles.usernameText]}>{`Dr.`} {user.first_name} {user.last_name}</Text>}
                             <Text style={[styles.headerText]}>
-                                {<><Icon5 name="user-circle" size={14} /><Text> {user.is_patient ? `Patient Account` : `Doctor Account`} </Text></>}
+                                {<><Text> {user.is_patient ? `Patient Account` : `Doctor Account`} </Text></>}
                             </Text>
+                            <TouchableOpacity style={styles.editProfileBtn} onPress={() => setIsDisabled(!isDisabled)}>
+                                <Text style={styles.editProfileTxt}>Edit Profile</Text>
+                            </TouchableOpacity>
                         </View>
 
                     </View>
@@ -676,7 +679,7 @@ const styles = StyleSheet.create({
     },
 
     headerText: {
-        fontSize: 14,
+        fontSize: config.fonts.small,
         color: config.colors.silver,
         paddingVertical: 5,
         opacity: 1
@@ -783,5 +786,17 @@ const styles = StyleSheet.create({
         ...selectInputStyles,
         color: config.colors.disabled,
     },
+
+    editProfileBtn: {
+        borderWidth: 1,
+        borderColor: config.colors.white,
+        borderRadius: 8,
+        paddingVertical: 7,
+        paddingHorizontal: 16,
+    },
+
+    editProfileTxt: {
+        color: config.colors.white
+    }
 
 })

@@ -1,6 +1,5 @@
 import ImagePicker from 'react-native-image-crop-picker'
 import { FileUpload } from '../../interfaces'
-const mime = require('mime-types')
 
 const takePhotoFromCamera = (): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -35,14 +34,12 @@ const getImageData = (image: any): FileUpload => {
     const imagePath = image.path
     const mimeType = image.mime
     const fileName = image.path.split('/').pop()
-    const fileExtension = mime.extension(mimeType)
 
     const imageData: FileUpload = {
         uri: imagePath,
         type: mimeType,
         size: image.size,
-        name: fileName,
-        extension: fileExtension
+        name: fileName
     }
     return imageData
 }

@@ -19,7 +19,7 @@ const TabNavigator: React.FC = () => {
   const navigation = useNavigation();
   const navigateBack = () => { navigation.goBack() }
   const Tab = React.useRef<ReturnType<typeof createBottomTabNavigator>>(createBottomTabNavigator()).current;
- 
+
   return (
     <MultiBarProvider
       overlayProps={{
@@ -50,26 +50,26 @@ const TabNavigator: React.FC = () => {
         <Tab.Screen
           name="HomeTabScreen"
           component={HomeScreen}
-          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabBarLabel: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
         />
 
         <Tab.Screen
           name="ProfileTabScreen"
           component={ProfileScreen}
-          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'My Profile', tabIcon: 'user-circle', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'My Profile', tabBarLabel: 'My Profile', tabIcon: 'user-circle', onPressBackButton: navigateBack })}
         />
 
 
         <Tab.Screen
           name="HelpTabScreen"
           component={ContactUsScreen}
-          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Help', tabIcon: 'question-circle', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Help', tabBarLabel: 'Help', tabIcon: 'question-circle', onPressBackButton: navigateBack })}
         />
 
         <Tab.Screen
           name="MoreTabScreen"
           component={MoreItemsScreen}
-          options={HeaderLeftComponent({ headerShown: false, headerTitle: 'More', tabIcon: 'bars', onPressBackButton: navigateBack })}
+          options={HeaderLeftComponent({ headerShown: true, headerTitle: 'Preferences', tabBarLabel: 'More', tabIcon: 'bars', onPressBackButton: navigateBack })}
         />
 
       </Tab.Navigator>
