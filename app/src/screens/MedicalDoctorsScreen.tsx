@@ -158,8 +158,8 @@ const SpecialitiesListScreen = ({ route, navigation }: { route: any, navigation:
 
     const [index, setIndex] = React.useState(0)
     const [routes] = React.useState([
-        { key: 'doctors', title: 'Doctors' },
         { key: 'specialties', title: 'Specialties' },
+        { key: 'doctors', title: 'Doctors' },
     ])
     const layout = useWindowDimensions()
     const tabViewRef = useRef<any>(null);
@@ -332,5 +332,4 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginVertical: 10,
     },
-
 })
