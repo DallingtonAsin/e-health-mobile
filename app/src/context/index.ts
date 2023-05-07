@@ -1,5 +1,5 @@
-import React  from "react";
-import { AppointmentInfo, IUser, LoginData, LoginPayload, PatientRegistrationPayload} from '../interfaces';
+import React from "react";
+import { AppointmentInfo, IUser, LoginData, LoginPayload, PatientRegistrationPayload } from '../interfaces';
 
 const createContext = (defaultValue: any) => {
 
@@ -11,7 +11,9 @@ const createContext = (defaultValue: any) => {
         sendVerificationCode: ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         verifyCode: ({ code, is_patient, onSuccess, onFailure, onCompletion }: { code: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         signup: ({ payload, onSuccess, onFailure, onCompletion }: { payload: PatientRegistrationPayload, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        signout: () => {},
+        signout: () => { },
+        markDoctorFavourite: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        unMarkDoctorFavourite: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
 
         // general api methods
         updateProfile: ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
@@ -31,7 +33,7 @@ const createContext = (defaultValue: any) => {
         getMedicalDoctors: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalFacilities: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         updateUserState: ({ onSuccess }: { onSuccess: any }) => { },
-        
+
         // doctor api methods
         authenticateDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         registerDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },

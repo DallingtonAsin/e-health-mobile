@@ -127,6 +127,7 @@ interface DoctorsDetail {
     service_fee: number,
     schedule_dates?: string[],
     schedule?: string[],
+    is_favourite: boolean
 }
 
 interface PatientDetail {
