@@ -59,10 +59,45 @@ const getMedicalHistory = () => {
     };
 };
 
+const markDoctorFavourite = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.patient.mark_doctor_favourite,
+            payload
+        ).then(async (res: any) => {
+            if (res && res.data && res.data.message) {
+                const message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const unMarkDoctorFavourite = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.delete(
+            `${routes.patient.unmark_doctor_favourite}/${payload.doctor_id}`
+        ).then(async (res: any) => {
+            if (res && res.data && res.data.message) {
+                const message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-         submitAppointment, cancelAppointment, getMedicalHistory
+        submitAppointment, cancelAppointment, getMedicalHistory, markDoctorFavourite, unMarkDoctorFavourite
     },
     { isAppLoading: true },
 );
