@@ -6,11 +6,13 @@ import Avatar from '../components/Avatar'
 import { DoctorsDetail } from "../interfaces"
 import { Context as AppContext } from '../context/appContext'
 import { Context as AuthContext } from '../context/authContext'
+import { Context as PatientContext } from '../context/patientContext'
 import { Context as DoctorContext } from '../context/doctorContext'
 import { displayMessage, getUserInitials, truncateString } from '../components/common/SharedHelper'
 import AppLoader from "../components/AppLoader"
 import { Searchbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import MedicalSpecialtyScreen from "./MedicalSpecialtyScreen"
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
 
@@ -20,28 +22,35 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const [searchQuery, setSearchQuery] = useState('')
     const [medicalDoctors, setMedicalDoctors] = useState<DoctorsDetail[]>([])
     const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([])
+    const [specialtyId, setSpecialtyId] = useState<number>()
     const [specialtyName, setSpecialtyName] = useState<string>('')
 
     const { state } = useContext(AuthContext)
     const user = state.user
     const { getDoctorsBySpecialty } = useContext(AppContext)
     const { getMedicalDoctors } = useContext(DoctorContext)
+    const { markDoctorFavourite, unMarkDoctorFavourite } = useContext(PatientContext)
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
         navigation.navigate('ScheduleAppointment', { doctor_id: item.id })
     }
 
     useEffect(() => {
-        if (route.params && route.params.specialty_id) {
-            getDoctorsBySpecialty({ specialtyId: route.params.specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
+        if (route.params && route.params.specialty_id && route.params.specialty_name) {
+            setSpecialtyId(route.params.specialty_id)
+            setSpecialtyName(route.params.specialty_name)
+        }
+        const id = route.params && route.params.specialty_id ? route.params.specialty_id : null
+        fetchMedicalDoctors(id)
+    }, [])
+
+    const fetchMedicalDoctors = (specialty_id: number | any = specialtyId) => {
+        if (specialty_id || specialtyId) {
+            getDoctorsBySpecialty({ specialtyId: specialty_id, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
         } else {
             getMedicalDoctors({ onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
         }
-
-        if (route.params && route.params.specialty_name) {
-            setSpecialtyName(route.params.specialty_name)
-        }
-    }, [])
+    }
 
     const populateMedicalDoctors = (doctors: DoctorsDetail[]) => {
         setMedicalDoctors(doctors)
@@ -64,10 +73,23 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
         }
     }
 
+    const updateFavouriteStatus = (item: DoctorsDetail) => {
+        const payload = { doctor_id:  item.id }
+        if (item.is_favourite) {
+            unMarkDoctorFavourite({ payload: payload, onSuccess: statusUpdated, onFailure: displayMessage, onCompletion: stopLoading })
+        } else {
+            markDoctorFavourite({ payload: payload, onSuccess: statusUpdated, onFailure: displayMessage, onCompletion: stopLoading })
+        }
+    }
+
+    const statusUpdated = (message: string) => {
+        displayMessage(message)
+        fetchMedicalDoctors(specialtyId)
+    }
+
     const stopLoading = () => {
         setIsLoading(false)
     }
-
 
     const renderItem = ({ item }: { item: DoctorsDetail }) => (
         <View style={styles.item}>
@@ -83,6 +105,9 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     <Text style={[styles.keyTitle, { color: configs.colors.secondary }]}>{item.specialty}</Text>
                     <Text style={styles.keyTitle}>{item.qualification}</Text>
                 </View>
+                <TouchableOpacity onPress={() => updateFavouriteStatus(item)}>
+                    <Icon name="heart" size={24} color={item.is_favourite ? configs.colors.orange : configs.colors.silver} />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.body}>

@@ -37,7 +37,7 @@ const validatePatientRegistration = (user: PatientRegistrationPayload, hasAgreed
     }
 
     if (user.password !== user.password_confirmation) {
-        return 'Your passwords donot match'
+        return 'Your passwords do not match'
     }
 
     if (!hasAgreedTerms) {
@@ -85,7 +85,7 @@ const validateDoctorRegistration = (user: DoctorRegistrationPayload, hasAgreedTe
     }
 
     if (user.password !== user.password_confirmation) {
-        return 'Your passwords donot match'
+        return 'Your passwords do not match'
     }
 
     if (!hasAgreedTerms) {

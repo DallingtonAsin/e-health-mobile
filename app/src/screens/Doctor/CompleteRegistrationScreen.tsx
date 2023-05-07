@@ -85,6 +85,11 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const onSuccess = async (message: string) => {
+        setUser(DrCompleteProfileInitialState)
+        setHasAgreedTerms(false)
+        setFrontImage(initialFileUpload)
+        setBackImage(initialFileUpload)
+
         updateUserState({
             onSuccess: () => {
                 Alert.alert(
@@ -104,7 +109,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setFrontImage(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            // Toast.show(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -113,7 +118,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setBackImage(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            // Toast.show(`Error while uploading image ${error.message}`)
         })
     }
 
