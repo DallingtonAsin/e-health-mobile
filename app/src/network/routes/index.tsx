@@ -31,6 +31,7 @@ const routes = {
       updateProfile: 'doctor/profile/update',
       update_profile_pic: 'doctor/profile-picture/update',
       delete_profile_pic: 'doctor/profile-picture/delete',
+      update_online_status: 'doctor/online-status',
       languages: 'doctor/languages',
       calendar: 'doctor/schedule',
       notifications: {

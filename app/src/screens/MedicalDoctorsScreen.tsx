@@ -74,7 +74,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     const updateFavouriteStatus = (item: DoctorsDetail) => {
-        const payload = { doctor_id:  item.id }
+        const payload = { doctor_id: item.id }
         if (item.is_favourite) {
             unMarkDoctorFavourite({ payload: payload, onSuccess: statusUpdated, onFailure: displayMessage, onCompletion: stopLoading })
         } else {
@@ -104,6 +104,10 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     <Text style={styles.name}>{`Dr.`} {item.first_name} {item.last_name}</Text>
                     <Text style={[styles.keyTitle, { color: configs.colors.secondary }]}>{item.specialty}</Text>
                     <Text style={styles.keyTitle}>{item.qualification}</Text>
+                    <Text style={item.is_online ? configs.styles.online : configs.styles.offline}>
+                        <Icon name="circle" size={10} color={item.is_online ? configs.colors.success : configs.colors.light_gray} />
+                        <Text style={{ marginLeft: 10 }}> {item.is_online ? 'online' : 'offline'}</Text>
+                    </Text>
                 </View>
                 <TouchableOpacity onPress={() => updateFavouriteStatus(item)}>
                     <Icon name="heart" size={24} color={item.is_favourite ? configs.colors.orange : configs.colors.silver} />
@@ -357,4 +361,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginVertical: 10,
     },
+
 })

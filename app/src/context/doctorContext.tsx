@@ -59,7 +59,7 @@ const completeRegistration = (dispatch: any) => {
                 const data = res.data
                 const user = data.user
                 const message = data.message
-                
+
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
 
@@ -174,6 +174,36 @@ const isVerified = (dispatch: any) => {
     };
 };
 
+const updateOnlineStatus = (dispatch: any) => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            routes.doctor.update_online_status,
+            {}
+        ).then(async (res) => {
+
+            if (res && res.data) {
+
+                const data = res.data;
+                const user = data.user;
+                const message = data.message;
+
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
+
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 const getMedicalDoctors = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -214,7 +244,7 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
-        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified
+        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus
     },
     { isAppLoading: true },
 );

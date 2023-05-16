@@ -254,6 +254,20 @@ export const styles = {
         color: colors.black
       }
     }
+  },
+
+  online: {
+    color: colors.success,
+    fontSize: fonts.small,
+    fontWeight: 'bold',
+    textTransform: 'capitalize'
+  },
+
+  offline: {
+    color: colors.light_gray,
+    fontSize: fonts.small,
+    fontWeight: 'bold',
+    textTransform: 'capitalize'
   }
 
 } as const;
