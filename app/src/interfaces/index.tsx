@@ -241,6 +241,11 @@ interface FacilityJson {
     value: string
 }
 
+interface PushNotification{
+    title: string,
+    body: string | any
+    payload?: any,
+}
 
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
@@ -269,5 +274,6 @@ export type {
     Registration,
     setPasswordError,
     LoginPayload,
+    PushNotification,
     DrCompleteProfilePayload
 }
