@@ -127,6 +127,7 @@ interface DoctorsDetail {
     service_fee: number,
     schedule_dates?: string[],
     schedule?: string[],
+    rating: number,
     is_favourite: boolean,
     is_online: boolean
 }
@@ -241,7 +242,7 @@ interface FacilityJson {
     value: string
 }
 
-interface PushNotification{
+interface PushNotification {
     title: string,
     body: string | any
     payload?: any,

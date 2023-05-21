@@ -5,7 +5,7 @@ import AppLoader from '../components/AppLoader';
 import RtcEngine, { createAgoraRtcEngine } from 'react-native-agora';
 import { Context as AppContext } from '../context/appContext';
 import { displayMessage } from '../components/common/SharedHelper';
-
+import { Rating, AirbnbRating } from 'react-native-ratings';
 
 const MeetingRoomScreen = ({ appointment_id, videoCall, setVideoCall }: { appointment_id: number, videoCall: boolean, setVideoCall: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
@@ -15,6 +15,23 @@ const MeetingRoomScreen = ({ appointment_id, videoCall, setVideoCall }: { appoin
   const { getMeetingDetails } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const agoraEngine = createAgoraRtcEngine();
+
+
+
+const showRatingAlert = (rating: number) => {
+  Alert.alert(
+    'Rate this App',
+    'How would you rate this app?',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Submit', onPress: () => submitRating() },
+    ],
+  );
+};
+
+const submitRating = () => {
+
+}
 
   useEffect(() => {
 
