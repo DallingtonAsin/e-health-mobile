@@ -57,6 +57,7 @@ const routes = {
    appointments: {
       index: 'appointments',
       cancel: 'appointments/cancel',
+      confirm: 'appointments/confirm',
       types: 'appointments/types',
       meeting: 'appointments/meeting',
       patient: {

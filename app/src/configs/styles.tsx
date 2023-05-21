@@ -124,6 +124,11 @@ export const styles = {
     color: colors.pendingColor
   },
 
+  confirmedTxt: {
+    backgroundColor: colors.warning,
+    color: colors.white
+  },
+
   cancelledTxt: {
     backgroundColor: colors.pink,
     color: colors.white

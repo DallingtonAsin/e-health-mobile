@@ -5,6 +5,7 @@ import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../components/Avatar';
 import { Context as AuthContext } from '../context/authContext';
 import { Context as PatientContext } from '../context/patientContext';
+import { Context as DoctorContext } from '../context/doctorContext';
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import MeetingRoomScreen from './MeetingRoomScreen';
@@ -20,6 +21,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
 
     const { state } = useContext(AuthContext);
+    const { confirmAppointment } = useContext(DoctorContext);
     const { cancelAppointment } = useContext(PatientContext);
 
     const user = state.user;
@@ -44,11 +46,13 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         </View>
     );
 
-    const cancelMedicalAppointment = () => {
+    const confirmMedicalAppointment = () => {
         Alert.alert(
             '',
-            `Are you sure you want to cancel appointment ${appointment_number}?`,
+            `Are you sure you want to confirm appointment ${appointment_number}?`,
             [
+
+                { text: 'No', onPress: () => console.log('Cancelled') },
                 {
                     text: 'Yes', onPress: async () => {
                         let payload = {
@@ -56,13 +60,43 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                             appointment_number: appointment_number
                         }
                         setIsLoading(true);
-                        cancelAppointment({ payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: afterCancelling });
+                        confirmAppointment({ payload: payload, onSuccess: onConfirmAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling });
                     }
                 },
-                { text: 'No', onPress: () => console.log('Cancel Pressed') },
             ],
             { cancelable: false }
         );
+    }
+
+    const cancelMedicalAppointment = () => {
+        Alert.alert(
+            '',
+            `Are you sure you want to cancel appointment ${appointment_number}?`,
+            [
+                { text: 'No', onPress: () => console.log('Cancel Pressed') },
+                {
+                    text: 'Yes', onPress: async () => {
+                        let payload = {
+                            patient_id: patient.id,
+                            appointment_number: appointment_number
+                        }
+                        setIsLoading(true);
+                        cancelAppointment({ payload: payload, onSuccess: onCancelAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling });
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+
+    const onConfirmAppointmentSuccess = (message: string) => {
+        displayMessage(message)
+        navigation.navigate(`MyAppointments`)
+    }
+
+    const onCancelAppointmentSuccess = (message: string) => {
+        displayMessage(message)
+        navigation.navigate(`MyAppointments`)
     }
 
     const completeMedicalAppoitment = () => {
@@ -196,7 +230,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                         {!user.is_patient &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
-                                onPress={() => completeMedicalAppoitment()}>
+                                onPress={() => confirmMedicalAppointment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
                             </TouchableOpacity>
                         }
