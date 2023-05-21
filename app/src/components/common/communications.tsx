@@ -1,5 +1,6 @@
 import { Linking } from "react-native";
 import Communications from 'react-native-communications';
+import { Notifications } from 'react-native-notifications'
 
 const callPhoneNumber = (phoneNumber: string) => {
     Communications.phonecall(phoneNumber, true);
@@ -17,4 +18,14 @@ const sendEmail = (email: string) => {
     Linking.openURL(`mailto:${email}?subject=Message`);
 };
 
-export {callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail}
+const showLocalNotification = (title: string, body: string | any) => {
+    const notification: any = {
+        title: title,
+        body: body,
+        sound: 'default',
+    };
+
+    Notifications.postLocalNotification(notification);
+};
+
+export { callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail, showLocalNotification }

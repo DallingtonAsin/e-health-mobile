@@ -87,6 +87,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         }
     }
 
+    const joinMeeting = () => {
+        if (doctor.is_online) {
+            setVideoCall(true)
+        } else {
+            displayMessage(`Doctor ${doctor.first_name} ${doctor.last_name} is currently offline, please try again later.`)
+        }
+    }
+
     const DoctorProfile = () => (
         <React.Fragment>
             <View style={styles.header}>
@@ -174,7 +182,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     <View style={styles.footer}>
 
                         {is_online &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => setVideoCall(true)}>
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => joinMeeting()}>
                                 <Text style={[styles.buttonText, { color: config.colors.primary }]}>Join Meeting</Text>
                             </TouchableOpacity>
                         }
@@ -182,6 +190,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {user.is_patient &&
                             <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
+
+                        {!user.is_patient &&
+                            <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
+                                onPress={() => completeMedicalAppoitment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
                             </TouchableOpacity>
                         }
 

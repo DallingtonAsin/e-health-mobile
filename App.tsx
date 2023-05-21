@@ -13,13 +13,13 @@ import { Provider } from 'react-redux'
 import AuthStack from './app/src/navigation/AuthStack'
 import AppStackScreen from './app/src/navigation/AppStack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Notifications } from 'react-native-notifications'
-import { PushNotification } from './app/src/interfaces'
-import { getToken } from './app/src/components/common/AppUtils'
+import { Notification, Notifications, Registered, RegistrationError } from 'react-native-notifications'
+import { showLocalNotification } from './app/src/components/common/communications'
 const Stack = createNativeStackNavigator()
 
 LogBox.ignoreLogs(['new NativeEventEmitter'])
 LogBox.ignoreAllLogs()
+
 
 const App = () => {
 
@@ -55,43 +55,27 @@ export default () => {
 
   useEffect(() => {
 
-    // const getFcmToken = async () => {
-    //   const token = await getToken()
-    //   console.log(`Token:  ${token}`)
-    // }
-
-    // getFcmToken()
     Notifications.registerRemoteNotifications()
 
-    const onRemoteNotificationReceived = Notifications.events().registerRemoteNotificationsRegistered((notification) => {
-      // Process the received push notification here
-      console.log('Received push notification:', notification)
+    const onRemoteNotificationReceived = Notifications.events().registerRemoteNotificationsRegistered((event: Registered) => {
+      // console.log("Device Token Received", event.deviceToken);
     })
 
-    Notifications.events().registerNotificationReceivedForeground((notification: any, completion) => {
-      console.log(`notification`, notification)
-      if(notification && notification['gcm.notification.title'] && notification['gcm.notification.body']){
-        console.log(`Notification received in foreground: ${notification['gcm.notification.title']} : ${notification['gcm.notification.body']}`)
-      }
-      completion({ alert: false, sound: false, badge: false })
+    Notifications.events().registerRemoteNotificationsRegistrationFailed((event: RegistrationError) => {
+      console.error(event);
+    });
+
+    Notifications.events().registerNotificationReceivedForeground((notification: Notification, completion) => {
+      showLocalNotification(notification.title, notification.body)
+      completion({ alert: true, sound: true, badge: false })
     })
 
-    Notifications.events().registerNotificationOpened((notification: PushNotification, completion) => {
-      console.log(`Notification opened: ${notification.payload}`)
+    Notifications.events().registerNotificationOpened((notification: Notification, completion) => {
       completion()
     })
 
-    // let someLocalNotification = Notifications.postLocalNotification({
-    //   body: "How are you?",
-    //   title: "Message",
-    //   sound: "chime.aiff",
-    //   category: "SOME_CATEGORY",
-    //   userInfo: {},
-    //   fireDate: new Date(),
-    // })
-
     return () => {
-      onRemoteNotificationReceived.remove(); // Unregister the event listener
+      //  onRemoteNotificationReceived.remove(); // Unregister the event listener
     };
 
   }, [])
