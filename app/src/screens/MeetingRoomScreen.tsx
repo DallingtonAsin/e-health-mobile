@@ -50,6 +50,7 @@ const MeetingRoomScreen = ({ appointment_id, doctor_id, videoCall, setVideoCall 
 
   const handleCloseRating = () => {
     setIsRatingVisible(false)
+    setVideoCall(false)
   }
 
   const handleRatingSubmit = (rating: number, comment: string) => {

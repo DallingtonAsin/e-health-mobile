@@ -18,8 +18,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-        reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
-
+            reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
+    
     const { state } = useContext(AuthContext);
     const { confirmAppointment } = useContext(DoctorContext);
     const { cancelAppointment } = useContext(PatientContext);
@@ -146,9 +146,9 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             <ContentItem title={"Name"} value={`${doctor.first_name} ${doctor.last_name}`} />
             <ContentItem title={"Phone Number"} value={`${doctor.country_code} ${doctor.phone_number}`} />
             <ContentItem title={"Specialty"} value={doctor.specialty} />
-            <ContentItem title={"Profession"} value={doctor.profession} />
+            <ContentItem title={"Primary facility"} value={doctor.primary_facility} />
             <ContentItem title={"Email"} value={doctor.email} />
-            <ContentItem title={"Experience"} value={doctor.experience} />
+            <ContentItem title={"Address"} value={doctor.address} />
             <ContentItem title={"Consultation fee"} value={doctor.service_fee} />
         </React.Fragment>
     );
@@ -198,11 +198,11 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             <View style={styles.body}>
                 <ContentItem title={"Appointment number"} value={appointment_number} />
                 <ContentItem title={"Appointment type"} value={appointment_type.name} />
+                <ContentItem title={"Appointment Time"} value={`${appointment_date} ${appointment_time}`} />
                 <ContentItem title={"Reason"} value={reason} />
                 <ContentItem title={"Medical history"} value={medical_history.past_medical_history} />
                 <ContentItem title={"Current treatment"} value={medical_history.current_treatment} />
-                <ContentItem title={"Appointment schedule"} value={`${appointment_date} ${appointment_time}`} />
-                <ContentItem title={"Consultation fee"} value={doctor.service_fee} />
+                <ContentItem title={"Consultation fee per 15 min"} value={doctor.service_fee} />
                 <View style={styles.appointmentInfo}>
                     <Text style={styles.subtitle}>Status</Text>
                     <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
@@ -211,38 +211,37 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
                 {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
 
-                {
-                    status == 'Pending' &&
-                    <View style={styles.footer}>
 
-                        {is_online &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => joinMeeting()}>
-                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Join Meeting</Text>
-                            </TouchableOpacity>
-                        }
+                <View style={styles.footer}>
 
-                        {user.is_patient &&
-                            <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointment</Text>
-                            </TouchableOpacity>
-                        }
+                    {is_online && status == 'Confirmed' &&
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => joinMeeting()}>
+                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Join Meeting</Text>
+                        </TouchableOpacity>
+                    }
+
+                    {user.is_patient && (status == 'Pending' || status == 'Confirmed') &&
+                        <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointments</Text>
+                        </TouchableOpacity>
+                    }
 
 
-                        {!user.is_patient &&
-                            <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
-                                onPress={() => confirmMedicalAppointment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
-                            </TouchableOpacity>
-                        }
+                    {!user.is_patient && status == 'Pending' &&
+                        <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
+                            onPress={() => confirmMedicalAppointment()}>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
+                        </TouchableOpacity>
+                    }
 
-                        {!user.is_patient &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
-                                onPress={() => completeMedicalAppoitment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
-                            </TouchableOpacity>
-                        }
-                    </View>
-                }
+                    {!user.is_patient && status == 'Confirmed' &&
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
+                            onPress={() => completeMedicalAppoitment()}>
+                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
+                        </TouchableOpacity>
+                    }
+                </View>
+
 
             </View>
         </ScrollView>
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
     appointmentInfo: {
         justifyContent: 'space-between',
         paddingHorizontal: 8,
-        paddingVertical: 5,
+        paddingVertical: 8,
         borderBottomWidth: 0.8,
         borderBottomColor: config.colors.silver,
         paddingBottom: 7,
