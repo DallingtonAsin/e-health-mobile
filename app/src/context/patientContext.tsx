@@ -94,10 +94,29 @@ const unMarkDoctorFavourite = () => {
     };
 };
 
+const postRating = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
+            routes.patient.rate_doctor,
+            payload
+        ).then(async (res: any) => {
+            if (res && res.data && res.data.message) {
+                const message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-        submitAppointment, cancelAppointment, getMedicalHistory, markDoctorFavourite, unMarkDoctorFavourite
+        submitAppointment, cancelAppointment, getMedicalHistory, 
+        markDoctorFavourite, unMarkDoctorFavourite, postRating
     },
     { isAppLoading: true },
 );

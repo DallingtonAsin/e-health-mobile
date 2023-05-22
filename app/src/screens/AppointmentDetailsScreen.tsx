@@ -115,14 +115,14 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} videoCall={videoCall} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} doctor_id={doctor.id} videoCall={videoCall} setVideoCall={setVideoCall} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
     }
 
     const joinMeeting = () => {
-        if (doctor.is_online) {
+        if (!doctor.is_online) {
             setVideoCall(true)
         } else {
             displayMessage(`Doctor ${doctor.first_name} ${doctor.last_name} is currently offline, please try again later.`)

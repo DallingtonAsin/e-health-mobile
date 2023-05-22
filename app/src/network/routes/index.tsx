@@ -18,7 +18,8 @@ const routes = {
          mark_as_read: 'patient/notifications/mark-as-read',
       },
       mark_doctor_favourite: 'patient/favourite-doctor',
-      unmark_doctor_favourite: 'patient/favourite-doctor'
+      unmark_doctor_favourite: 'patient/favourite-doctor',
+      rate_doctor: 'patient/rate-doctor',
    },
 
    doctor: {
