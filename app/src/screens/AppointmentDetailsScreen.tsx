@@ -115,7 +115,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} doctor_id={doctor.id} videoCall={videoCall} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} doctor_id={doctor.id} videoCall={false} setVideoCall={setVideoCall} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }

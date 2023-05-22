@@ -44,6 +44,10 @@ const displayMessage = (message: any) => {
   Toast.show(message, Toast.LONG);
 }
 
+const toastShortMessage = (message: any) => {
+  Toast.show(message, Toast.SHORT);
+}
+
 const displayErrorMessage = (error: any, onFailure: any) => {
   let message;
   if (error && error.response) {
@@ -221,5 +225,6 @@ export {
   removeCommas,
   truncateString,
   validatePassword,
+  toastShortMessage,
   validateConfirmPassword
 }
