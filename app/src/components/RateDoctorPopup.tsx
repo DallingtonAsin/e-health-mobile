@@ -1,14 +1,17 @@
-import * as config from '../configs';
-import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
-import { Rating } from 'react-native-ratings';
+import * as config from '../configs'
+import React, { useState } from 'react'
+import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native'
+import { Rating } from 'react-native-ratings'
+import { TextInput } from 'react-native-paper'
 
 const RateDoctorPopup = ({ visible, onClose, onRatingSubmit }: { visible: boolean, onClose: any, onRatingSubmit: any }) => {
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(0)
+    const [comment, setComment] = useState('')
 
     const handleRatingSubmit = () => {
-        onRatingSubmit(rating);
-    };
+        onRatingSubmit(rating, comment)
+        setRating(0)
+    }
 
     const onCloseRating = () => {
         setRating(0)
@@ -32,6 +35,17 @@ const RateDoctorPopup = ({ visible, onClose, onRatingSubmit }: { visible: boolea
                         imageSize={35}
                         style={styles.rating}
                     />
+                    <TextInput
+                        editable
+                        label={"Comment"}
+                        mode="outlined"
+                        value={comment}
+                        onChangeText={text => setComment(text)}
+                        multiline={true}
+                        numberOfLines={2}
+                        activeOutlineColor={config.colors.yellow}
+                        placeholder={""}
+                    />
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.submitButton} onPress={handleRatingSubmit}>
                             <Text style={styles.buttonText}>Submit</Text>
@@ -43,8 +57,8 @@ const RateDoctorPopup = ({ visible, onClose, onRatingSubmit }: { visible: boolea
                 </View>
             </View>
         </Modal>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -56,8 +70,9 @@ const styles = StyleSheet.create({
     popupContainer: {
         backgroundColor: 'white',
         paddingVertical: 15,
-        paddingHorizontal: 35,
+        paddingHorizontal: 20,
         borderRadius: 10,
+        width: '70%'
     },
     popupText: {
         fontSize: 18,
@@ -86,6 +101,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000',
     },
-});
+})
 
-export default RateDoctorPopup;
+export default RateDoctorPopup

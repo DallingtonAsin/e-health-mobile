@@ -52,12 +52,12 @@ const MeetingRoomScreen = ({ appointment_id, doctor_id, videoCall, setVideoCall 
     setIsRatingVisible(false)
   }
 
-  const handleRatingSubmit = (rating: number) => {
+  const handleRatingSubmit = (rating: number, comment: string) => {
     if (rating > 0) {
       const payload = {
         doctor_id: doctor_id,
         rating: rating,
-        comment: null
+        comment: comment
       }
 
       postRating({
