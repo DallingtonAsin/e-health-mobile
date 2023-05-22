@@ -127,7 +127,9 @@ interface DoctorsDetail {
     service_fee: number,
     schedule_dates?: string[],
     schedule?: string[],
-    is_favourite: boolean
+    rating: number,
+    is_favourite: boolean,
+    is_online: boolean
 }
 
 interface PatientDetail {
@@ -240,6 +242,11 @@ interface FacilityJson {
     value: string
 }
 
+interface PushNotification {
+    title: string,
+    body: string | any
+    payload?: any,
+}
 
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
@@ -268,5 +275,6 @@ export type {
     Registration,
     setPasswordError,
     LoginPayload,
+    PushNotification,
     DrCompleteProfilePayload
 }

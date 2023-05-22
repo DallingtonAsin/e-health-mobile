@@ -160,12 +160,28 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         });
     }
 
+    const callDoctor = () => {
+        if (doctorInfo.is_online) {
+            contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)
+        } else {
+            displayMessage(`Doctor ${doctorInfo.first_name} is currently offline. Please try again later or schedule an appointment`)
+        }
+    }
+
+    const textDoctor = () => {
+        if (doctorInfo.is_online) {
+            contact.sendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)
+        } else {
+            displayMessage(`Doctor ${doctorInfo.first_name} is currently offline. Please try again later or schedule an appointment`)
+        }
+    }
 
     if (isLoading || isAppointmentTypeLoading) {
         return (
             <AppLoader bgColor={configs.colors.white} />
         )
     }
+
 
     return (
         <>
@@ -190,10 +206,10 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         </View>
 
                         <View style={configs.styles.contacts}>
-                            <TouchableOpacity onPress={() => contact.callPhoneNumber(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
+                            <TouchableOpacity onPress={() => callDoctor()} style={configs.styles.sms}>
                                 <Icon5 name="phone-alt" size={18} style={configs.styles.callBtn} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => contact.sendSms(`${doctorInfo.country_code}${doctorInfo.phone_number}`)} style={configs.styles.sms}>
+                            <TouchableOpacity onPress={() => textDoctor()} style={configs.styles.sms}>
                                 <Icon name="envelope" size={18} style={configs.styles.callBtn} />
                             </TouchableOpacity>
                         </View>

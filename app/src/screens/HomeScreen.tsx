@@ -73,7 +73,11 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                             <View style={{ left: 20 }}>
                                 <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
-                                <Text style={styles.amazing}>Today is amazing!</Text>
+                                { user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
+                                { !user.is_patient && <Text style={styles.amazing}>Status: 
+                                { !user.patient && (user.is_registered ? ( !user.is_verified && <Text style={styles.underReviewTxt}>Profile under review</Text>) : null) }
+                                { !user.patient && (user.is_registered ? ( user.is_verified && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null) }
+                                </Text>}
                             </View>
                         </View>
                     </View>
@@ -222,7 +226,14 @@ const styles = StyleSheet.create({
     },
 
     amazing: {
-        fontSize: 18,
+        fontSize: configs.fonts.extraLarge,
+        color: configs.colors.white,
+        fontWeight: '500',
+        opacity: 0.9
+    },
+
+    docStatus: {
+        fontSize: configs.fonts.small,
         color: configs.colors.white,
         fontWeight: '300',
     },

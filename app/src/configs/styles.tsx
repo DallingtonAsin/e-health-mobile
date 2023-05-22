@@ -124,6 +124,11 @@ export const styles = {
     color: colors.pendingColor
   },
 
+  confirmedTxt: {
+    backgroundColor: colors.warning,
+    color: colors.white
+  },
+
   cancelledTxt: {
     backgroundColor: colors.pink,
     color: colors.white
@@ -254,6 +259,20 @@ export const styles = {
         color: colors.black
       }
     }
+  },
+
+  online: {
+    color: colors.success,
+    fontSize: fonts.small,
+    fontWeight: 'bold',
+    textTransform: 'capitalize'
+  },
+
+  offline: {
+    color: colors.light_gray,
+    fontSize: fonts.small,
+    fontWeight: 'bold',
+    textTransform: 'capitalize'
   }
 
 } as const;

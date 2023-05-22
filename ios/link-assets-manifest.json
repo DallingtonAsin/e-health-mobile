@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "app/assets/images/doctor.png",
+      "sha1": "a52f8c235407427e7d205d37c12622471558ef51"
+    },
+    {
+      "path": "app/assets/images/logo.jpg",
+      "sha1": "c03c98ae0f1ac83e3380becf23d2243bd722bb86"
+    },
+    {
+      "path": "app/assets/images/otp.jpg",
+      "sha1": "8b046b4bc4008ce4144de54a49d672239a09d747"
+    },
+    {
+      "path": "app/assets/images/patient.png",
+      "sha1": "d48bae731ad26fc3e93cd302c8ec725a1876a581"
+    }
+  ]
+}
