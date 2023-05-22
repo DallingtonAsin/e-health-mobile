@@ -12,9 +12,9 @@ import { displayMessage, getUserInitials, truncateString } from '../components/c
 import AppLoader from "../components/AppLoader"
 import { Searchbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import MedicalSpecialtyScreen from "./MedicalSpecialtyScreen"
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { AirbnbRating } from 'react-native-ratings';
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -74,7 +74,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     const updateFavouriteStatus = (item: DoctorsDetail) => {
-        const payload = { doctor_id:  item.id }
+        const payload = { doctor_id: item.id }
         if (item.is_favourite) {
             unMarkDoctorFavourite({ payload: payload, onSuccess: statusUpdated, onFailure: displayMessage, onCompletion: stopLoading })
         } else {
@@ -104,6 +104,10 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                     <Text style={styles.name}>{`Dr.`} {item.first_name} {item.last_name}</Text>
                     <Text style={[styles.keyTitle, { color: configs.colors.secondary }]}>{item.specialty}</Text>
                     <Text style={styles.keyTitle}>{item.qualification}</Text>
+                    <Text style={item.is_online ? configs.styles.online : configs.styles.offline}>
+                        <Icon name="circle" size={10} color={item.is_online ? configs.colors.success : configs.colors.light_gray} />
+                        <Text style={{ marginLeft: 10 }}> {item.is_online ? 'online' : 'offline'}</Text>
+                    </Text>
                 </View>
                 <TouchableOpacity onPress={() => updateFavouriteStatus(item)}>
                     <Icon name="heart" size={24} color={item.is_favourite ? configs.colors.orange : configs.colors.silver} />
@@ -111,7 +115,18 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
             </View>
 
             <View style={styles.body}>
-                <View>
+                <View style={styles.rating}>
+                    <AirbnbRating
+                        showRating={false}
+                        size={20}
+                        count={5}
+                        defaultRating={item.rating}
+                        isDisabled={true}
+                        starContainerStyle={{ paddingVertical: 10 }}
+                        reviewColor={configs.colors.primary}
+                    />
+                </View>
+                <View style={styles.moreInfo}>
                     <Text style={[styles.keyTitle, { fontWeight: 'bold' }]}>Bio Summary</Text>
                     <Text style={styles.values}>{truncateString(item.bio_summary, 25)}</Text>
                 </View>
@@ -285,8 +300,6 @@ const styles = StyleSheet.create({
 
     body: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         paddingVertical: 5
     },
 
@@ -295,6 +308,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 5,
+    },
+
+    rating: {
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+    },
+
+    moreInfo: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
 
     bookBtn: {
@@ -357,4 +380,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginVertical: 10,
     },
+
 })

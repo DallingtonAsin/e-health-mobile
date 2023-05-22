@@ -59,7 +59,7 @@ const completeRegistration = (dispatch: any) => {
                 const data = res.data
                 const user = data.user
                 const message = data.message
-                
+
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
 
@@ -78,6 +78,23 @@ const completeRegistration = (dispatch: any) => {
     };
 };
 
+const confirmAppointment = () => {
+    return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            routes.appointments.confirm,
+            payload
+        ).then(async (res: any) => {
+            if (res && res.data && res.data.message) {
+                let message = res.data.message;
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
 
 const getDoctorInfo = () => {
     return ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -174,6 +191,36 @@ const isVerified = (dispatch: any) => {
     };
 };
 
+const updateOnlineStatus = (dispatch: any) => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            routes.doctor.update_online_status,
+            {}
+        ).then(async (res) => {
+
+            if (res && res.data) {
+
+                const data = res.data;
+                const user = data.user;
+                const message = data.message;
+
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
+
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 const getMedicalDoctors = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -213,8 +260,8 @@ const getMedicalFacilities = () => {
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-        authenticateDoctor, completeRegistration, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
-        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified
+        authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
+        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus
     },
     { isAppLoading: true },
 );

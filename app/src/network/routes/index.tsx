@@ -18,7 +18,8 @@ const routes = {
          mark_as_read: 'patient/notifications/mark-as-read',
       },
       mark_doctor_favourite: 'patient/favourite-doctor',
-      unmark_doctor_favourite: 'patient/favourite-doctor'
+      unmark_doctor_favourite: 'patient/favourite-doctor',
+      rate_doctor: 'patient/rate-doctor',
    },
 
    doctor: {
@@ -31,6 +32,7 @@ const routes = {
       updateProfile: 'doctor/profile/update',
       update_profile_pic: 'doctor/profile-picture/update',
       delete_profile_pic: 'doctor/profile-picture/delete',
+      update_online_status: 'doctor/online-status',
       languages: 'doctor/languages',
       calendar: 'doctor/schedule',
       notifications: {
@@ -56,6 +58,7 @@ const routes = {
    appointments: {
       index: 'appointments',
       cancel: 'appointments/cancel',
+      confirm: 'appointments/confirm',
       types: 'appointments/types',
       meeting: 'appointments/meeting',
       patient: {
