@@ -115,7 +115,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} doctor_id={doctor.id} videoCall={false} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} doctor={doctor} patient={patient} videoCall={false} setVideoCall={setVideoCall} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
@@ -235,9 +235,9 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     }
 
                     {!user.is_patient && status == 'Confirmed' &&
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
+                        <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                             onPress={() => completeMedicalAppoitment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
                         </TouchableOpacity>
                     }
                 </View>

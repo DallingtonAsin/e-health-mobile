@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext, useCallback, useMemo } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, Alert } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, Alert, View } from 'react-native'
 import { Platform } from 'react-native'
 import {
     ClientRoleType,
@@ -12,76 +12,97 @@ import AppLoader from '../../components/AppLoader'
 import RateDoctorPopup from '../../components/RateDoctorPopup'
 import { requestAudioPermission } from '../../components/common/Permissions'
 import { Context as AppContext } from '../../context/appContext'
-import { displayMessage, toastShortMessage } from '../../components/common/SharedHelper'
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { displayMessage, getUserInitials, toastShortMessage } from '../../components/common/SharedHelper'
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { Divider } from 'react-native-paper'
 import * as config from '../../configs'
 import { Context as AuthContext } from '../../context/authContext'
 import { Context as PatientContext } from '../../context/patientContext'
-import { IUser } from '../../interfaces'
-import { useNavigation } from '@react-navigation/native';
+import { DoctorsDetail, IUser } from '../../interfaces'
+import { useNavigation } from '@react-navigation/native'
 import TimerScreen from '../../components/common/TimerScreen'
+import { Avatar as AvatarRP } from 'react-native-paper';
+import Avatar from '../../components/Avatar';
 
-const uid = 0
 
-const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: number, doctor_id: number }) => {
+interface AgoraConnectionProps {
+    appId: string,
+    token: string,
+    channel: string
+}
+var isMuted = false
+
+const uid = Math.floor(Math.random() * 100000);
+
+const AudioCallMeeting = ({ appointment_id, doctor, patient }: { appointment_id: number, doctor: DoctorsDetail, patient: any }) => {
 
     const agoraEngineRef = useRef<IRtcEngine>()
     const [isConnected, setIsConnected] = useState<boolean>(false)
     const [isJoined, setIsJoined] = useState<boolean>(false)
-    const [isMuted, setIsMuted] = useState<boolean>(false)
+    // const [isMuted, setIsMuted] = useState<boolean>(false)
     const [volume, setVolume] = useState<number>(100)
     const [isVolumeUp, setIsVolumeUp] = useState<boolean>(false)
     const [message, setMessage] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isRatingVisible, setIsRatingVisible] = useState<boolean>(false)
+    const [ownUID, setOwnUID] = useState<number>(uid);
     const [remoteUid, setRemoteUid] = useState(0)
+    const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
+  
 
-    const [timer, setTimer] = useState<number>(0);
-    const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-    const [interval, setIntervalId] = useState<any | null>(null);
-    const [connectionData, setConnectionData] = useState<any>()
+    const [timer, setTimer] = useState<number>(0)
+    const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
+    const [interval, setIntervalId] = useState<any | null>(null)
+    const [connectionData, setConnectionData] = useState<AgoraConnectionProps>({ appId: '', channel: '', token: '' })
     const { getMeetingDetails } = useContext(AppContext)
     const { postRating } = useContext(PatientContext)
-    const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['20%', '85%'], []);
+    const bottomSheetRef = useRef<BottomSheet>(null)
+    const snapPoints = useMemo(() => ['20%', '85%'], [])
     const { state } = useContext(AuthContext)
     const [user] = useState<IUser>(state.user)
-    const navigation = useNavigation();
+    const navigation = useNavigation()
 
     const showMessage = (msg: string) => {
         setMessage(msg)
     }
 
     const startTimer = (): void => {
-        setIsTimerRunning(true);
-    };
+        setIsTimerRunning(true)
+    }
 
     const stopTimer = (): void => {
-        setIsTimerRunning(false);
-        setTimer(0);
-    };
+        setIsTimerRunning(false)
+        setTimer(0)
+    }
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({ title: 'AudioCall Room' });
+      }, [navigation]);
 
     useEffect(() => {
         if (isTimerRunning) {
             const id = setInterval(() => {
-                setTimer((prevTimer: any) => prevTimer + 1);
-            }, 1000);
-            setIntervalId(id);
+                setTimer((prevTimer: any) => prevTimer + 1)
+            }, 1000)
+            setIntervalId(id)
         } else {
             if (interval) {
-                clearInterval(interval);
+                clearInterval(interval)
             }
-            setIntervalId(null);
+            setIntervalId(null)
         }
         return () => {
             if (interval) {
-                clearInterval(interval);
+                clearInterval(interval)
             }
-        };
-    }, [isTimerRunning]);
+        }
+    }, [isTimerRunning])
 
     useEffect(() => {
+        const requestPermissions = async() => {
+            if (Platform.OS === 'android') { await requestAudioPermission() }
+        }
+        requestPermissions()
         getMeetingDetails({ appointmentId: appointment_id, onSuccess: setConnectionData, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }, [])
 
@@ -91,31 +112,37 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
 
     const setupVoiceSDKEngine = async () => {
         try {
-            if (Platform.OS === 'android') { await requestAudioPermission() }
 
             agoraEngineRef.current = createAgoraRtcEngine()
             const agoraEngine = agoraEngineRef.current
 
-            if (connectionData && connectionData.channel) {
-                agoraEngine.registerEventHandler({
-                    onJoinChannelSuccess: () => {
-                        // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
-                        setIsConnected(true)
-                    },
-                    onUserJoined: (_connection, Uid) => {
-                        showMessage('Remote user joined with uid ' + Uid)
-                        setRemoteUid(Uid)
-                    },
-                    onUserOffline: (_connection, Uid) => {
-                        showMessage('Remote user left the channel. uid: ' + Uid)
-                        setRemoteUid(0)
-                    },
-                })
+            // if (connectionData && connectionData.channel) {
+            agoraEngine.registerEventHandler({
+                onJoinChannelSuccess: () => {
+                    // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
+                    setIsConnected(true)
+                },
+                onUserJoined: (_connection, Uid) => {
+                    showMessage('Remote user joined with uid ' + Uid)
+                    setRemoteUid(Uid)
+                    if(Uid !== ownUID){
+                        setIsOtherUserJoined(true);
+                    }
+                },
+                onUserOffline: (_connection, Uid) => {
+                    showMessage('Remote user left the channel. uid: ' + Uid)
+                    setRemoteUid(0)
+                    if(Uid !== ownUID){
+                        setIsOtherUserJoined(false);
+                    }
+                },
+            })
 
-                agoraEngine.initialize({
-                    appId: connectionData.appId
-                })
-            }
+            agoraEngine.initialize({
+                appId: connectionData.appId
+            })
+
+            // }
 
         } catch (e) {
             console.log(`Unable to initialize agora engine`, e)
@@ -124,19 +151,19 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
 
     const increaseVolume = () => {
         if (volume !== 100) {
-            setVolume(volume + 5);
+            setVolume(volume + 5)
         }
         toastShortMessage(volume.toString())
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
+        agoraEngineRef.current?.adjustRecordingSignalVolume(volume)
+    }
 
     const decreaseVolume = () => {
         if (volume !== 0) {
-            setVolume(volume - 5);
+            setVolume(volume - 5)
         }
         toastShortMessage(volume.toString())
-        agoraEngineRef.current?.adjustRecordingSignalVolume(volume);
-    };
+        agoraEngineRef.current?.adjustRecordingSignalVolume(volume)
+    }
 
     const join = async () => {
 
@@ -153,7 +180,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
                                 setIsRatingVisible(true)
                             } else {
                                 leave()
-                                navigation.navigate('MyAppointments')
+                                // navigation.navigate('MyAppointments')
                             }
                         }
                     },
@@ -165,10 +192,14 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
             agoraEngineRef.current?.setChannelProfile(
                 ChannelProfileType.ChannelProfileCommunication,
             )
-            if (connectionData && connectionData.appId) {
-                agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, uid, {
+            // agoraEngineRef.current?.muteLocalAudioStream(isMuted)
+
+            if (connectionData && connectionData.appId && ownUID) {
+
+                agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, ownUID, {
                     clientRoleType: ClientRoleType.ClientRoleBroadcaster,
                 })
+                // agoraEngineRef.current?.muteLocalAudioStream(isMuted)
                 startTimer()
                 setIsJoined(true)
             }
@@ -194,65 +225,75 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
         stopTimer()
         setIsRatingVisible(false)
         leave()
-        navigation.navigate('MyAppointments')
+        // navigation.navigate('MyAppointments')
     }
 
     const handleRatingSubmit = (rating: number, comment: string) => {
         if (rating > 0) {
             const payload = {
-                doctor_id: doctor_id,
+                doctor_id: doctor.id,
                 rating: rating,
                 comment: comment
             }
-
             postRating({
                 payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
                     setIsRatingVisible(false)
                     leave()
                 }
             })
-
         } else {
             displayMessage(`Rate doctor with atleast one star`)
         }
     }
 
-    const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), []);
+    const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), [])
 
     const handleSheetChanges = useCallback((index: number) => {
         bottomSheetRef.current?.snapToIndex(index)
-    }, []);
+    }, [])
 
 
     const muteCall = () => {
-        setIsMuted(!isMuted)
-        agoraEngineRef.current?.muteLocalAudioStream(isMuted);
-    }
-
-    const volumeUp = () => {
-        setIsVolumeUp(!isVolumeUp);
+        isMuted = !isMuted;
+        agoraEngineRef.current?.muteLocalAudioStream(isMuted)
     }
 
     return (
         <React.Fragment>
-            <SafeAreaView style={styles.main}>
+            <View style={styles.main}>
                 <ScrollView
-                    style={styles.scroll}
                     contentContainerStyle={styles.scrollContainer}>
-                    <TimerScreen timer={timer} />
-                    {isConnected ? (
-                        <Text>Local user uid: {uid}</Text>
-                    ) : (
-                        <Text>Join a channel</Text>
-                    )}
-                    {isConnected && remoteUid !== 0 ? (
-                        <Text>Remote user uid: {remoteUid}</Text>
-                    ) : (
-                        user.is_patient ?
-                            <Text>Waiting for doctor to join</Text>
-                            : <Text>Waiting for patient to join</Text>
-                    )}
-                    <Text>{message}</Text>
+
+                    <View style={styles.centeredContent}>
+                        {user.is_patient && (doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
+                        {!user.is_patient && (patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
+
+                        {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                        {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+
+                        {user.is_patient && <Text style={styles.name}>{doctor.first_name}</Text>}
+                        {!user.is_patient && <Text style={styles.name}>{patient.first_name}</Text>}
+
+                        {/* {isJoined && <Text>Local user uid: {uid}</Text>} */}
+                        {!isJoined && <Text>Start a call</Text>}
+
+
+                        {isJoined && isOtherUserJoined ? (
+                            <>
+                                {user.is_patient && <Text>{doctor.first_name} is now on call</Text>}
+                                {!user.is_patient && <Text>{patient.first_name} is now on call</Text>}
+                            </>
+                        ) : (
+                            <>
+                                {user.is_patient && isJoined && !isOtherUserJoined && <Text>Waiting for doctor {doctor.first_name} to join</Text>}
+                                {!user.is_patient &&  isJoined && !isOtherUserJoined && <Text>Waiting for {patient.first_name} to join</Text>}
+                            </>
+                        )}
+                        {/* <Text>{message}</Text> */}
+
+                        <TimerScreen timer={timer} />
+                    </View>
+
                 </ScrollView>
                 <BottomSheet
                     ref={bottomSheetRef}
@@ -271,48 +312,44 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
                     </BottomSheetScrollView>
                 </BottomSheet>
                 <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
-            </SafeAreaView>
+
+            </View>
             {isLoading && <AppLoader />}
         </React.Fragment>
     )
-
-
 }
 
 export default AudioCallMeeting
 
 const styles = StyleSheet.create({
-    button: {
-        paddingHorizontal: 25,
-        paddingVertical: 4,
-        fontWeight: 'bold',
-        color: '#ffffff',
-        backgroundColor: '#0055cc',
-        margin: 5,
-    },
+
     main: {
         flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
     },
-    scroll: {
-        flex: 1,
-        backgroundColor: '#ddeeff',
-        width: '100%'
-    },
+
     scrollContainer: {
-        alignItems: 'center'
+        flexGrow: 1,
     },
-    videoView: {
-        width: '90%',
-        height: 200
+
+    centeredContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 400
     },
-    btnContainer: {
+
+    contentContainer: {
+        paddingHorizontal: 25,
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'space-evenly',
     },
+
     head: {
         fontSize: 20
     },
+
     divider: {
         borderBottomColor: '#e2e2e2',
         borderBottomWidth: 1,
@@ -322,9 +359,11 @@ const styles = StyleSheet.create({
     bottomSheet: {
         backgroundColor: config.colors.audioCallbg
     },
-    contentContainer: {
-        paddingHorizontal: 25,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-    },
+
+    name: {
+        fontSize: 22,
+        // fontWeight: '700',
+        color: config.colors.dark
+    }
+
 })
