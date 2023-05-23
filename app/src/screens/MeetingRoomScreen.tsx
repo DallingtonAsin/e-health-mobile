@@ -1,14 +1,13 @@
 import React from 'react'
 import VideoCallMeeting from './meetings/VideoCallMeeting'
 import AudioCallMeeting from './meetings/AudioCallMeeting'
-import { DoctorsDetail, IUser } from '../interfaces'
 
-const MeetingRoomScreen = ({ appointment_id, doctor, patient, is_video, setVideoCall }: { appointment_id: number, doctor: DoctorsDetail, patient: IUser, is_video: boolean, setVideoCall: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const MeetingRoomScreen = ({ appointment_id, is_video }: { appointment_id: number, is_video: boolean }) => {
 
   if (is_video) {
-    return <VideoCallMeeting appointment_id={appointment_id} doctor_id={doctor.id} setVideoCall={setVideoCall} />
+    return <VideoCallMeeting appointment_id={appointment_id} />
   } else {
-    return <AudioCallMeeting appointment_id={appointment_id} doctor={doctor} patient={patient}/>
+    return <AudioCallMeeting appointment_id={appointment_id} />
   }
 }
 

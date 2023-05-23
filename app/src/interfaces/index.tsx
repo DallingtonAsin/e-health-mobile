@@ -221,6 +221,7 @@ interface DrCompleteProfilePayload {
     qualification: string,
     training_institute: string,
     umdp_license_id: string,
+    license_number?: string,
     service_fee: string,
     front_image: FileUpload,
     back_image: FileUpload

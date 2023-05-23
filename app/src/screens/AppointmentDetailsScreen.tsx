@@ -18,8 +18,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            reason, completed_at, cancelled_at, is_online, is_video, meeting_access, medical_history, status } = appointmentInfo;
-    
+        reason, completed_at, cancelled_at, is_online, is_video, meeting_access, medical_history, status } = appointmentInfo;
+
     const { state } = useContext(AuthContext);
     const { confirmAppointment } = useContext(DoctorContext);
     const { cancelAppointment } = useContext(PatientContext);
@@ -115,7 +115,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} doctor={doctor} patient={patient} is_video={is_video} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} is_video={is_video} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
@@ -132,8 +132,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const DoctorProfile = () => (
         <React.Fragment>
             <View style={styles.header}>
-                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} resizeMode={"cover"}/>}
-                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)}  style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} resizeMode={"cover"} />}
+                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
                     <TouchableOpacity onPress={() => callPhoneNumber(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />

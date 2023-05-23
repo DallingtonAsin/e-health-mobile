@@ -8,7 +8,7 @@
     "isolatedModules": true,
     "jsx": "react",
     "lib": [
-      "es6"
+      "es6", "es2018"
     ],
     "moduleResolution": "node",
     "noEmit": true,
