@@ -33,7 +33,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     const [volume, setVolume] = useState<number>(100)
     const [isVolumeUp, setIsVolumeUp] = useState<boolean>(false)
     const [message, setMessage] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isRatingVisible, setIsRatingVisible] = useState<boolean>(false)
     const [remoteUid, setRemoteUid] = useState(0)
 
@@ -96,26 +96,26 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
             agoraEngineRef.current = createAgoraRtcEngine()
             const agoraEngine = agoraEngineRef.current
 
-            // if (connectionData && connectionData.channel) {
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: () => {
-                    // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
-                    setIsConnected(true)
-                },
-                onUserJoined: (_connection, Uid) => {
-                    showMessage('Remote user joined with uid ' + Uid)
-                    setRemoteUid(Uid)
-                },
-                onUserOffline: (_connection, Uid) => {
-                    showMessage('Remote user left the channel. uid: ' + Uid)
-                    setRemoteUid(0)
-                },
-            })
+            if (connectionData && connectionData.channel) {
+                agoraEngine.registerEventHandler({
+                    onJoinChannelSuccess: () => {
+                        // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
+                        setIsConnected(true)
+                    },
+                    onUserJoined: (_connection, Uid) => {
+                        showMessage('Remote user joined with uid ' + Uid)
+                        setRemoteUid(Uid)
+                    },
+                    onUserOffline: (_connection, Uid) => {
+                        showMessage('Remote user left the channel. uid: ' + Uid)
+                        setRemoteUid(0)
+                    },
+                })
 
-            agoraEngine.initialize({
-                appId: connectionData.appId
-            })
-            // }
+                agoraEngine.initialize({
+                    appId: connectionData.appId
+                })
+            }
 
         } catch (e) {
             console.log(`Unable to initialize agora engine`, e)
