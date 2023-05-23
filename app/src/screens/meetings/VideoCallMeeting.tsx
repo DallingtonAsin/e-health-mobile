@@ -14,19 +14,14 @@ import TimerScreen from '../../components/common/TimerScreen'
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
 import * as config from '../../configs'
-
-const connectionState = {
-    appId: '68da267731be44fda2cc7106d5c4db12',
-    token: '007eJxTYLDYaX394yQn23jzni1hBTkfq2wWG7wQkNuReO5ksvuOyV8VGMwsUhKNzMzNjQ2TUk1M0oCc5GRzQwOzFNNkk5QkQyP2tTkpDYGMDLw3YpgYGSAQxOdhCEnNSc1NTclMzsxLZWAAAHSlIqE=',
-    channel: 'Telemedicine'
-}
+import { agoraConnectionInitialState } from '../../configs/constants'
 
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
     const { postRating } = useContext(PatientContext)
     const { state } = useContext(AuthContext)
     const [user] = useState<IUser>(state.user)
-    const [connectionData, setConnectionData] = useState<any>(connectionState)
+    const [connectionData, setConnectionData] = useState<any>(agoraConnectionInitialState)
     const { getMeetingDetails } = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(true)
     const [isRatingVisible, setIsRatingVisible] = useState(false)
@@ -165,8 +160,8 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                 {!user.is_patient && patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
 
                                 {!videoCall && <Text>Start video call with
-                                    {user.is_patient && doctor && <Text style={styles.name}> {doctor.first_name}</Text>}
-                                    {!user.is_patient && patient && <Text style={styles.name}> {patient.first_name}</Text>}
+                                    {user.is_patient && doctor && <Text> {doctor.first_name}</Text>}
+                                    {!user.is_patient && patient && <Text> {patient.first_name}</Text>}
                                 </Text>}
 
                                 <TimerScreen timer={timer} />
@@ -222,9 +217,5 @@ const styles = StyleSheet.create({
     bottomSheet: {
         backgroundColor: config.colors.audioCallbg
     },
-
-    name: {
-        // color: config.colors.dark
-    }
 
 })

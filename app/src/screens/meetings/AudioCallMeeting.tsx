@@ -22,21 +22,9 @@ import { IUser } from '../../interfaces'
 import TimerScreen from '../../components/common/TimerScreen'
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
-
-interface AgoraConnectionProps {
-    appId: string,
-    token: string,
-    channel: string
-}
-var isMuted = false
-
+import { agoraConnectionInitialState } from '../../configs/constants'
 const uid = Math.floor(Math.random() * 100000);
-
-const connectionState = {
-    appId: '68da267731be44fda2cc7106d5c4db12',
-    token: '007eJxTYLDYaX394yQn23jzni1hBTkfq2wWG7wQkNuReO5ksvuOyV8VGMwsUhKNzMzNjQ2TUk1M0oCc5GRzQwOzFNNkk5QkQyP2tTkpDYGMDLw3YpgYGSAQxOdhCEnNSc1NTclMzsxLZWAAAHSlIqE=',
-    channel: 'Telemedicine'
-}
+var isMuted = false
 
 const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -55,7 +43,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [timer, setTimer] = useState(0)
     const [isTimerRunning, setIsTimerRunning] = useState(false)
     const [interval, setIntervalId] = useState<any | null>(null)
-    const [connectionData, setConnectionData] = useState<any>(connectionState)
+    const [connectionData, setConnectionData] = useState<any>(agoraConnectionInitialState)
     const { getMeetingDetails } = useContext(AppContext)
     const { postRating } = useContext(PatientContext)
     const bottomSheetRef = useRef<BottomSheet>(null)
@@ -373,5 +361,4 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: config.colors.dark
     }
-
 })

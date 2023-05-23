@@ -1,6 +1,5 @@
 
-import { SignedinUser, DoctorsDetail, FileUpload, Registration, PatientRegistrationPayload, DrCompleteProfilePayload } from "../interfaces";
-
+import { SignedinUser, DoctorsDetail, FileUpload, Registration, DrCompleteProfilePayload } from "../interfaces";
 
 const initialUser = {
   first_name: '',
@@ -38,6 +37,9 @@ const initialDoctorInfo: DoctorsDetail = {
   service_fee: 0,
   schedule_dates: [],
   schedule: [],
+  rating: 0,
+  is_favourite: false,
+  is_online: false
 }
 
 const initialFileUpload: FileUpload = {
@@ -66,18 +68,24 @@ const DrCompleteProfileInitialState: DrCompleteProfilePayload = {
   bio_summary: '',
   qualification: '',
   training_institute: '',
+  umdp_license_id: '',
   license_number: '',
   service_fee: '',
-  front_image: {uri: '', source: '', name: '', type: ''},
-  back_image: {uri: '', source: '', name: '', type: ''},
+  front_image: { uri: '', source: '', name: '', type: '' },
+  back_image: { uri: '', source: '', name: '', type: '' },
 }
-
-
 
 const registrationState: Registration = {
   patient: _initialRegistrationData,
   doctor: _initialRegistrationData
 }
+
+const agoraConnectionInitialState = {
+  appId: '',
+  token: '',
+  channel: ''
+}
+
 
 export {
   initialUser,
@@ -85,5 +93,6 @@ export {
   initialDoctorInfo,
   initialFileUpload,
   registrationState,
-  DrCompleteProfileInitialState
+  DrCompleteProfileInitialState,
+  agoraConnectionInitialState
 }
