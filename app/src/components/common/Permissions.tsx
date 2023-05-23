@@ -18,14 +18,4 @@ const requestAudioPermission = async () => {
     }
 }
 
-const useRequestAudioHook = () => {
-    useEffect(() => {
-        if (Platform.OS === 'android') {
-            requestAudioPermission().then(() => {
-                console.log(`Audio permission requested!`)
-            })
-        }
-    }, [])
-}
-
-export { requestAudioPermission, useRequestAudioHook }
+export { requestAudioPermission }

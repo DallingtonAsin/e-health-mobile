@@ -40,12 +40,16 @@ const formatDate = (date: Date) => {
   return formattedDate;
 }
 
-const displayMessage = (message: any) => {
-  Toast.show(message, Toast.LONG);
+const displayMessage = (message: string | any) => {
+  if (message && typeof message === 'string') {
+    Toast.show(message, Toast.LONG);
+  }
 }
 
-const toastShortMessage = (message: any) => {
-  Toast.show(message, Toast.SHORT);
+const toastShortMessage = (message: string | any) => {
+  if (message && typeof message === 'string') {
+    Toast.show(message, Toast.SHORT);
+  }
 }
 
 const displayErrorMessage = (error: any, onFailure: any) => {

@@ -1,17 +1,16 @@
-import createDataContext from './createDataContext';
-import { routes } from '../network/routes';
-import Service from '../network/services/httpService';
-import { IUser } from '../interfaces';
-import { storeUser, storeAccessToken } from '../network/services/asyncStorageService';
-import { appReducer } from './reducers/appReducer';
-import { displayErrorMessage } from '../components/common/SharedHelper';
-import * as types from './actions';
+import createDataContext from './createDataContext'
+import { routes } from '../network/routes'
+import Service from '../network/services/httpService'
+import { storeUser, storeAccessToken } from '../network/services/asyncStorageService'
+import { appReducer } from './reducers/appReducer'
+import { displayErrorMessage } from '../components/common/SharedHelper'
+import * as types from './actions'
 
 const services = new Service();
 
 const updateProfile = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = is_patient ? routes.patient.updateProfile : routes.doctor.updateProfile
+        const endpoint = is_patient ? routes.patient.updateProfile : routes.doctor.updateProfile
         services.post(
             endpoint,
             payload,
@@ -43,7 +42,7 @@ const updateProfile = (dispatch: any) => {
 
 const updateProfileImage = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = is_patient ? routes.patient.update_profile_pic : routes.doctor.update_profile_pic;
+        const endpoint = is_patient ? routes.patient.update_profile_pic : routes.doctor.update_profile_pic;
         services.post(
             endpoint,
             payload,
@@ -75,16 +74,16 @@ const updateProfileImage = (dispatch: any) => {
 
 const deleteProfileImage = (dispatch: any) => {
     return ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = user.is_patient ? routes.patient.delete_profile_pic : routes.doctor.delete_profile_pic;
+        const endpoint = user.is_patient ? routes.patient.delete_profile_pic : routes.doctor.delete_profile_pic;
 
         services.delete(
             endpoint
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
-                let user = data.user;
-                let message = res.data.message;
+                const data = res.data;
+                const user = data.user;
+                const message = data.message;
 
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
@@ -112,7 +111,7 @@ const getMedicalSpecialties = () => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -129,7 +128,7 @@ const getDoctorsBySpecialty = () => {
             `${routes.medical.doctors_by_specialty}/${specialtyId}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -147,7 +146,7 @@ const getAppointmentTypes = () => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -164,7 +163,7 @@ const getMeetingDetails = () => {
             `${routes.appointments.meeting}/${appointmentId}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -178,12 +177,12 @@ const getMeetingDetails = () => {
 
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        let endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments;
+        const endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments;
         services.get(
             `${endpoint}/${payload.user_id}/${payload.path}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -202,7 +201,7 @@ const getDrugs = () => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -220,7 +219,7 @@ const getNotifications = () => {
             endpoint
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -255,7 +254,7 @@ const getDoctorLanguages = () => {
             `${routes.doctor.languages}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
