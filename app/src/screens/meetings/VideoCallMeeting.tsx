@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Alert } from 'react-native'
+import { View, Alert } from 'react-native'
 import AgoraUIKit from 'agora-rn-uikit'
 import AppLoader from '../../components/AppLoader'
 import { createAgoraRtcEngine } from 'react-native-agora'
@@ -92,8 +92,10 @@ const VideoCallMeeting = ({ appointment_id, doctor_id, setVideoCall }: { appoint
 
     return (
         <React.Fragment>
+            <View style={{flex:1}}>
             <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
             <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
+            </View>
         </React.Fragment>
     )
 }

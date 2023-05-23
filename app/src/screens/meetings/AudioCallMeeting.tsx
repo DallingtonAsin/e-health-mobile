@@ -268,15 +268,12 @@ const AudioCallMeeting = ({ appointment_id, doctor, patient }: { appointment_id:
                         {user.is_patient && (doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
                         {!user.is_patient && (patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
 
-                        {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
-                        {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                        {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
+                        {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
 
                         {user.is_patient && <Text style={styles.name}>{doctor.first_name}</Text>}
                         {!user.is_patient && <Text style={styles.name}>{patient.first_name}</Text>}
-
-                        {/* {isJoined && <Text>Local user uid: {uid}</Text>} */}
                         {!isJoined && <Text>Start a call</Text>}
-
 
                         {isJoined && isOtherUserJoined ? (
                             <>
@@ -289,7 +286,6 @@ const AudioCallMeeting = ({ appointment_id, doctor, patient }: { appointment_id:
                                 {!user.is_patient &&  isJoined && !isOtherUserJoined && <Text>Waiting for {patient.first_name} to join</Text>}
                             </>
                         )}
-                        {/* <Text>{message}</Text> */}
 
                         <TimerScreen timer={timer} />
                     </View>
@@ -362,7 +358,6 @@ const styles = StyleSheet.create({
 
     name: {
         fontSize: 22,
-        // fontWeight: '700',
         color: config.colors.dark
     }
 
