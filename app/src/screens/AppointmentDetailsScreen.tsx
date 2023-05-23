@@ -222,7 +222,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                     {(status == 'Pending' || status == 'Confirmed') &&
                         <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointments</Text>
+                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
                         </TouchableOpacity>
                     }
 

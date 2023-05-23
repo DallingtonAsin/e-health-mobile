@@ -59,7 +59,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     useEffect(() => {
         fetchAppointments()
-    }, [pendingAppointments, confirmedAppiontments, completedAppiontments, cancelledAppointments])
+    }, [])
 
     const fetchAppointments = () => {
         fetchPendingAppointments()
