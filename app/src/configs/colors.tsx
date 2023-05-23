@@ -31,5 +31,6 @@ export const colors = {
     grey: '#555',
     terms: '#2196f3',
     darkBlue: '#17414a',
-    disabled: '#D3D3D3'
+    disabled: '#D3D3D3',
+    audioCallbg: '#1f2c34'
 }

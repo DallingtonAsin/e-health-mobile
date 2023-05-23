@@ -47,11 +47,11 @@ const RateDoctorPopup = ({ visible, onClose, onRatingSubmit }: { visible: boolea
                         placeholder={""}
                     />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.submitButton} onPress={handleRatingSubmit}>
-                            <Text style={styles.buttonText}>Submit</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity style={styles.cancelButton} onPress={onCloseRating}>
                             <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton} onPress={handleRatingSubmit}>
+                            <Text style={styles.buttonText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
