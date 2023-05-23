@@ -7,12 +7,12 @@ import * as config from '../../configs';
 import { Context as AuthContext } from '../../context/authContext';
 import { Context as DoctorContext } from '../../context/doctorContext';
 import { DoctorCalendar } from '../../interfaces';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetHeader } from '../../components/BottomSheetHeader';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from 'react-native-simple-toast';
+import { BottomRightButton } from '../../components/common/buttons';
 
 
 const MyScheduleScreen = () => {
@@ -112,12 +112,6 @@ const MyScheduleScreen = () => {
 
     const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), []);
 
-    const CircleButton = ({ onPress }: { onPress: any }) => (
-        <TouchableOpacity onPress={onPress} style={styles.circularButton}>
-            <Icon5 name="plus" size={20} color={config.colors.white} />
-        </TouchableOpacity>
-    );
-
     const SetTimeButton = ({ time, buttonText, onPress }: { time: any, buttonText: any, onPress: any }) => (
         <View style={styles.buttonView}>
             <Button icon="clock" mode="contained"
@@ -202,7 +196,7 @@ const MyScheduleScreen = () => {
                             onRefresh={onRefresh}
                         />}
                 />
-                <CircleButton onPress={() => handleSnapPress(1)} />
+                <BottomRightButton onPress={() => handleSnapPress(1)} />
             </SafeAreaView>
 
             <BottomSheet

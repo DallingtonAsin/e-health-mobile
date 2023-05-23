@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Notification } from "../interfaces";
 import * as configs from '../configs';

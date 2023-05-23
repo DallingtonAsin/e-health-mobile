@@ -78,41 +78,31 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     return (
         <React.Fragment>
-            <SafeAreaView style={config.styles.registration.doctor.container}>
-
+            <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 12 }]}>
                 <StatusBar
                     backgroundColor={config.colors.primary}
                 />
-
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
-                    contentContainerStyle={config.styles.registration.doctor.scrollContainer}
+                    contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
 
                     <View style={styles.disabledView}>
-                        <Text style={styles.labelTxt}>Appointment No.</Text>
-                        <Text style={styles.appointmentNo}>#{appointment_number}</Text>
+                        <Text style={styles.labelTxt}>Patient Name</Text>
+                        <Text style={styles.appointmentNo}>{`${patient.first_name} ${patient.last_name}`}</Text>
                     </View>
 
-                    <View style={config.styles.registration.doctor.inputWrap}>
-                        <Text style={styles.labelTxt}>Patient Name</Text>
-                        <TextInput
-                            value={`${patient.first_name} ${patient.last_name}`}
-                            mode="outlined"
-                            dense={false}
-                            activeOutlineColor={config.colors.primary}
-                            numberOfLines={5}
-                            style={config.styles.registration.doctor.textInput}
-                            disabled={true}
-                        />
+                    <View style={styles.disabledView}>
+                        <Text style={styles.labelTxt}>Appointment Number.</Text>
+                        <Text style={styles.appointmentNo}>#{appointment_number}</Text>
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
                         <Text style={styles.labelTxt}>Past Medical History</Text>
                         <TextInput
                             multiline
-                            numberOfLines={3}
+                            numberOfLines={2}
                             value={medical_history.past_medical_history}
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
@@ -125,7 +115,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                         <Text style={styles.labelTxt}>Current treatment</Text>
                         <TextInput
                             multiline
-                            numberOfLines={3}
+                            numberOfLines={2}
                             label="Current Treatment"
                             value={medical_history.current_treatment}
                             mode="outlined"
@@ -195,9 +185,9 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     </View>
 
                     <View style={config.styles.registration.doctor.viewContainer}>
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 40 }]}
+                        <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 0 }]}
                             onPress={() => submit()}>
-                            <Text style={[config.styles.btnText]}>Submit</Text>
+                            <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -221,9 +211,16 @@ const styles = StyleSheet.create({
 
     labelTxt: {
         fontSize: 16,
+        color: config.colors.black
     },
 
     appointmentNo: {
         fontWeight: 'bold'
-    }
+    },
+
+    scrollContainer: {
+        flexGrow: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+      },
 });

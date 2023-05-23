@@ -128,6 +128,7 @@ interface DoctorsDetail {
     schedule_dates?: string[],
     schedule?: string[],
     rating: number,
+    thumbnail?: string,
     is_favourite: boolean,
     is_online: boolean
 }

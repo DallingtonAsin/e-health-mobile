@@ -18,7 +18,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const { appointmentInfo } = route.params;
     const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-            reason, completed_at, cancelled_at, is_online, meeting_access, medical_history, status } = appointmentInfo;
+            reason, completed_at, cancelled_at, is_online, is_video, meeting_access, medical_history, status } = appointmentInfo;
     
     const { state } = useContext(AuthContext);
     const { confirmAppointment } = useContext(DoctorContext);
@@ -115,7 +115,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     if (videoCall) {
         if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} doctor_id={doctor.id} videoCall={videoCall} setVideoCall={setVideoCall} />
+            return <MeetingRoomScreen appointment_id={id} doctor={doctor} patient={patient} is_video={is_video} setVideoCall={setVideoCall} />
         } else {
             displayMessage(`This meeting does not have meeting links, please contact admin`);
         }
@@ -132,8 +132,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const DoctorProfile = () => (
         <React.Fragment>
             <View style={styles.header}>
-                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} />}
-                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} resizeMode={"cover"}/>}
+                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)}  style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
                     <TouchableOpacity onPress={() => callPhoneNumber(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
@@ -220,9 +220,9 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         </TouchableOpacity>
                     }
 
-                    {user.is_patient && (status == 'Pending' || status == 'Confirmed') &&
-                        <TouchableOpacity style={[config.styles.dangerBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Cancel Appointments</Text>
+                    {(status == 'Pending' || status == 'Confirmed') &&
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointments</Text>
                         </TouchableOpacity>
                     }
 
@@ -235,9 +235,9 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     }
 
                     {!user.is_patient && status == 'Confirmed' &&
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
+                        <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                             onPress={() => completeMedicalAppoitment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete Appointment</Text>
+                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
                         </TouchableOpacity>
                     }
                 </View>
