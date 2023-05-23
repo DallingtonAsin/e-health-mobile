@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext, useCallback, useMemo } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, Alert } from 'react-native'
 import { Platform } from 'react-native'
 import {
     ClientRoleType,
@@ -20,6 +20,7 @@ import { Context as AuthContext } from '../../context/authContext'
 import { Context as PatientContext } from '../../context/patientContext'
 import { IUser } from '../../interfaces'
 import { useNavigation } from '@react-navigation/native';
+import TimerScreen from '../../components/common/TimerScreen'
 
 const uid = 0
 
@@ -36,6 +37,9 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     const [isRatingVisible, setIsRatingVisible] = useState<boolean>(false)
     const [remoteUid, setRemoteUid] = useState(0)
 
+    const [timer, setTimer] = useState<number>(0);
+    const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+    const [interval, setIntervalId] = useState<any | null>(null);
     const [connectionData, setConnectionData] = useState<any>()
     const { getMeetingDetails } = useContext(AppContext)
     const { postRating } = useContext(PatientContext)
@@ -48,6 +52,34 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     const showMessage = (msg: string) => {
         setMessage(msg)
     }
+
+    const startTimer = (): void => {
+        setIsTimerRunning(true);
+    };
+
+    const stopTimer = (): void => {
+        setIsTimerRunning(false);
+        setTimer(0);
+    };
+
+    useEffect(() => {
+        if (isTimerRunning) {
+            const id = setInterval(() => {
+                setTimer((prevTimer: any) => prevTimer + 1);
+            }, 1000);
+            setIntervalId(id);
+        } else {
+            if (interval) {
+                clearInterval(interval);
+            }
+            setIntervalId(null);
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isTimerRunning]);
 
     useEffect(() => {
         getMeetingDetails({ appointmentId: appointment_id, onSuccess: setConnectionData, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
@@ -64,26 +96,26 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
             agoraEngineRef.current = createAgoraRtcEngine()
             const agoraEngine = agoraEngineRef.current
 
-            if (connectionData && connectionData.channel) {
-                agoraEngine.registerEventHandler({
-                    onJoinChannelSuccess: () => {
-                        showMessage('Successfully joined the meeting channel ' + connectionData.channel)
-                        setIsConnected(true)
-                    },
-                    onUserJoined: (_connection, Uid) => {
-                        showMessage('Remote user joined with uid ' + Uid)
-                        setRemoteUid(Uid)
-                    },
-                    onUserOffline: (_connection, Uid) => {
-                        showMessage('Remote user left the channel. uid: ' + Uid)
-                        setRemoteUid(0)
-                    },
-                })
+            // if (connectionData && connectionData.channel) {
+            agoraEngine.registerEventHandler({
+                onJoinChannelSuccess: () => {
+                    // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
+                    setIsConnected(true)
+                },
+                onUserJoined: (_connection, Uid) => {
+                    showMessage('Remote user joined with uid ' + Uid)
+                    setRemoteUid(Uid)
+                },
+                onUserOffline: (_connection, Uid) => {
+                    showMessage('Remote user left the channel. uid: ' + Uid)
+                    setRemoteUid(0)
+                },
+            })
 
-                agoraEngine.initialize({
-                    appId: connectionData.appId
-                })
-            }
+            agoraEngine.initialize({
+                appId: connectionData.appId
+            })
+            // }
 
         } catch (e) {
             console.log(`Unable to initialize agora engine`, e)
@@ -109,6 +141,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     const join = async () => {
 
         if (isConnected && isJoined) {
+            stopTimer()
             Alert.alert(
                 `Confirm`,
                 'Are you sure you want to leave the call?',
@@ -136,6 +169,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
                 agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, uid, {
                     clientRoleType: ClientRoleType.ClientRoleBroadcaster,
                 })
+                startTimer()
                 setIsJoined(true)
             }
         } catch (e) {
@@ -146,6 +180,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     const leave = () => {
         try {
             agoraEngineRef.current?.leaveChannel()
+            stopTimer()
             setRemoteUid(0)
             setIsConnected(false)
             setIsJoined(false)
@@ -156,6 +191,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
     }
 
     const handleCloseRating = () => {
+        stopTimer()
         setIsRatingVisible(false)
         leave()
         navigation.navigate('MyAppointments')
@@ -189,16 +225,13 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
 
 
     const muteCall = () => {
-        console.log(`current mute value`, isMuted)
         setIsMuted(!isMuted)
         agoraEngineRef.current?.muteLocalAudioStream(isMuted);
     }
 
     const volumeUp = () => {
-        console.log(`is volume up`, isVolumeUp)
         setIsVolumeUp(!isVolumeUp);
     }
-
 
     return (
         <React.Fragment>
@@ -206,6 +239,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
                 <ScrollView
                     style={styles.scroll}
                     contentContainerStyle={styles.scrollContainer}>
+                    <TimerScreen timer={timer} />
                     {isConnected ? (
                         <Text>Local user uid: {uid}</Text>
                     ) : (
@@ -231,7 +265,7 @@ const AudioCallMeeting = ({ appointment_id, doctor_id }: { appointment_id: numbe
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
                         <CircularButton icon='volume-down' size={25} onPress={decreaseVolume} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='volume-up' size={20} onPress={increaseVolume} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                        <CircularButton icon='volume-up' size={22} onPress={increaseVolume} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                         <CircularButton icon='microphone-alt-slash' size={20} onPress={muteCall} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                         <CircularButton icon='phone-alt' size={20} onPress={join} btnStyle={{ marginTop: 20 }} />
                     </BottomSheetScrollView>
