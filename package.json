@@ -11,6 +11,7 @@
     "start": "react-native start --reset-cache",
     "port-8082": "node node_modules/react-native/local-cli/cli.js start --port 8082",
     "test": "jest",
+    "deploy": "ssh -p 22 vastel@207.180.244.124",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "gaa": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && ./gradlew assembleDebug",
     "gar": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && rm -rf  android/app/src/main/res/drawable-* && cd android && ./gradlew assembleRelease",

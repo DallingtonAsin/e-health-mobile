@@ -18,7 +18,6 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { isVerified } = useContext(DoctorContext);
     const notifications = useSelector(selectNotifications);
-
     const user = state.user;
     const iconSize = 40;
 
@@ -54,12 +53,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     contentContainerStyle={styles.scrollContainerStyle}>
 
                     <View style={styles.header}>
-
                         <View style={styles.headerImageSection}>
                             <Pressable style={styles.image} onPress={() => navigateScreen('Profile')}>
                                 <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
                             </Pressable>
-
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                                 {unreadCount > 0 &&
@@ -73,10 +70,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                             <View style={{ left: 20 }}>
                                 <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
-                                { user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
-                                { !user.is_patient && <Text style={styles.amazing}>Status: 
-                                { !user.patient && (user.is_registered ? ( !user.is_verified && <Text style={styles.underReviewTxt}>Profile under review</Text>) : null) }
-                                { !user.patient && (user.is_registered ? ( user.is_verified && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null) }
+                                {user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
+                                {!user.is_patient && <Text style={styles.amazing}>Status:
+                                    {!user.patient && (user.is_registered ? (user.is_verified === 0  && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
+                                    {!user.patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
                                 </Text>}
                             </View>
                         </View>

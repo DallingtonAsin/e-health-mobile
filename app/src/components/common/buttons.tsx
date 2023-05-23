@@ -7,15 +7,23 @@ const CircularButton = ({ icon = 'plus',
     iconColor = config.colors.white,
     backgroundColor = config.colors.primary,
     btnStyle,
-    onPress }: { icon?: string, size?: number, iconColor?: string, backgroundColor?: string, btnStyle?: ViewStyle, onPress: any }) => (
+    onPress
+}: { icon?: string, size?: number, iconColor?: string, backgroundColor?: string, btnStyle?: ViewStyle, onPress: any }) => (
     <TouchableOpacity onPress={onPress} style={[circularBtn(backgroundColor), btnStyle && btnStyle]}>
         <Icon5 name={icon} size={size} color={iconColor} />
     </TouchableOpacity>
 );
 
-const BottomRightButton = ({ icon = 'plus', size = 20, onPress }: { icon?: string, size?: number, onPress: any }) => (
-    <TouchableOpacity onPress={onPress} style={styles.circularButton}>
-        <Icon5 name={icon} size={size} color={config.colors.white} />
+const BottomRightButton = ({
+    icon = 'plus',
+    size = 20,
+    iconColor = config.colors.white,
+    backgroundColor = config.colors.primary,
+    btnStyle,
+    onPress
+}: { icon?: string, size?: number, iconColor?: string, backgroundColor?: string, btnStyle?: ViewStyle, onPress: any }) => (
+    <TouchableOpacity onPress={onPress} style={[circularBottomRightBtn(backgroundColor), btnStyle && btnStyle]}>
+        <Icon5 name={icon} size={size} color={iconColor} />
     </TouchableOpacity>
 );
 
@@ -30,13 +38,18 @@ const circularBtn = (backgroundColor = config.colors.primary): ViewStyle => {
     }
 }
 
-const styles = StyleSheet.create({
-    circularButton: {
-        ...circularBtn,
+const circularBottomRightBtn = (backgroundColor = config.colors.primary): ViewStyle => {
+    return {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: backgroundColor,
         position: 'absolute',
         bottom: 20,
         right: 20
-    },
-})
+    }
+}
 
 export { CircularButton, BottomRightButton }
