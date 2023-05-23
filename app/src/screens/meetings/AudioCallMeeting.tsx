@@ -19,11 +19,9 @@ import * as config from '../../configs'
 import { Context as AuthContext } from '../../context/authContext'
 import { Context as PatientContext } from '../../context/patientContext'
 import { IUser } from '../../interfaces'
-import { useNavigation } from '@react-navigation/native'
 import TimerScreen from '../../components/common/TimerScreen'
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
-
 
 interface AgoraConnectionProps {
     appId: string,
@@ -33,6 +31,12 @@ interface AgoraConnectionProps {
 var isMuted = false
 
 const uid = Math.floor(Math.random() * 100000);
+
+const connectionState = {
+    appId: '68da267731be44fda2cc7106d5c4db12',
+    token: '007eJxTYLDYaX394yQn23jzni1hBTkfq2wWG7wQkNuReO5ksvuOyV8VGMwsUhKNzMzNjQ2TUk1M0oCc5GRzQwOzFNNkk5QkQyP2tTkpDYGMDLw3YpgYGSAQxOdhCEnNSc1NTclMzsxLZWAAAHSlIqE=',
+    channel: 'Telemedicine'
+}
 
 const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -51,14 +55,13 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [timer, setTimer] = useState(0)
     const [isTimerRunning, setIsTimerRunning] = useState(false)
     const [interval, setIntervalId] = useState<any | null>(null)
-    const [connectionData, setConnectionData] = useState<AgoraConnectionProps>({ appId: '', channel: '', token: '' })
+    const [connectionData, setConnectionData] = useState<any>(connectionState)
     const { getMeetingDetails } = useContext(AppContext)
     const { postRating } = useContext(PatientContext)
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = useMemo(() => ['20%', '85%'], [])
     const { state } = useContext(AuthContext)
     const [user] = useState<IUser>(state.user)
-    const navigation = useNavigation()
     const [patient, setPatient] = useState<any>()
     const [doctor, setDoctor] = useState<any>()
 
@@ -127,33 +130,32 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             agoraEngineRef.current = createAgoraRtcEngine()
             const agoraEngine = agoraEngineRef.current
 
-            // if (connectionData && connectionData.channel) {
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: () => {
-                    // showMessage('Successfully joined the meeting channel ' + connectionData.channel)
-                    setIsConnected(true)
-                },
-                onUserJoined: (_connection, Uid) => {
-                    showMessage('Remote user joined with uid ' + Uid)
-                    setRemoteUid(Uid)
-                    if (Uid !== ownUID) {
-                        setIsOtherUserJoined(true);
-                    }
-                },
-                onUserOffline: (_connection, Uid) => {
-                    showMessage('Remote user left the channel. uid: ' + Uid)
-                    setRemoteUid(0)
-                    if (Uid !== ownUID) {
-                        setIsOtherUserJoined(false);
-                    }
-                },
-            })
+            if (connectionData && connectionData.channel) {
+                agoraEngine.registerEventHandler({
+                    onJoinChannelSuccess: () => {
+                        setIsConnected(true)
+                    },
+                    onUserJoined: (_connection, Uid) => {
+                        showMessage('Remote user joined with uid ' + Uid)
+                        setRemoteUid(Uid)
+                        if (Uid !== ownUID) {
+                            setIsOtherUserJoined(true);
+                        }
+                    },
+                    onUserOffline: (_connection, Uid) => {
+                        showMessage('Remote user left the channel. uid: ' + Uid)
+                        setRemoteUid(0)
+                        if (Uid !== ownUID) {
+                            setIsOtherUserJoined(false);
+                        }
+                    },
+                })
 
-            agoraEngine.initialize({
-                appId: connectionData.appId
-            })
+                agoraEngine.initialize({
+                    appId: connectionData.appId
+                })
 
-            // }
+            }
 
         } catch (e) {
             console.log(`Unable to initialize agora engine`, e)
@@ -191,7 +193,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                     setIsRatingVisible(true)
                                 } else {
                                     leave()
-                                    // navigation.navigate('MyAppointments')
                                 }
                             }
                         },
@@ -202,14 +203,12 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             agoraEngineRef.current?.setChannelProfile(
                 ChannelProfileType.ChannelProfileCommunication,
             )
-            // agoraEngineRef.current?.muteLocalAudioStream(isMuted)
 
             if (connectionData && connectionData.appId && ownUID) {
 
                 agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, ownUID, {
                     clientRoleType: ClientRoleType.ClientRoleBroadcaster,
                 })
-                // agoraEngineRef.current?.muteLocalAudioStream(isMuted)
                 startTimer()
                 setIsJoined(true)
             }
@@ -235,7 +234,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         stopTimer()
         setIsRatingVisible(false)
         leave()
-        // navigation.navigate('MyAppointments')
     }
 
     const handleRatingSubmit = (rating: number, comment: string) => {
@@ -277,20 +275,19 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     return (
-        <React.Fragment>
+        <>
             <View style={styles.main}>
                 <ScrollView
                     contentContainerStyle={styles.scrollContainer}>
-
                     <View style={styles.centeredContent}>
-                        {user.is_patient && (doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
-                        {!user.is_patient && (patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
+                        {user.is_patient && (doctor && doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
+                        {!user.is_patient && (patient && patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
 
-                        {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
-                        {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
+                        {user.is_patient && doctor && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
+                        {!user.is_patient && patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
 
-                        {user.is_patient && <Text style={styles.name}>{doctor.first_name}</Text>}
-                        {!user.is_patient && <Text style={styles.name}>{patient.first_name}</Text>}
+                        {user.is_patient && doctor && <Text style={styles.name}>{doctor.first_name}</Text>}
+                        {!user.is_patient && patient && <Text style={styles.name}>{patient.first_name}</Text>}
                         {!isJoined && <Text>Start a call</Text>}
 
                         {isJoined && isOtherUserJoined ? (
@@ -304,7 +301,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                 {!user.is_patient && isJoined && !isOtherUserJoined && <Text>Waiting for {patient.first_name} to join</Text>}
                             </>
                         )}
-
                         <TimerScreen timer={timer} />
                     </View>
 
@@ -319,17 +315,16 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 >
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                        <CircularButton icon='volume-down' size={25} onPress={decreaseVolume} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='volume-up' size={22} onPress={increaseVolume} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='microphone-alt-slash' size={20} onPress={muteCall} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='phone-alt' size={20} onPress={join} btnStyle={{ marginTop: 20 }} />
+                        <CircularButton icon='volume-down' size={25} onPress={() => decreaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                        <CircularButton icon='volume-up' size={22} onPress={() => increaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                        <CircularButton icon='microphone-alt-slash' size={20} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                        <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
                     </BottomSheetScrollView>
                 </BottomSheet>
                 <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
 
             </View>
-
-        </React.Fragment>
+        </>
     )
 }
 

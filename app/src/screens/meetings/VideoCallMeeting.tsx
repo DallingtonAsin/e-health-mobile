@@ -15,12 +15,18 @@ import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
 import * as config from '../../configs'
 
+const connectionState = {
+    appId: '68da267731be44fda2cc7106d5c4db12',
+    token: '007eJxTYLDYaX394yQn23jzni1hBTkfq2wWG7wQkNuReO5ksvuOyV8VGMwsUhKNzMzNjQ2TUk1M0oCc5GRzQwOzFNNkk5QkQyP2tTkpDYGMDLw3YpgYGSAQxOdhCEnNSc1NTclMzsxLZWAAAHSlIqE=',
+    channel: 'Telemedicine'
+}
+
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
     const { postRating } = useContext(PatientContext)
     const { state } = useContext(AuthContext)
     const [user] = useState<IUser>(state.user)
-    const [connectionData, setConnectionData] = useState<any>()
+    const [connectionData, setConnectionData] = useState<any>(connectionState)
     const { getMeetingDetails } = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(true)
     const [isRatingVisible, setIsRatingVisible] = useState(false)
@@ -41,7 +47,6 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         }
     }, [])
 
-
     const setMeetingDetails = (data: any) => {
         if (data && data.meeting_access) {
             setConnectionData(data.meeting_access)
@@ -53,7 +58,6 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             setDoctor(data.doctor)
         }
     }
-
 
     const handleCloseRating = () => {
         setIsRatingVisible(false)
@@ -149,31 +153,27 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             <View style={{ flex: 1 }}>
                 {videoCall ? (<AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
                 ) : (
+                    <View style={styles.main}>
+                        <ScrollView
+                            contentContainerStyle={styles.scrollContainer}>
 
-                    <>
-                        <View style={styles.main}>
-                            <ScrollView
-                                contentContainerStyle={styles.scrollContainer}>
+                            <View style={styles.centeredContent}>
+                                {user.is_patient && (doctor && doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
+                                {!user.is_patient && (patient && patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
 
-                                <View style={styles.centeredContent}>
-                                    {user.is_patient && (doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
-                                    {!user.is_patient && (patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
+                                {user.is_patient && doctor && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
+                                {!user.is_patient && patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
 
-                                    {user.is_patient && !doctor.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
-                                    {!user.is_patient && !patient.thumbnail && <AvatarRP.Text size={95} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.2, borderColor: config.colors.gray }]} />}
+                                {!videoCall && <Text>Start video call with
+                                    {user.is_patient && doctor && <Text style={styles.name}> {doctor.first_name}</Text>}
+                                    {!user.is_patient && patient && <Text style={styles.name}> {patient.first_name}</Text>}
+                                </Text>}
 
-                                    {!videoCall && <Text>Start video call with
-                                        {user.is_patient && <Text style={styles.name}> {doctor.first_name}</Text>}
-                                        {!user.is_patient && <Text style={styles.name}> {patient.first_name}</Text>}
-                                    </Text>}
-
-                                    <TimerScreen timer={timer} />
-                                </View>
-                                <BottomRightButton icon={"video"} size={20} onPress={() => startCall()} />
-
-                            </ScrollView>
-                        </View>
-                    </>
+                                <TimerScreen timer={timer} />
+                            </View>
+                        </ScrollView>
+                        <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 160 }} onPress={() => startCall()} />
+                    </View>
                 )
                 }
                 <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
