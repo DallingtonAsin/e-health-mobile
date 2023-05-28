@@ -167,7 +167,10 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                 <TimerScreen timer={timer} />
                             </View>
                         </ScrollView>
-                        <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 160 }} onPress={() => startCall()} />
+                        <View style={styles.controls}>
+                            <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 8 }} onPress={() => startCall()} />
+                            <Text style={styles.controlText}>{videoCall ? 'Stop video' : 'Start video'}</Text>
+                        </View>
                     </View>
                 )
                 }
@@ -217,5 +220,16 @@ const styles = StyleSheet.create({
     bottomSheet: {
         backgroundColor: config.colors.audioCallbg
     },
+
+    controls: {
+        alignItems: 'center',
+        bottom: 25
+    },
+
+    controlText: {
+        textAlign: 'center',
+        textTransform: 'lowercase',
+        fontSize: config.fonts.medium
+    }
 
 })

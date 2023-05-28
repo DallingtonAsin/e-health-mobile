@@ -306,20 +306,20 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
                         <View style={styles.controls}>
-                            <CircularButton icon='volume-down' size={26} onPress={() => decreaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='volume-down' size={30} onPress={() => decreaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                             <Text style={styles.controlText}>Volume down</Text>
                         </View>
                         <View style={styles.controls}>
-                            <CircularButton icon='volume-up' size={20} onPress={() => increaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='volume-up' size={25} onPress={() => increaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                             <Text style={styles.controlText}>Volume up</Text>
                         </View>
                         <View style={styles.controls}>
-                            <CircularButton icon='microphone-alt-slash' size={20} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='microphone-alt-slash' size={25} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                             <Text style={styles.controlText}>Mute</Text>
                         </View>
                         <View style={styles.controls}>
                             <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
-                            <Text style={styles.controlText}>{(isConnected || isJoined || isOtherUserJoined) ? 'Hang up' : 'Call'}</Text>
+                            <Text style={styles.controlText}>{(isConnected || isJoined || isOtherUserJoined) ? 'stop call' : 'start call'}</Text>
                         </View>
                     </BottomSheetScrollView>
                 </BottomSheet>
