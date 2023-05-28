@@ -7,38 +7,26 @@ import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
-import { addNotification, markAsRead, selectNotifications } from "../redux/reducers/notificationSlice";
+import { fetchNotifications, markAsRead } from "../redux/reducers/notificationSlice";
 import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from "../redux/store";
 
 const NotificationScreen = () => {
 
-    const [isLoading, setIsLoading] = useState(true);
-    const dispatch = useDispatch();
-    const notifications = useSelector(selectNotifications);
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch: AppDispatch = useDispatch();
+    const notifications = useSelector((state: RootState) => state.notifications.notifications);
+    const loading = useSelector((state: RootState) => state.notifications.loading);
+    const error = useSelector((state: RootState) => state.notifications.error);
 
-    const { state} = useContext(AuthContext);
-    const { getNotifications, markNotificationRead } = useContext(AppContext);
+    const { state } = useContext(AuthContext);
+    const { markNotificationRead } = useContext(AppContext);
     const user = state.user;
+    const { is_patient } = user;
 
     useEffect(() => {
-        fetchNotifications();
-    }, []);
-
-    const fetchNotifications = () => {
-        getNotifications({ is_patient: user.is_patient, onSuccess: populateNotifications, onFailure: displayMessage, onCompletion: stopLoading });
-    }
-
-    const populateNotifications = (data: any) => {
-        let messages = data.notifications;
-        if (messages.length > 0) {
-            messages.forEach((notification: Notification) => {
-                const existingNotification = notifications.find((n: Notification) => n.id === notification.id);
-                if (!existingNotification) {
-                    dispatch(addNotification(notification));
-                }
-            });
-        }
-    }
+        dispatch(fetchNotifications(is_patient));
+    }, [dispatch, is_patient]);
 
     const stopLoading = () => {
         setIsLoading(false);
@@ -71,7 +59,7 @@ const NotificationScreen = () => {
         </View>
     );
 
-    if (isLoading) {
+    if (isLoading || loading) {
         return <AppLoader bgColor={configs.colors.white} />
     }
 
