@@ -1,27 +1,28 @@
 import React, { useState, useContext } from 'react'
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native'
 import * as configs from '../configs'
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { displayMessage, getGreeting } from '../components/common/SharedHelper';
-import { Context as AuthContext } from '../context/authContext';
-import { Context as DoctorContext } from '../context/doctorContext';
-import Avatar from '../components/Avatar';
-import { useSelector } from 'react-redux';
-import { selectNotifications } from "../redux/reducers/notificationSlice";
-import { Notification } from '../interfaces';
-import AppLoader from '../components/AppLoader';
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import { displayMessage, getGreeting } from '../components/common/SharedHelper'
+import { Context as AuthContext } from '../context/authContext'
+import { Context as DoctorContext } from '../context/doctorContext'
+import Avatar from '../components/Avatar'
+import { useSelector } from 'react-redux'
+import { selectUnreadNotifications } from "../redux/reducers/notificationSlice"
+import AppLoader from '../components/AppLoader'
+import { RootState } from '../redux/store'
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
-    const { state, updateUserState } = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(false);
-    const { isVerified } = useContext(DoctorContext);
-    const notifications = useSelector(selectNotifications);
-    const user = state.user;
-    const iconSize = 40;
+    const { state, updateUserState } = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(false)
+    const { isVerified } = useContext(DoctorContext)
+    const unreadNotifications = useSelector((state: RootState) => selectUnreadNotifications(state));
+    const loading = useSelector((state: RootState) => state.notifications.loading)
+    const user = state.user
+    const iconSize = 40
 
-    const unreadCount = notifications.filter((notification: Notification) => !notification.read).length;
+    const unreadCount = unreadNotifications.length
 
     const navigateScreen = (screen: string) => {
         if (!user.is_patient) {
@@ -29,8 +30,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 if (user.is_verified) {
                     navigation.navigate(screen)
                 } else {
-                    setIsLoading(true);
-                    isVerified({ screen: screen, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+                    setIsLoading(true)
+                    isVerified({ screen: screen, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
                 }
             } else {
                 navigation.navigate('CompleteRegistration')
@@ -41,7 +42,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const onSuccess = async (screen: string) => {
-        updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: screen }) });
+        updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: screen }) })
     }
 
     return (
@@ -60,19 +61,18 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                                 {unreadCount > 0 &&
-                                    <View style={[configs.styles.supCount, { right: 2 }]}>
-                                        <Text style={{ color: configs.colors.white, fontSize: 12 }}>{unreadCount}</Text>
+                                    <View style={[configs.styles.supCount, { right: 2, backgroundColor: configs.colors.white, borderWidth: 0.6, borderColor: configs.colors.primary }]}>
+                                        <Text style={{ color: configs.colors.primary, fontSize: 12, fontWeight: 'bold' }}>{unreadCount}</Text>
                                     </View>}
                             </TouchableOpacity>
                         </View>
-
 
                         <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
                             <View style={{ left: 20 }}>
                                 <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
                                 {user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
                                 {!user.is_patient && <Text style={styles.amazing}>Status:
-                                    {!user.patient && (user.is_registered ? (user.is_verified === 0  && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
+                                    {!user.patient && (user.is_registered ? (user.is_verified === 0 && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
                                     {!user.patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
                                 </Text>}
                             </View>
@@ -135,12 +135,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                 </ScrollView>
             </SafeAreaView>
-            {isLoading && <AppLoader />}
+            {(isLoading || loading) && <AppLoader />}
         </React.Fragment>
-    );
+    )
 }
 
-export default HomeScreen;
+export default HomeScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -273,4 +273,4 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: configs.fonts.normal
     }
-});
+})

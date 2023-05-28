@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as configs from '../configs';
 import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
 import SpecialityListScreen from "../screens/MedicalDoctorsScreen";
 import ContactUsScreen from "../screens/ContactUsScreen";
@@ -21,9 +20,10 @@ import CartScreen from "../screens/CartScreen";
 import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen";
 import TabNavigator from "./TabNavigator";
 import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen";
-import { Context as AuthContext } from '../context/authContext';
 import HomeScreen from "../screens/HomeScreen";
 import SpecialitiesListScreen from '../screens/MedicalDoctorsScreen'
+import { Context as AuthContext } from '../context/authContext';
+import * as configs from '../configs';
 
 const Stack = createNativeStackNavigator();
 
@@ -103,12 +103,12 @@ const AppStackScreen = () => {
                 component={ProfileScreen}
                 options={{
                     headerStyle: {
-                        backgroundColor: configs.colors.white,
+                        backgroundColor: configs.colors.primary,
                     },
-                    headerTintColor: configs.colors.primary,
+                    headerTintColor: configs.colors.white,
                     headerTitle: `Profile`,
-                    headerBackVisible: false,
-                    headerShown: false,
+                    headerBackVisible: true,
+                    headerShown: true,
                 }}
             />
 

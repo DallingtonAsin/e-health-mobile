@@ -265,8 +265,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             !isUpdatingImage ?
                                 <View style={{ position: 'relative' }}>
                                     {state.user.image
-                                        ? <Pressable onPress={() => setVisible(!visible)}><Avatar size={100} source={state.user.image} resizeMode={'cover'} /></Pressable>
-                                        : <Pressable onPress={() => setVisible(!visible)}><AvatarRP.Text size={100} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} /></Pressable>
+                                        ? <Pressable onPress={() => setVisible(!visible)}><Avatar size={80} source={state.user.image} resizeMode={'cover'} /></Pressable>
+                                        : <Pressable onPress={() => setVisible(!visible)}><AvatarRP.Text size={80} label={getUserInitials(`${state.user.first_name} ${state.user.last_name}`)} style={config.styles.userAvatar} /></Pressable>
                                     }
 
                                     {!isDisabled && <IconButton

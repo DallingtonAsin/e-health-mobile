@@ -67,6 +67,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         setTimer(0)
     }
 
+
     useEffect(() => {
         if (isTimerRunning) {
             const id = setInterval(() => {
@@ -167,8 +168,9 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     const join = async () => {
+
         try {
-            if (isConnected && isJoined) {
+            if (isConnected || isJoined) {
                 stopTimer()
                 Alert.alert(
                     `Confirm`,
@@ -303,10 +305,22 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 >
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                        <CircularButton icon='volume-down' size={25} onPress={() => decreaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='volume-up' size={22} onPress={() => increaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='microphone-alt-slash' size={20} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
-                        <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
+                        <View style={styles.controls}>
+                            <CircularButton icon='volume-down' size={26} onPress={() => decreaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <Text style={styles.controlText}>Volume down</Text>
+                        </View>
+                        <View style={styles.controls}>
+                            <CircularButton icon='volume-up' size={20} onPress={() => increaseVolume()} iconColor={config.colors.gray} backgroundColor={isVolumeUp ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <Text style={styles.controlText}>Volume up</Text>
+                        </View>
+                        <View style={styles.controls}>
+                            <CircularButton icon='microphone-alt-slash' size={20} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <Text style={styles.controlText}>Mute</Text>
+                        </View>
+                        <View style={styles.controls}>
+                            <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
+                            <Text style={styles.controlText}>{(isConnected || isJoined || isOtherUserJoined) ? 'Hang up' : 'Call'}</Text>
+                        </View>
                     </BottomSheetScrollView>
                 </BottomSheet>
                 <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
@@ -340,7 +354,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         paddingHorizontal: 25,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
     },
 
     head: {
@@ -360,5 +374,15 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 22,
         color: config.colors.dark
+    },
+
+    controls: {
+        alignItems: 'center'
+    },
+
+    controlText: {
+        textAlign: 'center',
+        textTransform: 'lowercase',
+        fontSize: config.fonts.medium
     }
 })
