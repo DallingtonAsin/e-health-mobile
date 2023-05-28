@@ -1,16 +1,16 @@
+import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit"
+import { RootState } from '../store'
+import { Notification } from "../../interfaces"
+import { routes } from "../../network/routes"
+import Service from "../../network/services/httpService"
+import { displayErrorMessage, displayMessage } from '../../components/common/SharedHelper'
 
-import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
-import { RootState } from '../store';
-import { Notification } from "../../interfaces";
-import { routes } from "../../network/routes";
-import Service from "../../network/services/httpService";
-
-const services = new Service();
+const services = new Service()
 
 interface NotificationState {
-    notifications: Notification[];
-    loading: boolean;
-    error: string | null;
+    notifications: Notification[]
+    loading: boolean
+    error: string | null
 }
 
 const initialState: NotificationState = {
@@ -19,35 +19,30 @@ const initialState: NotificationState = {
     error: null,
 }
 
-
-// Assuming you have access to the `state.user` AuthContext
 export const fetchNotifications = createAsyncThunk<
     Notification[],
     boolean,
     { state: RootState }
 >('notifications/fetchNotifications', async (isPatient, thunkAPI) => {
-
-    const { is_patient } = thunkAPI.getState().user;
-    const endpoint = is_patient ? routes.patient.notifications.all : routes.doctor.notifications.all;
+    const endpoint = isPatient ? routes.patient.notifications.all : routes.doctor.notifications.all
     return services.get(
         endpoint
     ).then(async (res) => {
         if (res && res.data) {
             const data = res.data
-            return data.notifications;
+            return data.notifications
         }
     }).catch((error) => {
-        throw new Error('Failed to fetch notifications');
+        displayErrorMessage(error, displayMessage)
     })
-
-});
+})
 
 const notificationsSlice = createSlice({
     name: 'notifications',
     initialState: initialState,
     reducers: {
         addNotification: (state, action) => {
-            state.notifications.push(action.payload);
+            state.notifications.push(action.payload)
         },
         markAsRead: (state, action) => {
             state.notifications = state.notifications.map((notification) => {
@@ -55,37 +50,35 @@ const notificationsSlice = createSlice({
                     return {
                         ...notification,
                         read: true,
-                    };
+                    }
                 }
-                return notification;
-            });
+                return notification
+            })
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchNotifications.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.loading = true
+                state.error = null
             })
             .addCase(fetchNotifications.fulfilled, (state, action) => {
-                state.notifications = action.payload;
-                state.loading = false;
+                state.notifications = action.payload
+                state.loading = false
             })
             .addCase(fetchNotifications.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message ?? 'Failed to fetch notifications';
-            });
+                state.loading = false
+                state.error = action.error.message ?? 'Failed to fetch notifications'
+            })
     },
-});
+})
 
 
-export const { addNotification, markAsRead } = notificationsSlice.actions;
-export const selectAllNotifications = (state: RootState) => state.notifications.notifications;
+export const { addNotification, markAsRead } = notificationsSlice.actions
+export const selectAllNotifications = (state: RootState) => state.notifications.notifications
 export const selectUnreadNotifications = createSelector(
     selectAllNotifications,
     (notifications) => notifications.filter((notification: Notification) => !notification.read)
-);
+)
 
-// const unreadCount = notifications.filter((notification: Notification) => !notification.read).length
-
-export default notificationsSlice.reducer;
+export default notificationsSlice.reducer

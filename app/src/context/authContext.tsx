@@ -9,7 +9,6 @@ import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions';
 const services = new Service();
 
-
 const signin = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginPayload, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
         const endpoint = is_patient ? routes.patient.signin : routes.doctor.signin;

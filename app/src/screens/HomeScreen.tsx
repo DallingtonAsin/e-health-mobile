@@ -18,6 +18,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false)
     const { isVerified } = useContext(DoctorContext)
     const unreadNotifications = useSelector((state: RootState) => selectUnreadNotifications(state));
+    const loading = useSelector((state: RootState) => state.notifications.loading)
     const user = state.user
     const iconSize = 40
 
@@ -134,7 +135,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                 </ScrollView>
             </SafeAreaView>
-            {isLoading && <AppLoader />}
+            {(isLoading || loading) && <AppLoader />}
         </React.Fragment>
     )
 }
