@@ -1,21 +1,16 @@
-import React, { useState, useContext } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
+import React, { useContext } from 'react'
+import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import * as config from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Toast from 'react-native-simple-toast'
 import { Context as AuthContext } from '../context/authContext'
-import { Context as DoctorContext } from '../context/doctorContext'
 import * as configs from '../configs'
-import { displayMessage, getAppVersion } from '../components/common/SharedHelper'
-import AppLoader from '../components/AppLoader'
-
+import { getAppVersion } from '../components/common/SharedHelper'
 
 const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const { updateOnlineStatus } = useContext(DoctorContext)
-    const { state, signout, updateUserState } = useContext(AuthContext)
+    const { state, signout } = useContext(AuthContext)
     const user = state.user
 
     const listItems = [
@@ -27,39 +22,6 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 6, name: 'Rate Us', icon: 'star', isIcon5: true, action: () => Toast.show('Coming soon...', Toast.LONG) },
         { id: 7, name: 'Signout', icon: 'power-off', isIcon5: true, action: () => signout() },
     ]
-
-    if (!user.is_patient) {
-        listItems[7] = { id: 8, name: 'Change online status', icon: 'refresh', isIcon5: false, action: () => changeOnlineStatus() }
-    }
-
-    const changeOnlineStatus = () => {
-        if (!user.is_patient) {
-            const message = `Are you sure you want to go ${user.is_online ? 'offline' : 'online'}?`
-            Alert.alert(
-                `Confirm status`,
-                message,
-                [
-                    { text: 'No', onPress: () => { } },
-                    {
-                        text: 'Yes', onPress: () => {
-                            setIsLoading(true);
-                            updateOnlineStatus({ onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
-                        }
-                    },
-                ],
-                { cancelable: false }
-            );
-        }
-    }
-
-    const onSuccess = async (message: string) => {
-        updateUserState({
-            onSuccess: () => {
-                displayMessage(message)
-                navigation.navigate('SignedInStack', { screen: 'Home' })
-            }
-        })
-    }
 
     const gotoProfile = () => {
         if (!user.is_patient) {
@@ -105,7 +67,6 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
                     <Text style={styles.versionText}>Current Version: {getAppVersion()}</Text>
                 </View>
             </SafeAreaView>
-            {isLoading && <AppLoader />}
         </React.Fragment>
     )
 }
