@@ -204,7 +204,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointmentInfo: item })}>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointment_id: item.id })}>
             <View style={styles.circle}>
                 <Text style={styles.day}>{getDayMonth(item.appointment_date)[0]}</Text>
                 <Text style={styles.month}>{getDayMonth(item.appointment_date)[1]}</Text>

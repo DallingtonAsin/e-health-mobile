@@ -10,8 +10,9 @@ import AppLoader from "../components/AppLoader"
 import { fetchNotifications, markAsRead } from "../redux/reducers/notificationSlice"
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from "../redux/store"
+import NotificationCard from "../components/NotificationCard"
 
-const NotificationScreen = () => {
+const NotificationScreen = ({ navigation }: { navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const dispatch: AppDispatch = useDispatch()
@@ -31,7 +32,10 @@ const NotificationScreen = () => {
     const markNotificationAsRead = (item: Notification) => {
         if (!item.read) {
             dispatch(markAsRead(item.id))
-            markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: () => {}, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+            markNotificationRead({ notification_id: item.id, is_patient: user.is_patient, onSuccess: () => { }, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        }
+        if (item.is_appointment) {
+            navigation.navigate('AppointmentDetails', { appointment_id: item.data.appointment_id })
         }
     }
 
@@ -40,12 +44,7 @@ const NotificationScreen = () => {
     }
 
     const Item = ({ item }: { item: Notification }) => (
-        <TouchableOpacity style={styles.item} onPress={() => markNotificationAsRead(item)}>
-            <View style={item.read ? styles.dotRead : styles.dotUnread}></View>
-            <View style={styles.messageContainer}>
-                <Text style={styles.message}>{item.data.message}</Text>
-            </View>
-        </TouchableOpacity>
+        <NotificationCard onPress={() => markNotificationAsRead(item)} title={item.data.title} message={item.data.message} isRead={item.read} />
     )
 
     const renderItem = ({ item }: { item: Notification }) => (
@@ -81,53 +80,8 @@ export default NotificationScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.notificationbg,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-
-    item: {
-        shadowColor: configs.colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 3
-        },
-        shadowRadius: 5,
-        shadowOpacity: 1.0,
-        marginVertical: 5,
-        marginHorizontal: 16,
-        borderRadius: 5,
-        backgroundColor: configs.colors.white,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 20,
-        elevation: 5,
-    },
-
-    messageContainer: {
-        flexGrow: 1,
-        maxWidth: '96.5%',
-    },
-
-    message: {
-        color: '#000',
-        fontSize: configs.fonts.medium,
-    },
-
-    dotRead: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: configs.colors.gray,
-        marginRight: 10,
-    },
-
-    dotUnread: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: configs.colors.orange,
-        marginRight: 10,
-    },
-
+    }
 })
