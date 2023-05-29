@@ -83,7 +83,8 @@ interface Notification {
     notifiable_id: number,
     data: any,
     read_at: any,
-    read?: boolean,
+    read: boolean,
+    is_appointment: boolean
 }
 
 interface MedicalHistoryRecord {
@@ -250,6 +251,78 @@ interface PushNotification {
     payload?: any,
 }
 
+interface AppointmentDetail {
+    id: number,
+    patient_id: number,
+    doctor_id: number,
+    appointment_number: string,
+    appointment_type_id: number,
+    appointment_date: string,
+    reason: string,
+    notes: string | null,
+    status: string,
+    confirmed_at: string,
+    reminded_at: string,
+    completed_at: string | null,
+    rescheduled_at: string | null,
+    cancelled_at: string | null,
+    is_doctor_notified: number,
+    alert_status: string,
+    is_online: boolean,
+    is_video: boolean,
+    appointment_time: string,
+    patient: {
+        id: number,
+        first_name: string,
+        last_name: string,
+        country_code: string,
+        phone_number: string,
+        email: string,
+        address: string,
+        dob: string,
+        image: string,
+        thumbnail: string
+    },
+    doctor: {
+        id: number,
+        first_name: string,
+        last_name: string,
+        specialty_id: number,
+        primary_facility_id: number,
+        country_code: string,
+        phone_number: string,
+        email: string,
+        qualification: string,
+        address: string,
+        image: string,
+        service_fee: string,
+        fcm_token: string | null,
+        thumbnail: string
+        specialty: string,
+        primary_facility: string,
+        is_online: boolean
+    },
+    appointment_type: {
+        id: number,
+        name: string
+    },
+    meeting_access: {
+        appId: string,
+        channel: string,
+        token: string
+    },
+    medical_history: {
+        id: number,
+        patient_id: number,
+        appointment_id: number,
+        past_medical_history: string | null,
+        current_treatment: string | null,
+        illness: string | null,
+        diagnosis_date: string | null,
+        treatment: string | null
+    }
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -278,5 +351,6 @@ export type {
     setPasswordError,
     LoginPayload,
     PushNotification,
+    AppointmentDetail,
     DrCompleteProfilePayload
 }

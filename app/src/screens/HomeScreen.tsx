@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         if (!user.is_patient) {
             const message = `Are you sure you want to go ${user.is_online ? 'offline' : 'online'}?`
             Alert.alert(
-                `Confirm status`,
+                `Confirm change`,
                 message,
                 [
                     { text: 'No', onPress: () => { } },

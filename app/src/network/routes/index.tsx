@@ -48,7 +48,8 @@ const routes = {
       facilities: 'medical/facilities',
       doctors: 'medical/doctors',
       doctors_by_specialty: 'medical/doctors/specialty',
-      history: 'medical-history/patient'
+      history: 'medical-history/patient',
+      appointment_details: 'medical/appointments'
    },
 
    drugs: {
