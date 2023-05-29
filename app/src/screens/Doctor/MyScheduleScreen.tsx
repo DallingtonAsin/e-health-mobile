@@ -1,52 +1,56 @@
-import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { DataTable, Divider, Button } from 'react-native-paper';
-import AppLoader from '../../components/AppLoader';
-import { displayMessage, getCurrentDate } from '../../components/common/SharedHelper';
-import * as config from '../../configs';
-import { Context as AuthContext } from '../../context/authContext';
-import { Context as DoctorContext } from '../../context/doctorContext';
-import { DoctorCalendar } from '../../interfaces';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { BottomSheetHeader } from '../../components/BottomSheetHeader';
-import { Calendar } from 'react-native-calendars';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Toast from 'react-native-simple-toast';
-import { BottomRightButton } from '../../components/common/buttons';
-
+import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
+import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { DataTable, Divider, Button } from 'react-native-paper'
+import AppLoader from '../../components/AppLoader'
+import { displayMessage } from '../../components/common/SharedHelper'
+import * as config from '../../configs'
+import { Context as AuthContext } from '../../context/authContext'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { DoctorCalendar } from '../../interfaces'
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { BottomSheetHeader } from '../../components/BottomSheetHeader'
+import { Calendar } from 'react-native-calendars'
+import DateTimePickerModal from "react-native-modal-datetime-picker"
+import Toast from 'react-native-simple-toast'
+import { BottomRightButton } from '../../components/common/buttons'
+import moment from 'moment'
+const _format = 'YYYY-MM-DD'
+const _today = moment().format(_format)
+const _maxDate = moment().add(60, 'days').format(_format)
 
 const MyScheduleScreen = () => {
 
-    const [schedule, setSchedule] = useState<DoctorCalendar[]>();
-    const [isLoading, setIsLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
+    const initialState = {
+        [_today]: { 'selected': false, 'disabled': false }
+    }
+    const [schedule, setSchedule] = useState<DoctorCalendar[]>()
+    const [isLoading, setIsLoading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false)
 
-    const { state } = useContext(AuthContext);
-    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext);
+    const { state } = useContext(AuthContext)
+    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
+    const user = state.user
 
-    const user = state.user;
+    const addScheduleRef = useRef<BottomSheet>(null)
+    const snapPoints = useMemo(() => ['25%', '85%'], [])
+    const [markedDates, setMarkedDates] = useState<any>(initialState)
 
-    const addScheduleRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['25%', '85%'], []);
-    const currentDate = getCurrentDate();
+    const [startTime, setStartTime] = useState<string>()
+    const [endTime, setEndTime] = useState<string>()
 
-    const [selectedDate, setSelectedDate] = useState<string>(currentDate);
-    const [startTime, setStartTime] = useState<string>();
-    const [endTime, setEndTime] = useState<string>();
-
-    const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false);
-    const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
+    const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false)
+    const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false)
 
     useEffect(() => {
-        fetchDoctorCalendar();
-    }, []);
+        fetchDoctorCalendar()
+    }, [])
 
     const populateCalendar = (data: DoctorCalendar[]) => {
-        setSchedule(data);
+        setSchedule(data)
     }
 
     const fetchDoctorCalendar = () => {
-        getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+        getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }
 
     const HeaderComponent = () => {
@@ -56,7 +60,7 @@ const MyScheduleScreen = () => {
                 <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Start Time</Text></DataTable.Title>
                 <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>End Time</Text></DataTable.Title>
             </DataTable.Header>
-        );
+        )
     }
 
     const EmptyComponent = () => {
@@ -64,7 +68,18 @@ const MyScheduleScreen = () => {
             <View style={styles.emptyCalendarView}>
                 <Text style={styles.emptyListStyle}>Looks like you haven't added any calendar dates</Text>
             </View>
-        );
+        )
+    }
+
+    const onDaySelect = (day: any) => {
+        const _selectedDay = moment(day.dateString).format(_format)
+
+        let marked = true
+        if (markedDates[_selectedDay]) {
+            marked = !markedDates[_selectedDay].selected
+        }
+        const updatedMarkedDates = { ...markedDates, ...{ [_selectedDay]: { 'selected': marked } } }
+        setMarkedDates(updatedMarkedDates)
     }
 
     const CustomDataTable = ({ item }: { item: any }) => (
@@ -73,44 +88,41 @@ const MyScheduleScreen = () => {
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.end_time}</Text></DataTable.Cell>
         </DataTable.Row>
-    );
+    )
 
     const CustomCalendar = (props: any) => {
 
-        const marked = useMemo(() => ({
-            [currentDate]: { selected: false, selectedColor: config.colors.white, selectedTextColor: config.colors.gray, },
-            [selectedDate]: {
-                selected: true,
-                selectedColor: config.colors.primary,
-                selectedTextColor: config.colors.white,
-            }
-        }), [selectedDate]);
-
         return (
             <Calendar
-                hideExtraDays={true}
-                initialDate={currentDate}
-                minDate={currentDate}
-                markedDates={marked}
-
-                onDayPress={(day) => {
-                    setSelectedDate(day.dateString);
-                    props.onDaySelect && props.onDaySelect(day);
-                }}
+                initialDate={_today}
+                minDate={_today}
+                maxDate={_maxDate}
+                onDayPress={onDaySelect}
+                markedDates={markedDates}
                 disableAllTouchEventsForDisabledDays={true}
                 hideArrows={false}
-                {...props}
+                hideExtraDays={true}
+                style={{
+                    borderWidth: 0,
+                    borderRadius: 4,
+                }}
+                theme={{
+                    todayTextColor: config.colors.primary,
+                    selectedDayBackgroundColor: config.colors.primary,
+                    selectedDayTextColor: config.colors.white,
+                }}
+                markingType={'custom'}
             />
-        );
+        )
     }
 
     const onRefresh = () => {
-        setRefreshing(true);
-        fetchDoctorCalendar();
-        setRefreshing(false);
+        setRefreshing(true)
+        fetchDoctorCalendar()
+        setRefreshing(false)
     }
 
-    const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), []);
+    const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), [])
 
     const SetTimeButton = ({ time, buttonText, onPress }: { time: any, buttonText: any, onPress: any }) => (
         <View style={styles.buttonView}>
@@ -119,66 +131,67 @@ const MyScheduleScreen = () => {
                 buttonColor={config.colors.white} onPress={onPress}>{buttonText}</Button>
             <Text style={styles.time}>{time}</Text>
         </View>
-    );
+    )
 
     const handleSheetChanges = useCallback((index: number) => {
         addScheduleRef.current?.snapToIndex(index)
-    }, []);
+    }, [])
 
     const handleSnapPress = useCallback((index: number) => {
-        addScheduleRef.current?.snapToIndex(index);
-    }, []);
+        addScheduleRef.current?.snapToIndex(index)
+    }, [])
 
     const handleClosePress = useCallback(() => {
-        addScheduleRef.current?.close();
-    }, []);
+        addScheduleRef.current?.close()
+    }, [])
 
     const setSelectedStartTime = (time: any) => {
-        setStartTimePickerVisible(false);
-        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        setStartTimePickerVisible(false)
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
 
-        setStartTime(formattedTime);
+        setStartTime(formattedTime)
     }
 
     const setSelectedEndTime = (time: any) => {
-        setEndTimePickerVisible(false);
-        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-        setEndTime(formattedTime);
+        setEndTimePickerVisible(false)
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+        setEndTime(formattedTime)
     }
 
     const submitSchedule = () => {
-        if (!selectedDate) {
-            Toast.show(`Please select date`);
+        const selectedCalendarDates = Object.keys(markedDates).filter((date) => markedDates[date].selected)
+        console.log(`marked dates`, selectedCalendarDates)
+        if (markedDates.length < 1) {
+            Toast.show(`Please select date`)
+            return
         }
         if (!startTime) {
-            Toast.show(`Please select start time`);
+            Toast.show(`Please select start time`)
+            return
         }
         if (!endTime) {
-            Toast.show(`Please select end time`);
+            Toast.show(`Please select end time`)
+            return
         }
 
-        if (selectedDate && startTime && endTime) {
-
-            let payload = {
-                doctor_id: user.id,
-                date: selectedDate,
-                start_time: startTime,
-                end_time: endTime
-            }
-            setIsLoading(true);
-            submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
-
+        const payload = {
+            doctor_id: user.id,
+            date: markedDates,
+            start_time: startTime,
+            end_time: endTime
         }
+        setIsLoading(true)
+        submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
 
     }
 
     const updateCalendar = (message: string) => {
-        handleClosePress();
-        displayMessage(message);
-        setSelectedDate(currentDate);
-        setStartTime("");
-        setEndTime("");
-        fetchDoctorCalendar();
+        handleClosePress()
+        displayMessage(message)
+        setMarkedDates(initialState)
+        setStartTime("")
+        setEndTime("")
+        fetchDoctorCalendar()
     }
 
     return (
@@ -245,7 +258,7 @@ const MyScheduleScreen = () => {
 
 }
 
-export default MyScheduleScreen;
+export default MyScheduleScreen
 
 const styles = StyleSheet.create({
 
@@ -322,4 +335,4 @@ const styles = StyleSheet.create({
         fontWeight: '900',
     }
 
-});
+})
