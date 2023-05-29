@@ -255,12 +255,12 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         <React.Fragment>
             <SafeAreaView style={styles.container}>
                 <StatusBar backgroundColor={config.colors.primary} />
-                <ScrollView
-                    style={styles.scrollView}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Icon5 name="arrow-left" size={20} style={{ marginLeft: 20 }} color={config.colors.white} />
+                    </TouchableOpacity>
 
-                    <View style={styles.header}>
+                    <View style={styles.userProfile}>
                         {
                             !isUpdatingImage ?
                                 <View style={{ position: 'relative' }}>
@@ -281,7 +281,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 <View style={styles.profile_avatar}>
                                     <UIActivityIndicator color='black' size={27} />
                                 </View>
-
                         }
 
                         <View style={{ alignItems: 'center', marginTop: 10 }}>
@@ -291,11 +290,18 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 {<><Text> {user.is_patient ? `Patient Account` : `Doctor Account`} </Text></>}
                             </Text>
                             <TouchableOpacity style={styles.editProfileBtn} onPress={() => setIsDisabled(!isDisabled)}>
-                                <Text style={styles.editProfileTxt}>Edit Profile</Text>
+                                <Text style={styles.editProfileTxt}><Icon5 name={isDisabled ? 'pen' : 'eye'} size={10} color={config.colors.silver} /> {isDisabled ? 'Edit' : 'View'} profile</Text>
                             </TouchableOpacity>
                         </View>
-
                     </View>
+                </View>
+
+                <ScrollView
+                    style={styles.scrollView}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}>
+
+
 
                     <View style={styles.body}>
 
@@ -572,7 +578,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                     <Icon name={"trash"} size={30} color={config.colors.danger} />
                                 </TouchableOpacity>
                             }
-
                         </View>
 
                         <View style={{
@@ -640,17 +645,19 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        flex: 1,
         backgroundColor: config.colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
+        paddingVertical: 10,
     },
 
     body: {
         flex: 1,
         paddingHorizontal: 15,
         backgroundColor: config.colors.white
+    },
+
+    userProfile: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     scrollContainer: {
@@ -754,7 +761,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: config.colors.white,
         position: 'absolute',
-        left: 77,
+        left: 68,
         bottom: 18,
         right: 0
     },
@@ -788,15 +795,15 @@ const styles = StyleSheet.create({
     },
 
     editProfileBtn: {
-        borderWidth: 1,
-        borderColor: config.colors.white,
-        borderRadius: 8,
-        paddingVertical: 7,
-        paddingHorizontal: 16,
+        borderWidth: 0.5,
+        borderColor: config.colors.silver,
+        borderRadius: 25,
+        paddingVertical: 5,
+        paddingHorizontal: 12,
     },
 
     editProfileTxt: {
-        color: config.colors.white
+        color: config.colors.silver
     }
 
 })

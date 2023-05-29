@@ -73,15 +73,14 @@ const notificationsSlice = createSlice({
     },
 })
 
-
 export const { addNotification, markAsRead } = notificationsSlice.actions
 export const selectAllNotifications = (state: RootState) => state.notifications.notifications
 export const selectUnreadNotifications = (state: RootState) => {
     const notifications = state.notifications.notifications
-    if (notifications.length > 0) {
-      return notifications.filter(notification => !notification.read)
+    if (notifications && notifications.length > 0) {
+        return notifications.filter(notification => !notification.read)
     }
     return []
-  }
+}
 
 export default notificationsSlice.reducer
