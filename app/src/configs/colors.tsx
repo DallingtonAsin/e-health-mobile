@@ -34,5 +34,5 @@ export const colors = {
     disabled: '#D3D3D3',
     audioCallbg: '#1f2c34',
     notificationbg: '#f6f7fb',
-    green: 'green'
+    green: '#61ca8d'
 }

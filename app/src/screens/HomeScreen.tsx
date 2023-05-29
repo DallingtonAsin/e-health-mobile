@@ -92,8 +92,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
                                 {unreadCount > 0 &&
-                                    <View style={[configs.styles.supCount, { right: 2, backgroundColor: configs.colors.white, borderWidth: 0.6, borderColor: configs.colors.primary }]}>
-                                        <Text style={{ color: configs.colors.primary, fontSize: 12, fontWeight: 'bold' }}>{unreadCount}</Text>
+                                    <View style={[configs.styles.supCount, { right: 2, backgroundColor: configs.colors.green, borderWidth: 0.6, borderColor: configs.colors.green }]}>
+                                        <Text style={{ color: configs.colors.white, fontSize: 12, fontWeight: 'bold' }}>{unreadCount}</Text>
                                     </View>}
                             </TouchableOpacity>
                         </View>
