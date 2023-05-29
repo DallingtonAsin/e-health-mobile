@@ -26,10 +26,10 @@ const MyScheduleScreen = () => {
     const [schedule, setSchedule] = useState<DoctorCalendar[]>()
     const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
-
     const { state } = useContext(AuthContext)
-    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
     const user = state.user
+
+    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
 
     const addScheduleRef = useRef<BottomSheet>(null)
     const snapPoints = useMemo(() => ['25%', '85%'], [])
@@ -53,6 +53,84 @@ const MyScheduleScreen = () => {
         getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }
 
+    const onDaySelect = (day: any) => {
+        const _selectedDay = moment(day.dateString).format(_format)
+        let marked = true
+        if (markedDates[_selectedDay]) {
+            marked = !markedDates[_selectedDay].selected
+        }
+        const updatedMarkedDates = { ...markedDates, ...{ [_selectedDay]: { 'selected': marked } } }
+        setMarkedDates(updatedMarkedDates)
+    }
+
+    const handleSheetChanges = useCallback((index: number) => {
+        addScheduleRef.current?.snapToIndex(index)
+    }, [])
+
+    const handleSnapPress = useCallback((index: number) => {
+        addScheduleRef.current?.snapToIndex(index)
+    }, [])
+
+    const handleClosePress = useCallback(() => {
+        addScheduleRef.current?.close()
+    }, [])
+
+    const setSelectedStartTime = (time: any) => {
+        setStartTimePickerVisible(false)
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+
+        setStartTime(formattedTime)
+    }
+
+    const setSelectedEndTime = (time: any) => {
+        setEndTimePickerVisible(false)
+        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+        setEndTime(formattedTime)
+    }
+
+    const submitSchedule = () => {
+
+        const selectedCalendarDates = Object.keys(markedDates).filter((date) => markedDates[date].selected)
+        if (selectedCalendarDates.length < 1) {
+            Toast.show(`Please select at least one date`)
+            return
+        }
+        if (!startTime) {
+            Toast.show(`Please select start time`)
+            return
+        }
+        if (!endTime) {
+            Toast.show(`Please select end time`)
+            return
+        }
+
+        const payload = {
+            doctor_id: user.id,
+            dates: selectedCalendarDates,
+            start_time: startTime,
+            end_time: endTime
+        }
+        setIsLoading(true)
+        submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+    }
+
+    const updateCalendar = (message: string) => {
+        handleClosePress()
+        displayMessage(message)
+        setMarkedDates(initialState)
+        setStartTime("")
+        setEndTime("")
+        fetchDoctorCalendar()
+    }
+
+    const CustomDataTable = ({ item }: { item: any }) => (
+        <DataTable.Row>
+            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.date}</Text></DataTable.Cell>
+            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
+            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.end_time}</Text></DataTable.Cell>
+        </DataTable.Row>
+    )
+
     const HeaderComponent = () => {
         return (
             <DataTable.Header style={styles.tableHead}>
@@ -71,27 +149,7 @@ const MyScheduleScreen = () => {
         )
     }
 
-    const onDaySelect = (day: any) => {
-        const _selectedDay = moment(day.dateString).format(_format)
-
-        let marked = true
-        if (markedDates[_selectedDay]) {
-            marked = !markedDates[_selectedDay].selected
-        }
-        const updatedMarkedDates = { ...markedDates, ...{ [_selectedDay]: { 'selected': marked } } }
-        setMarkedDates(updatedMarkedDates)
-    }
-
-    const CustomDataTable = ({ item }: { item: any }) => (
-        <DataTable.Row>
-            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.date}</Text></DataTable.Cell>
-            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
-            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.end_time}</Text></DataTable.Cell>
-        </DataTable.Row>
-    )
-
     const CustomCalendar = (props: any) => {
-
         return (
             <Calendar
                 initialDate={_today}
@@ -132,67 +190,6 @@ const MyScheduleScreen = () => {
             <Text style={styles.time}>{time}</Text>
         </View>
     )
-
-    const handleSheetChanges = useCallback((index: number) => {
-        addScheduleRef.current?.snapToIndex(index)
-    }, [])
-
-    const handleSnapPress = useCallback((index: number) => {
-        addScheduleRef.current?.snapToIndex(index)
-    }, [])
-
-    const handleClosePress = useCallback(() => {
-        addScheduleRef.current?.close()
-    }, [])
-
-    const setSelectedStartTime = (time: any) => {
-        setStartTimePickerVisible(false)
-        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
-
-        setStartTime(formattedTime)
-    }
-
-    const setSelectedEndTime = (time: any) => {
-        setEndTimePickerVisible(false)
-        const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
-        setEndTime(formattedTime)
-    }
-
-    const submitSchedule = () => {
-        const selectedCalendarDates = Object.keys(markedDates).filter((date) => markedDates[date].selected)
-        console.log(`marked dates`, selectedCalendarDates)
-        if (markedDates.length < 1) {
-            Toast.show(`Please select date`)
-            return
-        }
-        if (!startTime) {
-            Toast.show(`Please select start time`)
-            return
-        }
-        if (!endTime) {
-            Toast.show(`Please select end time`)
-            return
-        }
-
-        const payload = {
-            doctor_id: user.id,
-            date: markedDates,
-            start_time: startTime,
-            end_time: endTime
-        }
-        setIsLoading(true)
-        submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
-
-    }
-
-    const updateCalendar = (message: string) => {
-        handleClosePress()
-        displayMessage(message)
-        setMarkedDates(initialState)
-        setStartTime("")
-        setEndTime("")
-        fetchDoctorCalendar()
-    }
 
     return (
         <React.Fragment>
