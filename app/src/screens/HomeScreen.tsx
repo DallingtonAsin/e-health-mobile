@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native'
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable, Alert } from 'react-native'
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
@@ -11,15 +11,17 @@ import { useSelector } from 'react-redux'
 import { selectUnreadNotifications } from "../redux/reducers/notificationSlice"
 import AppLoader from '../components/AppLoader'
 import { RootState } from '../redux/store'
+import { Switch } from 'react-native-paper'
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const { state, updateUserState } = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(false)
-    const { isVerified } = useContext(DoctorContext)
+    const { isVerified, updateOnlineStatus } = useContext(DoctorContext)
     const unreadNotifications = useSelector((state: RootState) => selectUnreadNotifications(state));
     const loading = useSelector((state: RootState) => state.notifications.loading)
     const user = state.user
+    const [isSwitchOn, setIsSwitchOn] = React.useState(user.is_online)
     const iconSize = 40
 
     const unreadCount = unreadNotifications.length
@@ -43,6 +45,35 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const onSuccess = async (screen: string) => {
         updateUserState({ onSuccess: navigation.navigate('SignedInStack', { screen: screen }) })
+    }
+
+    const changeOnlineStatus = () => {
+        if (!user.is_patient) {
+            const message = `Are you sure you want to go ${user.is_online ? 'offline' : 'online'}?`
+            Alert.alert(
+                `Confirm status`,
+                message,
+                [
+                    { text: 'No', onPress: () => { } },
+                    {
+                        text: 'Yes', onPress: () => {
+                            setIsLoading(true);
+                            updateOnlineStatus({ onSuccess: onChangeStatusSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+                        }
+                    },
+                ],
+                { cancelable: false }
+            );
+        }
+    }
+
+    const onChangeStatusSuccess = async (message: string) => {
+        updateUserState({
+            onSuccess: () => {
+                setIsSwitchOn(!isSwitchOn)
+                displayMessage(message)
+            }
+        })
     }
 
     return (
@@ -77,6 +108,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 </Text>}
                             </View>
                         </View>
+
+                        {!user.is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 50 }}>
+                            <Switch value={isSwitchOn} onValueChange={changeOnlineStatus} color={configs.colors.success} style={{ top: 4 }} />
+                            <Text style={{ color: configs.colors.silver }}>Switch to {isSwitchOn ? 'offline' : 'online'} mode</Text>
+                        </View>}
+
                     </View>
 
 

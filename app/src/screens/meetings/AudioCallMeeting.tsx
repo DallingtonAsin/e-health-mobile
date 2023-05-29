@@ -287,8 +287,10 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             </>
                         ) : (
                             <>
-                                {user.is_patient && isJoined && !isOtherUserJoined && <Text>Waiting for doctor {doctor.first_name} to join</Text>}
-                                {!user.is_patient && isJoined && !isOtherUserJoined && <Text>Waiting for {patient.first_name} to join</Text>}
+                                {/* Waiting for doctor {doctor.first_name} to join */}
+                                {/* Waiting for {patient.first_name} to join */}
+                                {user.is_patient && isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
+                                {!user.is_patient && isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
                             </>
                         )}
                         <TimerScreen timer={timer} />
