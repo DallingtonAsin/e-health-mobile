@@ -1,4 +1,4 @@
-
+import React from 'react'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import * as configs from '../configs'
 

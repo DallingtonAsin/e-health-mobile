@@ -107,8 +107,8 @@ const AppStackScreen = () => {
                     },
                     headerTintColor: configs.colors.white,
                     headerTitle: `Profile`,
-                    headerBackVisible: true,
-                    headerShown: true,
+                    headerBackVisible: false,
+                    headerShown: false,
                 }}
             />
 
