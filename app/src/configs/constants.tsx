@@ -86,6 +86,80 @@ const agoraConnectionInitialState = {
   channel: ''
 }
 
+const InitialAppointmentDetailState = {
+  id: 0,
+  patient_id: 0,
+  doctor_id: 0,
+  appointment_number: '',
+  appointment_type_id: 0,
+  appointment_date: '',
+  reason: '',
+  notes: '' ,
+  status: '',
+  confirmed_at: '',
+  reminded_at: '',
+  completed_at: '' ,
+  rescheduled_at: '' ,
+  cancelled_at: '' ,
+  is_doctor_notified: 0,
+  alert_status: '',
+  is_online: false,
+  is_video: false,
+  appointment_time: '',
+  patient: {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      country_code: '',
+      phone_number: '',
+      email: '',
+      address: '',
+      dob: '',
+      image: '',
+      thumbnail: ''
+  },
+  doctor: {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      specialty_id: 0,
+      primary_facility_id: 0,
+      country_code: '',
+      phone_number: '',
+      email: '',
+      qualification: '',
+      address: '',
+      image: '',
+      service_fee: '',
+      fcm_token: '' ,
+      thumbnail: '',
+      specialty: '',
+      primary_facility: '',
+      is_online: false
+  },
+  appointment_type: {
+      id: 0,
+      name: ''
+  },
+  meeting_access: {
+      appId: '',
+      channel: '',
+      token: ''
+  },
+  medical_history: {
+      id: 0,
+      patient_id: 0,
+      appointment_id: 0,
+      past_medical_history: '' ,
+      current_treatment: '' ,
+      illness: '' ,
+      diagnosis_date: '' ,
+      treatment: '' 
+  }
+}
+
+
+
 
 export {
   initialUser,
@@ -94,5 +168,6 @@ export {
   initialFileUpload,
   registrationState,
   DrCompleteProfileInitialState,
-  agoraConnectionInitialState
+  agoraConnectionInitialState,
+  InitialAppointmentDetailState
 }

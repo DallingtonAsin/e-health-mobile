@@ -32,5 +32,7 @@ export const colors = {
     terms: '#2196f3',
     darkBlue: '#17414a',
     disabled: '#D3D3D3',
-    audioCallbg: '#1f2c34'
+    audioCallbg: '#1f2c34',
+    notificationbg: '#f6f7fb',
+    green: 'green'
 }

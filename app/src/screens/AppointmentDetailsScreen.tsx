@@ -1,92 +1,106 @@
-import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity, useWindowDimensions } from 'react-native';
-import * as config from '../configs';
-import { Avatar as AvatarRP } from 'react-native-paper';
-import Avatar from '../components/Avatar';
-import { Context as AuthContext } from '../context/authContext';
-import { Context as PatientContext } from '../context/patientContext';
-import { Context as DoctorContext } from '../context/doctorContext';
-import { displayMessage, getUserInitials } from '../components/common/SharedHelper';
-import AppLoader from '../components/AppLoader';
-import MeetingRoomScreen from './MeetingRoomScreen';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { callPhoneNumber, sendSms } from '../components/common/communications';
+import React, { useContext, useEffect, useState } from 'react'
+import { SafeAreaView, StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity, useWindowDimensions } from 'react-native'
+import * as config from '../configs'
+import { Avatar as AvatarRP } from 'react-native-paper'
+import Avatar from '../components/Avatar'
+import { Context as AuthContext } from '../context/authContext'
+import { Context as AppContext } from '../context/appContext'
+import { Context as PatientContext } from '../context/patientContext'
+import { Context as DoctorContext } from '../context/doctorContext'
+import { displayMessage, getUserInitials } from '../components/common/SharedHelper'
+import AppLoader from '../components/AppLoader'
+import MeetingRoomScreen from './MeetingRoomScreen'
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import { callPhoneNumber, sendSms } from '../components/common/communications'
+import { AppointmentDetail } from '../interfaces'
+import { InitialAppointmentDetailState } from '../configs/constants'
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { appointmentInfo } = route.params;
-    const { id, doctor, patient, appointment_number, appointment_date, appointment_time, appointment_type,
-        reason, completed_at, cancelled_at, is_online, is_video, meeting_access, medical_history, status } = appointmentInfo;
+    const { appointment_id } = route.params
 
-    const { state } = useContext(AuthContext);
-    const { confirmAppointment } = useContext(DoctorContext);
-    const { cancelAppointment } = useContext(PatientContext);
+    const { state } = useContext(AuthContext)
+    const { getAppointmentDetails } = useContext(AppContext)
+    const { confirmAppointment } = useContext(DoctorContext)
+    const { cancelAppointment } = useContext(PatientContext)
 
-    const user = state.user;
-    const [isLoading, setIsLoading] = useState(false);
-    const [videoCall, setVideoCall] = useState(false);
-    const [index, setIndex] = React.useState(0);
-    const layout = useWindowDimensions();
+    const user = state.user
+    const [isLoading, setIsLoading] = useState(true)
+    const [videoCall, setVideoCall] = useState(false)
+    const [appointmentInfo, setAppointmentInfo] = useState<AppointmentDetail>(InitialAppointmentDetailState)
+    const [index, setIndex] = React.useState(0)
+    const layout = useWindowDimensions()
 
     const [routes] = React.useState([
         { key: 'appointment', title: 'Details' },
         { key: 'profile', title: user.is_patient ? 'Doctor Profile' : 'Patient Profile' },
-    ]);
+    ])
+
+    useEffect(() => {
+        if (appointment_id) {
+            getAppointmentDetails({ appointment_id: appointment_id, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        }
+    }, [])
+
+    const onSuccess = (data: any) => {
+        console.log(`appointment details`, data)
+        setAppointmentInfo(data)
+    }
 
     const Separator = () => (
         <View style={styles.separator} />
-    );
+    )
 
     const ContentItem = ({ title, value, row = false }: { title: any, value: any, row?: boolean }) => (
         <View style={[styles.appointmentInfo, row ? { flexDirection: 'row' } : { flexDirection: 'column' }]}>
             <Text style={styles.subtitle}>{title}</Text>
             <Text style={styles.info}>{value}</Text>
         </View>
-    );
+    )
 
     const confirmMedicalAppointment = () => {
         Alert.alert(
             '',
-            `Are you sure you want to confirm appointment ${appointment_number}?`,
+            `Are you sure you want to confirm appointment ${appointmentInfo.appointment_number}?`,
             [
 
                 { text: 'No', onPress: () => console.log('Cancelled') },
                 {
                     text: 'Yes', onPress: async () => {
                         let payload = {
-                            patient_id: patient.id,
-                            appointment_number: appointment_number
+                            patient_id: appointmentInfo.patient.id,
+                            appointment_number: appointmentInfo.appointment_number
                         }
-                        setIsLoading(true);
-                        confirmAppointment({ payload: payload, onSuccess: onConfirmAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling });
+                        setIsLoading(true)
+                        confirmAppointment({ payload: payload, onSuccess: onConfirmAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling })
                     }
                 },
             ],
             { cancelable: false }
-        );
+        )
     }
 
     const cancelMedicalAppointment = () => {
         Alert.alert(
             '',
-            `Are you sure you want to cancel appointment ${appointment_number}?`,
+            `Are you sure you want to cancel appointment ${appointmentInfo.appointment_number}?`,
             [
                 { text: 'No', onPress: () => console.log('Cancel Pressed') },
                 {
                     text: 'Yes', onPress: async () => {
                         let payload = {
-                            patient_id: patient.id,
-                            appointment_number: appointment_number
+                            patient_id: appointmentInfo.patient.id,
+                            appointment_number: appointmentInfo.appointment_number
                         }
-                        setIsLoading(true);
-                        cancelAppointment({ payload: payload, onSuccess: onCancelAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling });
+                        setIsLoading(true)
+                        cancelAppointment({ payload: payload, onSuccess: onCancelAppointmentSuccess, onFailure: displayMessage, onCompletion: afterCancelling })
                     }
                 },
             ],
             { cancelable: false }
-        );
+        )
     }
 
     const onConfirmAppointmentSuccess = (message: string) => {
@@ -101,79 +115,85 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const completeMedicalAppoitment = () => {
         navigation.navigate('CompleteAppointment', {
-            appointment_id: id,
-            appointment_number: appointment_number,
-            patient: patient,
-            medical_history: medical_history
-        });
+            appointment_id: appointment_id,
+            appointment_number: appointmentInfo.appointment_number,
+            patient: appointmentInfo.patient,
+            medical_history: appointmentInfo.medical_history
+        })
     }
 
     const afterCancelling = () => {
-        setIsLoading(false);
-        navigation.navigate('MyAppointments');
+        setIsLoading(false)
+        navigation.navigate('MyAppointments')
     }
 
     if (videoCall) {
-        if (meeting_access && meeting_access.appId) {
-            return <MeetingRoomScreen appointment_id={id} is_video={is_video} />
+        if (appointmentInfo && appointmentInfo.meeting_access && appointmentInfo.meeting_access.appId) {
+            return <MeetingRoomScreen appointment_id={appointment_id} is_video={appointmentInfo.is_video} />
         } else {
-            displayMessage(`This meeting does not have meeting links, please contact admin`);
+            displayMessage(`This meeting does not have meeting links, please contact admin`)
         }
     }
 
     const joinMeeting = () => {
-        if (!doctor.is_online) {
+        if (!appointmentInfo.doctor.is_online) {
             setVideoCall(true)
         } else {
-            displayMessage(`Doctor ${doctor.first_name} ${doctor.last_name} is currently offline, please try again later.`)
+            displayMessage(`Doctor ${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name} is currently offline, please try again later.`)
         }
     }
 
     const DoctorProfile = () => (
         <React.Fragment>
-            <View style={styles.header}>
-                {doctor.thumbnail && <Avatar size={90} source={doctor.thumbnail} resizeMode={"cover"} />}
-                {!doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${doctor.first_name} ${doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+            {!isLoading && <><View style={styles.header}>
+                {appointmentInfo.doctor.thumbnail && <Avatar size={90} source={appointmentInfo.doctor.thumbnail} resizeMode={"cover"} />}
+                {!appointmentInfo.doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
-                    <TouchableOpacity onPress={() => callPhoneNumber(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sendSms(`${doctor.country_code}${doctor.phone_number}`)} style={config.styles.sms}>
+                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="sms" size={22} style={config.styles.callBtn} />
                     </TouchableOpacity>
                 </View>
             </View>
-            <ContentItem title={"Name"} value={`${doctor.first_name} ${doctor.last_name}`} />
-            <ContentItem title={"Phone Number"} value={`${doctor.country_code} ${doctor.phone_number}`} />
-            <ContentItem title={"Specialty"} value={doctor.specialty} />
-            <ContentItem title={"Primary facility"} value={doctor.primary_facility} />
-            <ContentItem title={"Email"} value={doctor.email} />
-            <ContentItem title={"Address"} value={doctor.address} />
-            <ContentItem title={"Consultation fee"} value={doctor.service_fee} />
+                <ContentItem title={"Name"} value={`${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name}`} />
+                <ContentItem title={"Phone Number"} value={`${appointmentInfo.doctor.country_code} ${appointmentInfo.doctor.phone_number}`} />
+                <ContentItem title={"Specialty"} value={appointmentInfo.doctor.specialty} />
+                <ContentItem title={"Primary facility"} value={appointmentInfo.doctor.primary_facility} />
+                <ContentItem title={"Email"} value={appointmentInfo.doctor.email} />
+                <ContentItem title={"Address"} value={appointmentInfo.doctor.address} />
+                <ContentItem title={"Consultation fee"} value={appointmentInfo.doctor.service_fee} />
+            </>
+            }
+            {isLoading && <AppLoader />}
         </React.Fragment>
-    );
+    )
 
     const PatientProfile = () => (
         <React.Fragment>
-            <View style={styles.header}>
-                {patient.thumbnail && <Avatar size={100} source={patient.thumbnail} />}
-                {!patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${patient.first_name} ${patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
+            {!isLoading && <><View style={styles.header}>
+                {appointmentInfo.patient.thumbnail && <Avatar size={100} source={appointmentInfo.patient.thumbnail} />}
+                {!appointmentInfo.patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${appointmentInfo.patient.first_name} ${appointmentInfo.patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
-                    <TouchableOpacity onPress={() => callPhoneNumber(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sendSms(`${patient.country_code}${patient.phone_number}`)} style={config.styles.sms}>
+                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.sms}>
                         <Icon5 name="sms" size={22} style={config.styles.callBtn} />
                     </TouchableOpacity>
                 </View>
             </View>
-            <ContentItem title={"Name"} value={`${patient.first_name} ${patient.last_name}`} />
-            <ContentItem title={"Phone Number"} value={`${patient.country_code} ${patient.phone_number}`} />
-            <ContentItem title={"Address"} value={patient.address} />
-            <ContentItem title={"Email"} value={patient.email} />
-            <ContentItem title={"Date of Birth"} value={patient.dob} />
+                <ContentItem title={"Name"} value={`${appointmentInfo.patient.first_name} ${appointmentInfo.patient.last_name}`} />
+                <ContentItem title={"Phone Number"} value={`${appointmentInfo.patient.country_code} ${appointmentInfo.patient.phone_number}`} />
+                <ContentItem title={"Address"} value={appointmentInfo.patient.address} />
+                <ContentItem title={"Email"} value={appointmentInfo.patient.email} />
+                <ContentItem title={"Date of Birth"} value={appointmentInfo.patient.dob} />
+            </>
+            }
+            {isLoading && <AppLoader />}
         </React.Fragment>
-    );
+    )
 
     const ProfileDetails = () => (
         <ScrollView
@@ -186,71 +206,76 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 {!user.is_patient && <PatientProfile />}
             </View>
         </ScrollView>
-    );
+    )
 
     const AppointmentDetails = () => (
-        <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContainer}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
+        <React.Fragment>
+            {!isLoading && <ScrollView
+                style={styles.scroll}
+                contentContainerStyle={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}>
 
-            <View style={styles.body}>
-                <ContentItem title={"Appointment number"} value={appointment_number} />
-                <ContentItem title={"Appointment type"} value={appointment_type.name} />
-                <ContentItem title={"Appointment Time"} value={`${appointment_date} ${appointment_time}`} />
-                <ContentItem title={"Reason"} value={reason} />
-                <ContentItem title={"Medical history"} value={medical_history.past_medical_history} />
-                <ContentItem title={"Current treatment"} value={medical_history.current_treatment} />
-                <ContentItem title={"Consultation fee per 15 min"} value={doctor.service_fee} />
-                <View style={styles.appointmentInfo}>
-                    <Text style={styles.subtitle}>Status</Text>
-                    <Text style={[status == 'Pending' && { color: config.colors.pendingColor }, status == 'Cancelled' && { color: config.colors.pink }, status == 'Completed' && { color: config.colors.success }]}>{status}</Text>
+                <View style={styles.body}>
+                    <ContentItem title={"Appointment number"} value={appointmentInfo.appointment_number} />
+                    <ContentItem title={"Appointment type"} value={appointmentInfo.appointment_type.name} />
+                    <ContentItem title={"Appointment Time"} value={`${appointmentInfo.appointment_date} ${appointmentInfo.appointment_time}`} />
+                    <ContentItem title={"Reason"} value={appointmentInfo.reason} />
+                    <ContentItem title={"Medical history"} value={appointmentInfo.medical_history.past_medical_history} />
+                    <ContentItem title={"Current treatment"} value={appointmentInfo.medical_history.current_treatment} />
+                    <ContentItem title={"Consultation fee per 15 min"} value={appointmentInfo.doctor.service_fee} />
+                    <View style={styles.appointmentInfo}>
+                        <Text style={styles.subtitle}>Status</Text>
+                        <Text style={[appointmentInfo.status == 'Pending' && { color: config.colors.pendingColor }, appointmentInfo.status == 'Cancelled' && { color: config.colors.pink }, appointmentInfo.status == 'Completed' && { color: config.colors.success }]}>{appointmentInfo.status}</Text>
+                    </View>
+
+                    {appointmentInfo.completed_at && <><ContentItem title={"Completed At"} value={appointmentInfo.completed_at} /><Separator /></>}
+                    {appointmentInfo.cancelled_at && <><ContentItem title={"Cancelled At"} value={appointmentInfo.cancelled_at} /><Separator /></>}
+
+
+                    <View style={styles.footer}>
+
+                        {appointmentInfo.is_online && appointmentInfo.status == 'Confirmed' &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => joinMeeting()}>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Join Meeting</Text>
+                            </TouchableOpacity>
+                        }
+
+                        {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
+
+                        {!user.is_patient && appointmentInfo.status == 'Pending' &&
+                            <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
+                                onPress={() => confirmMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
+                        {!user.is_patient && appointmentInfo.status == 'Confirmed' &&
+                            <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
+                                onPress={() => completeMedicalAppoitment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
+                            </TouchableOpacity>
+                        }
+                    </View>
+
+
                 </View>
+            </ScrollView>
+            }
+            {isLoading && <AppLoader />}
+        </React.Fragment>
 
-                {completed_at && <><ContentItem title={"Completed At"} value={completed_at} /><Separator /></>}
-                {cancelled_at && <><ContentItem title={"Cancelled At"} value={cancelled_at} /><Separator /></>}
-
-
-                <View style={styles.footer}>
-
-                    {is_online && status == 'Confirmed' &&
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '98%' }]} onPress={() => joinMeeting()}>
-                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Join Meeting</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {(status == 'Pending' || status == 'Confirmed') &&
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
-                        </TouchableOpacity>
-                    }
-
-
-                    {!user.is_patient && status == 'Pending' &&
-                        <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
-                            onPress={() => confirmMedicalAppointment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {!user.is_patient && status == 'Confirmed' &&
-                        <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
-                            onPress={() => completeMedicalAppoitment()}>
-                            <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
-                        </TouchableOpacity>
-                    }
-                </View>
-
-
-            </View>
-        </ScrollView>
-    );
+    )
 
     const renderScene = SceneMap({
         appointment: AppointmentDetails,
         profile: ProfileDetails
-    });
+    })
 
 
     const renderTabBar = (props: any) => (
@@ -264,11 +289,11 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
             indicatorStyle={{ backgroundColor: config.colors.primary }}
             style={{ backgroundColor: config.colors.white }}
         />
-    );
+    )
 
     return (
         <React.Fragment>
-            <SafeAreaView style={styles.container}>
+            {!isLoading && <SafeAreaView style={styles.container}>
                 <TabView
                     navigationState={{ index, routes }}
                     renderTabBar={renderTabBar}
@@ -276,13 +301,13 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     onIndexChange={setIndex}
                     initialLayout={{ width: layout.width }}
                 />
-            </SafeAreaView>
+            </SafeAreaView>}
             {isLoading && <AppLoader />}
         </React.Fragment>
-    );
+    )
 }
 
-export default AppointmentDetailsScreen;
+export default AppointmentDetailsScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -438,4 +463,4 @@ const styles = StyleSheet.create({
 
 
 
-});
+})

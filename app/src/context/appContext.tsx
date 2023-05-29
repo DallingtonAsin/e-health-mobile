@@ -265,13 +265,31 @@ const getDoctorLanguages = () => {
     };
 };
 
+const getAppointmentDetails = () => {
+    return ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = `${routes.medical.appointment_details}/${appointment_id}`
+        services.get(
+            endpoint
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
         getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage,
-        getDoctorLanguages, getNotifications, markNotificationRead
+        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails
     },
     { isAppLoading: true },
 );
