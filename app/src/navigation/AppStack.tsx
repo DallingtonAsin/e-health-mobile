@@ -1,36 +1,37 @@
 import React, { useContext } from "react"
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen';
-import SpecialityListScreen from "../screens/MedicalDoctorsScreen";
-import ContactUsScreen from "../screens/ContactUsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import ScheduleAppointmentScreen from "../screens/ScheduleAppointment";
-import AppointmentConfirmationScreen from "../screens/AppointmentConfirmationScreen";
-import MyAppointmentScreen from "../screens/MyAppointmentScreen";
-import AppointmentDetailsScreen from "../screens/AppointmentDetailsScreen";
-import MedicalRecordScreen from "../screens/MedicalRecordScreen";
-import NotificationScreen from "../screens/NotificationScreen";
-import MedicalHistoryScreen from "../screens/MedicalHistoryScreen";
-import MyScheduleScreen from "../screens/Doctor/MyScheduleScreen";
-import DrugScreen from "../screens/DrugScreen";
-import DrugDetailsScreen from "../screens/DrugDetailsScreen";
-import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/common/index";
-import CartIcon from "../screens/common/CartIcon";
-import CartScreen from "../screens/CartScreen";
-import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen";
-import TabNavigator from "./TabNavigator";
-import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen";
-import HomeScreen from "../screens/HomeScreen";
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen'
+import SpecialityListScreen from "../screens/MedicalDoctorsScreen"
+import ContactUsScreen from "../screens/ContactUsScreen"
+import ProfileScreen from "../screens/ProfileScreen"
+import ScheduleAppointmentScreen from "../screens/ScheduleAppointment"
+import AppointmentConfirmationScreen from "../screens/AppointmentConfirmationScreen"
+import MyAppointmentScreen from "../screens/MyAppointmentScreen"
+import AppointmentDetailsScreen from "../screens/AppointmentDetailsScreen"
+import MedicalRecordScreen from "../screens/MedicalRecordScreen"
+import NotificationScreen from "../screens/NotificationScreen"
+import MedicalHistoryScreen from "../screens/MedicalHistoryScreen"
+import MyScheduleScreen from "../screens/Doctor/MyScheduleScreen"
+import DrugScreen from "../screens/DrugScreen"
+import DrugDetailsScreen from "../screens/DrugDetailsScreen"
+import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/common/index"
+import CartIcon from "../screens/common/CartIcon"
+import CartScreen from "../screens/CartScreen"
+import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen"
+import TabNavigator from "./TabNavigator"
+import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen"
+import HomeScreen from "../screens/HomeScreen"
 import SpecialitiesListScreen from '../screens/MedicalDoctorsScreen'
-import { Context as AuthContext } from '../context/authContext';
-import * as configs from '../configs';
+import { Context as AuthContext } from '../context/authContext'
+import * as configs from '../configs'
+import DoctorProfileScreen from "../screens/Doctor/DoctorProfileScreen"
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 
 const AppStackScreen = () => {
 
-    const { state } = useContext(AuthContext);
+    const { state } = useContext(AuthContext)
     const user = state.user
 
     return (
@@ -107,6 +108,20 @@ const AppStackScreen = () => {
                     },
                     headerTintColor: configs.colors.white,
                     headerTitle: `Profile`,
+                    headerBackVisible: false,
+                    headerShown: false,
+                }}
+            />
+
+            <Stack.Screen
+                name="DoctorProfile"
+                component={DoctorProfileScreen}
+                options={{
+                    headerStyle: {
+                        backgroundColor: configs.colors.primary,
+                    },
+                    headerTintColor: configs.colors.white,
+                    headerTitle: `Doctor Profile`,
                     headerBackVisible: false,
                     headerShown: false,
                 }}
@@ -331,4 +346,4 @@ const AppStackScreen = () => {
     )
 }
 
-export default AppStackScreen;
+export default AppStackScreen
