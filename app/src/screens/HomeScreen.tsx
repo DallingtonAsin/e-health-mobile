@@ -118,7 +118,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
 
                     <View style={styles.body}>
-                        <Text style={styles.title}>Quick Actions</Text>
+
+                        <View style={styles.cardHeaderView}>
+                            <View style={styles.centerContainer}>
+                                <Text style={styles.centerText}>Quick Actions</Text>
+                            </View>
+                            {!user.is_patient && <Text style={styles.ratingText}> <Icon5 name="star" size={20} color={configs.colors.orange} /> {user.rating ? user.rating : 0}/5</Text>}
+                        </View>
 
                         <View style={styles.cardContainer}>
                             {user.is_patient &&
@@ -230,13 +236,34 @@ const styles = StyleSheet.create({
         elevation: 8
     },
 
-    title: {
+    cardHeaderView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        marginVertical: 15,
+    },
+
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    centerText: {
         fontSize: 17,
         textAlign: 'center',
         fontWeight: 'bold',
         fontStyle: 'normal',
-        marginTop: 20,
         textTransform: 'capitalize',
+        color: configs.colors.darkBlue,
+        opacity: 0.7,
+    },
+
+    ratingText: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontStyle: 'italic',
         color: configs.colors.darkBlue,
         opacity: 0.7,
     },
