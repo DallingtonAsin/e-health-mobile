@@ -32,7 +32,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const { markDoctorFavourite, unMarkDoctorFavourite } = useContext(PatientContext)
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
-        navigation.navigate('ScheduleAppointment', { doctor_id: item.id })
+        navigation.navigate('DoctorProfile', { doctor_id: item.id })
     }
 
     useEffect(() => {
@@ -141,7 +141,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                         style={styles.bookBtn}
                         onPress={() => bookMedicalDoctor(item)}
                     >
-                        <Text style={styles.btnTxt}>Book</Text>
+                        <Text style={styles.btnTxt}>Consult</Text>
                     </TouchableOpacity>
                 </View>
             </View>
