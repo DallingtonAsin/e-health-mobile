@@ -182,7 +182,6 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         )
     }
 
-
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -206,11 +205,11 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
                         </View>
 
                         <View style={configs.styles.contacts}>
-                            <TouchableOpacity onPress={() => callDoctor()} style={configs.styles.sms}>
-                                <Icon5 name="phone-alt" size={18} style={configs.styles.callBtn} />
+                            <TouchableOpacity onPress={() => callDoctor()} style={configs.styles.callBtn}>
+                                <Icon5 name="phone-alt" size={18} color={configs.colors.white} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => textDoctor()} style={configs.styles.sms}>
-                                <Icon name="envelope" size={18} style={configs.styles.callBtn} />
+                            <TouchableOpacity onPress={() => textDoctor()} style={configs.styles.callBtn}>
+                                <Icon name="envelope" size={18} color={configs.colors.white} />
                             </TouchableOpacity>
                         </View>
 

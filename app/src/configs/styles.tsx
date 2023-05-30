@@ -160,8 +160,12 @@ export const styles = {
   callBtn: {
     color: colors.white,
     backgroundColor: colors.primary,
-    padding: 12,
+    width: 50,
+    height: 50,
     borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 2
   },
 
   sms: {
@@ -170,7 +174,7 @@ export const styles = {
 
   contacts: {
     flexDirection: 'row',
-    alignItems: 'stretch'
+    // alignItems: 'stretch'
   },
 
   documentId: {

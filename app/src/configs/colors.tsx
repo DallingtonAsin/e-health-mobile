@@ -28,11 +28,15 @@ export const colors = {
     pendingBg: '#e8eef0',
     pendingColor: '#215d67',
     orange: '#ff8414',
+    paleOrange: '#eec6b9',
     grey: '#555',
     terms: '#2196f3',
+    primaryBlue: '#2268a0',
     darkBlue: '#17414a',
     disabled: '#D3D3D3',
     audioCallbg: '#1f2c34',
     notificationbg: '#f6f7fb',
-    green: '#61ca8d'
+    green: '#61ca8d',
+    paleBlue: '#85a7b0',
+    paleSilver: '#fafafa'
 }

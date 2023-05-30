@@ -117,6 +117,8 @@ interface DoctorsDetail {
     country_code?: string,
     phone_number: string,
     gender: string,
+    email?: string,
+    address?: string,
     specialty?: string,
     primary_facility?: string,
     bio_summary: string,
