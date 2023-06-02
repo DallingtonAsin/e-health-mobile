@@ -161,6 +161,7 @@ interface MyAppointmentInfo {
     appointment_date: string,
     appointment_time: string,
     status: string,
+    is_expired: boolean,
 }
 
 interface AppointmentInfo {

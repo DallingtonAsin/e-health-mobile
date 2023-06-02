@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
 import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import { DataTable, Divider, Button } from 'react-native-paper'
+import { DataTable, Divider, Button, IconButton } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import * as config from '../../configs'
@@ -13,6 +13,8 @@ import { Calendar } from 'react-native-calendars'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Toast from 'react-native-simple-toast'
 import { BottomRightButton } from '../../components/common/buttons'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
 const _format = 'YYYY-MM-DD'
 const _today = moment().format(_format)
@@ -32,7 +34,7 @@ const MyScheduleScreen = () => {
     const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
 
     const addScheduleRef = useRef<BottomSheet>(null)
-    const snapPoints = useMemo(() => ['25%', '85%'], [])
+    const snapPoints = useMemo(() => ['25%', '92%'], [])
     const [markedDates, setMarkedDates] = useState<any>(initialState)
 
     const [startTime, setStartTime] = useState<string>()
@@ -184,8 +186,8 @@ const MyScheduleScreen = () => {
 
     const SetTimeButton = ({ time, buttonText, onPress }: { time: any, buttonText: any, onPress: any }) => (
         <View style={styles.buttonView}>
-            <Button icon="clock" mode="contained"
-                textColor={config.colors.gray} style={{ borderWidth: 1, borderColor: config.colors.gray, opacity: 0.9 }}
+            <Button icon={() => <Icon5 name="clock" color={config.colors.red} />} mode="contained"
+                textColor={config.colors.gray} style={{ borderWidth: 0.5, borderColor: config.colors.gray, opacity: 0.9 }}
                 buttonColor={config.colors.white} onPress={onPress}>{buttonText}</Button>
             <Text style={styles.time}>{time}</Text>
         </View>
@@ -220,6 +222,7 @@ const MyScheduleScreen = () => {
                 <Divider style={styles.divider} />
 
                 <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                    <Text style={styles.infoText}>Select one or more days and the timeframe you will be available to take online consultations.</Text>
                     <CustomCalendar onDaySelect={(day: any) => { }} />
 
                     <SetTimeButton time={startTime} buttonText={'Start Time'} onPress={() => setStartTimePickerVisible(true)} />
@@ -330,6 +333,12 @@ const styles = StyleSheet.create({
     time: {
         fontSize: config.fonts.extraLarge,
         fontWeight: '900',
+    },
+
+    infoText: {
+        fontSize: config.fonts.medium_15,
+        textAlign: 'center',
+        paddingVertical: 5
     }
 
 })

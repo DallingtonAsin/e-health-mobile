@@ -230,7 +230,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
                         <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt,
-                         item.status === 'Cancelled' && config.styles.cancelledTxt, item.status === 'Pending' && config.styles.pendingTxt, item.status === 'Confirmed' && config.styles.confirmedTxt]}>{item.status}</Text>
+                        (item.status === 'Cancelled' || item.is_expired) && config.styles.cancelledTxt, item.status === 'Pending' && config.styles.pendingTxt, item.status === 'Confirmed' && config.styles.confirmedTxt]}>{item.status}</Text>
                     </View>
                 </View>
             </View>
@@ -320,6 +320,8 @@ const styles = StyleSheet.create({
 
     statusView: {
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     dateView: {
@@ -328,7 +330,9 @@ const styles = StyleSheet.create({
     },
 
     status: {
-        fontWeight: '600',
+        fontSize: config.fonts.normal,
+        opacity: 0.90,
+        fontWeight: '300',
         marginLeft: 5,
         borderRadius: 5,
         textAlign: 'center',
@@ -340,7 +344,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 50,
-        backgroundColor:  '#00bfff',
+        backgroundColor: '#00bfff',
         alignItems: 'center',
         justifyContent: 'center',
     },
