@@ -42,9 +42,13 @@ const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navi
           <Icon5 name="calendar-alt"
             size={15} color={configs.colors.white} /> on {readableDate(appointmentInfo.appointment_date)} - {readableTime(appointmentInfo.appointment_time)}</Text>
 
-        <Pressable style={styles.button} onPress={() => navigation.navigate(`SignedInStack`, {screen: `Home`})}>
-          <Text style={styles.okayText}>Okay</Text>
-        </Pressable>
+
+
+        <View style={styles.footer}>
+          <Pressable style={configs.styles.secondaryBtn} onPress={() => navigation.navigate(`SignedInStack`, { screen: `Home` })}>
+            <Text style={styles.okayText}>Okay</Text>
+          </Pressable>
+        </View>
 
       </ScrollView>
     </SafeAreaView>
@@ -60,7 +64,8 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    flex: 1,
+    flexGrow: 1,
+    marginBottom: 50
   },
 
   scrollContainer: {
@@ -143,6 +148,13 @@ const styles = StyleSheet.create({
 
   dateSection: {
     flexDirection: 'row',
-  }
+  },
+
+  footer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
 
 });
