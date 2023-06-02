@@ -36,7 +36,6 @@ const createContext = (defaultValue: any) => {
         getMedicalDoctors: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalFacilities: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         updateUserState: ({ onSuccess }: { onSuccess: any }) => { },
-        updateOnlineStatus: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         checkAppointmentStatus: ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
 
         // doctor api methods
@@ -49,6 +48,8 @@ const createContext = (defaultValue: any) => {
         markNotificationRead: ({ notification_id, is_patient, onSuccess, onFailure, onCompletion }: { notification_id: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalHistory: ({ patient_id, onSuccess, onFailure, onCompletion }: { patient_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         isVerified: ({ screen, onSuccess, onFailure, onCompletion }: { screen: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        updateOnlineStatus: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        changeAutoApproveAppointmentStatus: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });
 
     return Context;

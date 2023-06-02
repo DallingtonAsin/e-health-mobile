@@ -558,9 +558,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                 </ScrollView>
-
-
-
+                
                 <BottomSheet
                     visible={visible}
                     onBackButtonPress={() => setVisible(!visible)}
