@@ -22,7 +22,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { appointment_id } = route.params
 
     const { state } = useContext(AuthContext)
-    const { getAppointmentDetails } = useContext(AppContext)
+    const { getAppointmentDetails, checkAppointmentStatus } = useContext(AppContext)
     const { confirmAppointment } = useContext(DoctorContext)
     const { cancelAppointment } = useContext(PatientContext)
 
@@ -45,7 +45,6 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     }, [])
 
     const onSuccess = (data: any) => {
-        console.log(`appointment details`, data)
         setAppointmentInfo(data)
     }
 
@@ -136,11 +135,16 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     }
 
     const joinMeeting = () => {
-        if (!appointmentInfo.doctor.is_online) {
-            setVideoCall(true)
-        } else {
-            displayMessage(`Doctor ${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name} is currently offline, please try again later.`)
-        }
+        setIsLoading(true)
+        checkAppointmentStatus({
+            appointment_id: appointmentInfo.id, onSuccess: () => {
+                if (!appointmentInfo.doctor.is_online) {
+                    setVideoCall(true)
+                } else {
+                    displayMessage(`Doctor ${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name} is currently offline, please try again later.`)
+                }
+            }, onFailure: displayMessage, onCompletion: () => setIsLoading(false)
+        })
     }
 
     const DoctorProfile = () => (
