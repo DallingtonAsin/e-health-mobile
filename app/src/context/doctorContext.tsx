@@ -197,20 +197,42 @@ const updateOnlineStatus = (dispatch: any) => {
             routes.doctor.update_online_status,
             {}
         ).then(async (res) => {
-
             if (res && res.data) {
-
                 const data = res.data;
                 const user = data.user;
                 const message = data.message;
-
                 await storeAccessToken(user.access_token);
                 await storeUser(user);
                 dispatch({
                     type: types.HOME,
                     payload: user
                 });
+                onSuccess(message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
 
+const changeAutoApproveAppointmentStatus = (dispatch: any) => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            routes.doctor.update_auto_approve_status,
+            {}
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                const user = data.user;
+                const message = data.message;
+                await storeAccessToken(user.access_token);
+                await storeUser(user);
+                dispatch({
+                    type: types.HOME,
+                    payload: user
+                });
                 onSuccess(message);
             }
         }).catch((error) => {
@@ -261,7 +283,7 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
-        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus
+        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus
     },
     { isAppLoading: true },
 );
