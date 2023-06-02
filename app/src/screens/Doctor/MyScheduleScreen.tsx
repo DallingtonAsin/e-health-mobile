@@ -32,7 +32,7 @@ const MyScheduleScreen = () => {
     const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
 
     const addScheduleRef = useRef<BottomSheet>(null)
-    const snapPoints = useMemo(() => ['25%', '85%'], [])
+    const snapPoints = useMemo(() => ['25%', '92%'], [])
     const [markedDates, setMarkedDates] = useState<any>(initialState)
 
     const [startTime, setStartTime] = useState<string>()
@@ -220,6 +220,7 @@ const MyScheduleScreen = () => {
                 <Divider style={styles.divider} />
 
                 <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                    <Text style={styles.infoText}>Select one or more days and the timeframe you will be available to take online consultations.</Text>
                     <CustomCalendar onDaySelect={(day: any) => { }} />
 
                     <SetTimeButton time={startTime} buttonText={'Start Time'} onPress={() => setStartTimePickerVisible(true)} />
@@ -330,6 +331,12 @@ const styles = StyleSheet.create({
     time: {
         fontSize: config.fonts.extraLarge,
         fontWeight: '900',
+    },
+
+    infoText: {
+        fontSize: config.fonts.medium_15,
+        textAlign: 'center',
+        paddingVertical: 5
     }
 
 })
