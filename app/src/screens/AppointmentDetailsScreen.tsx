@@ -22,7 +22,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     const { appointment_id } = route.params
 
     const { state } = useContext(AuthContext)
-    const { getAppointmentDetails } = useContext(AppContext)
+    const { getAppointmentDetails, checkAppointmentStatus } = useContext(AppContext)
     const { confirmAppointment } = useContext(DoctorContext)
     const { cancelAppointment } = useContext(PatientContext)
 
@@ -45,7 +45,6 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     }, [])
 
     const onSuccess = (data: any) => {
-        console.log(`appointment details`, data)
         setAppointmentInfo(data)
     }
 
@@ -136,11 +135,16 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
     }
 
     const joinMeeting = () => {
-        if (!appointmentInfo.doctor.is_online) {
-            setVideoCall(true)
-        } else {
-            displayMessage(`Doctor ${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name} is currently offline, please try again later.`)
-        }
+        setIsLoading(true)
+        checkAppointmentStatus({
+            appointment_id: appointmentInfo.id, onSuccess: () => {
+                if (!appointmentInfo.doctor.is_online) {
+                    setVideoCall(true)
+                } else {
+                    displayMessage(`Doctor ${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name} is currently offline, please try again later.`)
+                }
+            }, onFailure: displayMessage, onCompletion: () => setIsLoading(false)
+        })
     }
 
     const DoctorProfile = () => (
@@ -149,11 +153,11 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 {appointmentInfo.doctor.thumbnail && <Avatar size={90} source={appointmentInfo.doctor.thumbnail} resizeMode={"cover"} />}
                 {!appointmentInfo.doctor.thumbnail && <AvatarRP.Text size={90} label={getUserInitials(`${appointmentInfo.doctor.first_name} ${appointmentInfo.doctor.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
-                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.sms}>
-                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.callBtn}>
+                        <Icon5 name="phone-alt" size={20} color={config.colors.white} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.sms}>
-                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.doctor.country_code}${appointmentInfo.doctor.phone_number}`)} style={config.styles.callBtn}>
+                        <Icon5 name="sms" size={20} color={config.colors.white} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -176,11 +180,11 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 {appointmentInfo.patient.thumbnail && <Avatar size={100} source={appointmentInfo.patient.thumbnail} />}
                 {!appointmentInfo.patient.thumbnail && <AvatarRP.Text size={80} label={getUserInitials(`${appointmentInfo.patient.first_name} ${appointmentInfo.patient.last_name}`)} style={[config.styles.userAvatar, { borderWidth: 0.5, borderColor: config.colors.gray }]} />}
                 <View style={config.styles.contacts}>
-                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.sms}>
-                        <Icon5 name="phone-alt" size={22} style={config.styles.callBtn} />
+                    <TouchableOpacity onPress={() => callPhoneNumber(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.callBtn}>
+                        <Icon5 name="phone-alt" size={20} color={config.colors.white} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.sms}>
-                        <Icon5 name="sms" size={22} style={config.styles.callBtn} />
+                    <TouchableOpacity onPress={() => sendSms(`${appointmentInfo.patient.country_code}${appointmentInfo.patient.phone_number}`)} style={config.styles.callBtn}>
+                        <Icon5 name="sms" size={20} color={config.colors.white} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -241,17 +245,16 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                             </TouchableOpacity>
                         }
 
-                        {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
-                            </TouchableOpacity>
-                        }
-
-
                         {!user.is_patient && appointmentInfo.status == 'Pending' &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                                 onPress={() => confirmMedicalAppointment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Confirm Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
+                        {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
                             </TouchableOpacity>
                         }
 

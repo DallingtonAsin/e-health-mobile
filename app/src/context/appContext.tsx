@@ -283,12 +283,29 @@ const getAppointmentDetails = () => {
     };
 };
 
+const checkAppointmentStatus = () => {
+    return ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.medical.appointment_status}/${appointment_id}/status`
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
-        getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage,
+        getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus,
         getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails
     },
     { isAppLoading: true },
