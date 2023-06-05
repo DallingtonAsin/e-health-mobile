@@ -112,11 +112,28 @@ const postRating = () => {
     };
 };
 
+const getDoctorsByOnlineStatus = () => {
+    return ({ is_online, onSuccess, onFailure, onCompletion }: { is_online: number | null, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.medical.doctors_by_online_status}/${is_online}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                let data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-        submitAppointment, cancelAppointment, getMedicalHistory, 
-        markDoctorFavourite, unMarkDoctorFavourite, postRating
+        submitAppointment, cancelAppointment, getMedicalHistory,
+        getDoctorsByOnlineStatus, markDoctorFavourite, unMarkDoctorFavourite, postRating
     },
     { isAppLoading: true },
 );
