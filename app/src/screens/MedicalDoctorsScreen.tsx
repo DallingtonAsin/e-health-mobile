@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from "react"
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, useWindowDimensions } from "react-native"
 import * as configs from '../configs'
-import { Avatar as AvatarRP } from 'react-native-paper'
+import { Avatar as AvatarRP, RadioButton } from 'react-native-paper'
 import Avatar from '../components/Avatar'
 import { DoctorsDetail } from "../interfaces"
 import { Context as AppContext } from '../context/appContext'
@@ -24,12 +24,12 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     const [filteredData, setFilteredData] = useState<DoctorsDetail[]>([])
     const [specialtyId, setSpecialtyId] = useState<number>()
     const [specialtyName, setSpecialtyName] = useState<string>('')
-
+    const [onlineStatus, setOnlineStatus] = useState<number | null>(null)
     const { state } = useContext(AuthContext)
     const user = state.user
     const { getDoctorsBySpecialty } = useContext(AppContext)
     const { getMedicalDoctors } = useContext(DoctorContext)
-    const { markDoctorFavourite, unMarkDoctorFavourite } = useContext(PatientContext)
+    const { markDoctorFavourite, unMarkDoctorFavourite, getDoctorsByOnlineStatus } = useContext(PatientContext)
 
     const bookMedicalDoctor = (item: DoctorsDetail) => {
         navigation.navigate('DoctorProfile', { doctor_id: item.id })
@@ -43,6 +43,13 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
         const id = route.params && route.params.specialty_id ? route.params.specialty_id : null
         fetchMedicalDoctors(id)
     }, [])
+
+
+    const onChangeOnlineStatus = (status: number | null) => {
+        setOnlineStatus(status)
+        setIsLoading(true)
+        getDoctorsByOnlineStatus({ is_online: status, onSuccess: populateMedicalDoctors, onFailure: displayMessage, onCompletion: stopLoading })
+    }
 
     const fetchMedicalDoctors = (specialty_id: number | any = specialtyId) => {
         if (specialty_id || specialtyId) {
@@ -58,7 +65,6 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     }
 
     const handleSearch = (text: string) => {
-
         setSearchQuery(text)
         const newData = medicalDoctors.filter((item: DoctorsDetail) => {
             const searchText = text.toLowerCase()
@@ -180,6 +186,35 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
                         inputStyle={styles.searchbarInput}
                     />
                 }
+
+                <View style={styles.radioBtnView}>
+                    <Text>Select status</Text>
+                    <View style={styles.btnGroup}>
+                        <RadioButton
+                            value="all"
+                            status={onlineStatus === null ? 'checked' : 'unchecked'}
+                            onPress={() => onChangeOnlineStatus(null)}
+                            color={configs.colors.primary} />
+                        <Text>All</Text>
+                    </View>
+                    <View style={styles.btnGroup}>
+                        <RadioButton
+                            value="online"
+                            status={onlineStatus === 1 ? 'checked' : 'unchecked'}
+                            onPress={() => onChangeOnlineStatus(1)}
+                            color={configs.colors.primary} />
+                        <Text>online</Text>
+                    </View>
+
+                    <View style={styles.btnGroup}>
+                        <RadioButton
+                            value="offline"
+                            status={onlineStatus === 0 ? 'checked' : 'unchecked'}
+                            onPress={() => onChangeOnlineStatus(0)}
+                            color={configs.colors.primary} />
+                        <Text>offline</Text>
+                    </View>
+                </View>
                 <FlatList
                     data={filteredData}
                     renderItem={renderItem}
@@ -380,5 +415,17 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginVertical: 10,
     },
+
+    radioBtnView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    btnGroup: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 
 })

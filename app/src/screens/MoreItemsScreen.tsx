@@ -131,7 +131,7 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
                 index={-1}
                 snapPoints={snapPoints}
                 onChange={handleSnapPress}
-                handleComponent={() => <BottomSheetHeader title='Appointment settings' onClose={handleClosePress} />}
+                handleComponent={() => <BottomSheetHeader title='Appointment Settings' onClose={handleClosePress} />}
                 style={styles.bottomSheet}
             >
                 <Divider style={styles.divider} />
