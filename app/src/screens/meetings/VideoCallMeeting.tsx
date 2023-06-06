@@ -15,6 +15,8 @@ import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
 import * as config from '../../configs'
 import { agoraConnectionInitialState } from '../../configs/constants'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
 
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -146,7 +148,15 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     return (
         <React.Fragment>
             <View style={{ flex: 1 }}>
-                {videoCall ? (<AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+                {videoCall ? (
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Text style={styles.infoText}><Icon name="info-circle" size={18} color={config.colors.primary}/> You are the only one here</Text>
+                        </View>
+                        <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+                    </View>
+
+
                 ) : (
                     <View style={styles.main}>
                         <ScrollView
@@ -183,6 +193,24 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 export default VideoCallMeeting
 
 const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: config.colors.white,
+    },
+
+    header: {
+        height: 30,
+        backgroundColor: config.colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    body: {
+        flex: 1,
+        backgroundColor: config.colors.white,
+        height: '100%'
+    },
 
     main: {
         flex: 1,
@@ -230,6 +258,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textTransform: 'lowercase',
         fontSize: config.fonts.medium
+    },
+
+    infoText: {
+        textAlign: 'center',
+        fontSize: config.fonts.medium,
+      
     }
 
 })
