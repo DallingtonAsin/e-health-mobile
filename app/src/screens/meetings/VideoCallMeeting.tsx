@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import { ScrollView, SafeAreaView, StyleSheet, Text, Alert, View, PermissionsAndroid, Platform } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { ScrollView, StyleSheet, Text, Alert, View, NativeEventEmitter, NativeModules } from 'react-native'
 import AgoraUIKit from 'agora-rn-uikit'
 import AppLoader from '../../components/AppLoader'
+import { createAgoraRtcEngine } from 'react-native-agora'
 import { Context as AppContext } from '../../context/appContext'
 import { Context as PatientContext } from '../../context/patientContext'
 import { displayMessage, getUserInitials } from '../../components/common/SharedHelper'
 import RateDoctorPopup from '../../components/RateDoctorPopup'
 import { Context as AuthContext } from '../../context/authContext'
 import { IUser } from '../../interfaces'
-import { BottomRightButton, CircularButton } from '../../components/common/buttons'
+import { BottomRightButton } from '../../components/common/buttons'
 import TimerScreen from '../../components/common/TimerScreen'
 import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
@@ -16,16 +17,6 @@ import * as config from '../../configs'
 import { agoraConnectionInitialState } from '../../configs/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import * as Animatable from 'react-native-animatable'
-import {
-    ClientRoleType,
-    createAgoraRtcEngine,
-    IRtcEngine,
-    RtcSurfaceView,
-    ChannelProfileType,
-} from 'react-native-agora';
-import StickerWithText from '../../components/StickerWithText'
-const uid = Math.floor(Math.random() * 100000);
-var isMuted = false;
 
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -43,11 +34,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [timer, setTimer] = useState(0)
     const [isTimerRunning, setIsTimerRunning] = useState(false)
     const [interval, setIntervalId] = useState<any | null>(null)
-    const [ownUID, setOwnUID] = useState(uid);
-    const agoraEngineRef = useRef<IRtcEngine>();
-    const [isJoined, setIsJoined] = useState(false);
-    const [remoteUid, setRemoteUid] = useState(0);
-    const [message, setMessage] = useState('');
+    const [isJoined, setIsJoined] = useState(false)
     const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
 
     useEffect(() => {
@@ -58,121 +45,6 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             })
         }
     }, [])
-
-    function showMessage(msg: string) {
-        setMessage(msg);
-    }
-
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-            ]);
-        }
-    };
-
-    useEffect(() => {
-        setupVideoSDKEngine();
-    });
-
-    const setupVideoSDKEngine = async () => {
-        try {
-            if (Platform.OS === 'android') { await getPermission() };
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-
-            if (connectionData && connectionData.channel) {
-                agoraEngine.registerEventHandler({
-                    onJoinChannelSuccess: () => {
-                        showMessage('Successfully joined the channel ' + connectionData.channel);
-                        setIsJoined(true);
-                    },
-                    onUserJoined: (_connection, Uid) => {
-                        showMessage('Remote user joined with uid ' + Uid);
-                        setRemoteUid(Uid);
-                        if (Uid !== ownUID) {
-                            setIsOtherUserJoined(true);
-                        }
-                    },
-                    onUserOffline: (_connection, Uid) => {
-                        showMessage('Remote user left the channel. uid: ' + Uid);
-                        setRemoteUid(0);
-                        if (Uid !== ownUID) {
-                            setIsOtherUserJoined(false);
-                        }
-                    },
-                });
-                agoraEngine.initialize({
-                    appId: connectionData.appId,
-                    channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
-                });
-                agoraEngine.enableVideo();
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const join = async () => {
-        if (isJoined) {
-            return;
-        }
-        try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileCommunication,
-            );
-            agoraEngineRef.current?.startPreview();
-            if (connectionData && connectionData.appId && ownUID) {
-                agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, ownUID, {
-                    clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-                });
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const leave = () => {
-        try {
-
-            Alert.alert(
-                `Confirm`,
-                'Are you sure you want to leave the call?',
-                [
-                    { text: 'No', onPress: () => { } },
-                    {
-                        text: 'Yes', onPress: () => {
-                            if (user.is_patient) {
-                                stopTimer()
-                                setIsRatingVisible(true)
-                            } else {
-                                leaveChannel()
-                                stopTimer()
-                            }
-                        }
-                    },
-                ],
-                { cancelable: false }
-            )
-
-
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const leaveChannel = () => {
-        agoraEngineRef.current?.leaveChannel();
-        setRemoteUid(0);
-        setIsJoined(false);
-        showMessage('You left the channel');
-    }
-
-    const mute = () => {
-        isMuted = !isMuted;
-        agoraEngineRef.current?.muteLocalAudioStream(isMuted);
-    };
 
     const setMeetingDetails = (data: any) => {
         if (data && data.meeting_access) {
@@ -188,7 +60,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
     const handleCloseRating = () => {
         setIsRatingVisible(false)
-        leaveChannel()
+        setVideoCall(false)
     }
 
     const handleRatingSubmit = (rating: number, comment: string) => {
@@ -202,7 +74,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 postRating({
                     payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
                         setIsRatingVisible(false)
-                        leaveChannel()
+                        setVideoCall(false)
                     }
                 })
             } else {
@@ -211,6 +83,53 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         } else {
             displayMessage(`Rate doctor with atleast one star`)
         }
+    }
+
+    const rtcCallbacks = {
+
+        JoinChannelSuccess: () => {
+            console.log(`Joined my channel xxx`)
+            setIsJoined(true)
+        },
+
+        UserJoined: (data: any) => {
+            if (data.localUid) {
+                setIsOtherUserJoined(true);
+            }
+            console.log(`user joined channel xxxx...`, data)
+        },
+
+        UserOffline: (data: any) => {
+            console.log(`user offline channel xxxx...`, data)
+            setIsOtherUserJoined(false);
+        },
+
+        LeaveChannel: () => {
+            console.log(`Left the channel`)
+        },
+
+        EndCall: () => {
+            Alert.alert(
+                `Confirm`,
+                'Are you sure you want to leave the call?',
+                [
+                    { text: 'No', onPress: () => { } },
+                    {
+                        text: 'Yes', onPress: () => {
+                            if (user.is_patient) {
+                                stopTimer()
+                                setIsRatingVisible(true)
+                            } else {
+                                setVideoCall(false)
+                                stopTimer()
+                            }
+                        }
+                    },
+                ],
+                { cancelable: false }
+            )
+
+        },
     }
 
     const startTimer = (): void => {
@@ -243,7 +162,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
     const startCall = () => {
         startTimer()
-        join()
+        setVideoCall(true)
     }
 
     if (isLoading) {
@@ -251,49 +170,18 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     return (
-        <SafeAreaView style={styles.main}>
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContainer}>
-                {isJoined ? (
-                    <React.Fragment key={0}>
-
-                        {/* {isJoined && isOtherUserJoined && <View style={styles.header}><Animatable.Text >{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Animatable.Text ></View>} */}
-                        {isJoined && !isOtherUserJoined && <View style={styles.header}><Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text ></View>}
-
-                        {isJoined && <RtcSurfaceView canvas={{ uid: 0 }} style={styles.videoView} />}
-                        {isJoined && remoteUid !== 0 && <RtcSurfaceView canvas={{ uid: remoteUid }} style={styles.videoView} />}
-
-                        <View style={styles.btnContainer}>
-                            <View style={styles.contentContainer}>
-                                <View style={styles.controls}>
-                                    <CircularButton icon={isMuted ? 'microphone-alt-slash' : 'microphone-alt'} size={20} onPress={mute} btnStyle={{ marginTop: 20 }} backgroundColor={config.colors.paleBlue1} />
-                                    <Text style={styles.controlText}>Audio</Text>
-                                </View>
-
-                                <View style={styles.controls}>
-                                    <CircularButton icon='video' size={20} onPress={startCall} btnStyle={{ marginTop: 20 }} backgroundColor={config.colors.paleBlue1} />
-                                    <Text style={styles.controlText}>Video</Text>
-                                </View>
-
-                                <View style={styles.controls}>
-                                    <CircularButton icon='video' size={20} onPress={startCall} btnStyle={{ marginTop: 20 }} backgroundColor={config.colors.paleBlue1} />
-                                    <Text style={styles.controlText}>Switch</Text>
-                                </View>
-
-                                <View style={styles.controls}>
-                                    <CircularButton icon='phone-alt' size={20} onPress={leave} btnStyle={{ marginTop: 20 }} backgroundColor={config.colors.red} />
-                                    <Text style={styles.controlText}>Hang Up</Text>
-                                </View>
-                            </View>
-                        </View>
-
-
-
-                    </React.Fragment>
+        <React.Fragment>
+            <View style={{ flex: 1 }}>
+                {videoCall ? (
+                    <View style={styles.container}>
+                        {isJoined && !isOtherUserJoined && <View style={styles.header}>
+                        <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text >
+                        </View>}
+                        <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+                    </View>
                 ) : (
-                    <View style={styles._main}>
-                        <ScrollView contentContainerStyle={styles._scrollContainer}>
+                    <View style={styles.main}>
+                        <ScrollView contentContainerStyle={styles.scrollContainer}>
                             <View style={styles.centeredContent}>
                                 {user.is_patient && (doctor && doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
                                 {!user.is_patient && (patient && patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
@@ -310,19 +198,15 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         </ScrollView>
                         <View style={styles.controls}>
                             <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 8 }} onPress={() => startCall()} />
-                            <Text style={[styles.controlText, { color: config.colors.gray }]}>{videoCall ? 'Stop video' : 'Start video'}</Text>
+                            <Text style={styles.controlText}>{videoCall ? 'Stop video' : 'Start video'}</Text>
                         </View>
                     </View>
-                )}
-
-
-
-
-            </ScrollView>
-            <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
-        </SafeAreaView>
-    );
-
+                )
+                }
+                <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
+            </View>
+        </React.Fragment>
+    )
 }
 
 export default VideoCallMeeting
@@ -336,6 +220,7 @@ const styles = StyleSheet.create({
 
     header: {
         height: 30,
+        backgroundColor: config.colors.white,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -346,6 +231,16 @@ const styles = StyleSheet.create({
         height: '100%'
     },
 
+    main: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    scrollContainer: {
+        flexGrow: 1,
+    },
+
     centeredContent: {
         flex: 1,
         justifyContent: 'center',
@@ -354,10 +249,13 @@ const styles = StyleSheet.create({
     },
 
     contentContainer: {
-        flex: 1,
+        paddingHorizontal: 25,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingHorizontal: 25,
+    },
+
+    head: {
+        fontSize: 20
     },
 
     divider: {
@@ -377,9 +275,8 @@ const styles = StyleSheet.create({
 
     controlText: {
         textAlign: 'center',
-        textTransform: 'capitalize',
-        fontSize: config.fonts.medium,
-        color: config.colors.white,
+        textTransform: 'lowercase',
+        fontSize: config.fonts.medium
     },
 
     infoText: {
@@ -388,63 +285,10 @@ const styles = StyleSheet.create({
 
     },
 
-    button: {
-        paddingHorizontal: 25,
-        paddingVertical: 4,
-        fontWeight: 'bold',
-        color: '#ffffff',
-        backgroundColor: '#0055cc',
-        margin: 5,
-    },
-
-    main: {
-        flex: 1,
-        alignItems: 'center',
-        color: config.colors.white,
-    },
-    scroll: {
-        flex: 1,
-        backgroundColor: '#ddeeff',
-        width: '100%'
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        alignItems: 'center'
-    },
-    videoView: {
-        width: '100%',
-        height: 650
-    },
-    btnContainer: {
-        position: 'absolute',
-        bottom: 0,
-        flexDirection: 'row',
-        marginBottom: 0,
-        justifyContent: 'space-between',
-    },
-    head: {
-        fontSize: 20
-    },
     info: {
         color: config.colors.primaryBlue,
         textAlign: 'center',
         fontSize: config.fonts.medium,
-    },
-
-    _main: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    _scrollContainer: {
-        flexGrow: 1,
-    },
-
-    stickerContainer: {
-        position: 'absolute',
-        top: 20,
-        right: 20,
     },
 
 })
