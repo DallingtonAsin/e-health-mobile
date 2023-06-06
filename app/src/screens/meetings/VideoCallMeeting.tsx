@@ -261,20 +261,8 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {/* {isJoined && isOtherUserJoined && <View style={styles.header}><Animatable.Text >{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Animatable.Text ></View>} */}
                         {isJoined && !isOtherUserJoined && <View style={styles.header}><Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text ></View>}
 
-                        {isJoined && !isOtherUserJoined && <RtcSurfaceView canvas={{ uid: 0 }} style={styles.videoView} />}
-                        {/* {isJoined && remoteUid !== 0 && <RtcSurfaceView canvas={{ uid: remoteUid }} style={styles.videoView} />} */}
-
-                        {isJoined && remoteUid !== 0 ? (
-                    <React.Fragment key={remoteUid}>
-                        <RtcSurfaceView
-                            canvas={{ uid: remoteUid }}
-                            style={styles.videoView}
-                        />
-                        <Text>Remote user uid: {remoteUid}</Text>
-                    </React.Fragment>
-                ) : (
-                    <Text>Waiting for a remote user to join</Text>
-                )}
+                        {isJoined && <RtcSurfaceView canvas={{ uid: 0 }} style={styles.videoView} />}
+                        {isJoined && remoteUid !== 0 && <RtcSurfaceView canvas={{ uid: remoteUid }} style={styles.videoView} />}
 
                         <View style={styles.btnContainer}>
                             <View style={styles.contentContainer}>
