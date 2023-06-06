@@ -283,7 +283,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {isJoined && isOtherUserJoined && <Text>{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Text>}
                         {isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
                         
-                        <TimerScreen timer={timer} />
+                        <TimerScreen seconds={timer} />
                     </View>
 
                 </ScrollView>

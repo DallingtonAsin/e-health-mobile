@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ScrollView, StyleSheet, Text, Alert, View, NativeEventEmitter, NativeModules } from 'react-native'
+import { ScrollView, StyleSheet, Text, Alert, View} from 'react-native'
 import AgoraUIKit from 'agora-rn-uikit'
 import AppLoader from '../../components/AppLoader'
 import { createAgoraRtcEngine } from 'react-native-agora'
@@ -31,9 +31,8 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [videoCall, setVideoCall] = useState(false)
     const [patient, setPatient] = useState<any>()
     const [doctor, setDoctor] = useState<any>()
-    const [timer, setTimer] = useState(0)
-    const [isTimerRunning, setIsTimerRunning] = useState(false)
-    const [interval, setIntervalId] = useState<any | null>(null)
+    const [seconds, setSeconds] = useState(0)
+    const [isActive, setIsActive] = useState(false)
     const [isJoined, setIsJoined] = useState(false)
     const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
 
@@ -117,11 +116,11 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     {
                         text: 'Yes', onPress: () => {
                             if (user.is_patient) {
-                                stopTimer()
+                                pauseTimer()
                                 setIsRatingVisible(true)
                             } else {
                                 setVideoCall(false)
-                                stopTimer()
+                                pauseTimer()
                             }
                         }
                     },
@@ -132,33 +131,35 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         },
     }
 
-    const startTimer = (): void => {
-        setIsTimerRunning(true)
-    }
-
-    const stopTimer = (): void => {
-        setIsTimerRunning(false)
-        setTimer(0)
-    }
-
+  
     useEffect(() => {
-        if (isTimerRunning) {
-            const id = setInterval(() => {
-                setTimer((prevTimer: any) => prevTimer + 1)
-            }, 1000)
-            setIntervalId(id)
+        let interval: any = null;
+
+        if (isActive) {
+            interval = setInterval(() => {
+                setSeconds((prevSeconds) => prevSeconds + 1);
+            }, 1000);
         } else {
-            if (interval) {
-                clearInterval(interval)
-            }
-            setIntervalId(null)
+            clearInterval(interval);
         }
-        return () => {
-            if (interval) {
-                clearInterval(interval)
-            }
-        }
-    }, [isTimerRunning])
+
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const startTimer= () => {
+        setIsActive(true);
+      };
+    
+      const pauseTimer = () => {
+        setIsActive(false);
+      };
+    
+      const stopTimer = () => {
+        setIsActive(false);
+        setSeconds(0);
+      };
+
+
 
     const startCall = () => {
         startTimer()
@@ -175,7 +176,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 {videoCall ? (
                     <View style={styles.container}>
                         {isJoined && !isOtherUserJoined && <View style={styles.header}>
-                        <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text >
+                            <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text >
                         </View>}
                         <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
                     </View>
@@ -193,7 +194,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                     {user.is_patient && doctor && <Text> {doctor.first_name}</Text>}
                                     {!user.is_patient && patient && <Text> {patient.first_name}</Text>}
                                 </Text>}
-                                <TimerScreen timer={timer} />
+                                <TimerScreen seconds={seconds} />
                             </View>
                         </ScrollView>
                         <View style={styles.controls}>
