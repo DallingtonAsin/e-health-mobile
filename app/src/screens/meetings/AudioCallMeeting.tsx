@@ -143,7 +143,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 agoraEngine.initialize({
                     appId: connectionData.appId
                 })
-
             }
 
         } catch (e) {
@@ -220,6 +219,12 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         }
     }
 
+    const mute = () => {
+        isMuted = !isMuted;
+        agoraEngineRef.current?.muteLocalAudioStream(isMuted)
+    }
+
+
     const handleCloseRating = () => {
         stopTimer()
         setIsRatingVisible(false)
@@ -255,11 +260,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }, [])
 
 
-    const muteCall = () => {
-        isMuted = !isMuted;
-        agoraEngineRef.current?.muteLocalAudioStream(isMuted)
-    }
-
     if (isLoading) {
         return <AppLoader />
     }
@@ -280,19 +280,9 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {!user.is_patient && patient && <Text style={styles.name}>{patient.first_name}</Text>}
                         {!isJoined && <Text>Start a call</Text>}
 
-                        {isJoined && isOtherUserJoined ? (
-                            <>
-                                {user.is_patient && <Text>{doctor.first_name} is now on call</Text>}
-                                {!user.is_patient && <Text>{patient.first_name} is now on call</Text>}
-                            </>
-                        ) : (
-                            <>
-                                {/* Waiting for doctor {doctor.first_name} to join */}
-                                {/* Waiting for {patient.first_name} to join */}
-                                {user.is_patient && isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
-                                {!user.is_patient && isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
-                            </>
-                        )}
+                        {isJoined && isOtherUserJoined && <Text>{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Text>}
+                        {isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
+                        
                         <TimerScreen timer={timer} />
                     </View>
 
@@ -316,7 +306,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             <Text style={styles.controlText}>Volume up</Text>
                         </View>
                         <View style={styles.controls}>
-                            <CircularButton icon='microphone-alt-slash' size={25} onPress={() => muteCall()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='microphone-alt-slash' size={25} onPress={() => mute()} iconColor={config.colors.gray} backgroundColor={isMuted ? config.colors.silver : config.colors.white} btnStyle={{ marginTop: 20 }} />
                             <Text style={styles.controlText}>Mute</Text>
                         </View>
                         <View style={styles.controls}>

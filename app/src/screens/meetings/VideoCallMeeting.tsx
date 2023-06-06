@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ScrollView, StyleSheet, Text, Alert, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, Alert, View, NativeEventEmitter, NativeModules } from 'react-native'
 import AgoraUIKit from 'agora-rn-uikit'
 import AppLoader from '../../components/AppLoader'
 import { createAgoraRtcEngine } from 'react-native-agora'
@@ -15,6 +15,8 @@ import { Avatar as AvatarRP } from 'react-native-paper';
 import Avatar from '../../components/Avatar';
 import * as config from '../../configs'
 import { agoraConnectionInitialState } from '../../configs/constants'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import * as Animatable from 'react-native-animatable'
 
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -32,6 +34,8 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [timer, setTimer] = useState(0)
     const [isTimerRunning, setIsTimerRunning] = useState(false)
     const [interval, setIntervalId] = useState<any | null>(null)
+    const [isJoined, setIsJoined] = useState(false)
+    const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
 
     useEffect(() => {
         getMeetingDetails({ appointmentId: appointment_id, onSuccess: setMeetingDetails, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
@@ -82,6 +86,28 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     const rtcCallbacks = {
+
+        JoinChannelSuccess: () => {
+            console.log(`Joined my channel xxx`)
+            setIsJoined(true)
+        },
+
+        UserJoined: (data: any) => {
+            if (data.localUid) {
+                setIsOtherUserJoined(true);
+            }
+            console.log(`user joined channel xxxx...`, data)
+        },
+
+        UserOffline: (data: any) => {
+            console.log(`user offline channel xxxx...`, data)
+            setIsOtherUserJoined(false);
+        },
+
+        LeaveChannel: () => {
+            console.log(`Left the channel`)
+        },
+
         EndCall: () => {
             Alert.alert(
                 `Confirm`,
@@ -146,12 +172,16 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     return (
         <React.Fragment>
             <View style={{ flex: 1 }}>
-                {videoCall ? (<AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+                {videoCall ? (
+                    <View style={styles.container}>
+                        {isJoined && !isOtherUserJoined && <View style={styles.header}>
+                        <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text >
+                        </View>}
+                        <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
+                    </View>
                 ) : (
                     <View style={styles.main}>
-                        <ScrollView
-                            contentContainerStyle={styles.scrollContainer}>
-
+                        <ScrollView contentContainerStyle={styles.scrollContainer}>
                             <View style={styles.centeredContent}>
                                 {user.is_patient && (doctor && doctor.thumbnail && <Avatar size={95} source={doctor.thumbnail} />)}
                                 {!user.is_patient && (patient && patient.thumbnail && <Avatar size={95} source={patient.thumbnail} />)}
@@ -163,7 +193,6 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                                     {user.is_patient && doctor && <Text> {doctor.first_name}</Text>}
                                     {!user.is_patient && patient && <Text> {patient.first_name}</Text>}
                                 </Text>}
-
                                 <TimerScreen timer={timer} />
                             </View>
                         </ScrollView>
@@ -183,6 +212,24 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 export default VideoCallMeeting
 
 const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: config.colors.white,
+    },
+
+    header: {
+        height: 30,
+        backgroundColor: config.colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    body: {
+        flex: 1,
+        backgroundColor: config.colors.white,
+        height: '100%'
+    },
 
     main: {
         flex: 1,
@@ -230,6 +277,18 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textTransform: 'lowercase',
         fontSize: config.fonts.medium
-    }
+    },
+
+    infoText: {
+        textAlign: 'center',
+        fontSize: config.fonts.medium,
+
+    },
+
+    info: {
+        color: config.colors.primaryBlue,
+        textAlign: 'center',
+        fontSize: config.fonts.medium,
+    },
 
 })
