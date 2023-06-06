@@ -39,5 +39,6 @@ export const colors = {
     notificationbg: '#f6f7fb',
     green: '#61ca8d',
     paleBlue: '#85a7b0',
-    paleSilver: '#fafafa'
+    paleSilver: '#fafafa',
+    paleBlue1: '#02b8f9',
 }
