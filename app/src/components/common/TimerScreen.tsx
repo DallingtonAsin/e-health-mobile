@@ -2,27 +2,22 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import * as config from '../../configs'
 
-const TimerScreen = ({ timer }: { timer: number }) => {
+const TimerScreen = ({ seconds }: { seconds: number }) => {
 
-    const formatTime = (time: number): string => {
-        const hours: string = padWithLeadingZeros(Math.floor(time / 3600), 2)
-        const minutes: string = padWithLeadingZeros(Math.floor((time % 3600) / 60), 2)
-        const seconds: string = padWithLeadingZeros(time % 60, 2)
+    const formatTime = (time: number) => {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = Math.floor(time % 60);
+    
+        return `${hours.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      };
 
-        return `${hours}:${minutes}:${seconds}`
-    }
-
-    const padWithLeadingZeros = (number: number, length: number): string => {
-        let str = String(number)
-        while (str.length < length) {
-            str = '0' + str
-        }
-        return str
-    }
-
+  
     return (
         <View style={{ marginVertical: 10 }}>
-            <Text style={{ fontSize: 24, color: config.colors.primary, fontWeight: 'bold' }}>{formatTime(timer)}</Text>
+            <Text style={{ fontSize: 24, color: config.colors.primary, fontWeight: 'bold' }}>{formatTime(seconds)}</Text>
         </View>
     )
 }
