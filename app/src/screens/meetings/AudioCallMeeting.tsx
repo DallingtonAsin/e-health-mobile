@@ -29,22 +29,20 @@ var isMuted = false
 const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
     const agoraEngineRef = useRef<IRtcEngine>()
-    const [isConnected, setIsConnected] = useState(false)
     const [isJoined, setIsJoined] = useState(false)
     const [volume, setVolume] = useState(100)
     const [isVolumeUp, setIsVolumeUp] = useState(false)
-    const [message, setMessage] = useState<string | any>('')
     const [isLoading, setIsLoading] = useState(true)
     const [isRatingVisible, setIsRatingVisible] = useState(false)
     const [ownUID, setOwnUID] = useState(uid);
     const [remoteUid, setRemoteUid] = useState(0)
+    const [seconds, setSeconds] = useState(0)
+    const [isActive, setIsActive] = useState(false)
     const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
+    const [message, setMessage] = useState<string | any>('')
 
-    const [timer, setTimer] = useState(0)
-    const [isTimerRunning, setIsTimerRunning] = useState(false)
-    const [interval, setIntervalId] = useState<any | null>(null)
     const [connectionData, setConnectionData] = useState<any>(agoraConnectionInitialState)
-    const { getMeetingDetails } = useContext(AppContext)
+    const { getMeetingDetails, postCallDetails } = useContext(AppContext)
     const { postRating } = useContext(PatientContext)
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = useMemo(() => ['20%', '85%'], [])
@@ -53,40 +51,6 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [patient, setPatient] = useState<any>()
     const [doctor, setDoctor] = useState<any>()
 
-
-    const showMessage = (msg: string) => {
-        setMessage(msg)
-    }
-
-    const startTimer = (): void => {
-        setIsTimerRunning(true)
-    }
-
-    const stopTimer = (): void => {
-        setIsTimerRunning(false)
-        setTimer(0)
-    }
-
-
-    useEffect(() => {
-        if (isTimerRunning) {
-            const id = setInterval(() => {
-                setTimer((prevTimer: any) => prevTimer + 1)
-            }, 1000)
-            setIntervalId(id)
-        } else {
-            if (interval) {
-                clearInterval(interval)
-            }
-            setIntervalId(null)
-        }
-        return () => {
-            if (interval) {
-                clearInterval(interval)
-            }
-        }
-    }, [isTimerRunning])
-
     useEffect(() => {
         const requestPermissions = async () => {
             if (Platform.OS === 'android') { await requestAudioPermission() }
@@ -94,6 +58,33 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         requestPermissions()
         getMeetingDetails({ appointmentId: appointment_id, onSuccess: setMeetingDetails, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }, [])
+
+    useEffect(() => {
+        let interval: any = null;
+
+        if (isActive) {
+            interval = setInterval(() => {
+                setSeconds((prevSeconds) => prevSeconds + 1);
+            }, 1000);
+        } else {
+            clearInterval(interval);
+        }
+
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const startTimer = () => {
+        setIsActive(true);
+    };
+
+    const pauseTimer = () => {
+        setIsActive(false);
+    };
+
+    const stopTimer = () => {
+        setIsActive(false);
+        setSeconds(0);
+    };
 
     const setMeetingDetails = (data: any) => {
         if (data && data.meeting_access) {
@@ -106,6 +97,34 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
         if (data && data.doctor) {
             setDoctor(data.doctor)
+        }
+    }
+
+    const submitCallDuration = () => {
+        if ((doctor && doctor.id) && (patient && patient.id)) {
+
+            let payload: any = {
+                appointment_id: appointment_id,
+                duration: seconds
+            }
+
+            if (user.is_patient) {
+                payload.doctor_id = doctor.id
+            }
+
+            if (!user.is_patient) {
+                payload.patient_id = patient.id
+            }
+
+            const is_patient: any = user.is_patient
+            setIsLoading(true);
+            postCallDetails({
+                is_patient: is_patient, payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
+                    setIsLoading(false);
+                }
+            })
+        } else {
+            displayMessage(`Unable to process request: no doc id`)
         }
     }
 
@@ -122,17 +141,17 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             if (connectionData && connectionData.channel) {
                 agoraEngine.registerEventHandler({
                     onJoinChannelSuccess: () => {
-                        setIsConnected(true)
+                        setIsJoined(true)
                     },
                     onUserJoined: (_connection, Uid) => {
-                        showMessage('Remote user joined with uid ' + Uid)
+                        setMessage('Remote user joined with uid ' + Uid)
                         setRemoteUid(Uid)
                         if (Uid !== ownUID) {
                             setIsOtherUserJoined(true);
                         }
                     },
                     onUserOffline: (_connection, Uid) => {
-                        showMessage('Remote user left the channel. uid: ' + Uid)
+                        setMessage('Remote user left the channel. uid: ' + Uid)
                         setRemoteUid(0)
                         if (Uid !== ownUID) {
                             setIsOtherUserJoined(false);
@@ -167,10 +186,9 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     const join = async () => {
-
         try {
-            if (isConnected || isJoined) {
-                stopTimer()
+            if (isJoined) {
+                pauseTimer()
                 Alert.alert(
                     `Confirm`,
                     'Are you sure you want to leave the call?',
@@ -179,27 +197,31 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {
                             text: 'Yes', onPress: () => {
                                 if (user.is_patient) {
+                                    pauseTimer()
                                     setIsRatingVisible(true)
                                 } else {
                                     leave()
+                                    pauseTimer()
+                                    submitCallDuration()
                                 }
                             }
                         },
                     ],
                     { cancelable: false }
                 )
-            }
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileCommunication,
-            )
+            } else {
 
-            if (connectionData && connectionData.appId && ownUID) {
+                agoraEngineRef.current?.setChannelProfile(
+                    ChannelProfileType.ChannelProfileCommunication,
+                )
 
-                agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, ownUID, {
-                    clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-                })
-                startTimer()
-                setIsJoined(true)
+                if (connectionData && connectionData.appId && ownUID) {
+                    agoraEngineRef.current?.joinChannel(connectionData.token, connectionData.channel, ownUID, {
+                        clientRoleType: ClientRoleType.ClientRoleBroadcaster,
+                    })
+                    startTimer()
+                    setIsJoined(true)
+                }
             }
         } catch (e) {
             console.log(e)
@@ -209,11 +231,10 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const leave = () => {
         try {
             agoraEngineRef.current?.leaveChannel()
-            stopTimer()
+            pauseTimer()
             setRemoteUid(0)
-            setIsConnected(false)
             setIsJoined(false)
-            showMessage('You left the channel')
+            setMessage('You left the channel')
         } catch (e) {
             console.log(e)
         }
@@ -226,9 +247,10 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
 
     const handleCloseRating = () => {
-        stopTimer()
+        pauseTimer()
         setIsRatingVisible(false)
         leave()
+        submitCallDuration()
     }
 
     const handleRatingSubmit = (rating: number, comment: string) => {
@@ -243,6 +265,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
                         setIsRatingVisible(false)
                         leave()
+                        submitCallDuration()
                     }
                 })
             } else {
@@ -265,7 +288,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }
 
     return (
-        <>
+        <React.Fragment>
             <View style={styles.main}>
                 <ScrollView
                     contentContainerStyle={styles.scrollContainer}>
@@ -282,8 +305,8 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
                         {isJoined && isOtherUserJoined && <Text>{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Text>}
                         {isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
-                        
-                        <TimerScreen timer={timer} />
+
+                        <TimerScreen seconds={seconds} />
                     </View>
 
                 </ScrollView>
@@ -311,14 +334,14 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         </View>
                         <View style={styles.controls}>
                             <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
-                            <Text style={styles.controlText}>{(isConnected || isJoined || isOtherUserJoined) ? 'stop call' : 'start call'}</Text>
+                            <Text style={styles.controlText}>{(isJoined || isOtherUserJoined) ? 'stop call' : 'start call'}</Text>
                         </View>
                     </BottomSheetScrollView>
                 </BottomSheet>
                 <RateDoctorPopup visible={isRatingVisible} onClose={handleCloseRating} onRatingSubmit={handleRatingSubmit} />
 
             </View>
-        </>
+        </React.Fragment>
     )
 }
 
