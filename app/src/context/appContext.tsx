@@ -300,13 +300,31 @@ const checkAppointmentStatus = () => {
     };
 };
 
+const postCallDetails = () => {
+    return ({ is_patient, payload, onSuccess, onFailure, onCompletion }: { is_patient: boolean, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? `${routes.patient.call_details}` : `${routes.doctor.call_details}`;
+        services.post(
+            endpoint,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                onSuccess(res.data.message);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
         getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus,
-        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails
+        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails
     },
     { isAppLoading: true },
 );

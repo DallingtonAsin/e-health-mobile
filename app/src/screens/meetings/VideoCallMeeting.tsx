@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ScrollView, StyleSheet, Text, Alert, View} from 'react-native'
+import { ScrollView, StyleSheet, Text, Alert, View } from 'react-native'
 import AgoraUIKit from 'agora-rn-uikit'
 import AppLoader from '../../components/AppLoader'
 import { createAgoraRtcEngine } from 'react-native-agora'
@@ -24,7 +24,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const { state } = useContext(AuthContext)
     const [user] = useState<IUser>(state.user)
     const [connectionData, setConnectionData] = useState<any>(agoraConnectionInitialState)
-    const { getMeetingDetails } = useContext(AppContext)
+    const { getMeetingDetails, postCallDetails } = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(true)
     const [isRatingVisible, setIsRatingVisible] = useState(false)
     const agoraEngine = createAgoraRtcEngine()
@@ -45,6 +45,33 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
         }
     }, [])
 
+    useEffect(() => {
+        let interval: any = null;
+
+        if (isActive) {
+            interval = setInterval(() => {
+                setSeconds((prevSeconds) => prevSeconds + 1);
+            }, 1000);
+        } else {
+            clearInterval(interval);
+        }
+
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const startTimer = () => {
+        setIsActive(true);
+    };
+
+    const pauseTimer = () => {
+        setIsActive(false);
+    };
+
+    // const stopTimer = () => {
+    //     setIsActive(false);
+    //     setSeconds(0);
+    // };
+
     const setMeetingDetails = (data: any) => {
         if (data && data.meeting_access) {
             setConnectionData(data.meeting_access)
@@ -60,6 +87,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const handleCloseRating = () => {
         setIsRatingVisible(false)
         setVideoCall(false)
+        submitCallDuration()
     }
 
     const handleRatingSubmit = (rating: number, comment: string) => {
@@ -74,6 +102,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
                         setIsRatingVisible(false)
                         setVideoCall(false)
+                        submitCallDuration()
                     }
                 })
             } else {
@@ -81,6 +110,34 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             }
         } else {
             displayMessage(`Rate doctor with atleast one star`)
+        }
+    }
+
+    const submitCallDuration = () => {
+        if ((doctor && doctor.id) && (patient && patient.id)) {
+
+            let payload: any = {
+                appointment_id: appointment_id,
+                duration: seconds
+            }
+
+            if (user.is_patient) {
+                payload.doctor_id = doctor.id
+            }
+
+            if (!user.is_patient) {
+                payload.patient_id = patient.id
+            }
+
+            const is_patient: any = user.is_patient
+            setIsLoading(true);
+            postCallDetails({
+                is_patient: is_patient, payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
+                    setIsLoading(false);
+                }
+            })
+        } else {
+            displayMessage(`Unable to process request: no doc id`)
         }
     }
 
@@ -118,9 +175,11 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             if (user.is_patient) {
                                 pauseTimer()
                                 setIsRatingVisible(true)
+
                             } else {
                                 setVideoCall(false)
                                 pauseTimer()
+                                submitCallDuration()
                             }
                         }
                     },
@@ -130,36 +189,6 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
         },
     }
-
-  
-    useEffect(() => {
-        let interval: any = null;
-
-        if (isActive) {
-            interval = setInterval(() => {
-                setSeconds((prevSeconds) => prevSeconds + 1);
-            }, 1000);
-        } else {
-            clearInterval(interval);
-        }
-
-        return () => clearInterval(interval);
-    }, [isActive]);
-
-    const startTimer= () => {
-        setIsActive(true);
-      };
-    
-      const pauseTimer = () => {
-        setIsActive(false);
-      };
-    
-      const stopTimer = () => {
-        setIsActive(false);
-        setSeconds(0);
-      };
-
-
 
     const startCall = () => {
         startTimer()
@@ -290,6 +319,5 @@ const styles = StyleSheet.create({
         color: config.colors.primaryBlue,
         textAlign: 'center',
         fontSize: config.fonts.medium,
-    },
-
+    }
 })

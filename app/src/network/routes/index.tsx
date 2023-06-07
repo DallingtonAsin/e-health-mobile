@@ -11,6 +11,7 @@ const routes = {
       updateProfile: 'patient/profile/update',
       update_profile_pic: 'patient/profile-picture/update',
       delete_profile_pic: 'patient/profile-picture/delete',
+      call_details: 'patient/calls',
       notifications: {
          all: 'patient/notifications',
          read: 'patient/notifications/read',
@@ -36,6 +37,7 @@ const routes = {
       update_auto_approve_status: 'doctor/appointments/auto-approve',
       languages: 'doctor/languages',
       calendar: 'doctor/schedule',
+      call_details: 'doctor/calls',
       notifications: {
          all: 'doctor/notifications',
          read: 'doctor/notifications/read',
