@@ -33,7 +33,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                 verifyCode({ code: code, is_patient: true, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
             }
         } else {
-            Toast.show(`Please enter verification code`);
+            displayMessage(`Please enter verification code`);
         }
     }
 

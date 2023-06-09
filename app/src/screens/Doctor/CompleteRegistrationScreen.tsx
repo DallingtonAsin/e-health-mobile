@@ -3,7 +3,6 @@ import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Button, Image, 
 import * as config from '../../configs'
 import { TextInput, Checkbox } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
-import Toast from 'react-native-simple-toast'
 import { displayMessage, formatNumber, removeCommas } from '../../components/common/SharedHelper'
 import { Context as AppContext } from '../../context/appContext'
 import { Context as AuthContext } from '../../context/authContext'
@@ -62,7 +61,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
         const validationError = ValidateDrCompleteProfile(user, selectedFacilities, hasAgreedTerms, frontImage, backImage);
         if (validationError) {
-            Toast.show(validationError, Toast.LONG)
+            displayMessage(validationError)
             return;
         }
         let service_fee = removeCommas(user.service_fee);
@@ -109,7 +108,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setFrontImage(imageData)
         }).catch((error: any) => {
-            // Toast.show(`Error while uploading image ${error.message}`)
+            // displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -118,7 +117,7 @@ const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setBackImage(imageData)
         }).catch((error: any) => {
-            // Toast.show(`Error while uploading image ${error.message}`)
+            // displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 

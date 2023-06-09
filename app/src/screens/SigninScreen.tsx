@@ -50,7 +50,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
 
                 const country_code = phoneInputRef.current?.getCallingCode()
                 if (country_code != '256') {
-                    Toast.show(`Sorry, only phone numbers with a country code from Uganda are accepted.`, Toast.LONG)
+                    displayMessage(`Sorry, only phone numbers with a country code from Uganda are accepted.`)
                     return
                 }
 
@@ -58,25 +58,25 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 payload.phone_number = number
 
             } else {
-                Toast.show(`Please enter a valid phone number`, Toast.LONG)
+                displayMessage(`Please enter a valid phone number`)
                 return
             }
         }
 
         if (!isPhoneLogin) {
             if (!email) {
-                Toast.show(`Please enter your email`, Toast.LONG)
+                displayMessage(`Please enter your email`)
                 return
             }
             if (!isValidEmail(email)) {
-                Toast.show(`Please enter valid email`, Toast.LONG)
+                displayMessage(`Please enter valid email`)
                 return
             }
             payload.email = email
         }
 
         if (!password) {
-            Toast.show(`Please enter your password`, Toast.LONG)
+            displayMessage(`Please enter your password`)
             return
         }
 
