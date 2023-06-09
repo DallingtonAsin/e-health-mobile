@@ -116,17 +116,17 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     const confirmAppointment = () => {
         if (!appointmentDate) {
-            Toast.show(`Please select appointment date`); return;
+            displayMessage(`Please select appointment date`); return;
         }
 
         if (!appointmentTime) {
-            Toast.show(`Please select appointment hour`); return;
+            displayMessage(`Please select appointment hour`); return;
         }
         if (!appointmentType) {
-            Toast.show(`Please select appointment type`); return;
+            displayMessage(`Please select appointment type`); return;
         }
         if (!reason) {
-            Toast.show(`Please enter reason for appointment`); return;
+            displayMessage(`Please enter reason for appointment`); return;
         }
         if (appointmentDate && appointmentTime && appointmentType && reason) {
             let appointmentDetails: AppointmentInfo = {

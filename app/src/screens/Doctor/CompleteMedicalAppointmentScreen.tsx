@@ -1,20 +1,19 @@
-import React, { useState, useContext } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
-import * as config from '../../configs';
-import { TextInput } from 'react-native-paper';
-import AppLoader from '../../components/AppLoader';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage } from '../../components/common/SharedHelper';
-import { Context as DoctorContext } from '../../context/doctorContext';
-import { MedicalHistoryRecord } from '../../interfaces';
-import Toast from 'react-native-simple-toast';
-
+import React, { useState, useContext } from 'react'
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
+import * as config from '../../configs'
+import { TextInput } from 'react-native-paper'
+import AppLoader from '../../components/AppLoader'
+import { formatDate, displayMessage } from '../../components/common/SharedHelper'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { MedicalHistoryRecord } from '../../interfaces'
+import AppDatePicker from '../../components/AppDatePicker'
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { appointment_id, appointment_number, patient, medical_history } = route.params;
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const { appointment_id, appointment_number, patient, medical_history } = route.params
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const history: MedicalHistoryRecord = {
         id: medical_history.id,
@@ -27,38 +26,31 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         treatment: '',
     }
 
-    const [historyInfo, setHistoryInfo] = useState<MedicalHistoryRecord>(history);
-    const { completeAppointment } = useContext(DoctorContext);
-
-    const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
-
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
+    const [historyInfo, setHistoryInfo] = useState<MedicalHistoryRecord>(history)
+    const { completeAppointment } = useContext(DoctorContext)
 
     const handleConfirm = (date: Date) => {
-        hideDatePicker();
-        let dob = formatDate(date);
+        setOpen(false)
+        setDate(date)
+        const dob = formatDate(date)
         setHistoryInfo({
             ...historyInfo,
             diagnosis_date: dob
-        });
-    };
+        })
+    }
 
     const submit = () => {
         if (!historyInfo.illness) {
-            Toast.show("Please enter patient's illness", Toast.LONG);
-            return;
+            displayMessage("Please enter patient's illness")
+            return
         }
         if (!historyInfo.diagnosis_date) {
-            Toast.show("Please select diagnosis date", Toast.LONG);
-            return;
+            displayMessage("Please select diagnosis date")
+            return
         }
         if (!historyInfo.treatment) {
-            Toast.show("Please enter treatment", Toast.LONG);
-            return;
+            displayMessage("Please enter treatment")
+            return
         }
 
         const payload = {
@@ -67,21 +59,19 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
             diagnosis_date: historyInfo.diagnosis_date,
             treatment: historyInfo.treatment
         }
-        setIsLoading(true);
-        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        setIsLoading(true)
+        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const onSuccess = (message: string) => {
-        displayMessage(message);
-        navigation.navigate('MyAppointments');
+        displayMessage(message)
+        navigation.navigate('MyAppointments')
     }
 
     return (
         <React.Fragment>
             <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 12 }]}>
-                <StatusBar
-                    backgroundColor={config.colors.primary}
-                />
+                <StatusBar backgroundColor={config.colors.primary} />
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={styles.scrollContainer}
@@ -153,18 +143,11 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                                 activeOutlineColor={config.colors.primary}
                                 style={config.styles.registration.doctor.textInput}
                                 textColor={config.colors.dark}
-                                onFocus={showDatePicker}
+                                onFocus={() => setOpen(true)}
                                 showSoftInputOnFocus={false}
                                 onChangeText={text => setHistoryInfo(prev => ({ ...prev, diagnosis_date: text }))}
                             />
-                            <DateTimePickerModal
-                                isVisible={isDatePickerVisible}
-                                mode="date"
-                                display='inline'
-                                onConfirm={handleConfirm}
-                                onCancel={hideDatePicker}
-
-                            />
+                            <AppDatePicker open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm} />
                         </View>
                     </View>
 
@@ -198,7 +181,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     )
 }
 
-export default CompleteMedicalAppointmentScreen;
+export default CompleteMedicalAppointmentScreen
 
 const styles = StyleSheet.create({
 
@@ -222,5 +205,5 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingHorizontal: 10,
         paddingVertical: 10,
-      },
-});
+    },
+})

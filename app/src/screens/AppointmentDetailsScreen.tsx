@@ -192,7 +192,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                 <ContentItem title={"Phone Number"} value={`${appointmentInfo.patient.country_code} ${appointmentInfo.patient.phone_number}`} />
                 <ContentItem title={"Address"} value={appointmentInfo.patient.address} />
                 <ContentItem title={"Email"} value={appointmentInfo.patient.email} />
-                <ContentItem title={"Date of Birth"} value={appointmentInfo.patient.dob} />
+                <ContentItem title={"Age"} value={appointmentInfo.patient.age} />
             </>
             }
             {isLoading && <AppLoader />}

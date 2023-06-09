@@ -1,41 +1,40 @@
-import React, { useState, useContext } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Linking, StatusBar } from 'react-native';
-import * as config from '../../configs';
-import { TextInput, Checkbox } from 'react-native-paper';
-import AppLoader from '../../components/AppLoader';
-import Toast from 'react-native-simple-toast';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
-import { DoctorRegistrationPayload } from '../../interfaces';
-import { SelectList } from 'react-native-dropdown-select-list';
-import { Context as AuthContext } from '../../context/authContext';
-import { registrationState } from '../../configs/constants';
-import { validateDoctorRegistration } from '../../components/common/validation';
-import { togglePasswordVisibility } from '../../components/common/AppUtils';
-
+import React, { useState, useContext } from 'react'
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Linking, StatusBar } from 'react-native'
+import * as config from '../../configs'
+import { TextInput, Checkbox } from 'react-native-paper'
+import AppLoader from '../../components/AppLoader'
+import { formatDate, displayMessage, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper'
+import { DoctorRegistrationPayload } from '../../interfaces'
+import { SelectList } from 'react-native-dropdown-select-list'
+import { Context as AuthContext } from '../../context/authContext'
+import { registrationState } from '../../configs/constants'
+import { validateDoctorRegistration } from '../../components/common/validation'
+import { togglePasswordVisibility } from '../../components/common/AppUtils'
+import AppDatePicker from '../../components/AppDatePicker'
 
 const RegistrationScreen = ({ navigation }: { navigation: any }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [passwordError, setPasswordError] = useState('');
-    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
-    const [user, setUser] = useState<DoctorRegistrationPayload>(registrationState.doctor);
-    const { registerDoctor } = useContext(AuthContext);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
+    const [passwordError, setPasswordError] = useState('')
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false)
+    const [user, setUser] = useState<DoctorRegistrationPayload>(registrationState.doctor)
+    const { registerDoctor } = useContext(AuthContext)
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const genderOptions = [
         { key: '1', value: 'Male' },
         { key: '2', value: 'Female' },
-    ];
+    ]
 
     const submit = () => {
 
-        const validationError = validateDoctorRegistration(user, hasAgreedTerms);
+        const validationError = validateDoctorRegistration(user, hasAgreedTerms)
         if (validationError) {
-            Toast.show(validationError, Toast.LONG)
-            return;
+            displayMessage(validationError)
+            return
         }
 
         let payload: DoctorRegistrationPayload = {
@@ -48,48 +47,41 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
             password_confirmation: user.password_confirmation,
         }
 
-        setIsLoading(true);
-        registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        setIsLoading(true)
+        registerDoctor({ payload: payload, onSuccess: navigateMethod, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const navigateMethod = async (data: any) => {
-        navigation.navigate('SignedInStack', { screen: 'Home' });
+        navigation.navigate('SignedInStack', { screen: 'Home' })
     }
 
-    const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
-
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
-
     const handleConfirm = (date: Date) => {
-        hideDatePicker();
-        let dob = formatDate(date);
+        setOpen(false)
+        setDate(date)
+        const dob = formatDate(date)
         setUser({
             ...user,
             dob: dob
-        });
+        })
     }
 
     const handleCheckTermsAndConditions = () => {
-        setHasAgreedTerms(!hasAgreedTerms);
+        setHasAgreedTerms(!hasAgreedTerms)
     }
 
     const handlePrivacyPolicyPress = () => {
-        Linking.openURL('https://example.com/privacy-policy');
+        Linking.openURL('https://example.com/privacy-policy')
     }
 
     const handleTermsPress = () => {
-        Linking.openURL('https://example.com/terms-and-conditions');
+        Linking.openURL('https://example.com/terms-and-conditions')
     }
 
     const setState = (field: string, text: any) => {
         setUser((prev) => ({
             ...prev,
             [field]: text,
-        }));
+        }))
     }
 
     const handleTextInputChange = (field: string, text: any) => {
@@ -98,7 +90,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
             if (text !== user.password_confirmation) {
                 setPasswordError('Passwords do not match')
             } else {
-                setPasswordError('');
+                setPasswordError('')
                 setState(field, text)
             }
         }
@@ -107,25 +99,23 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
             if (text !== user.password) {
                 setPasswordError('Passwords do not match')
             } else {
-                setPasswordError('');
+                setPasswordError('')
                 setState(field, text)
             }
         }
         setState(field, text)
-        // validateForm();
-    };
+        // validateForm()
+    }
 
 
     return (
         <>
             <SafeAreaView style={config.styles.registration.doctor.container}>
-
                 <StatusBar backgroundColor={config.colors.primary} />
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={config.styles.registration.doctor.scrollContainer}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
                     <Text style={config.styles.registration.doctor.title}>Medical Doctor Registration</Text>
 
                     <View style={config.styles.registration.doctor.inputWrap}>
@@ -199,17 +189,11 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={config.colors.primary}
                                 style={config.styles.registration.doctor.textInput}
                                 textColor={config.colors.dark}
-                                onFocus={showDatePicker}
+                                onFocus={() => setOpen(true)}
                                 showSoftInputOnFocus={false}
                                 onChangeText={text => handleTextInputChange('dob', text)}
                             />
-                            <DateTimePickerModal
-                                isVisible={isDatePickerVisible}
-                                mode="date"
-                                display='inline'
-                                onConfirm={handleConfirm}
-                                onCancel={hideDatePicker}
-                            />
+                            <AppDatePicker title={"Select date of birth"} open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm} />
                         </View>
                     </View>
 
@@ -287,4 +271,4 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
     )
 }
 
-export default RegistrationScreen;
+export default RegistrationScreen

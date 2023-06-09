@@ -37,7 +37,7 @@ const MoreItemsScreen = ({ navigation }: { navigation: any }) => {
         { id: 3, name: 'Help & Support', icon: 'question-circle', isIcon5: true, action: () => navigation.navigate('ContactUs') },
         { id: 4, name: 'Terms & Conditions', icon: 'files-o', isIcon5: false, action: () => navigation.navigate('TermsConditions') },
         { id: 5, name: 'About Us', icon: 'info-circle', isIcon5: false, action: () => navigation.navigate('AboutUs') },
-        { id: 6, name: 'Rate Us', icon: 'star', isIcon5: true, action: () => Toast.show('Coming soon...', Toast.LONG) },
+        { id: 6, name: 'Rate Us', icon: 'star', isIcon5: true, action: () => displayMessage('Coming soon...') },
 
     ]
 

@@ -1,58 +1,57 @@
-import React, { useState, useContext } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, StatusBar } from 'react-native';
-import * as config from '../../configs';
-import { TextInput } from 'react-native-paper';
-import AppLoader from '../../components/AppLoader';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { formatDate, displayMessage, isValidEmail, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper';
-import { Context as AuthContext } from '../../context/authContext';
-import { PatientRegistrationPayload } from '../../interfaces';
-import { SelectList } from 'react-native-dropdown-select-list';
-import { HOSPITAL_NAME } from '@env';
-import { Checkbox } from 'react-native-paper';
-import { registrationState } from '../../configs/constants';
-import { validatePatientRegistration } from '../../components/common/validation';
-import Toast from 'react-native-simple-toast';
-import { togglePasswordVisibility } from '../../components/common/AppUtils';
-
+import React, { useState, useContext } from 'react'
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, StatusBar } from 'react-native'
+import * as config from '../../configs'
+import { TextInput } from 'react-native-paper'
+import AppLoader from '../../components/AppLoader'
+import { formatDate, displayMessage, isValidEmail, validatePassword, validateConfirmPassword } from '../../components/common/SharedHelper'
+import { Context as AuthContext } from '../../context/authContext'
+import { PatientRegistrationPayload } from '../../interfaces'
+import { SelectList } from 'react-native-dropdown-select-list'
+import { HOSPITAL_NAME } from '@env'
+import { Checkbox } from 'react-native-paper'
+import { registrationState } from '../../configs/constants'
+import { validatePatientRegistration } from '../../components/common/validation'
+import { togglePasswordVisibility } from '../../components/common/AppUtils'
+import AppDatePicker from '../../components/AppDatePicker'
 
 const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
-    const [user, setUser] = useState<PatientRegistrationPayload>(registrationState.patient);
-    const [isValidForm, setIsValidForm] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
-    const [passwordError, setPasswordError] = useState('');
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [user, setUser] = useState<PatientRegistrationPayload>(registrationState.patient)
+    const [isValidForm, setIsValidForm] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false)
+    const [passwordError, setPasswordError] = useState('')
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const { signup } = useContext(AuthContext);
+    const { signup } = useContext(AuthContext)
 
     const genderOptions = [
         { key: '1', value: 'Male' },
         { key: '2', value: 'Female' },
-    ];
+    ]
 
     const validateForm = () => {
 
-        let validEmail: boolean = true;
+        let validEmail: boolean = true
         if (user.email != '') {
-            validEmail = isValidEmail(user.email);
+            validEmail = isValidEmail(user.email)
         }
 
         if (user.first_name !== '' && user.last_name !== '' && user.address !== '' && user.gender !== '' && user.dob !== '' && validEmail) {
-            setIsValidForm(true);
+            setIsValidForm(true)
         } else {
-            setIsValidForm(false);
+            setIsValidForm(false)
         }
-    };
+    }
 
     const setState = (field: string, text: any) => {
         setUser((prev) => ({
             ...prev,
             [field]: text,
-        }));
+        }))
     }
 
     const handleTextInputChange = (field: string, text: any) => {
@@ -61,7 +60,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             if (text !== user.password_confirmation) {
                 setPasswordError('Passwords do not match')
             } else {
-                setPasswordError('');
+                setPasswordError('')
                 setState(field, text)
             }
         }
@@ -70,23 +69,23 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             if (text !== user.password) {
                 setPasswordError('Passwords do not match')
             } else {
-                setPasswordError('');
+                setPasswordError('')
                 setState(field, text)
             }
         }
         setState(field, text)
-        validateForm();
-    };
+        validateForm()
+    }
 
 
     const submitDetails = () => {
 
-        const validationError = validatePatientRegistration(user, hasAgreedTerms);
+        const validationError = validatePatientRegistration(user, hasAgreedTerms)
         if (validationError) {
-            Toast.show(validationError, Toast.LONG)
-            return;
+            displayMessage(validationError)
+            return
         }
-        setIsLoading(true);
+        setIsLoading(true)
 
         let payload: PatientRegistrationPayload = {
             first_name: user.first_name,
@@ -99,43 +98,36 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
             password_confirmation: user.password_confirmation,
         }
 
-        signup({ payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading });
+        signup({ payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: stopLoading })
 
     }
 
     const stopLoading = () => {
-        setIsLoading(false);
+        setIsLoading(false)
     }
 
     const onSuccess = async (data: any) => {
-        navigation.navigate('SignedInStack', { screen: 'Home' });
+        navigation.navigate('SignedInStack', { screen: 'Home' })
     }
 
-    const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
-
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
-
     const handleConfirm = (date: Date) => {
-        hideDatePicker();
-        let dob = formatDate(date);
-        handleTextInputChange('dob', dob);
-    };
+        setOpen(false)
+        setDate(date)
+        const dob = formatDate(date)
+        handleTextInputChange('dob', dob)
+    }
 
     const handleCheckTermsAndConditions = () => {
-        setHasAgreedTerms(!hasAgreedTerms);
-    };
+        setHasAgreedTerms(!hasAgreedTerms)
+    }
 
     const handlePrivacyPolicyPress = () => {
-        Linking.openURL('https://example.com/privacy-policy');
-    };
+        Linking.openURL('https://example.com/privacy-policy')
+    }
 
     const handleTermsPress = () => {
-        Linking.openURL('https://example.com/terms-and-conditions');
-    };
+        Linking.openURL('https://example.com/terms-and-conditions')
+    }
 
     return (
         <>
@@ -231,18 +223,11 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
                                 textColor={config.colors.dark}
-                                onFocus={showDatePicker}
+                                onFocus={() => setOpen(true)}
                                 showSoftInputOnFocus={false}
                                 onChangeText={(text) => handleTextInputChange('dob', text)}
                             />
-                            <DateTimePickerModal
-                                isVisible={isDatePickerVisible}
-                                mode="date"
-                                display='inline'
-                                onConfirm={handleConfirm}
-                                onCancel={hideDatePicker}
-
-                            />
+                            <AppDatePicker title={"Select date of birth"} open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm} />
                         </View>
 
                     </View>
@@ -325,7 +310,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 }
 
 
-export default PatientRegistrationScreen;
+export default PatientRegistrationScreen
 
 const styles = StyleSheet.create({
     container: {
