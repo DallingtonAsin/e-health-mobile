@@ -283,6 +283,7 @@ interface AppointmentDetail {
         email: string,
         address: string,
         dob: string,
+        age: string,
         image: string,
         thumbnail: string
     },

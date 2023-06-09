@@ -41,7 +41,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
 
             const country_code = phoneInputRef.current?.getCallingCode()
             if (country_code != '256') {
-                Toast.show(`Sorry, only phone numbers with a country code from Uganda are accepted.`, Toast.LONG)
+                displayMessage(`Sorry, only phone numbers with a country code from Uganda are accepted.`)
                 return
             }
 
@@ -68,7 +68,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
                 { cancelable: false }
             );
         } else {
-            Toast.show(`Please enter a valid phone number`, Toast.LONG);
+            displayMessage(`Please enter a valid phone number`)
         }
     }
 

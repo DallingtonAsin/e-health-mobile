@@ -10,11 +10,10 @@ import { DoctorCalendar } from '../../interfaces'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BottomSheetHeader } from '../../components/BottomSheetHeader'
 import { Calendar } from 'react-native-calendars'
-import DateTimePickerModal from "react-native-modal-datetime-picker"
-import Toast from 'react-native-simple-toast'
 import { BottomRightButton } from '../../components/common/buttons'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import moment from 'moment'
+import AppDatePicker from '../../components/AppDatePicker'
 const _format = 'YYYY-MM-DD'
 const _today = moment().format(_format)
 const _maxDate = moment().add(60, 'days').format(_format)
@@ -28,19 +27,20 @@ const MyScheduleScreen = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const { state } = useContext(AuthContext)
-    const user = state.user
+    const { user } = state
 
-    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
+    const [startTime, setStartTime] = useState<any>()
+    const [endTime, setEndTime] = useState<any>()
+    const [startDate, setStartDate] = useState(new Date())
+    const [endDate, setEndDate] = useState(new Date())
+    const [openStartTime, setOpenStartTime] = useState(false)
+    const [openEndTime, setOpenEndTime] = useState(false)
 
     const addScheduleRef = useRef<BottomSheet>(null)
     const snapPoints = useMemo(() => ['25%', '92%'], [])
     const [markedDates, setMarkedDates] = useState<any>(initialState)
 
-    const [startTime, setStartTime] = useState<string>()
-    const [endTime, setEndTime] = useState<string>()
-
-    const [isStartTimePickerVisible, setStartTimePickerVisible] = useState(false)
-    const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false)
+    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
 
     useEffect(() => {
         fetchDoctorCalendar()
@@ -76,15 +76,16 @@ const MyScheduleScreen = () => {
         addScheduleRef.current?.close()
     }, [])
 
-    const setSelectedStartTime = (time: any) => {
-        setStartTimePickerVisible(false)
+    const handleConfirmStartTime = (time: Date) => {
+        setOpenStartTime(false)
+        setStartDate(time)
         const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
-
         setStartTime(formattedTime)
     }
 
-    const setSelectedEndTime = (time: any) => {
-        setEndTimePickerVisible(false)
+    const handleConfirmEndTime = (time: Date) => {
+        setOpenEndTime(false)
+        setEndDate(time)
         const formattedTime = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
         setEndTime(formattedTime)
     }
@@ -93,15 +94,15 @@ const MyScheduleScreen = () => {
 
         const selectedCalendarDates = Object.keys(markedDates).filter((date) => markedDates[date].selected)
         if (selectedCalendarDates.length < 1) {
-            Toast.show(`Please select at least one date`)
+            displayMessage(`Please select at least one date`)
             return
         }
         if (!startTime) {
-            Toast.show(`Please select start time`)
+            displayMessage(`Please select start time`)
             return
         }
         if (!endTime) {
-            Toast.show(`Please select end time`)
+            displayMessage(`Please select end time`)
             return
         }
 
@@ -112,6 +113,7 @@ const MyScheduleScreen = () => {
             end_time: endTime
         }
         setIsLoading(true)
+
         submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }
 
@@ -224,24 +226,11 @@ const MyScheduleScreen = () => {
                     <Text style={styles.infoText}>Select one or more days and the timeframe you will be available to take online consultations.</Text>
                     <CustomCalendar onDaySelect={(day: any) => { }} />
 
-                    <SetTimeButton time={startTime} buttonText={'Start Time'} onPress={() => setStartTimePickerVisible(true)} />
-                    <SetTimeButton time={endTime} buttonText={'End Time'} onPress={() => setEndTimePickerVisible(true)} />
+                    <SetTimeButton time={startTime} buttonText={'Start Time'} onPress={() => setOpenStartTime(true)} />
+                    <SetTimeButton time={endTime} buttonText={'End Time'} onPress={() => setOpenEndTime(true)} />
 
-                    <DateTimePickerModal
-                        isVisible={isStartTimePickerVisible}
-                        mode="time"
-                        display='inline'
-                        onConfirm={setSelectedStartTime}
-                        onCancel={() => setStartTimePickerVisible(false)}
-                    />
-
-                    <DateTimePickerModal
-                        isVisible={isEndTimePickerVisible}
-                        mode="time"
-                        display='inline'
-                        onConfirm={setSelectedEndTime}
-                        onCancel={() => setEndTimePickerVisible(false)}
-                    />
+                    <AppDatePicker mode={"time"} title={"Select start time"} open={openStartTime} setOpen={setOpenStartTime} date={startDate} handleConfirm={handleConfirmStartTime} />
+                    <AppDatePicker mode={"time"} title={"Select end time"} open={openEndTime} setOpen={setOpenEndTime} date={endDate} handleConfirm={handleConfirmEndTime} />
 
                 </BottomSheetScrollView>
 

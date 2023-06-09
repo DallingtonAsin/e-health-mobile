@@ -6,13 +6,11 @@ import { Avatar as AvatarRP, IconButton } from 'react-native-paper'
 import Avatar from '../components/Avatar'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Toast from 'react-native-simple-toast'
 import AppLoader from '../components/AppLoader'
 import { Context as AppContext } from '../context/appContext'
 import { Context as AuthContext } from '../context/authContext'
 import { Context as DoctorContext } from '../context/doctorContext'
 import { FileUpload, IUser } from '../interfaces'
-import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey } from '../components/common/SharedHelper'
 import { UIActivityIndicator } from 'react-native-indicators'
 import { BottomSheet } from 'react-native-btr'
@@ -20,7 +18,7 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { validateProfileUpdate } from '../components/common/validation'
 import { initialFileUpload } from '../configs/constants'
 import { choosePhotoFromLibrary, getImageData, takePhotoFromCamera } from '../components/common/FileHelper'
-
+import AppDatePicker from '../components/AppDatePicker'
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
@@ -31,7 +29,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const [visible, setVisible] = useState(false)
     const [updateFrontID, setUpdateFrontID] = useState(false)
     const [updateBackID, setUpdateBackID] = useState(false)
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [isUpdatingImage, setIsUpdatingImage] = useState(false)
     const [facilities, setFacilities] = useState([])
     const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload)
@@ -42,6 +39,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
     const { getMedicalFacilities } = useContext(DoctorContext)
     const { getMedicalSpecialties, updateProfile, updateProfileImage, deleteProfileImage } = useContext(AppContext)
     const [user, setUser] = useState<IUser>(state.user)
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
 
     const genderOptions = [
         { key: '1', value: 'Male' },
@@ -88,12 +88,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
             const validationError = validateProfileUpdate(user, selectedFacilities)
             if (validationError) {
-                Toast.show(validationError, Toast.LONG)
+                displayMessage(validationError)
                 return
             }
 
             const formData = new FormData()
-
             formData.append('_method', 'put')
             formData.append('first_name', user.first_name)
             formData.append('last_name', user.last_name)
@@ -125,7 +124,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     formData.append('back_image', backImage)
                 }
             }
-
             setIsLoading(true)
             const is_patient = user.is_patient || false
             updateProfile({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
@@ -145,17 +143,10 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
         })
     }
 
-    const showDatePicker = () => {
-        setDatePickerVisibility(true)
-    }
-
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false)
-    }
-
     const handleConfirm = (date: Date) => {
-        hideDatePicker()
-        let dob = formatDate(date)
+        setOpen(false)
+        setDate(date)
+        const dob = formatDate(date)
         setUser({
             ...user,
             dob: dob
@@ -168,7 +159,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setFrontImage(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -178,7 +169,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             setBackImage(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -187,7 +178,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             submitProfilePicture(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -196,7 +187,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             const imageData = getImageData(image)
             submitProfilePicture(imageData)
         }).catch((error: any) => {
-            Toast.show(`Error while uploading image ${error.message}`)
+            displayMessage(`Error while uploading image ${error.message}`)
         })
     }
 
@@ -212,7 +203,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             updateProfileImage({ payload: formData, is_patient: is_patient, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader })
 
         } catch (err: any) {
-            Toast.show(err.message, Toast.LONG)
+            displayMessage(err.message)
         }
     }
 
@@ -230,7 +221,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             setIsUpdatingImage(true)
             deleteProfileImage({ user: user_obj, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: closeLoader })
         } catch (err: any) {
-            Toast.show(err.message, Toast.LONG)
+            displayMessage(err.message)
         }
     }
 
@@ -304,7 +295,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
 
                     <View style={styles.body}>
-
                         <View style={styles.detailView}>
                             <Text style={styles.infoText}>First Name
                                 {!isDisabled && <Text style={config.styles.registration.doctor.required}>*</Text>}
@@ -389,16 +379,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 activeOutlineColor={config.colors.primary}
                                 style={isDisabled ? styles.disabledInput : styles.enabledInput}
                                 error={!user.dob}
-                                onFocus={showDatePicker}
+                                onFocus={() => setOpen(true)}
                                 showSoftInputOnFocus={false}
                                 onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
                             />
-                            <DateTimePickerModal
-                                isVisible={isDatePickerVisible}
-                                mode="date"
-                                onConfirm={handleConfirm}
-                                onCancel={hideDatePicker}
-                            />
+                            <AppDatePicker title={"Select date of birth"} open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm}/>
                         </View>
 
 
@@ -558,7 +543,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     </View>
 
                 </ScrollView>
-                
+
                 <BottomSheet
                     visible={visible}
                     onBackButtonPress={() => setVisible(!visible)}

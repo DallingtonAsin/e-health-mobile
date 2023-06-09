@@ -115,6 +115,7 @@ const InitialAppointmentDetailState = {
       email: '',
       address: '',
       dob: '',
+      age: '',
       image: '',
       thumbnail: ''
   },

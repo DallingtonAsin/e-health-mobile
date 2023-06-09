@@ -4,7 +4,7 @@ import { Divider, TextInput } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { BottomSheetHeader } from '../../components/BottomSheetHeader';
 import * as config from '../../configs';
-import { numberWithCommas } from '../../components/common/SharedHelper';
+import { displayMessage, numberWithCommas } from '../../components/common/SharedHelper';
 import Toast from 'react-native-simple-toast';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../../redux/reducers/drugsSlice';
@@ -30,7 +30,7 @@ const Checkout = ({ checkoutCartRef, amount }: { checkoutCartRef: any, amount: n
     const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), []);
 
     const makePayment = () => {
-        Toast.show('Coming soon...', Toast.SHORT);
+        displayMessage('Coming soon...');
     }
 
     return (
