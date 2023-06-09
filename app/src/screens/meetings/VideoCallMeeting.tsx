@@ -227,7 +227,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             </View>
                         </ScrollView>
                         <View style={styles.controls}>
-                            <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 8 }} onPress={() => startCall()} />
+                            <BottomRightButton icon={"video"} size={18} btnStyle={{ right: 8 }} onPress={() => startCall()} backgroundColor={isJoined ? config.colors.red : config.colors.green_1} />
                             <Text style={styles.controlText}>{videoCall ? 'Stop video' : 'Start video'}</Text>
                         </View>
                     </View>
@@ -305,7 +305,6 @@ const styles = StyleSheet.create({
 
     controlText: {
         textAlign: 'center',
-        textTransform: 'lowercase',
         fontSize: config.fonts.medium
     },
 

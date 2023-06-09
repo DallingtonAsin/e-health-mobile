@@ -316,8 +316,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     snapPoints={snapPoints}
                     enablePanDownToClose={true}
                     backdropComponent={renderBackDrop}
-                    onChange={handleSheetChanges}
-                >
+                    onChange={handleSheetChanges}>
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
                         <View style={styles.controls}>
@@ -333,7 +332,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             <Text style={styles.controlText}>Mute</Text>
                         </View>
                         <View style={styles.controls}>
-                            <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} backgroundColor={isJoined ? config.colors.red : config.colors.green_1} />
                             <Text style={styles.controlText}>{(isJoined || isOtherUserJoined) ? 'stop call' : 'start call'}</Text>
                         </View>
                     </BottomSheetScrollView>
