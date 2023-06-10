@@ -17,6 +17,7 @@ import * as config from '../../configs'
 import { agoraConnectionInitialState } from '../../configs/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import * as Animatable from 'react-native-animatable'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
 
 const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
 
@@ -33,6 +34,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [doctor, setDoctor] = useState<any>()
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(false)
+    const [isRemoteUserMuted, setRemoteUserMuted] = useState(false)
     const [isJoined, setIsJoined] = useState(false)
     const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
 
@@ -164,6 +166,11 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             console.log(`Left the channel`)
         },
 
+        UserMuteAudio: (muted: any) => {
+            console.log(`Muted audio`, muted)
+            // setRemoteUserMuted(muted)
+        },
+
         EndCall: () => {
             Alert.alert(
                 `Confirm`,
@@ -207,6 +214,13 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {isJoined && !isOtherUserJoined && <View style={styles.header}>
                             <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out" style={styles.info}><Icon name="info-circle" size={18} color={config.colors.primaryBlue} /> You are the only one here</Animatable.Text >
                         </View>}
+
+                        {isRemoteUserMuted && <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Animatable.Text animation="pulse" iterationCount={"infinite"} easing="ease-out">{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on mute</Animatable.Text>
+                            <Icon5 name={'microphone-alt-slash'} size={20} color={config.colors.primary} style={{ marginLeft: 4 }} />
+                        </View>
+                        }
+
                         <AgoraUIKit connectionData={connectionData} rtcCallbacks={rtcCallbacks} />
                     </View>
                 ) : (
@@ -227,7 +241,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             </View>
                         </ScrollView>
                         <View style={styles.controls}>
-                            <BottomRightButton icon={"video"} size={20} btnStyle={{ right: 8 }} onPress={() => startCall()} />
+                            <BottomRightButton icon={"video"} size={18} btnStyle={{ right: 8 }} onPress={() => startCall()} backgroundColor={ videoCall ? config.colors.red : config.colors.green_1} />
                             <Text style={styles.controlText}>{videoCall ? 'Stop video' : 'Start video'}</Text>
                         </View>
                     </View>
@@ -305,7 +319,6 @@ const styles = StyleSheet.create({
 
     controlText: {
         textAlign: 'center',
-        textTransform: 'lowercase',
         fontSize: config.fonts.medium
     },
 

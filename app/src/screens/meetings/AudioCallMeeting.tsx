@@ -20,10 +20,12 @@ import { Context as AuthContext } from '../../context/authContext'
 import { Context as PatientContext } from '../../context/patientContext'
 import { IUser } from '../../interfaces'
 import TimerScreen from '../../components/common/TimerScreen'
-import { Avatar as AvatarRP } from 'react-native-paper';
-import Avatar from '../../components/Avatar';
+import { Avatar as AvatarRP } from 'react-native-paper'
+import Avatar from '../../components/Avatar'
 import { agoraConnectionInitialState } from '../../configs/constants'
-const uid = Math.floor(Math.random() * 100000);
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+
+const uid = Math.floor(Math.random() * 100000)
 var isMuted = false
 
 const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
@@ -34,12 +36,12 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     const [isVolumeUp, setIsVolumeUp] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [isRatingVisible, setIsRatingVisible] = useState(false)
-    const [ownUID, setOwnUID] = useState(uid);
+    const [ownUID, setOwnUID] = useState(uid)
     const [remoteUid, setRemoteUid] = useState(0)
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(false)
-    const [isOtherUserJoined, setIsOtherUserJoined] = useState(false);
-    const [message, setMessage] = useState<string | any>('')
+    const [isRemoteUserMuted, setRemoteUserMuted] = useState(false)
+    const [isOtherUserJoined, setIsOtherUserJoined] = useState(false)
 
     const [connectionData, setConnectionData] = useState<any>(agoraConnectionInitialState)
     const { getMeetingDetails, postCallDetails } = useContext(AppContext)
@@ -60,31 +62,31 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     }, [])
 
     useEffect(() => {
-        let interval: any = null;
+        let interval: any = null
 
         if (isActive) {
             interval = setInterval(() => {
-                setSeconds((prevSeconds) => prevSeconds + 1);
-            }, 1000);
+                setSeconds((prevSeconds) => prevSeconds + 1)
+            }, 1000)
         } else {
-            clearInterval(interval);
+            clearInterval(interval)
         }
 
-        return () => clearInterval(interval);
-    }, [isActive]);
+        return () => clearInterval(interval)
+    }, [isActive])
 
     const startTimer = () => {
-        setIsActive(true);
-    };
+        setIsActive(true)
+    }
 
     const pauseTimer = () => {
-        setIsActive(false);
-    };
+        setIsActive(false)
+    }
 
     const stopTimer = () => {
-        setIsActive(false);
-        setSeconds(0);
-    };
+        setIsActive(false)
+        setSeconds(0)
+    }
 
     const setMeetingDetails = (data: any) => {
         if (data && data.meeting_access) {
@@ -117,10 +119,10 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             }
 
             const is_patient: any = user.is_patient
-            setIsLoading(true);
+            setIsLoading(true)
             postCallDetails({
                 is_patient: is_patient, payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => {
-                    setIsLoading(false);
+                    setIsLoading(false)
                 }
             })
         } else {
@@ -143,20 +145,22 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     onJoinChannelSuccess: () => {
                         setIsJoined(true)
                     },
-                    onUserJoined: (_connection, Uid) => {
-                        setMessage('Remote user joined with uid ' + Uid)
+                    onUserJoined: async (_connection, Uid) => {
                         setRemoteUid(Uid)
                         if (Uid !== ownUID) {
-                            setIsOtherUserJoined(true);
+                            setIsOtherUserJoined(true)
                         }
                     },
                     onUserOffline: (_connection, Uid) => {
-                        setMessage('Remote user left the channel. uid: ' + Uid)
                         setRemoteUid(0)
                         if (Uid !== ownUID) {
-                            setIsOtherUserJoined(false);
+                            setIsOtherUserJoined(false)
                         }
                     },
+
+                    onUserMuteAudio: (_connection, Uid, muted) => {
+                        setRemoteUserMuted(muted)
+                    }
                 })
 
                 agoraEngine.initialize({
@@ -234,14 +238,13 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
             pauseTimer()
             setRemoteUid(0)
             setIsJoined(false)
-            setMessage('You left the channel')
         } catch (e) {
             console.log(e)
         }
     }
 
     const mute = () => {
-        isMuted = !isMuted;
+        isMuted = !isMuted
         agoraEngineRef.current?.muteLocalAudioStream(isMuted)
     }
 
@@ -303,7 +306,13 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                         {!user.is_patient && patient && <Text style={styles.name}>{patient.first_name}</Text>}
                         {!isJoined && <Text>Start a call</Text>}
 
-                        {isJoined && isOtherUserJoined && <Text>{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on call</Text>}
+                        {
+                            isJoined && isOtherUserJoined &&
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text>{user.is_patient ? `${doctor.first_name}` : `${patient.first_name}`} is now on {isRemoteUserMuted ? 'mute': 'call'}</Text>
+                                <Icon5 name={isRemoteUserMuted ? 'microphone-alt-slash' : 'microphone-alt'} size={20} color={isRemoteUserMuted ? config.colors.primary : config.colors.green_1} style={{ marginLeft: 4 }} />
+                            </View>
+                        }
                         {isJoined && !isOtherUserJoined && <Text>You are the only one here</Text>}
 
                         <TimerScreen seconds={seconds} />
@@ -316,8 +325,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                     snapPoints={snapPoints}
                     enablePanDownToClose={true}
                     backdropComponent={renderBackDrop}
-                    onChange={handleSheetChanges}
-                >
+                    onChange={handleSheetChanges}>
                     <Divider style={styles.divider} />
                     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
                         <View style={styles.controls}>
@@ -333,7 +341,7 @@ const AudioCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                             <Text style={styles.controlText}>Mute</Text>
                         </View>
                         <View style={styles.controls}>
-                            <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} />
+                            <CircularButton icon='phone-alt' size={20} onPress={() => join()} btnStyle={{ marginTop: 20 }} backgroundColor={isJoined ? config.colors.red : config.colors.green_1} />
                             <Text style={styles.controlText}>{(isJoined || isOtherUserJoined) ? 'stop call' : 'start call'}</Text>
                         </View>
                     </BottomSheetScrollView>
