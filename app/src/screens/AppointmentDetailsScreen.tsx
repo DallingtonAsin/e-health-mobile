@@ -252,21 +252,20 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                             </TouchableOpacity>
                         }
 
-                        {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
-                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
-                            </TouchableOpacity>
-                        }
-
                         {!user.is_patient && appointmentInfo.status == 'Confirmed' &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                                 onPress={() => completeMedicalAppoitment()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
                             </TouchableOpacity>
                         }
+
+                        {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
+                            </TouchableOpacity>
+                        }
+
                     </View>
-
-
                 </View>
             </ScrollView>
             }
