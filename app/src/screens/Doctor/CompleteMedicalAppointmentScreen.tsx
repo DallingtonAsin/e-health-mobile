@@ -16,8 +16,8 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [isFetchingLabTests, setIsFetchingLabTests] = useState(false)
-    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(false)
+    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
+    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
