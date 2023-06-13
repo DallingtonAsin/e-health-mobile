@@ -28,7 +28,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setSelectedIcdCodes(items);
     };
 
-    const onRemoveICDCode = (item: any, index: number) => {
+    const onRemoveICDCode = (item: any) => {
         const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id);
         setSelectedIcdCodes(items);
     }
@@ -39,7 +39,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setSelectedLabTests(items);
     };
 
-    const onRemoveLabTest = (item: any, index: number) => {
+    const onRemoveLabTest = (item: any) => {
         const items = selectedLabTests.filter((sitem: any) => sitem.id !== item.id);
         setSelectedLabTests(items);
     }
