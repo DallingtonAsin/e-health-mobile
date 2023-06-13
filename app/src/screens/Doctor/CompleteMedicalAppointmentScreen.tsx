@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions } from 'react-native'
 import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
 import { formatDate, displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
-import { MedicalHistoryRecord } from '../../interfaces'
+import { Option, MedicalHistoryRecord } from '../../interfaces'
 import AppDatePicker from '../../components/AppDatePicker'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
 import SearchableDropdown from 'react-native-searchable-dropdown'
@@ -16,11 +16,30 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [isFetchingLabTests, setIsFetchingLabTests] = useState(false)
+    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(false)
+
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
+    const [labTestCategories, setLabTestCategories] = useState<Option[] | any>();
+    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>();
     const [selectedLabTests, setSelectedLabTests] = useState<any>([]);
     const [selectedIcdCodes, setSelectedIcdCodes] = useState<any>([]);
 
+    const { getLabTestCategories, getIcd10Codes } = useContext(DoctorContext);
+
+    useEffect(() => {
+        getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) });
+        getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) });
+    }, []);
+
+    const populateLabCategories = (data: Option[]) => {
+        setLabTestCategories(data)
+    }
+
+    const populateIcd10Codes = (data: Option[]) => {
+        setIcd10Codes(data)
+    }
 
     const onSelectICDCode = (item: any) => {
         const items = selectedIcdCodes;
@@ -127,8 +146,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                 <ScrollView
                     style={config.styles.registration.doctor.scrollView}
                     contentContainerStyle={styles.scrollContainer}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Past Medical History</Text>
                         <TextInput
@@ -177,7 +195,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                         itemStyle={styles.searchableItemStyle}
                         itemTextStyle={styles.searchableTextStyle}
                         itemsContainerStyle={{ maxHeight: 140 }}
-                        items={data}
+                        items={labTestCategories}
                         placeholder="Select LabTest"
                         resetValue={false}
                         underlineColorAndroid="transparent"
@@ -231,7 +249,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                         itemStyle={styles.searchableItemStyle}
                         itemTextStyle={styles.searchableTextStyle}
                         itemsContainerStyle={{ maxHeight: 140 }}
-                        items={data}
+                        items={icd10Codes}
                         placeholder="Select ICD10 Code"
                         resetValue={false}
                         underlineColorAndroid="transparent"
@@ -330,7 +348,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     </View>
                 </ScrollView>
             </SafeAreaView>
-            {isLoading && <AppLoader />}
         </React.Fragment>
     )
 
@@ -370,6 +387,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                 </TouchableOpacity>
             </View>
+            {(isLoading) || isFetchingLabTests || isFetchingIcdCodes && <AppLoader />}
         </React.Fragment>
     )
 }

@@ -18,7 +18,7 @@ const signin = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 let access_token = data.access_token;
 
                 await storeAuthToken(access_token);
@@ -49,7 +49,7 @@ const sendVerificationCode = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 await storeAuthToken(data.access_token);
 
                 dispatch({
@@ -78,7 +78,7 @@ const verifyCode = (dispatch: any) => {
 
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 let access_token = data.access_token;
                 await storeAuthToken(access_token);
 
@@ -114,7 +114,7 @@ const signup = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
 
                 await storeAccessToken(data.access_token);
                 await storeUser(data);
@@ -142,7 +142,7 @@ const authenticateDoctor = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 let access_token = data.access_token;
                 await storeAuthToken(access_token);
 
@@ -178,7 +178,7 @@ const registerDoctor = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 await storeAccessToken(data.access_token);
                 await storeUser(data);
 

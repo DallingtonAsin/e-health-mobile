@@ -8,8 +8,8 @@ declare module 'react-native-searchable-dropdown' {
     }
 
     interface SearchableDropdownProps {
-        onItemSelect: (item: Option) => void;
-        onRemoveItem?: (item: Option) => void;
+        onItemSelect: (item: Option | any) => void;
+        onRemoveItem?: (item: Option | any) => void;
         multi?: boolean;
         containerStyle?: ViewStyle;
         textInputStyle?: TextStyle;

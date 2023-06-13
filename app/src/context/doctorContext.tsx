@@ -18,7 +18,7 @@ const authenticateDoctor = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                let data = res.data;
+                const data = res.data;
                 let access_token = data.access_token;
                 await storeAuthToken(access_token);
 
@@ -102,7 +102,7 @@ const getDoctorInfo = () => {
             `${routes.medical.doctors}/${doctorId}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -119,7 +119,7 @@ const getDoctorsCalendar = () => {
             `${routes.doctor.calendar}/${doctor_id}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -250,7 +250,7 @@ const getMedicalDoctors = () => {
             routes.medical.doctors
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -267,7 +267,41 @@ const getMedicalFacilities = () => {
             routes.medical.facilities
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getLabTestCategories = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.doctor.lab_test_categories
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getIcd10Codes = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.doctor.icd_10_codes
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -283,7 +317,8 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
-        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus
+        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
+        getLabTestCategories, getIcd10Codes
     },
     { isAppLoading: true },
 );

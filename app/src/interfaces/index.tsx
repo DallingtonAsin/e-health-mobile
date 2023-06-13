@@ -327,6 +327,11 @@ interface AppointmentDetail {
     }
 }
 
+interface Option {
+    id: number;
+    name: string;
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -356,5 +361,6 @@ export type {
     LoginPayload,
     PushNotification,
     AppointmentDetail,
-    DrCompleteProfilePayload
+    DrCompleteProfilePayload,
+    Option
 }

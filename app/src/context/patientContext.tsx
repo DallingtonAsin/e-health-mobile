@@ -48,7 +48,7 @@ const getMedicalHistory = () => {
             `${routes.medical.history}/${patient_id}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {
@@ -118,7 +118,7 @@ const getDoctorsByOnlineStatus = () => {
             `${routes.medical.doctors_by_online_status}/${is_online}`
         ).then(async (res) => {
             if (res && res.data) {
-                let data = res.data;
+                const data = res.data;
                 onSuccess(data);
             }
         }).catch((error) => {

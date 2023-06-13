@@ -35,7 +35,6 @@ const createContext = (defaultValue: any) => {
         getAppointmentDetails: ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getDoctorLanguages: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalDoctors: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        getMedicalFacilities: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         updateUserState: ({ onSuccess }: { onSuccess: any }) => { },
         checkAppointmentStatus: ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         postCallDetails: ({ is_patient, payload, onSuccess, onFailure, onCompletion }: { is_patient: boolean, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
@@ -52,6 +51,9 @@ const createContext = (defaultValue: any) => {
         isVerified: ({ screen, onSuccess, onFailure, onCompletion }: { screen: string, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         updateOnlineStatus: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         changeAutoApproveAppointmentStatus: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getMedicalFacilities: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getLabTestCategories: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getIcd10Codes: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });
 
     return Context;
