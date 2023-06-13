@@ -17,6 +17,8 @@ declare module 'react-native-searchable-dropdown' {
         itemTextStyle?: TextStyle;
         itemsContainerStyle?: ViewStyle;
         items: Option[];
+        defaultIndex?: number;
+        chip?: boolean;
         selectedItems?: Option[];
         placeholder?: string;
         resetValue?: boolean;
