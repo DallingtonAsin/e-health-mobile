@@ -85,7 +85,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         }
 
         return (
-            <>
+            <React.Fragment>
                 <SafeAreaView style={styles.container}>
                     <View style={styles.subcontainer}>
                         <FlatList
@@ -101,7 +101,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                 </SafeAreaView>
                 {isPendingLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
-            </>
+            </React.Fragment>
         )
     }
 
@@ -115,7 +115,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         }
 
         return (
-            <>
+            <React.Fragment>
                 <SafeAreaView style={styles.container}>
                     <View style={styles.subcontainer}>
                         <FlatList
@@ -131,7 +131,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                 </SafeAreaView>
                 {isConfirmedLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
-            </>
+            </React.Fragment>
         )
     }
 
@@ -145,7 +145,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         }
 
         return (
-            <>
+            <React.Fragment>
                 <SafeAreaView style={styles.container}>
                     <View style={styles.subcontainer}>
                         <FlatList
@@ -161,7 +161,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                 </SafeAreaView>
                 {isCompletedLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
-            </>
+            </React.Fragment>
         )
     }
 
@@ -175,7 +175,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         }
 
         return (
-            <>
+            <React.Fragment>
                 <SafeAreaView style={styles.container}>
                     <View style={styles.subcontainer}>
                         <FlatList
@@ -191,7 +191,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                 </SafeAreaView>
                 {isCancelledLoading && !refreshing && <AppLoader bgColor={config.colors.white} />}
-            </>
+            </React.Fragment>
         )
     }
 
