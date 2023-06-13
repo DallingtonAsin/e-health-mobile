@@ -38,6 +38,8 @@ const routes = {
       languages: 'doctor/languages',
       calendar: 'doctor/schedule',
       call_details: 'doctor/calls',
+      lab_test_categories: 'lab-test-categories',
+      icd_10_codes: 'icd-10-codes',
       notifications: {
          all: 'doctor/notifications',
          read: 'doctor/notifications/read',
