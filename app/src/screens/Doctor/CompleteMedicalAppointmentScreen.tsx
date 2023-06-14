@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
 import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
@@ -8,7 +8,7 @@ import { Context as DoctorContext } from '../../context/doctorContext'
 import { Context as AppContext } from '../../context/appContext'
 import { Option, MedicalHistoryRecord } from '../../interfaces'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
-import SearchableDropdown from 'react-native-searchable-dropdown'
+import CustomSearchableDropdown from '../../components/CustomSearchableDropdown'
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -93,7 +93,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     const [routes] = React.useState([
         { key: 'history', title: 'History' },
-        { key: 'findings', title: 'Tests' },
+        { key: 'tests', title: 'Tests' },
         { key: 'diagnosis', title: 'Diagnosis' },
         { key: 'treatment', title: 'Treatment' },
     ])
@@ -150,127 +150,78 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         navigation.navigate('MyAppointments')
     }
 
+
+
     const HistoryScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            {/* <View style={styles.header}>
-                <View style={styles.disabledView}>
-                    <Text style={styles.labelTxt}>Appointment Number.</Text>
-                    <Text style={styles.appointmentNo}>#{appointment_number}</Text>
-                </View>
-                <View style={styles.disabledView}>
-                    <Text style={styles.labelTxt}>Patient Name</Text>
-                    <Text style={styles.appointmentNo}>{`${patient.first_name} ${patient.last_name}`}</Text>
-                </View>
-            </View> */}
-            <ScrollView
-                style={config.styles.registration.doctor.scrollView}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}>
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Past medical history</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        value={medical_history.past_medical_history}
-                        mode="outlined"
-                        label="Past medical history"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        disabled={false}
-                    />
-                </View>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Past medical history</Text>
+                <TextInput
+                    multiline
+                    numberOfLines={3}
+                    value={medical_history.past_medical_history}
+                    mode="outlined"
+                    label="Past medical history"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    disabled={false}
+                />
+            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Current treatment</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Current treatment"
-                        value={medical_history.current_treatment}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        disabled={false}
-                    />
-                </View>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Current treatment</Text>
+                <TextInput
+                    multiline
+                    numberOfLines={3}
+                    label="Current treatment"
+                    value={medical_history.current_treatment}
+                    mode="outlined"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    disabled={false}
+                />
+            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Drug allergies
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Drug allergies..."
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Drug allergies
+                    <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                <TextInput
+                    multiline
+                    numberOfLines={3}
+                    label="Drug allergies..."
+                    value={historyInfo.illness}
+                    mode="outlined"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    textColor={config.colors.dark}
+                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                />
+            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Findings
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Findings..."
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
-            </ScrollView>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Findings
+                    <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                <TextInput
+                    multiline
+                    numberOfLines={3}
+                    label="Findings..."
+                    value={historyInfo.illness}
+                    mode="outlined"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    textColor={config.colors.dark}
+                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                />
+            </View>
         </SafeAreaView>
     )
 
-    const CustomSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
-        multi: boolean,
-        items: Option[],
-        selectedItems: Option[],
-        placeholderStr: string,
-        textInputStr: string,
-        onItemSelect: (item: any) => void,
-        onRemoveItem: (item: any) => void
-    }) => (
-        <SearchableDropdown
-            multi={true}
-            items={items}
-            selectedItems={selectedItems}
-            onItemSelect={onItemSelect}
-            onRemoveItem={onRemoveItem}
-            containerStyle={styles.searchableContainerStyle}
-            textInputStyle={styles.searchableTextInputStyle}
-            itemStyle={styles.searchableItemStyle}
-            itemTextStyle={styles.searchableTextStyle}
-            itemsContainerStyle={{ maxHeight: 140 }}
-            chip={true}
-            placeholder={placeholderStr}
-            resetValue={false}
-            underlineColorAndroid="transparent"
-            textInputProps={{
-                placeholder: textInputStr,
-                underlineColorAndroid: "transparent",
-                style: styles.searchableTextInputPropsStyle,
-                onTextChange: (text: any) => console.log(text)
-            }}
-            listProps={{ nestedScrollEnabled: true }}
-        />
-    )
-
-    const FindingsScreen = () => (
+    const TestsScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-
             <ScrollView
                 style={config.styles.registration.doctor.scrollView}
                 contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}>
-
                 <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
                     <Text style={styles.labelTxt}>Select LabTest</Text>
                     <CustomSearchableDropdown
@@ -364,84 +315,71 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     const DiagnosisScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
+            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
+                <Text style={styles.labelTxt}>Select ICD-10 Code</Text>
+                <CustomSearchableDropdown
+                    multi={true}
+                    items={icd10Codes}
+                    selectedItems={selectedIcdCodes}
+                    placeholderStr="Select ICD10 Code"
+                    textInputStr="ICD10 Code"
+                    onItemSelect={onSelectICDCode}
+                    onRemoveItem={onRemoveICDCode}
+                />
+            </View>
 
-            <ScrollView
-                style={config.styles.registration.doctor.scrollView}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}>
-
-                <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                    <Text style={styles.labelTxt}>Select ICD-10 Code</Text>
-                    <CustomSearchableDropdown
-                        multi={true}
-                        items={icd10Codes}
-                        selectedItems={selectedIcdCodes}
-                        placeholderStr="Select ICD10 Code"
-                        textInputStr="ICD10 Code"
-                        onItemSelect={onSelectICDCode}
-                        onRemoveItem={onRemoveICDCode}
-                    />
-                </View>
-
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Additional Comments</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Additional comments"
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
-            </ScrollView>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Additional comments</Text>
+                <TextInput
+                    multiline
+                    numberOfLines={3}
+                    label="Additional comments"
+                    value={historyInfo.illness}
+                    mode="outlined"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    textColor={config.colors.dark}
+                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                />
+            </View>
         </SafeAreaView>
     )
 
     const TreatmentScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            <ScrollView
-                style={config.styles.registration.doctor.scrollView}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}>
+            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
+                <Text style={styles.labelTxt}>Select prescription drug(s)</Text>
+                <CustomSearchableDropdown
+                    multi={true}
+                    items={drugs}
+                    selectedItems={selectedDrugs}
+                    placeholderStr="Select prescription drug"
+                    textInputStr="Prescription drugs"
+                    onItemSelect={onSelectDrug}
+                    onRemoveItem={onRemoveDrug}
+                />
+            </View>
 
-                <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                    <Text style={styles.labelTxt}>Select prescription drug(s)</Text>
-                    <CustomSearchableDropdown
-                        multi={true}
-                        items={drugs}
-                        selectedItems={selectedDrugs}
-                        placeholderStr="Select prescription drug"
-                        textInputStr="Prescription drugs"
-                        onItemSelect={onSelectDrug}
-                        onRemoveItem={onRemoveDrug}
-                    />
-                </View>
-
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Treatment plan/action(s)</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={6}
-                        label="Treatment plan"
-                        value={historyInfo.treatment}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, treatment: text }))}
-                    />
-                </View>
-            </ScrollView>
+            <View style={styles.viewContainer}>
+                <Text style={styles.labelTxt}>Treatment plan/action(s)</Text>
+                <TextInput
+                    multiline
+                    numberOfLines={6}
+                    label="Treatment plan"
+                    value={historyInfo.treatment}
+                    mode="outlined"
+                    activeOutlineColor={config.colors.primary}
+                    style={styles.textInput}
+                    textColor={config.colors.dark}
+                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, treatment: text }))}
+                />
+            </View>
         </SafeAreaView>
     )
 
     const renderScene = SceneMap({
         history: HistoryScreen,
-        findings: FindingsScreen,
+        tests: TestsScreen,
         diagnosis: DiagnosisScreen,
         treatment: TreatmentScreen
     })
@@ -530,38 +468,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingHorizontal: 10,
         paddingVertical: 10,
-    },
-
-    searchableContainerStyle: {
-        paddingHorizontal: 0,
-        marginVertical: 10
-    },
-
-    searchableTextInputStyle: {
-        padding: 12,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-    },
-
-    searchableItemStyle: {
-        padding: 10,
-        marginTop: 8,
-        backgroundColor: '#ddd',
-        borderColor: '#bbb',
-        borderWidth: 1,
-        borderRadius: 5,
-    },
-
-    searchableTextStyle: {
-        color: '#222'
-    },
-
-    searchableTextInputPropsStyle: {
-        padding: 12,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
     },
 
     textInput: {
