@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
 
     amount: {
         color: configs.colors.primary,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     searchbar: {

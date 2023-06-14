@@ -61,6 +61,7 @@ const routes = {
 
    drugs: {
       index: 'drugs',
+      prescription: 'prescription-drugs'
    },
 
    appointments: {

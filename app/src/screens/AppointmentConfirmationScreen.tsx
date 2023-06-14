@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   okayText: {
     fontSize: 15,
     color: configs.colors.primary,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textTransform: 'uppercase',
   },
 

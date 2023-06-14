@@ -41,7 +41,7 @@ export const styles = {
 
   continueText: {
     color: colors.white,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     fontSize: fonts.extraLarge,
   },
 
@@ -226,7 +226,7 @@ export const styles = {
         marginVertical: 10,
         textAlign: 'center',
         fontSize: fonts.extraLarge,
-        fontWeight: '800',
+        // fontWeight: '800',
         textTransform: 'uppercase',
       },
 
@@ -268,14 +268,14 @@ export const styles = {
   online: {
     color: colors.success,
     fontSize: fonts.small,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textTransform: 'capitalize'
   },
 
   offline: {
     color: colors.light_gray,
     fontSize: fonts.small,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textTransform: 'capitalize'
   }
 

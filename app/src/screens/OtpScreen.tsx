@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     textSignin: {
         fontSize: 28,
         color: configs.colors.white,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         left: 20,
     },
 

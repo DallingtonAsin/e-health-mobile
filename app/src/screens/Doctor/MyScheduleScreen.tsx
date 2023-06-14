@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     },
 
     rowHeaderText: {
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         color: config.colors.white,
         textTransform: 'uppercase',
         fontSize: config.fonts.normal

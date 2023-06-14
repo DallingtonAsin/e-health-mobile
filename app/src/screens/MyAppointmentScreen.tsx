@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
 
     typeTxt: {
         color: config.colors.white,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: config.fonts.normal
     },
 
@@ -352,13 +352,13 @@ const styles = StyleSheet.create({
     day: {
         fontSize: 24,
         color: 'white',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     month: {
         fontSize: 14,
         color: 'white',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
 })
