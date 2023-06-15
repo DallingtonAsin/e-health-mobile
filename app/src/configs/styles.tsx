@@ -41,7 +41,6 @@ export const styles = {
 
   continueText: {
     color: colors.white,
-    // fontWeight: 'bold',
     fontSize: fonts.extraLarge,
   },
 
@@ -54,6 +53,12 @@ export const styles = {
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.white,
+  },
+
+  bottomFooter: {
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: 20
   },
 
   btnText: {
@@ -242,7 +247,7 @@ export const styles = {
       },
 
       required: {
-        color: colors.danger,
+        color: colors.red
       },
 
       textInput: {

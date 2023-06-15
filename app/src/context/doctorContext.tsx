@@ -278,10 +278,11 @@ const getMedicalFacilities = () => {
     };
 };
 
-const getLabTestCategories = () => {
+
+const getIcd10Codes = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
-            routes.doctor.lab_test_categories
+            routes.doctor.icd_10_codes
         ).then(async (res) => {
             if (res && res.data) {
                 const data = res.data;
@@ -295,10 +296,27 @@ const getLabTestCategories = () => {
     };
 };
 
-const getIcd10Codes = () => {
+const getLabTestCategories = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
-            routes.doctor.icd_10_codes
+            routes.doctor.labtest_categories
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
+const getImageTestCategories = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.doctor.imagetest_categories
         ).then(async (res) => {
             if (res && res.data) {
                 const data = res.data;
@@ -318,7 +336,7 @@ export const { Provider, Context } = createDataContext(
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
         getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
-        getLabTestCategories, getIcd10Codes
+        getIcd10Codes, getLabTestCategories, getImageTestCategories
     },
     { isAppLoading: true },
 );

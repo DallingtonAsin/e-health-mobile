@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
+import { SafeAreaView, KeyboardAvoidingView, View, Text, TouchableOpacity, Button, StatusBar, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
 import * as config from '../../configs'
-import { TextInput } from 'react-native-paper'
+import { TextInput, DataTable, Portal, PaperProvider } from 'react-native-paper'
+import Modal from "react-native-modal"
 import AppLoader from '../../components/AppLoader'
 import { formatDate, displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
@@ -9,6 +10,24 @@ import { Context as AppContext } from '../../context/appContext'
 import { Option, MedicalHistoryRecord } from '../../interfaces'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
 import CustomSearchableDropdown from '../../components/CustomSearchableDropdown'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+const numberOfItemsPerPageList = [2, 3, 4];
+
+const items = [
+    {
+        key: 1,
+        name: 'Page 1',
+    },
+    {
+        key: 2,
+        name: 'Page 2',
+    },
+    {
+        key: 3,
+        name: 'Page 3',
+    },
+];
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -16,84 +35,108 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
+
+    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>()
+    const [drugs, setDrugs] = useState<Option[]>([])
+    const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
+    const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
+
+    const [selectedDrugs, setSelectedDrugs] = useState<any>([])
+    const [selectedIcdCodes, setSelectedIcdCodes] = useState<any>([])
+    const [selectedLabTests, setSelectedLabTests] = useState<any>([])
+    const [selectedImageTests, setSelectedImageTests] = useState<any>([])
+
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
+    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
+    const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
     const [isFetchingDrugs, setFetchingDrugs] = useState(true)
+
+    const [page, setPage] = React.useState<number>(0);
+
+    const [numberOfItemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
+    const from = page * numberOfItemsPerPage;
+    const to = Math.min((page + 1) * numberOfItemsPerPage, items.length);
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
 
-    const [labTestCategories, setLabTestCategories] = useState<Option[] | any>();
-    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>();
-    const [drugs, setDrugs] = useState<Option[]>([]);
-
-    const [selectedLabTests, setSelectedLabTests] = useState<any>([]);
-    const [selectedIcdCodes, setSelectedIcdCodes] = useState<any>([]);
-    const [selectedDrugs, setSelectedDrugs] = useState<any>([]);
-
-
-    const { getLabTestCategories, getIcd10Codes } = useContext(DoctorContext);
-    const { getDrugs } = useContext(AppContext);
+    const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
+    const { getDrugs } = useContext(AppContext)
 
     useEffect(() => {
-        getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) });
-        getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) });
-        getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: () => setFetchingDrugs(false) });
-    }, []);
+        getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: () => setFetchingDrugs(false) })
+        getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
+        getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) })
+        getImageTestCategories({ onSuccess: populateImageCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingImageTests(false) })
+    }, [])
 
-    const populateLabCategories = (data: Option[]) => {
-        setLabTestCategories(data)
+    const populateDrugs = (drugs: Option[]) => {
+        setDrugs(drugs)
     }
 
     const populateIcd10Codes = (data: Option[]) => {
         setIcd10Codes(data)
     }
 
-    const populateDrugs = (drugs: Option[]) => {
-        setDrugs(drugs);
+    const populateLabCategories = (data: Option[]) => {
+        setLabTestCategories(data)
     }
 
+    const populateImageCategories = (data: Option[]) => {
+        setImageTestCategories(data)
+    }
 
     // ICD-10 Codes
     const onSelectICDCode = (item: any) => {
-        const items = selectedIcdCodes;
+        const items = selectedIcdCodes
         items.push(item)
-        setSelectedIcdCodes(items);
-    };
+        setSelectedIcdCodes(items)
+    }
 
     const onRemoveICDCode = (item: any) => {
-        const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id);
-        setSelectedIcdCodes(items);
+        const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id)
+        setSelectedIcdCodes(items)
     }
 
     // Lab Tests
     const onSelectLabTest = (item: any) => {
-        const items = selectedLabTests;
+        const items = selectedLabTests
         items.push(item)
-        setSelectedLabTests(items);
-    };
-
-    const onRemoveLabTest = (item: any) => {
-        const items = selectedLabTests.filter((sitem: any) => sitem.id !== item.id);
-        setSelectedLabTests(items);
+        setSelectedLabTests(items)
     }
 
+    const onRemoveLabTest = (item: any) => {
+        const items = selectedLabTests.filter((sitem: any) => sitem.id !== item.id)
+        setSelectedLabTests(items)
+    }
+
+    // Image Tests
+    const onSelectImageTest = (item: any) => {
+        const items = selectedImageTests
+        items.push(item)
+        setSelectedImageTests(items)
+    }
+
+    const onRemoveImageTest = (item: any) => {
+        const items = selectedImageTests.filter((sitem: any) => sitem.id !== item.id)
+        setSelectedImageTests(items)
+    }
 
     // Prescription drugs
     const onSelectDrug = (item: any) => {
-        const items = selectedDrugs;
+        const items = selectedDrugs
         items.push(item)
-        setSelectedDrugs(items);
-    };
+        setSelectedDrugs(items)
+    }
 
     const onRemoveDrug = (item: any) => {
-        const items = selectedDrugs.filter((sitem: any) => sitem.id !== item.id);
-        setSelectedDrugs(items);
+        const items = selectedDrugs.filter((sitem: any) => sitem.id !== item.id)
+        setSelectedDrugs(items)
     }
 
     const [routes] = React.useState([
         { key: 'history', title: 'History' },
-        { key: 'tests', title: 'Tests' },
+        { key: 'tests', title: 'Lab' },
         { key: 'diagnosis', title: 'Diagnosis' },
         { key: 'treatment', title: 'Treatment' },
     ])
@@ -150,168 +193,244 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         navigation.navigate('MyAppointments')
     }
 
-
-
     const HistoryScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Past medical history</Text>
-                <TextInput
-                    multiline
-                    numberOfLines={3}
-                    value={medical_history.past_medical_history}
-                    mode="outlined"
-                    label="Past medical history"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    disabled={false}
-                />
-            </View>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+                <View style={styles.viewContainer}>
+                    <Text style={styles.labelTxt}>Presenting complaint<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <TextInput
+                        multiline
+                        numberOfLines={3}
+                        label="Presenting complaint"
+                        value={medical_history.current_treatment}
+                        mode="outlined"
+                        activeOutlineColor={config.colors.primary}
+                        style={styles.textInput}
+                        disabled={false}
+                    />
+                </View>
 
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Current treatment</Text>
-                <TextInput
-                    multiline
-                    numberOfLines={3}
-                    label="Current treatment"
-                    value={medical_history.current_treatment}
-                    mode="outlined"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    disabled={false}
-                />
-            </View>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.labelTxt}>Past medical history<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <TextInput
+                        multiline
+                        numberOfLines={3}
+                        value={medical_history.past_medical_history}
+                        mode="outlined"
+                        label="Past medical history"
+                        placeholder="Past medical history can include patient current treatment"
+                        activeOutlineColor={config.colors.primary}
+                        style={styles.textInput}
+                        disabled={false}
+                    />
+                </View>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.labelTxt}>Drug allergies<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <TextInput
+                        multiline
+                        numberOfLines={3}
+                        label="Drug allergies..."
+                        value={historyInfo.illness}
+                        mode="outlined"
+                        activeOutlineColor={config.colors.primary}
+                        style={styles.textInput}
+                        textColor={config.colors.dark}
+                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                    />
+                </View>
 
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Drug allergies
-                    <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                <TextInput
-                    multiline
-                    numberOfLines={3}
-                    label="Drug allergies..."
-                    value={historyInfo.illness}
-                    mode="outlined"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    textColor={config.colors.dark}
-                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                />
-            </View>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.labelTxt}>Findings
+                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <TextInput
+                        multiline
+                        numberOfLines={3}
+                        label="Findings..."
+                        value={historyInfo.illness}
+                        mode="outlined"
+                        activeOutlineColor={config.colors.primary}
+                        style={styles.textInput}
+                        textColor={config.colors.dark}
+                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                    />
+                </View>
 
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Findings
-                    <Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                <TextInput
-                    multiline
-                    numberOfLines={3}
-                    label="Findings..."
-                    value={historyInfo.illness}
-                    mode="outlined"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    textColor={config.colors.dark}
-                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                />
-            </View>
+                <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
+                    <Text style={styles.infoText}>*For any mandatory field, if it is not applicable, please enter "None or N/A".</Text>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 
-    const TestsScreen = () => (
-        <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            <ScrollView
-                style={config.styles.registration.doctor.scrollView}
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}>
-                <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                    <Text style={styles.labelTxt}>Select LabTest</Text>
-                    <CustomSearchableDropdown
-                        multi={true}
-                        items={labTestCategories}
-                        selectedItems={selectedLabTests}
-                        placeholderStr="Lab Tests"
-                        textInputStr="Lab Tests"
-                        onItemSelect={onSelectLabTest}
-                        onRemoveItem={onRemoveLabTest}
-                    />
+    const TestsScreen = () => {
+        const [visible, setVisible] = useState(false);
+        const showModal = () => setVisible(true);
+        const hideModal = () => setVisible(false);
+
+        return (
+
+            <React.Fragment>
+                <TouchableOpacity onPress={showModal} style={[config.styles.primaryBtn, { marginTop: 10 }]}>
+                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add Tests</Text>
+                </TouchableOpacity>
+
+                <View>
+                    <DataTable>
+                        <DataTable.Header>
+                            <DataTable.Title>Dessert</DataTable.Title>
+                            <DataTable.Title numeric>Calories</DataTable.Title>
+                            <DataTable.Title numeric>Fat</DataTable.Title>
+                        </DataTable.Header>
+
+                        <DataTable.Row>
+                            <DataTable.Cell>Frozen yogurt</DataTable.Cell>
+                            <DataTable.Cell numeric>159</DataTable.Cell>
+                            <DataTable.Cell numeric>6.0</DataTable.Cell>
+                        </DataTable.Row>
+
+                        <DataTable.Row>
+                            <DataTable.Cell>Ice cream sandwich</DataTable.Cell>
+                            <DataTable.Cell numeric>237</DataTable.Cell>
+                            <DataTable.Cell numeric>8.0</DataTable.Cell>
+                        </DataTable.Row>
+
+                        <DataTable.Row>
+                            <DataTable.Cell>Frozen yogurt</DataTable.Cell>
+                            <DataTable.Cell numeric>132</DataTable.Cell>
+                            <DataTable.Cell numeric>6.0</DataTable.Cell>
+                        </DataTable.Row>
+
+                        <DataTable.Row>
+                            <DataTable.Cell>Ice cream sandwich</DataTable.Cell>
+                            <DataTable.Cell numeric>100</DataTable.Cell>
+                            <DataTable.Cell numeric>8.0</DataTable.Cell>
+                        </DataTable.Row>
+
+                        <DataTable.Pagination
+                            page={page}
+                            numberOfPages={Math.ceil(items.length / numberOfItemsPerPage)}
+                            onPageChange={page => setPage(page)}
+                            label={`${from + 1}-${to} of ${items.length}`}
+                            showFastPaginationControls
+                            numberOfItemsPerPageList={numberOfItemsPerPageList}
+                            numberOfItemsPerPage={numberOfItemsPerPage}
+                            onItemsPerPageChange={onItemsPerPageChange}
+                            selectPageDropdownLabel={'Rows per page'}
+                        />
+                    </DataTable>
                 </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>LabTest Findings
-                        {/* <Text style={config.styles.registration.doctor.required}>*</Text> */}
-                    </Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Lab test findings"
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
+                <Modal isVisible={visible} onDismiss={hideModal}>
+                    <SafeAreaView style={[config.styles.registration.doctor.container]}>
+                        <TouchableOpacity
+                            style={styles.closeBtn}
+                            onPress={hideModal}>
+                            <Icon name="times" size={25} color={config.colors.red} />
+                        </TouchableOpacity>
+                        <ScrollView
+                            style={config.styles.registration.doctor.scrollView}
+                            contentContainerStyle={styles.scrollContainer}
+                            showsVerticalScrollIndicator={false}>
+                            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
+                                <Text style={styles.labelTxt}>Select LabTest</Text>
+                                <CustomSearchableDropdown
+                                    multi={true}
+                                    items={labTestCategories}
+                                    selectedItems={selectedLabTests}
+                                    placeholderStr="Lab Tests"
+                                    textInputStr="Lab Tests"
+                                    onItemSelect={onSelectLabTest}
+                                    onRemoveItem={onRemoveLabTest}
+                                />
+                            </View>
 
-                <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                    <Text style={styles.labelTxt}>Select ImageTests</Text>
-                    <CustomSearchableDropdown
-                        multi={true}
-                        items={labTestCategories}
-                        selectedItems={selectedLabTests}
-                        placeholderStr="Image Tests"
-                        textInputStr="Image Tests"
-                        onItemSelect={onSelectLabTest}
-                        onRemoveItem={onRemoveLabTest}
-                    />
-                </View>
+                            <View style={styles.viewContainer}>
+                                <Text style={styles.labelTxt}>LabTest Findings
+                                    {/* <Text style={config.styles.registration.doctor.required}>*</Text> */}
+                                </Text>
+                                <TextInput
+                                    multiline
+                                    numberOfLines={3}
+                                    label="Lab test findings"
+                                    value={historyInfo.illness}
+                                    mode="outlined"
+                                    activeOutlineColor={config.colors.primary}
+                                    style={styles.textInput}
+                                    textColor={config.colors.dark}
+                                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                                />
+                            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>ImageTest Findings</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Image test findings"
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
+                            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
+                                <Text style={styles.labelTxt}>Select ImageTests</Text>
+                                <CustomSearchableDropdown
+                                    multi={true}
+                                    items={imageTestCategories}
+                                    selectedItems={selectedImageTests}
+                                    placeholderStr="Image Tests"
+                                    textInputStr="Image Tests"
+                                    onItemSelect={onSelectImageTest}
+                                    onRemoveItem={onRemoveImageTest}
+                                />
+                            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Other Tests</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Other Tests"
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
+                            <View style={styles.viewContainer}>
+                                <Text style={styles.labelTxt}>ImageTest Findings</Text>
+                                <TextInput
+                                    multiline
+                                    numberOfLines={3}
+                                    label="Image test findings"
+                                    value={historyInfo.illness}
+                                    mode="outlined"
+                                    activeOutlineColor={config.colors.primary}
+                                    style={styles.textInput}
+                                    textColor={config.colors.dark}
+                                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                                />
+                            </View>
 
-                <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Other Test Findings</Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={3}
-                        label="Other test findings"
-                        value={historyInfo.illness}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
-                    />
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    )
+                            <View style={styles.viewContainer}>
+                                <Text style={styles.labelTxt}>Other Tests</Text>
+                                <TextInput
+                                    multiline
+                                    numberOfLines={3}
+                                    label="Other Tests"
+                                    value={historyInfo.illness}
+                                    mode="outlined"
+                                    activeOutlineColor={config.colors.primary}
+                                    style={styles.textInput}
+                                    textColor={config.colors.dark}
+                                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                                />
+                            </View>
+
+                            <View style={styles.viewContainer}>
+                                <Text style={styles.labelTxt}>Other Test Findings</Text>
+                                <TextInput
+                                    multiline
+                                    numberOfLines={3}
+                                    label="Other test findings"
+                                    value={historyInfo.illness}
+                                    mode="outlined"
+                                    activeOutlineColor={config.colors.primary}
+                                    style={styles.textInput}
+                                    textColor={config.colors.dark}
+                                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
+                                />
+                            </View>
+
+                            <TouchableOpacity onPress={showModal} style={[config.styles.primaryBtn, { marginVertical: 10, width: '93%', marginBottom: 40 }]}>
+                                <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add Test</Text>
+                            </TouchableOpacity>
+
+                        </ScrollView>
+                    </SafeAreaView>
+                </Modal>
+            </React.Fragment>
+
+
+        )
+    }
 
     const DiagnosisScreen = () => (
         <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
@@ -329,7 +448,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
             </View>
 
             <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Additional comments</Text>
+                <Text style={styles.labelTxt}>Additional comments<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
                     multiline
                     numberOfLines={3}
@@ -341,6 +460,10 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     textColor={config.colors.dark}
                     onChangeText={text => setHistoryInfo(prev => ({ ...prev, illness: text }))}
                 />
+            </View>
+
+            <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
+                <Text style={styles.infoText}>*For any mandatory field, if it is not applicable, please enter "None or N/A".</Text>
             </View>
         </SafeAreaView>
     )
@@ -361,11 +484,12 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
             </View>
 
             <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Treatment plan/action(s)</Text>
+                <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
                     multiline
                     numberOfLines={6}
-                    label="Treatment plan"
+                    label="Treatment plan or management"
+                    placeholder="Treatment plan or management"
                     value={historyInfo.treatment}
                     mode="outlined"
                     activeOutlineColor={config.colors.primary}
@@ -459,15 +583,11 @@ const styles = StyleSheet.create({
         color: config.colors.black
     },
 
-    appointmentNo: {
-        // fontWeight: 'bold',
-        fontSize: config.fonts.normal,
-    },
-
     scrollContainer: {
         flexGrow: 1,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        marginTop: 25
     },
 
     textInput: {
@@ -475,4 +595,15 @@ const styles = StyleSheet.create({
         color: config.colors.silver,
         fontSize: config.fonts.normal
     },
+
+    infoText: {
+        color: config.colors.red,
+        textAlign: 'center'
+    },
+    closeBtn: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 1,
+    }
 })
