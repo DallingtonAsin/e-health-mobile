@@ -1,15 +1,21 @@
 import React from 'react'
-import { View, FlatList, ScrollView, Text, StyleSheet } from 'react-native'
+import { View, FlatList, ScrollView, TouchableHighlight, Text, StyleSheet } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import * as config from '../../../configs'
 import { ILabTest, IPrescriptionDrug } from '../../../interfaces'
 
-const renderRow = ({ item }: { item: any }) => (
-    <DataTable.Row>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.test}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.findings}</Text></DataTable.Cell>
-    </DataTable.Row>
-)
+const renderRow = ({ item, index }: { item: any, index: number }) => {
+    const isOddRow = (index: number) => index % 2 === 0;
+    const rowStyle = isOddRow(index) ? styles.stripedRow : null;
+    return (
+        <TouchableHighlight key={item.id} onPress={() => console.log(`Hey row ${item.id}: ${item.test}`)}>
+            <DataTable.Row style={rowStyle}>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.test}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.findings}</Text></DataTable.Cell>
+            </DataTable.Row>
+        </TouchableHighlight>
+    )
+}
 
 const renderHeader = () => (
     <DataTable.Header style={styles.tableHead}>
@@ -21,16 +27,20 @@ const renderHeader = () => (
 const renderTable = (tests: ILabTest[], headerTitle: string) => {
     return (
         tests && tests.length > 0 ?
-            <DataTable>
-                <View style={{ alignItems: 'center', marginTop: 16 }}>
-                    <Text style={{ color: config.colors.primaryBlue, textTransform: 'uppercase', fontWeight: '800', fontSize: 14, opacity: 0.8 }}>{headerTitle}</Text>
+            <ScrollView contentContainerStyle={styles.datatableContainer} horizontal={true}>
+                <View style={{ width: 350, paddingHorizontal: 5 }}>
+                    <DataTable>
+                        <View style={{ alignItems: 'center', marginTop: 16 }}>
+                            <Text style={{ color: config.colors.primaryBlue, textTransform: 'uppercase', fontWeight: '800', fontSize: 14, opacity: 0.8 }}>{headerTitle}</Text>
+                        </View>
+                        {renderHeader()}
+                        <FlatList
+                            data={tests}
+                            renderItem={renderRow}
+                            keyExtractor={(item: any, index: number) => item.id.toString()} />
+                    </DataTable>
                 </View>
-                {renderHeader()}
-                <FlatList
-                    data={tests}
-                    renderItem={renderRow}
-                    keyExtractor={(item: any, index: number) => item.id.toString()} />
-            </DataTable>
+            </ScrollView>
             : null
     )
 }
@@ -38,14 +48,17 @@ const renderTable = (tests: ILabTest[], headerTitle: string) => {
 const renderDrugRow = ({ item, index }: { item: IPrescriptionDrug, index: number }) => {
     const isOddRow = (index: number) => index % 2 === 0;
     const rowStyle = isOddRow(index) ? styles.stripedRow : null;
-    return (<DataTable.Row style={rowStyle}>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.name}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.instructions}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.route_of_admin}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.dosage}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.duration}</Text></DataTable.Cell>
-        <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.quantity}</Text></DataTable.Cell>
-    </DataTable.Row>
+    return (
+        <TouchableHighlight key={item.id} onPress={() => console.log(`Hey row ${item.id}: ${item.name}`)}>
+            <DataTable.Row style={rowStyle}>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.name}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.instructions}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.route_of_admin}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.dosage}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.duration}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.quantity}</Text></DataTable.Cell>
+            </DataTable.Row>
+        </TouchableHighlight>
     )
 }
 
@@ -57,7 +70,6 @@ const renderDrugHeader = () => (
         <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Dosage</Text></DataTable.Title>
         <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Duration (Days)</Text></DataTable.Title>
         <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Quantity</Text></DataTable.Title>
-
     </DataTable.Header>
 )
 

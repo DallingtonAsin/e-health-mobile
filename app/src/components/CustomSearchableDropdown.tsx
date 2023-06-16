@@ -37,18 +37,16 @@ const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, 
     />
 )
 
-const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInputStr, defaultIndex, onItemSelect, onRemoveItem }: {
+const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInputStr, defaultIndex, onItemSelect }: {
     selectedItem: Option,
     items: Option[],
     placeholderStr: string,
     textInputStr: string,
     defaultIndex?: number,
-    onItemSelect: (item: any) => void,
-    onRemoveItem: (item: any) => void
+    onItemSelect: (item: any) => void
 }) => (
     <SearchableDropdown
         onItemSelect={(item) => onItemSelect(item)}
-        onRemoveItem={(item) => onRemoveItem(item)}
         containerStyle={{ padding: 5 }}
         textInputStyle={styles.searchableTextInputStyle}
         itemStyle={{
@@ -82,7 +80,6 @@ const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInp
         listProps={{ nestedScrollEnabled: true }}
     />
 )
-
 
 
 export { MultiSearchableDropdown, SingleSearchableDropdown }

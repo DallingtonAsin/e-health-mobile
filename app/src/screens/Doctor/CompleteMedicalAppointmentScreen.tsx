@@ -16,6 +16,7 @@ import { renderTabBar } from '../../components/common/tabView'
 import DiagnosisScreen from '../Lab/DiagnosisScreen'
 import { TreatmentPlanModal, handleAddDrug } from '../../components/common/lab/TreatmentPlanModal'
 import { TextInput } from 'react-native-paper'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -23,10 +24,8 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [historyInfo, setHistoryInfo] = useState<IMedicalHistData>(InitialMedicalHistData)
     const { completeAppointment } = useContext(DoctorContext)
 
-    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>()
-
-    const [drugs, setDrugs] = useState<Option[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>()
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
 
@@ -42,7 +41,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
     const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
     const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
-    const [isFetchingDrugs, setFetchingDrugs] = useState(true)
+
 
     const [page, setPage] = React.useState<number>(0)
 
@@ -53,19 +52,15 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
 
-    const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
+    const { getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes } = useContext(DoctorContext)
     const { getDrugs } = useContext(AppContext)
 
     useEffect(() => {
-        getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: () => setFetchingDrugs(false) })
         getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
         getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) })
         getImageTestCategories({ onSuccess: populateImageCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingImageTests(false) })
     }, [])
 
-    const populateDrugs = (drugs: Option[]) => {
-        setDrugs(drugs)
-    }
 
     const populateIcd10Codes = (data: Option[]) => {
         setIcd10Codes(data)
@@ -79,15 +74,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setImageTestCategories(data)
     }
 
-    const onRemoveLabTest = (item: any) => {
-        const items = recordedLabTests.filter((sitem: any) => sitem.id !== item.id)
-        setRecordedLabTests(items)
-    }
 
-    const onRemoveImageTest = (item: any) => {
-        const items = recordedImageTests.filter((sitem: any) => sitem.id !== item.id)
-        setRecordedImageTests(items)
-    }
 
     // ICD-10 Codes
     const onSelectICDCode = (item: any) => {
@@ -99,12 +86,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const onRemoveICDCode = (item: any) => {
         const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id)
         setSelectedIcdCodes(items)
-    }
-
-    // prescription drugs
-    const onRemovePrescriptionDrug = (item: any) => {
-        const items = recordedDrugs.filter((sitem: any) => sitem.id !== item.id)
-        setRecordedDrugs(items)
     }
 
     const [routes] = React.useState([
@@ -191,23 +172,27 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         )
 
         return (
-            <React.Fragment>
-                <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View>
+                <FlatList
+                    data={tests}
+                    renderItem={renderItem}
+                    keyExtractor={(_, index) => index.toString()} 
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    scrollEnabled={true}
+                    style={{ top: 5 }} />
+                </View>
+
+                <ScrollView 
+                style={{marginBottom: 20}}
+                contentContainerStyle={{flexGrow:1, top: 10}}>
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
-                    <FlatList
-                        data={tests}
-                        renderItem={renderItem}
-                        keyExtractor={(item: any, index: number) => item.id.toString()}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        scrollEnabled={true}
-                        style={{ top: 20 }} />
-                </SafeAreaView>
+                </ScrollView>
 
                 <CustomAddTestModal
                     items={labTestCategories}
-                    addedTests={recordedLabTests}
                     selectedItem={selectedLabTestItem}
                     isVisible={isLabTestModalVisible}
                     findingsText={labTestFindings}
@@ -220,13 +205,11 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     toggleModal={toggleLabTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleLabTestItemSelect}
-                    onRemoveItem={onRemoveLabTest}
                     setFindingsText={setLabTestFindings}
                     onSubmit={() => handleAddTest(selectedLabTestItem, labTestFindings, recordedLabTests, setRecordedLabTests, () => setLabTestFindings(''))} />
 
                 <CustomAddTestModal
                     items={imageTestCategories}
-                    addedTests={recordedImageTests}
                     selectedItem={selectedImageTestItem}
                     isVisible={isImageTestModalVisible}
                     findingsText={imageTestFindings}
@@ -239,7 +222,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     toggleModal={toggleImageTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleImageTestItemSelect}
-                    onRemoveItem={onRemoveImageTest}
                     setFindingsText={setImageTestFindings}
                     onSubmit={() => handleAddTest(selectedImageTestItem, imageTestFindings, recordedImageTests, setRecordedImageTests, () => setImageTestFindings(''))} />
 
@@ -252,12 +234,14 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     otherTestFindings={otherTestFindings}
                     setOtherTestFindings={setOtherTestFindings} />
 
-            </React.Fragment>
+            </SafeAreaView>
         )
     }
 
     const TreatmentScreen = () => {
         const [selectedDrugItem, setSelectedDrugItem] = useState<Option>(initialOption)
+        const [selectedAdminRouteItem, setSelectedAdminRouteItem] = useState<Option>(initialOption)
+
         const [isDrugModalVisible, setIsDrugModalVisible] = useState(false)
         const [drugInfo, setDrugInfo] = useState<IPrescriptionDrug>(initialPresDrugState)
 
@@ -269,6 +253,15 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                 ...drugInfo,
                 id: parseInt(item.id.toString()),
                 name: item.name
+            };
+            setDrugInfo(updatedDrugInfo)
+        }
+
+        const handleAdminRouteItemSelect = (item: any) => {
+            setSelectedAdminRouteItem(item)
+            const updatedDrugInfo: IPrescriptionDrug = {
+                ...drugInfo,
+                route_of_admin: item.name
             };
             setDrugInfo(updatedDrugInfo)
         }
@@ -297,14 +290,14 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     />
                 </View>
                 <TreatmentPlanModal
-                    items={drugs}
                     selectedDrugItem={selectedDrugItem}
                     isVisible={isDrugModalVisible}
                     drugInfo={drugInfo}
                     setDrugInfo={setDrugInfo}
                     toggleModal={toggleDrugModal}
-                    handleItemSelect={handleDrugItemSelect}
-                    onRemoveItem={onRemovePrescriptionDrug}
+                    handleDrugItemSelect={handleDrugItemSelect}
+                    selectedAdminRoute={selectedAdminRouteItem}
+                    handleAdminRouteSelect={handleAdminRouteItemSelect}
                     onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
                 />
             </View>
@@ -340,7 +333,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                 </TouchableOpacity>
             </View>
-            {(isLoading || isFetchingLabTests || isFetchingIcdCodes || isFetchingDrugs || isFetchingImageTests) && <AppLoader />}
+            {(isLoading || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
         </View>
     )
 }

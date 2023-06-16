@@ -11,7 +11,6 @@ import { displayMessage } from '../SharedHelper'
 
 const CustomAddTestModal = ({
     items,
-    addedTests,
     selectedItem,
     isVisible,
     findingsText,
@@ -24,13 +23,11 @@ const CustomAddTestModal = ({
     toggleModal,
     handleBackdropPress,
     handleItemSelect,
-    onRemoveItem,
     setFindingsText,
     onSubmit,
 }:
     {
         items: Option[],
-        addedTests: ILabTest[],
         selectedItem: Option,
         isVisible: boolean,
         placeholder: string,
@@ -43,7 +40,6 @@ const CustomAddTestModal = ({
         toggleModal: () => void,
         handleBackdropPress: () => void,
         handleItemSelect: (item: any) => void,
-        onRemoveItem: (item: any) => void,
         setFindingsText: any,
         onSubmit: () => void,
     }) => {
@@ -73,7 +69,6 @@ const CustomAddTestModal = ({
                             placeholderStr={placeholder}
                             textInputStr={textInputStr}
                             onItemSelect={handleItemSelect}
-                            onRemoveItem={onRemoveItem}
                             defaultIndex={selectedItem ? selectedItem.id - 1 : 0}
                         />
                     </View>
@@ -92,14 +87,6 @@ const CustomAddTestModal = ({
                             textColor={config.colors.dark} />
                     </View>
                 </View>
-
-                <DataTable>
-                    {addedTests && addedTests.length > 0 && renderHeader()}
-                    <FlatList
-                        data={addedTests}
-                        renderItem={renderRow}
-                        keyExtractor={(item: any, index: number) => item.id.toString()} />
-                </DataTable>
 
                 <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                     <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
@@ -242,7 +229,7 @@ const styles = StyleSheet.create({
 
     viewContainer: {
         marginVertical: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
 
     modalViewContainer: {

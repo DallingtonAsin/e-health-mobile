@@ -200,7 +200,6 @@ const getDrugs = () => {
             routes.drugs.index
         ).then(async (res) => {
             if (res && res.data) {
-
                 const data = res.data;
                 onSuccess(data);
             }
@@ -228,6 +227,7 @@ const getPrescriptionDrugs = () => {
         });
     };
 };
+
 
 const getNotifications = () => {
     return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {

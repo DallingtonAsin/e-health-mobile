@@ -330,13 +330,30 @@ const getImageTestCategories = () => {
     };
 };
 
+const getAdministrationRoutes = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.medical.administration_routes
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
         getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
-        getIcd10Codes, getLabTestCategories, getImageTestCategories
+        getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes
     },
     { isAppLoading: true },
 );
