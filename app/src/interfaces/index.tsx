@@ -110,6 +110,13 @@ interface MedicalSpecialty {
     name: string,
 }
 
+interface IMedicalHistData {
+    presenting_complaint: string,
+    past_medical_history: string,
+    drug_allergies: string,
+    findings: string,
+}
+
 interface DoctorsDetail {
     id: number,
     first_name: string,
@@ -332,6 +339,12 @@ interface Option {
     name: string;
 }
 
+interface ILabTest {
+    id: number;
+    test: string;
+    findings: string;
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -362,5 +375,7 @@ export type {
     PushNotification,
     AppointmentDetail,
     DrCompleteProfilePayload,
-    Option
+    Option,
+    ILabTest,
+    IMedicalHistData
 }

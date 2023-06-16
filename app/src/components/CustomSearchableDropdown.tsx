@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import SearchableDropdown from 'react-native-searchable-dropdown'
 import { Option } from '../interfaces'
 
-const CustomSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
+const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
     multi: boolean,
     items: Option[],
     selectedItems: Option[],
@@ -36,7 +36,56 @@ const CustomSearchableDropdown = ({ multi, items, selectedItems, placeholderStr,
         listProps={{ nestedScrollEnabled: true }}
     />
 )
-export default CustomSearchableDropdown
+
+const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInputStr, defaultIndex, onItemSelect, onRemoveItem }: {
+    selectedItem: Option,
+    items: Option[],
+    placeholderStr: string,
+    textInputStr: string,
+    defaultIndex?: number,
+    onItemSelect: (item: any) => void,
+    onRemoveItem: (item: any) => void
+}) => (
+    <SearchableDropdown
+        onItemSelect={(item) => onItemSelect(item)}
+        onRemoveItem={(item) => onRemoveItem(item)}
+        containerStyle={{ padding: 5 }}
+        textInputStyle={styles.searchableTextInputStyle}
+        itemStyle={{
+            padding: 10,
+            marginTop: 2,
+            backgroundColor: '#ddd',
+            borderColor: '#bbb',
+            borderWidth: 1,
+            borderRadius: 5,
+        }}
+        itemTextStyle={{ color: '#222' }}
+        itemsContainerStyle={{ maxHeight: 140 }}
+        items={items}
+        defaultIndex={defaultIndex}
+        placeholder={placeholderStr}
+        resetValue={false}
+        underlineColorAndroid="transparent"
+        textInputProps={{
+            placeholder: textInputStr,
+            underlineColorAndroid: "transparent",
+            style: {
+                padding: 12,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+            },
+            editable: true,
+            value: selectedItem ? selectedItem.name : '',
+            onTextChange: (text: any) => console.log(text)
+        }}
+        listProps={{ nestedScrollEnabled: true }}
+    />
+)
+
+
+
+export { MultiSearchableDropdown, SingleSearchableDropdown }
 
 const styles = StyleSheet.create({
 
