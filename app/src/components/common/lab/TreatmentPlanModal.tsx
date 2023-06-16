@@ -34,8 +34,7 @@ const TreatmentPlanModal = ({
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <Modal
                 isVisible={isVisible}
                 onDismiss={toggleModal}
@@ -127,12 +126,14 @@ const TreatmentPlanModal = ({
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
                                 textColor={config.colors.dark} />
+
+                            <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
                         </View>
                     </View>
 
-                    <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
-                        <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
-                    </View>
+                    {/* <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
+                        
+                    </View> */}
 
                     <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                         <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
@@ -245,7 +246,8 @@ const styles = StyleSheet.create({
 
     infoText: {
         color: config.colors.red,
-        textAlign: 'center'
+        textAlign: 'left',
+        top:20
     },
 
     bottomBtn: {

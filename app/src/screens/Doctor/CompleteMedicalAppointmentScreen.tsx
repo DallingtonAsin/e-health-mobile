@@ -274,15 +274,15 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         }
 
         return (
-            <React.Fragment>
-                <TouchableOpacity style={styles.item} onPress={toggleDrugModal}>
+            <View>
+                <TouchableOpacity style={[styles.item, {marginVertical: 10}]} onPress={toggleDrugModal}>
                     <Text style={styles.itemTitle}>Add prescription drug</Text>
                     <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
                 </TouchableOpacity>
 
                 {renderDrugTable(recordedDrugs, 'Prescription drugs')}
 
-                <View style={styles.viewContainer}>
+                <View style={[styles.viewContainer, {backgroundColor: config.colors.white, marginHorizontal:15, padding: 20 }]}>
                     <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                     <TextInput
                         multiline
@@ -294,7 +294,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                         activeOutlineColor={config.colors.primary}
                         style={styles.textInput}
                         textColor={config.colors.dark}
-                        onChangeText={(text: string) => setTreatmentPlan(text)}
+                        onChangeText={text => setTreatmentPlan(text)}
                     />
                 </View>
                 <TreatmentPlanModal
@@ -308,7 +308,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     onRemoveItem={onRemovePrescriptionDrug}
                     onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
                 />
-            </React.Fragment>
+            </View>
         )
     }
 
