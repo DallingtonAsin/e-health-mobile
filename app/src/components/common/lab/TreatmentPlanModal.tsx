@@ -107,7 +107,7 @@ const TreatmentPlanModal = ({
                             <TextInput
                                 label={"Duration"}
                                 placeholder='Enter number of days'
-                                value={drugInfo.duration}
+                                value={drugInfo.duration.toString()}
                                 onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, duration: text }))}
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
@@ -120,7 +120,7 @@ const TreatmentPlanModal = ({
                             <TextInput
                                 label={"Quantity"}
                                 placeholder='Enter quantity'
-                                value={drugInfo.quantity}
+                                value={drugInfo.quantity.toString()}
                                 onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, quantity: text }))}
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
@@ -130,10 +130,6 @@ const TreatmentPlanModal = ({
                             <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
                         </View>
                     </View>
-
-                    {/* <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
-                        
-                    </View> */}
 
                     <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                         <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>

@@ -263,7 +263,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
         const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
 
-        const handleDrugItemSelect = (item: Option) => {
+        const handleDrugItemSelect = (item: any) => {
             setSelectedDrugItem(item)
             const updatedDrugInfo: IPrescriptionDrug = {
                 ...drugInfo,
