@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList, Text, StyleSheet } from 'react-native'
+import { View, FlatList, ScrollView, Text, StyleSheet } from 'react-native'
 import { DataTable } from 'react-native-paper'
 import * as config from '../../../configs'
 import { ILabTest, IPrescriptionDrug } from '../../../interfaces'
@@ -21,7 +21,7 @@ const renderHeader = () => (
 const renderTable = (tests: ILabTest[], headerTitle: string) => {
     return (
         tests && tests.length > 0 ?
-            <View style={styles.datatableContainer}>
+            <ScrollView contentContainerStyle={styles.datatableContainer} horizontal>
                 <DataTable>
                     <View style={{ alignItems: 'center', marginTop: 16 }}>
                         <Text style={{ color: config.colors.primaryBlue, textTransform: 'uppercase', fontWeight: '800', fontSize: 14, opacity: 0.8 }}>{headerTitle}</Text>
@@ -32,7 +32,7 @@ const renderTable = (tests: ILabTest[], headerTitle: string) => {
                         renderItem={renderRow}
                         keyExtractor={(item: any, index: number) => item.id.toString()} />
                 </DataTable>
-            </View>
+            </ScrollView>
             : null
     )
 }
@@ -63,7 +63,7 @@ const renderDrugHeader = () => (
 const renderDrugTable = (drugs: IPrescriptionDrug[], headerTitle: string) => {
     return (
         drugs && drugs.length > 0 ?
-            <View style={styles.datatableContainer}>
+            <ScrollView style={styles.datatableContainer} horizontal={true}>
                 <DataTable>
                     <View style={{ alignItems: 'center', marginTop: 16 }}>
                         <Text style={{ color: config.colors.primaryBlue, textTransform: 'uppercase', fontWeight: '800', fontSize: 14, opacity: 0.8 }}>{headerTitle}</Text>
@@ -74,7 +74,7 @@ const renderDrugTable = (drugs: IPrescriptionDrug[], headerTitle: string) => {
                         renderItem={renderDrugRow}
                         keyExtractor={(item: any, index: number) => item.id.toString()} />
                 </DataTable>
-            </View>
+            </ScrollView>
             : null
     )
 }
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textTransform: 'capitalize',
         textAlign: 'center',
+        
     },
 
     rowHeaderText: {
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
     },
 
     datatableContainer: {
+        flexGrow:1,
         backgroundColor: config.colors.white,
         marginHorizontal: 15,
         marginVertical: 10

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, ScrollView } from 'react-native'
 import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
@@ -279,7 +279,9 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     <Text style={styles.itemTitle}>Add prescription drug</Text>
                     <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
                 </TouchableOpacity>
+
                 {renderDrugTable(recordedDrugs, 'Prescription drugs')}
+
                 <View style={styles.viewContainer}>
                     <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                     <TextInput
@@ -297,13 +299,10 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                 </View>
                 <TreatmentPlanModal
                     items={drugs}
-                    addedDrugs={recordedDrugs}
                     selectedDrugItem={selectedDrugItem}
                     isVisible={isDrugModalVisible}
                     drugInfo={drugInfo}
                     setDrugInfo={setDrugInfo}
-                    treatmentPlan={treatmentPlan}
-                    setTreatmentPlan={setTreatmentPlan}
                     toggleModal={toggleDrugModal}
                     handleItemSelect={handleDrugItemSelect}
                     onRemoveItem={onRemovePrescriptionDrug}
