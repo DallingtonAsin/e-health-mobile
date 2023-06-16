@@ -174,19 +174,19 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View>
-                <FlatList
-                    data={tests}
-                    renderItem={renderItem}
-                    keyExtractor={(_, index) => index.toString()} 
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    scrollEnabled={true}
-                    style={{ top: 5 }} />
+                    <FlatList
+                        data={tests}
+                        renderItem={renderItem}
+                        keyExtractor={(_, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEnabled={true}
+                        style={{ top: 5 }} />
                 </View>
 
-                <ScrollView 
-                style={{marginBottom: 20}}
-                contentContainerStyle={{flexGrow:1, top: 10}}>
+                <ScrollView
+                    style={{ marginBottom: 20 }}
+                    contentContainerStyle={{ flexGrow: 1, top: 10 }}>
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
                 </ScrollView>
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
         backgroundColor: config.colors.white,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 20,
+        padding: 18,
         elevation: 5,
     },
 
