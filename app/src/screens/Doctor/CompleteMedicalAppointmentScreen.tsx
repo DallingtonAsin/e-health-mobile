@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, ScrollView } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
 import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
@@ -275,20 +275,19 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
         return (
             <View>
-                <TouchableOpacity style={[styles.item, {marginVertical: 10}]} onPress={toggleDrugModal}>
+                <TouchableOpacity style={[styles.item, { marginVertical: 10 }]} onPress={toggleDrugModal}>
                     <Text style={styles.itemTitle}>Add prescription drug</Text>
                     <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
                 </TouchableOpacity>
 
                 {renderDrugTable(recordedDrugs, 'Prescription drugs')}
 
-                <View style={[styles.viewContainer, {backgroundColor: config.colors.white, marginHorizontal:15, padding: 20 }]}>
+                <View style={[styles.viewContainer, { backgroundColor: config.colors.white, marginHorizontal: 15, padding: 20 }]}>
                     <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                     <TextInput
                         multiline
                         numberOfLines={6}
-                        label="Treatment plan or management"
-                        placeholder="Treatment plan or management"
+                        label="Treatment management/plan"
                         value={treatmentPlan}
                         mode="outlined"
                         activeOutlineColor={config.colors.primary}
@@ -327,7 +326,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     })
 
     return (
-        <React.Fragment>
+        <View style={styles.container}>
             <StatusBar backgroundColor={config.colors.primary} />
             <TabView
                 navigationState={{ index, routes }}
@@ -342,7 +341,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                 </TouchableOpacity>
             </View>
             {(isLoading || isFetchingLabTests || isFetchingIcdCodes || isFetchingDrugs || isFetchingImageTests) && <AppLoader />}
-        </React.Fragment>
+        </View>
     )
 }
 
@@ -350,6 +349,9 @@ export default CompleteMedicalAppointmentScreen
 
 const styles = StyleSheet.create({
 
+    container: {
+        flex: 1
+    },
     viewContainer: {
         marginVertical: 5,
         paddingHorizontal: 10

@@ -19,7 +19,7 @@ const DiagnosisScreen = ({
     comments: string,
     setComments: React.Dispatch<React.SetStateAction<string>>,
 }) => (
-    <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
+    <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10, backgroundColor: config.colors.white }]}>
         <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
             <Text style={styles.labelTxt}>Select ICD-10 Code</Text>
             <MultiSearchableDropdown
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 
     viewContainer: {
         marginVertical: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
 
     labelTxt: {
