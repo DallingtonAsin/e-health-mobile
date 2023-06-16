@@ -8,6 +8,7 @@ import { Context as AppContext } from '../context/appContext'
 import { Context as AuthContext } from '../context/authContext'
 import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper'
 import AppLoader from '../components/AppLoader'
+import { renderTabBar } from '../components/common/tabView'
 
 const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
@@ -235,19 +236,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
             </View>
         </TouchableOpacity>
-    )
-
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.normal, fontWeight: '400' }}>
-                    {route.title}
-                </Text>
-            )}
-            indicatorStyle={{ backgroundColor: config.colors.primary }}
-            style={{ backgroundColor: config.colors.white }}
-        />
     )
 
     return (

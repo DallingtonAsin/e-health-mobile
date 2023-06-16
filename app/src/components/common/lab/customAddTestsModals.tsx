@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native'
 import { SingleSearchableDropdown } from '../../CustomSearchableDropdown'
 import { ILabTest, Option } from '../../../interfaces'
 import Modal from "react-native-modal"
@@ -82,7 +82,7 @@ const CustomAddTestModal = ({
                         <Text style={styles.labelTxt}>{findingsTitle}</Text>
                         <TextInput
                             multiline
-                            numberOfLines={3}
+                            numberOfLines={5}
                             label={textInputLabel}
                             value={findingsText}
                             onChangeText={setFindingsText}
@@ -138,11 +138,7 @@ const OtherTestsModal = ({
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView
-                    style={config.styles.registration.doctor.scrollView}
-                    contentContainerStyle={styles.scrollContainer}
-                    showsVerticalScrollIndicator={false}>
-
+                <View style={{ marginTop: 30 }}>
                     <View style={styles.viewContainer}>
                         <Text style={styles.labelTxt}>Other Tests</Text>
                         <TextInput
@@ -162,7 +158,7 @@ const OtherTestsModal = ({
                         <Text style={styles.labelTxt}>Other Test Findings</Text>
                         <TextInput
                             multiline
-                            numberOfLines={4}
+                            numberOfLines={5}
                             label="Other test findings"
                             value={otherTestFindings}
                             mode="outlined"
@@ -172,11 +168,11 @@ const OtherTestsModal = ({
                             onChangeText={text => setOtherTestFindings(text)}
                         />
                     </View>
+                </View>
 
-                    <TouchableOpacity style={[config.styles.primaryBtn, styles.bottomBtn]}>
-                        <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                <TouchableOpacity style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
+                </TouchableOpacity>
             </View>
         </Modal>
     )
@@ -199,12 +195,12 @@ const handleAddTest = (
     }
     const exists = addedTests.some((labTest: ILabTest) => labTest.id === selectedTest.id)
     if (!exists) {
-        const newLabTest = {
+        const newTest = {
             id: selectedTest.id,
             test: selectedTest.name,
             findings: labFindings
         }
-        setAddedTests([...addedTests, newLabTest])
+        setAddedTests([...addedTests, newTest])
         resetFindings
     } else {
         displayMessage(`Test ${selectedTest.name} already added`)

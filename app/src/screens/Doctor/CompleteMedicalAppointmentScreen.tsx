@@ -1,55 +1,43 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, ScrollView, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
 import * as config from '../../configs'
-import { TextInput } from 'react-native-paper'
-import Modal from "react-native-modal"
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
 import { Context as AppContext } from '../../context/appContext'
-import { Option, ILabTest, IMedicalHistData } from '../../interfaces'
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Option, ILabTest, IMedicalHistData, IPrescriptionDrug } from '../../interfaces'
+import { TabView, SceneMap } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import { renderTable } from '../../components/common/lab/dataTable'
-import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/CustomAddTestModal'
+import { renderDrugTable, renderTable } from '../../components/common/lab/dataTable'
+import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customAddTestsModals'
 import HistoryTabScreen from '../Lab/HistoryScreen'
-import { InitialMedicalHistData } from '../../configs/constants'
-const numberOfItemsPerPageList = [2, 3, 4]
-
-const items = [
-    {
-        key: 1,
-        name: 'Page 1',
-    },
-    {
-        key: 2,
-        name: 'Page 2',
-    },
-    {
-        key: 3,
-        name: 'Page 3',
-    },
-]
+import { InitialMedicalHistData, dataTablePageItems, initialOption, initialPresDrugState, numberOfItemsPerPageList } from '../../configs/constants'
+import { renderTabBar } from '../../components/common/tabView'
+import DiagnosisScreen from '../Lab/DiagnosisScreen'
+import { TreatmentPlanModal, handleAddDrug } from '../../components/common/lab/TreatmentPlanModal'
+import { TextInput } from 'react-native-paper'
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointment_id, patient } = route.params
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
+    const [historyInfo, setHistoryInfo] = useState<IMedicalHistData>(InitialMedicalHistData)
+    const { completeAppointment } = useContext(DoctorContext)
 
     const [icd10Codes, setIcd10Codes] = useState<Option[] | any>()
+
     const [drugs, setDrugs] = useState<Option[]>([])
+    const [isLoading, setIsLoading] = useState(false)
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
 
-    const [selectedDrugs, setSelectedDrugs] = useState<any>([])
-    const [selectedIcdCodes, setSelectedIcdCodes] = useState<ILabTest[]>([])
+    const [selectedIcdCodes, setSelectedIcdCodes] = useState<Option[]>([])
     const [recordedLabTests, setRecordedLabTests] = useState<ILabTest[]>([])
     const [recordedImageTests, setRecordedImageTests] = useState<ILabTest[]>([])
     const [recordedOtherTests, setRecordedOtherTests] = useState<string>('')
     const [otherTestFindings, setOtherTestFindings] = useState<string>('')
+    const [diagnosisComments, setDiagnosisComments] = useState<string>('')
+    const [recordedDrugs, setRecordedDrugs] = useState<any>([])
+    const [treatmentPlan, setTreatmentPlan] = useState<any>()
 
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
     const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
@@ -60,7 +48,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     const [numberOfItemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0])
     const from = page * numberOfItemsPerPage
-    const to = Math.min((page + 1) * numberOfItemsPerPage, items.length)
+    const to = Math.min((page + 1) * numberOfItemsPerPage, dataTablePageItems.length)
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
@@ -101,15 +89,30 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setRecordedImageTests(items)
     }
 
+    // ICD-10 Codes
+    const onSelectICDCode = (item: any) => {
+        const items = selectedIcdCodes
+        items.push(item)
+        setSelectedIcdCodes(items)
+    }
+
+    const onRemoveICDCode = (item: any) => {
+        const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id)
+        setSelectedIcdCodes(items)
+    }
+
+    // prescription drugs
+    const onRemovePrescriptionDrug = (item: any) => {
+        const items = recordedDrugs.filter((sitem: any) => sitem.id !== item.id)
+        setRecordedDrugs(items)
+    }
+
     const [routes] = React.useState([
         { key: 'history', title: 'History' },
         { key: 'tests', title: 'Lab' },
         { key: 'diagnosis', title: 'Diagnosis' },
         { key: 'treatment', title: 'Treatment' },
     ])
-
-    const [historyInfo, setHistoryInfo] = useState<IMedicalHistData>(InitialMedicalHistData)
-    const { completeAppointment } = useContext(DoctorContext)
 
     const submit = () => {
 
@@ -148,12 +151,11 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     const TestsScreen = () => {
 
-        const [selectedLabTestItem, setSelectedLabTestItem] = useState<any>()
-        const [selectedImageTestItem, setSelectedImageTestItem] = useState<any>()
+        const [selectedLabTestItem, setSelectedLabTestItem] = useState<Option>(initialOption)
+        const [selectedImageTestItem, setSelectedImageTestItem] = useState<Option>(initialOption)
 
         const [labTestFindings, setLabTestFindings] = useState('')
         const [imageTestFindings, setImageTestFindings] = useState('')
-
 
         const [isLabTestModalVisible, setIsLabTestModalVisible] = useState(false)
         const [isImageTestModalVisible, setIsImageTestModalVisible] = useState(false)
@@ -242,7 +244,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                     onSubmit={() => handleAddTest(selectedImageTestItem, imageTestFindings, recordedImageTests, setRecordedImageTests, () => setImageTestFindings(''))} />
 
                 <OtherTestsModal
-                    modalTitle={"Enter other tests information conducted"}
+                    modalTitle={"Enter other tests information"}
                     isVisible={isotherTestModalVisible}
                     toggleModal={toggleOtherTestModal}
                     otherTests={recordedOtherTests}
@@ -254,89 +256,76 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         )
     }
 
-    const DiagnosisScreen = () => (
-        <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                <Text style={styles.labelTxt}>Select ICD-10 Code</Text>
-                {/* <SingleSearchableDropdown
-                    items={icd10Codes}
-                    placeholderStr="Select ICD10 Code"
-                    textInputStr="ICD10 Code"
-                    onItemSelect={onSelectICDCode}
-                    onRemoveItem={onRemoveICDCode}
-                /> */}
-            </View>
+    const TreatmentScreen = () => {
+        const [selectedDrugItem, setSelectedDrugItem] = useState<Option>(initialOption)
+        const [isDrugModalVisible, setIsDrugModalVisible] = useState(false)
+        const [drugInfo, setDrugInfo] = useState<IPrescriptionDrug>(initialPresDrugState)
 
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Additional comments<Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                <TextInput
-                    multiline
-                    numberOfLines={3}
-                    label="Additional comments"
-                    value={historyInfo.presenting_complaint}
-                    mode="outlined"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    textColor={config.colors.dark}
-                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, presenting_complaint: text }))} />
-            </View>
+        const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
 
-            <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
-                <Text style={styles.infoText}>*For any mandatory field, if it is not applicable, please enter "None or N/A".</Text>
-            </View>
-        </SafeAreaView>
-    )
+        const handleDrugItemSelect = (item: Option) => {
+            setSelectedDrugItem(item)
+            const updatedDrugInfo: IPrescriptionDrug = {
+                ...drugInfo,
+                id: parseInt(item.id.toString()),
+                name: item.name
+            };
+            setDrugInfo(updatedDrugInfo)
+        }
 
-    const TreatmentScreen = () => (
-        <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-            <View style={{ paddingHorizontal: 10, marginVertical: 5 }}>
-                <Text style={styles.labelTxt}>Select prescription drug(s)</Text>
-                {/* <SingleSearchableDropdown
+        return (
+            <React.Fragment>
+                <TouchableOpacity style={styles.item} onPress={toggleDrugModal}>
+                    <Text style={styles.itemTitle}>Add prescription drug</Text>
+                    <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
+                </TouchableOpacity>
+                {renderDrugTable(recordedDrugs, 'Prescription drugs')}
+                <View style={styles.viewContainer}>
+                    <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <TextInput
+                        multiline
+                        numberOfLines={6}
+                        label="Treatment plan or management"
+                        placeholder="Treatment plan or management"
+                        value={treatmentPlan}
+                        mode="outlined"
+                        activeOutlineColor={config.colors.primary}
+                        style={styles.textInput}
+                        textColor={config.colors.dark}
+                        onChangeText={(text: string) => setTreatmentPlan(text)}
+                    />
+                </View>
+                <TreatmentPlanModal
                     items={drugs}
-                    placeholderStr="Select prescription drug"
-                    textInputStr="Prescription drugs"
-                    onItemSelect={onSelectDrug}
-                    onRemoveItem={onRemoveDrug}
-                /> */}
-            </View>
-
-            <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                <TextInput
-                    multiline
-                    numberOfLines={6}
-                    label="Treatment plan or management"
-                    placeholder="Treatment plan or management"
-                    value={historyInfo.presenting_complaint}
-                    mode="outlined"
-                    activeOutlineColor={config.colors.primary}
-                    style={styles.textInput}
-                    textColor={config.colors.dark}
-                    onChangeText={text => setHistoryInfo(prev => ({ ...prev, presenting_complaint: text }))}
+                    addedDrugs={recordedDrugs}
+                    selectedDrugItem={selectedDrugItem}
+                    isVisible={isDrugModalVisible}
+                    drugInfo={drugInfo}
+                    setDrugInfo={setDrugInfo}
+                    treatmentPlan={treatmentPlan}
+                    setTreatmentPlan={setTreatmentPlan}
+                    toggleModal={toggleDrugModal}
+                    handleItemSelect={handleDrugItemSelect}
+                    onRemoveItem={onRemovePrescriptionDrug}
+                    onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
                 />
-            </View>
-        </SafeAreaView>
-    )
+            </React.Fragment>
+        )
+    }
 
     const renderScene = SceneMap({
         history: () => <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />,
         tests: TestsScreen,
-        diagnosis: DiagnosisScreen,
+        diagnosis: () => <DiagnosisScreen
+            icd10Codes={icd10Codes}
+            selectedIcdCodes={selectedIcdCodes}
+            onSelectICDCode={onSelectICDCode}
+            onRemoveICDCode={onRemoveICDCode}
+            comments={diagnosisComments}
+            setComments={setDiagnosisComments}
+        />,
         treatment: TreatmentScreen
     })
-
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            renderLabel={({ route, focused }) => (
-                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.medium_15, fontWeight: '400' }}>
-                    {route.title}
-                </Text>
-            )}
-            indicatorStyle={{ backgroundColor: config.colors.primary }}
-            style={{ backgroundColor: config.colors.white }}
-        />
-    )
 
     return (
         <React.Fragment>
@@ -382,11 +371,6 @@ const styles = StyleSheet.create({
         fontSize: config.fonts.normal
     },
 
-    infoText: {
-        color: config.colors.red,
-        textAlign: 'center'
-    },
-
     item: {
         shadowColor: config.colors.black,
         shadowOffset: {
@@ -412,14 +396,5 @@ const styles = StyleSheet.create({
 
     arrow: {
         right: 0
-    },
-
-    bottomBtn: {
-        bottom: 0,
-        position: 'absolute',
-        width: '98%',
-        marginVertical: 10,
-        marginBottom: 20,
-        borderRadius: 5
     }
 })

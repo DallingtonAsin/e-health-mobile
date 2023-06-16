@@ -1,5 +1,8 @@
 
-import { SignedinUser, DoctorsDetail, FileUpload, Registration, DrCompleteProfilePayload, IMedicalHistData } from "../interfaces";
+import {
+  SignedinUser, DoctorsDetail, FileUpload, Registration,
+  DrCompleteProfilePayload, IMedicalHistData, Option, IPrescriptionDrug
+} from "../interfaces";
 
 const initialUser = {
   first_name: '',
@@ -159,12 +162,35 @@ const InitialAppointmentDetailState = {
   }
 }
 
+const initialOption: Option = {
+  id: 0,
+  name: ''
+}
+
 const InitialMedicalHistData: IMedicalHistData = {
   presenting_complaint: '',
   past_medical_history: '',
   drug_allergies: '',
   findings: ''
 }
+
+const initialPresDrugState: IPrescriptionDrug = {
+  id: 0,
+  name: '',
+  instructions: '',
+  route_of_admin: '',
+  dosage: '',
+  duration: 0,
+  quantity: 0
+}
+
+const numberOfItemsPerPageList = [2, 3, 4]
+
+const dataTablePageItems = [
+  { key: 1, name: 'Page 1' },
+  { key: 2, name: 'Page 2' },
+  { key: 3, name: 'Page 3' }
+]
 
 
 export {
@@ -176,5 +202,9 @@ export {
   InitialMedicalHistData,
   DrCompleteProfileInitialState,
   agoraConnectionInitialState,
-  InitialAppointmentDetailState
+  InitialAppointmentDetailState,
+  numberOfItemsPerPageList,
+  dataTablePageItems,
+  initialOption,
+  initialPresDrugState
 }

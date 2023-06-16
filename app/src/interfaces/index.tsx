@@ -345,6 +345,16 @@ interface ILabTest {
     findings: string;
 }
 
+interface IPrescriptionDrug {
+    id: number;
+    name: string;
+    instructions?: string;
+    route_of_admin?: string;
+    dosage?: string;
+    duration?: number;
+    quantity?: number;
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -377,5 +387,6 @@ export type {
     DrCompleteProfilePayload,
     Option,
     ILabTest,
-    IMedicalHistData
+    IMedicalHistData,
+    IPrescriptionDrug
 }

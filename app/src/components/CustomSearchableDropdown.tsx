@@ -4,7 +4,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown'
 import { Option } from '../interfaces'
 
 const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
-    multi: boolean,
+    multi?: boolean,
     items: Option[],
     selectedItems: Option[],
     placeholderStr: string,
@@ -13,7 +13,7 @@ const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, 
     onRemoveItem: (item: any) => void
 }) => (
     <SearchableDropdown
-        multi={multi}
+        multi={multi ? multi : true}
         items={items}
         selectedItems={selectedItems}
         onItemSelect={(item) => onItemSelect(item)}

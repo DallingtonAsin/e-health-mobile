@@ -9,14 +9,15 @@ const HistoryTabScreen = ({
     setHistoryInfo
 }: {
     historyInfo: IMedicalHistData,
-    setHistoryInfo: React.Dispatch<React.SetStateAction<any>>,
+    setHistoryInfo: React.Dispatch<React.SetStateAction<IMedicalHistData>>,
 }) => (
     <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
             <View style={styles.viewContainer}>
                 <Text style={styles.labelTxt}>Presenting complaint<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
-                    multiline
+                    editable
+                    multiline={true}
                     numberOfLines={3}
                     label="Presenting complaint"
                     value={historyInfo.presenting_complaint}
@@ -31,7 +32,8 @@ const HistoryTabScreen = ({
             <View style={styles.viewContainer}>
                 <Text style={styles.labelTxt}>Past medical history<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
-                    multiline
+                    editable
+                    multiline={true}
                     numberOfLines={3}
                     value={historyInfo.past_medical_history}
                     mode="outlined"
@@ -46,7 +48,8 @@ const HistoryTabScreen = ({
             <View style={styles.viewContainer}>
                 <Text style={styles.labelTxt}>Drug allergies<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
-                    multiline
+                    editable
+                    multiline={true}
                     numberOfLines={3}
                     label="Drug allergies..."
                     value={historyInfo.drug_allergies}
@@ -62,7 +65,8 @@ const HistoryTabScreen = ({
                 <Text style={styles.labelTxt}>Findings
                     <Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
-                    multiline
+                    editable
+                    multiline={true}
                     numberOfLines={3}
                     label="Findings..."
                     value={historyInfo.findings}
