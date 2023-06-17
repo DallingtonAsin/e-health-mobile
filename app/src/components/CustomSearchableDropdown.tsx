@@ -33,7 +33,7 @@ const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, 
             style: styles.searchableTextInputPropsStyle,
             onTextChange: (text: any) => console.log(text)
         }}
-        listProps={{ nestedScrollEnabled: true }}
+        listProps={{ nestedScrollEnabled: false }}
     />
 )
 

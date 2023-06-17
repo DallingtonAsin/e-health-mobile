@@ -205,7 +205,8 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointment_id: item.id })}>
+        <TouchableOpacity style={styles.item}
+            onPress={() => navigation.navigate('AppointmentDetails', { appointment_id: item.id })}>
             <View style={styles.circle}>
                 <Text style={styles.day}>{getDayMonth(item.appointment_date)[0]}</Text>
                 <Text style={styles.month}>{getDayMonth(item.appointment_date)[1]}</Text>
@@ -222,12 +223,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.typeView}>
-                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type.name, 'audio') && { backgroundColor: config.colors.silver },
+                    <View style={[styles.type, strContains(item.appointment_type.name, 'audio') && { backgroundColor: config.colors.silver },
                     strContains(item.appointment_type.name, 'video') && { backgroundColor: config.colors.warning },
                     strContains(item.appointment_type.name, 'person') && { backgroundColor: config.colors.confirmedColor },
                     ]}>
                         <Text style={styles.typeTxt}>{item.appointment_type.name}</Text>
-                    </TouchableOpacity>
+                    </View>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
                         <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt,

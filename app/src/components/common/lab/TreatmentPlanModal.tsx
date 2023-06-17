@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, StyleSheet, Platform } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { SingleSearchableDropdown } from '../../CustomSearchableDropdown'
 import { IPrescriptionDrug, Option } from '../../../interfaces'
 import Modal from "react-native-modal"
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { displayMessage } from '../SharedHelper'
 import { Context as DoctorContext } from '../../../context/doctorContext'
 import { Context as AppContext } from '../../../context/appContext'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AppLoader from '../../AppLoader'
 
 const TreatmentPlanModal = ({
@@ -56,116 +57,124 @@ const TreatmentPlanModal = ({
         setAdminRoutes(data)
     }
 
+    if (isFetchingDrugs || isFetchingAdminRoutes) {
+        return <AppLoader />
+    }
+
     return (
-        <>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-                <Modal
-                    isVisible={isVisible}
-                    onDismiss={toggleModal}
-                    scrollHorizontal={true}
-                    avoidKeyboard={true}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Add prescription drug(s)</Text>
-                            <TouchableOpacity
-                                style={styles.closeBtn}
-                                onPress={toggleModal}>
-                                <Icon name="times" size={25} color={config.colors.red} />
-                            </TouchableOpacity>
+        <React.Fragment>
+            <Modal
+                isVisible={isVisible}
+                onDismiss={toggleModal}
+                scrollHorizontal={true}
+                avoidKeyboard={true}
+                style={{ margin: 10 }} >
+                <ScrollView 
+                nestedScrollEnabled={true} 
+                    style={{ marginTop: 0 }}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}>
+
+                    <View style={styles.modalHeader}>
+                        <Text style={styles.modalTitle}>Add prescription drug(s)</Text>
+                        <TouchableOpacity
+                            style={styles.closeBtn}
+                            onPress={toggleModal}>
+                            <Icon name="times" size={25} color={config.colors.red} />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.modalBody}>
+                        <View>
+                            <Text style={styles.labelTxt}>Select presription drug</Text>
+                            <SingleSearchableDropdown
+                                selectedItem={selectedDrugItem}
+                                items={drugs}
+                                placeholderStr={"Select presription drug..."}
+                                textInputStr={"Select presription drug..."}
+                                onItemSelect={handleDrugItemSelect}
+                                defaultIndex={selectedDrugItem ? selectedDrugItem.id - 1 : 0}
+                            />
                         </View>
 
-                        <View style={{ paddingHorizontal: 5, marginTop: 30 }}>
-                            <View>
-                                <Text style={styles.labelTxt}>Select presription drug</Text>
-                                <SingleSearchableDropdown
-                                    selectedItem={selectedDrugItem}
-                                    items={drugs}
-                                    placeholderStr={"Select presription drug..."}
-                                    textInputStr={"Select presription drug..."}
-                                    onItemSelect={handleDrugItemSelect}
-                                    defaultIndex={selectedDrugItem ? selectedDrugItem.id - 1 : 0}
-                                />
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Comments/Instructions</Text>
+                            <TextInput
+                                multiline={true}
+                                numberOfLines={3}
+                                label={"Comments/Instructions"}
+                                value={drugInfo.comments}
+                                onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, instructions: text }))}
+                                mode="outlined"
+                                activeOutlineColor={config.colors.primary}
+                                style={styles.textInput}
+                                textColor={config.colors.dark} />
+                        </View>
 
-                            <View style={styles.modalViewContainer}>
-                                <Text style={styles.labelTxt}>Comments/Instructions</Text>
-                                <TextInput
-                                    multiline={true}
-                                    numberOfLines={3}
-                                    label={"Comments/Instructions"}
-                                    value={drugInfo.comments}
-                                    onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, instructions: text }))}
-                                    mode="outlined"
-                                    activeOutlineColor={config.colors.primary}
-                                    style={styles.textInput}
-                                    textColor={config.colors.dark} />
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Administration Route</Text>
+                            <SingleSearchableDropdown
+                                selectedItem={selectedAdminRoute}
+                                items={adminRoutes}
+                                placeholderStr={"Select administration route..."}
+                                textInputStr={"Select administration route..."}
+                                onItemSelect={handleAdminRouteSelect}
+                                defaultIndex={selectedAdminRoute ? selectedAdminRoute.id - 1 : 0}
+                            />
+                        </View>
 
-                            <View style={styles.modalViewContainer}>
-                                <Text style={styles.labelTxt}>Administration Route</Text>
-                                <SingleSearchableDropdown
-                                    selectedItem={selectedAdminRoute}
-                                    items={adminRoutes}
-                                    placeholderStr={"Select administration route..."}
-                                    textInputStr={"Select administration route..."}
-                                    onItemSelect={handleAdminRouteSelect}
-                                    defaultIndex={selectedAdminRoute ? selectedAdminRoute.id - 1 : 0}
-                                />
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Dosage</Text>
+                            <TextInput
+                                label={"Dosage"}
+                                value={drugInfo.dosage}
+                                onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, dosage: text }))}
+                                mode="outlined"
+                                activeOutlineColor={config.colors.primary}
+                                style={styles.textInput}
+                                textColor={config.colors.dark} />
+                        </View>
 
-                            <View style={styles.modalViewContainer}>
-                                <Text style={styles.labelTxt}>Dosage</Text>
-                                <TextInput
-                                    label={"Dosage"}
-                                    value={drugInfo.dosage}
-                                    onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, dosage: text }))}
-                                    mode="outlined"
-                                    activeOutlineColor={config.colors.primary}
-                                    style={styles.textInput}
-                                    textColor={config.colors.dark} />
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Duration</Text>
+                            <TextInput
+                                label={"Duration"}
+                                placeholder='Enter number of days'
+                                value={drugInfo.duration.toString()}
+                                onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, duration: text }))}
+                                mode="outlined"
+                                keyboardType={'numeric'}
+                                activeOutlineColor={config.colors.primary}
+                                style={styles.textInput}
+                                textColor={config.colors.dark} />
+                        </View>
 
-                            <View style={styles.modalViewContainer}>
-                                <Text style={styles.labelTxt}>Duration</Text>
-                                <TextInput
-                                    label={"Duration"}
-                                    placeholder='Enter number of days'
-                                    value={drugInfo.duration.toString()}
-                                    onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, duration: text }))}
-                                    mode="outlined"
-                                    keyboardType={'numeric'}
-                                    activeOutlineColor={config.colors.primary}
-                                    style={styles.textInput}
-                                    textColor={config.colors.dark} />
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Quantity</Text>
+                            <TextInput
+                                label={"Quantity"}
+                                placeholder='Enter quantity'
+                                value={drugInfo.quantity.toString()}
+                                onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, quantity: text }))}
+                                mode="outlined"
+                                keyboardType={'numeric'}
+                                activeOutlineColor={config.colors.primary}
+                                style={styles.textInput}
+                                textColor={config.colors.dark} />
+                        </View>
 
-                            <View style={styles.modalViewContainer}>
-                                <Text style={styles.labelTxt}>Quantity</Text>
-                                <TextInput
-                                    label={"Quantity"}
-                                    placeholder='Enter quantity'
-                                    value={drugInfo.quantity.toString()}
-                                    onChangeText={(text: string) => setDrugInfo((prev: IPrescriptionDrug) => ({ ...prev, quantity: text }))}
-                                    mode="outlined"
-                                    keyboardType={'numeric'}
-                                    activeOutlineColor={config.colors.primary}
-                                    style={styles.textInput}
-                                    textColor={config.colors.dark} />
-
-                                <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
-                            </View>
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
                         </View>
 
                         <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                             <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
                         </TouchableOpacity>
                     </View>
-                </Modal>
-                {(isFetchingDrugs || isFetchingAdminRoutes) && <AppLoader />}
-            </KeyboardAvoidingView>
-        </>
+                </ScrollView>
+            </Modal>
+            {(isFetchingDrugs || isFetchingAdminRoutes) && <AppLoader />}
+        </React.Fragment>
     )
 }
 
@@ -221,17 +230,22 @@ const handleAddDrug = (
 export { TreatmentPlanModal, handleAddDrug }
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        padding: 16,
+
+    scrollContainer: {
+        flexGrow: 1,
+        paddingHorizontal: 16,
+        backgroundColor: config.colors.white
     },
 
     modalHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 15
+    },
+
+    modalBody: {
+        marginTop: 15
     },
 
     modalTitle: {
@@ -242,13 +256,6 @@ const styles = StyleSheet.create({
         zIndex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-
-    scrollContainer: {
-        flexGrow: 1,
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        marginTop: 25
     },
 
     viewContainer: {
@@ -276,11 +283,19 @@ const styles = StyleSheet.create({
     },
 
     bottomBtn: {
-        bottom: 0,
+        marginTop: 40,
+        marginBottom: 40,
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '99%'
+    },
+
+    button: {
         position: 'absolute',
-        width: '98%',
-        marginVertical: 10,
-        marginBottom: 20,
-        borderRadius: 5
-    }
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'blue',
+        padding: 16,
+    },
 })

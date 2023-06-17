@@ -4,7 +4,7 @@ import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import { MultiSearchableDropdown } from '../../components/CustomSearchableDropdown'
 
-const DiagnosisScreen = ({
+const DiagnosisTabScreen = ({
     icd10Codes,
     selectedIcdCodes,
     onSelectICDCode,
@@ -52,7 +52,7 @@ const DiagnosisScreen = ({
     </SafeAreaView>
 )
 
-export default DiagnosisScreen
+export default DiagnosisTabScreen
 
 const styles = StyleSheet.create({
 

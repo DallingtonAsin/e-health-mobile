@@ -5,17 +5,16 @@ import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
 import { Context as AppContext } from '../../context/appContext'
-import { Option, ILabTest, IMedicalHistData, IPrescriptionDrug } from '../../interfaces'
+import { Option, ILabTest, IMedicalHistData } from '../../interfaces'
 import { TabView, SceneMap } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import { renderDrugTable, renderTable } from '../../components/common/lab/dataTable'
-import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customAddTestsModals'
-import HistoryTabScreen from '../Lab/HistoryScreen'
-import { InitialMedicalHistData, dataTablePageItems, initialOption, initialPresDrugState, numberOfItemsPerPageList } from '../../configs/constants'
+import { renderTable } from '../../components/common/lab/dataTable'
+import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
+import HistoryTabScreen from '../Lab/HistoryTabScreen'
+import DiagnosisTabScreen from '../Lab/DiagnosisTabScreen'
+import TreatmentTabScreen from '../Lab/TreatmentTabScreen'
+import { InitialMedicalHistData, dataTablePageItems, initialOption, numberOfItemsPerPageList } from '../../configs/constants'
 import { renderTabBar } from '../../components/common/tabView'
-import DiagnosisScreen from '../Lab/DiagnosisScreen'
-import { TreatmentPlanModal, handleAddDrug } from '../../components/common/lab/TreatmentPlanModal'
-import { TextInput } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
@@ -74,8 +73,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setImageTestCategories(data)
     }
 
-
-
     // ICD-10 Codes
     const onSelectICDCode = (item: any) => {
         const items = selectedIcdCodes
@@ -90,7 +87,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
     const [routes] = React.useState([
         { key: 'history', title: 'History' },
-        { key: 'tests', title: 'Lab' },
+        { key: 'lab', title: 'Lab' },
         { key: 'diagnosis', title: 'Diagnosis' },
         { key: 'treatment', title: 'Treatment' },
     ])
@@ -130,8 +127,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         navigation.navigate('MyAppointments')
     }
 
-    const TestsScreen = () => {
-
+    const LabTabScreen = () => {
         const [selectedLabTestItem, setSelectedLabTestItem] = useState<Option>(initialOption)
         const [selectedImageTestItem, setSelectedImageTestItem] = useState<Option>(initialOption)
 
@@ -238,76 +234,10 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         )
     }
 
-    const TreatmentScreen = () => {
-        const [selectedDrugItem, setSelectedDrugItem] = useState<Option>(initialOption)
-        const [selectedAdminRouteItem, setSelectedAdminRouteItem] = useState<Option>(initialOption)
-
-        const [isDrugModalVisible, setIsDrugModalVisible] = useState(false)
-        const [drugInfo, setDrugInfo] = useState<IPrescriptionDrug>(initialPresDrugState)
-
-        const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
-
-        const handleDrugItemSelect = (item: any) => {
-            setSelectedDrugItem(item)
-            const updatedDrugInfo: IPrescriptionDrug = {
-                ...drugInfo,
-                id: parseInt(item.id.toString()),
-                name: item.name
-            };
-            setDrugInfo(updatedDrugInfo)
-        }
-
-        const handleAdminRouteItemSelect = (item: any) => {
-            setSelectedAdminRouteItem(item)
-            const updatedDrugInfo: IPrescriptionDrug = {
-                ...drugInfo,
-                route_of_admin: item.name
-            };
-            setDrugInfo(updatedDrugInfo)
-        }
-
-        return (
-            <View>
-                <TouchableOpacity style={[styles.item, { marginVertical: 10 }]} onPress={toggleDrugModal}>
-                    <Text style={styles.itemTitle}>Add prescription drug</Text>
-                    <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
-                </TouchableOpacity>
-
-                {renderDrugTable(recordedDrugs, 'Prescription drugs')}
-
-                <View style={[styles.viewContainer, { backgroundColor: config.colors.white, marginHorizontal: 15, padding: 20 }]}>
-                    <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
-                    <TextInput
-                        multiline
-                        numberOfLines={6}
-                        label="Treatment management/plan"
-                        value={treatmentPlan}
-                        mode="outlined"
-                        activeOutlineColor={config.colors.primary}
-                        style={styles.textInput}
-                        textColor={config.colors.dark}
-                        onChangeText={text => setTreatmentPlan(text)}
-                    />
-                </View>
-                <TreatmentPlanModal
-                    selectedDrugItem={selectedDrugItem}
-                    isVisible={isDrugModalVisible}
-                    drugInfo={drugInfo}
-                    setDrugInfo={setDrugInfo}
-                    toggleModal={toggleDrugModal}
-                    handleDrugItemSelect={handleDrugItemSelect}
-                    selectedAdminRoute={selectedAdminRouteItem}
-                    handleAdminRouteSelect={handleAdminRouteItemSelect}
-                    onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
-                />
-            </View>
-        )
-    }
-
     const renderScene = SceneMap({
         history: () => <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />,
-        tests: TestsScreen,
-        diagnosis: () => <DiagnosisScreen
+        lab: LabTabScreen,
+        diagnosis: () => <DiagnosisTabScreen
             icd10Codes={icd10Codes}
             selectedIcdCodes={selectedIcdCodes}
             onSelectICDCode={onSelectICDCode}
@@ -315,7 +245,12 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
             comments={diagnosisComments}
             setComments={setDiagnosisComments}
         />,
-        treatment: TreatmentScreen
+        treatment: () => <TreatmentTabScreen
+            recordedDrugs={recordedDrugs}
+            setRecordedDrugs={setRecordedDrugs}
+            treatmentPlan={treatmentPlan}
+            setTreatmentPlan={setTreatmentPlan}
+        />
     })
 
     return (
