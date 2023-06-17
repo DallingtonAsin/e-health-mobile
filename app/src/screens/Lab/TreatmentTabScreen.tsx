@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { TreatmentPlanModal, handleAddDrug } from "../../components/common/lab/TreatmentPlanModal"
-import { IPrescriptionDrug, Option } from "../../interfaces"
+import { IPrescriptionDrug } from "../../interfaces"
 import { renderDrugTable } from '../../components/common/lab/dataTable'
-import { initialOption, initialPresDrugState } from '../../configs/constants'
+import { initialPresDrugState } from '../../configs/constants'
 import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import DropDownPicker from 'react-native-dropdown-picker'
 
 const TreatmentTabScreen = ({
     recordedDrugs,
@@ -20,39 +19,12 @@ const TreatmentTabScreen = ({
     treatmentPlan: string,
     setTreatmentPlan: React.Dispatch<React.SetStateAction<string>>
 }) => {
-    const [selectedDrugItem, setSelectedDrugItem] = useState<Option>(initialOption)
-    const [selectedAdminRouteItem, setSelectedAdminRouteItem] = useState<Option>(initialOption)
 
+    const [selectedDrugItem, setSelectedDrugItem] = useState<string>('')
     const [isDrugModalVisible, setIsDrugModalVisible] = useState(false)
     const [drugInfo, setDrugInfo] = useState<IPrescriptionDrug>(initialPresDrugState)
 
     const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: 'Apple', value: 'apple' },
-        { label: 'Banana', value: 'banana' }
-    ]);
-
-    const handleDrugItemSelect = (item: any) => {
-        setSelectedDrugItem(item)
-        const updatedDrugInfo: IPrescriptionDrug = {
-            ...drugInfo,
-            id: parseInt(item.id.toString()),
-            name: item.name
-        };
-        setDrugInfo(updatedDrugInfo)
-    }
-
-    const handleAdminRouteItemSelect = (item: any) => {
-        setSelectedAdminRouteItem(item)
-        const updatedDrugInfo: IPrescriptionDrug = {
-            ...drugInfo,
-            route_of_admin: item.name
-        };
-        setDrugInfo(updatedDrugInfo)
-    }
 
     return (
         <View>
@@ -62,15 +34,6 @@ const TreatmentTabScreen = ({
             </TouchableOpacity>
 
             {renderDrugTable(recordedDrugs, 'Prescription drugs')}
-
-            <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setValue={setValue}
-                setItems={setItems}
-                setOpen={setOpen}
-            />
 
             <View style={[styles.viewContainer, { backgroundColor: config.colors.white, marginHorizontal: 15, padding: 20 }]}>
                 <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
@@ -87,14 +50,11 @@ const TreatmentTabScreen = ({
                 />
             </View>
             <TreatmentPlanModal
-                selectedDrugItem={selectedDrugItem}
                 isVisible={isDrugModalVisible}
                 drugInfo={drugInfo}
                 setDrugInfo={setDrugInfo}
                 toggleModal={toggleDrugModal}
-                handleDrugItemSelect={handleDrugItemSelect}
-                selectedAdminRoute={selectedAdminRouteItem}
-                handleAdminRouteSelect={handleAdminRouteItemSelect}
+                setSelectedDrugItem={setSelectedDrugItem}
                 onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
             />
         </View>

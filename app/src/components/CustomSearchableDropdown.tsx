@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import SearchableDropdown from 'react-native-searchable-dropdown'
+import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
 import { Option } from '../interfaces'
 
 const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
@@ -81,8 +82,28 @@ const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInp
     />
 )
 
+const CustomSingleSelectDropdown = ({
+    data,
+    setSelected,
+    placeholder = 'Select option'
+}: {
+    data: any,
+    setSelected: React.Dispatch<React.SetStateAction<any>>,
+    placeholder?: string
+}) => {
+    return (
+        <SelectList
+            setSelected={(val: any) => setSelected(val)}
+            data={data}
+            save="value"
+            placeholder={placeholder}
+            search={true}
+        />
+    )
+}
 
-export { MultiSearchableDropdown, SingleSearchableDropdown }
+
+export { MultiSearchableDropdown, SingleSearchableDropdown, CustomSingleSelectDropdown }
 
 const styles = StyleSheet.create({
 

@@ -339,6 +339,11 @@ interface Option {
     name: string;
 }
 
+interface ISelectItem {
+    key: number;
+    value: string;
+}
+
 interface ILabTest {
     id: number;
     test: string;
@@ -346,7 +351,6 @@ interface ILabTest {
 }
 
 interface IPrescriptionDrug {
-    id: number;
     name: string;
     instructions?: string;
     route_of_admin?: string;
@@ -386,6 +390,7 @@ export type {
     AppointmentDetail,
     DrCompleteProfilePayload,
     Option,
+    ISelectItem,
     ILabTest,
     IMedicalHistData,
     IPrescriptionDrug

@@ -1,7 +1,7 @@
 
 import {
   SignedinUser, DoctorsDetail, FileUpload, Registration,
-  DrCompleteProfilePayload, IMedicalHistData, Option, IPrescriptionDrug
+  DrCompleteProfilePayload, IMedicalHistData, Option, IPrescriptionDrug, ISelectItem
 } from "../interfaces";
 
 const initialUser = {
@@ -167,6 +167,11 @@ const initialOption: Option = {
   name: ''
 }
 
+const initialSelectItem: ISelectItem = {
+  key: 0,
+  value: ''
+}
+
 const InitialMedicalHistData: IMedicalHistData = {
   presenting_complaint: '',
   past_medical_history: '',
@@ -175,7 +180,6 @@ const InitialMedicalHistData: IMedicalHistData = {
 }
 
 const initialPresDrugState: IPrescriptionDrug = {
-  id: 0,
   name: '',
   instructions: '',
   route_of_admin: '',
@@ -206,5 +210,6 @@ export {
   numberOfItemsPerPageList,
   dataTablePageItems,
   initialOption,
+  initialSelectItem,
   initialPresDrugState
 }

@@ -49,7 +49,7 @@ const renderDrugRow = ({ item, index }: { item: IPrescriptionDrug, index: number
     const isOddRow = (index: number) => index % 2 === 0;
     const rowStyle = isOddRow(index) ? styles.stripedRow : null;
     return (
-        <TouchableHighlight key={item.id} onPress={() => console.log(`Hey row ${item.id}: ${item.name}`)}>
+        <TouchableHighlight key={item.name} onPress={() => console.log(`Hey drug: ${item.name}`)}>
             <DataTable.Row style={rowStyle}>
                 <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.name}</Text></DataTable.Cell>
                 <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.instructions}</Text></DataTable.Cell>

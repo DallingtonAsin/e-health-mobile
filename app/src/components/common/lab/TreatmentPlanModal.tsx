@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { SingleSearchableDropdown } from '../../CustomSearchableDropdown'
-import { IPrescriptionDrug, Option } from '../../../interfaces'
+import { CustomSingleSelectDropdown } from '../../CustomSearchableDropdown'
+import { IPrescriptionDrug, ISelectItem, Option } from '../../../interfaces'
 import Modal from "react-native-modal"
 import { TextInput } from 'react-native-paper'
 import * as config from '../../../configs'
@@ -9,51 +9,61 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { displayMessage } from '../SharedHelper'
 import { Context as DoctorContext } from '../../../context/doctorContext'
 import { Context as AppContext } from '../../../context/appContext'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AppLoader from '../../AppLoader'
 
 const TreatmentPlanModal = ({
-    selectedDrugItem,
     isVisible,
     drugInfo,
     setDrugInfo,
     toggleModal,
-    handleDrugItemSelect,
-    onSubmit,
-    selectedAdminRoute,
-    handleAdminRouteSelect
+    setSelectedDrugItem,
+    onSubmit
 }:
     {
-        selectedDrugItem: Option,
         isVisible: boolean,
         drugInfo: any,
         toggleModal: () => void,
-        handleDrugItemSelect: (item: any) => void,
+        setSelectedDrugItem: React.Dispatch<React.SetStateAction<string>>,
         setDrugInfo: any,
-        onSubmit: () => void,
-        selectedAdminRoute: Option,
-        handleAdminRouteSelect: (item: any) => void
+        onSubmit: () => void
     }) => {
 
 
-    const [drugs, setDrugs] = useState<Option[]>([])
+    const [drugs, setDrugs] = useState<any[]>([])
     const [adminRoutes, setAdminRoutes] = useState<Option[] | any>()
     const [isFetchingDrugs, setFetchingDrugs] = useState(true)
     const [isFetchingAdminRoutes, setFetchingAdminRoutes] = useState(true)
 
     const { getAdministrationRoutes } = useContext(DoctorContext)
-    const { getDrugs } = useContext(AppContext)
+    const { getPrescriptionDrugs } = useContext(AppContext)
+
+    const handleDrugItemSelect = (drug: string) => {
+        setSelectedDrugItem(drug)
+        const updatedDrugInfo: IPrescriptionDrug = {
+            ...drugInfo,
+            name: drug
+        };
+        setDrugInfo(updatedDrugInfo)
+    }
+
+    const handleAdminRouteItemSelect = (route: string) => {
+        const updatedDrugInfo: IPrescriptionDrug = {
+            ...drugInfo,
+            route_of_admin: route
+        };
+        setDrugInfo(updatedDrugInfo)
+    }
 
     useEffect(() => {
-        getDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: () => setFetchingDrugs(false) })
+        getPrescriptionDrugs({ onSuccess: populateDrugs, onFailure: displayMessage, onCompletion: () => setFetchingDrugs(false) })
         getAdministrationRoutes({ onSuccess: populateAdminRoutes, onFailure: displayMessage, onCompletion: () => setFetchingAdminRoutes(false) })
     }, [])
 
-    const populateDrugs = (drugs: Option[]) => {
+    const populateDrugs = (drugs: ISelectItem[]) => {
         setDrugs(drugs)
     }
 
-    const populateAdminRoutes = (data: Option[]) => {
+    const populateAdminRoutes = (data: ISelectItem[]) => {
         setAdminRoutes(data)
     }
 
@@ -69,8 +79,8 @@ const TreatmentPlanModal = ({
                 scrollHorizontal={true}
                 avoidKeyboard={true}
                 style={{ margin: 10 }} >
-                <ScrollView 
-                nestedScrollEnabled={true} 
+                <ScrollView
+                    nestedScrollEnabled={true}
                     style={{ marginTop: 0 }}
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}>
@@ -85,15 +95,12 @@ const TreatmentPlanModal = ({
                     </View>
 
                     <View style={styles.modalBody}>
-                        <View>
-                            <Text style={styles.labelTxt}>Select presription drug</Text>
-                            <SingleSearchableDropdown
-                                selectedItem={selectedDrugItem}
-                                items={drugs}
-                                placeholderStr={"Select presription drug..."}
-                                textInputStr={"Select presription drug..."}
-                                onItemSelect={handleDrugItemSelect}
-                                defaultIndex={selectedDrugItem ? selectedDrugItem.id - 1 : 0}
+                        <View style={styles.modalViewContainer}>
+                            <Text style={styles.labelTxt}>Select drug</Text>
+                            <CustomSingleSelectDropdown
+                                data={drugs}
+                                setSelected={handleDrugItemSelect}
+                                placeholder='Select drug'
                             />
                         </View>
 
@@ -113,13 +120,11 @@ const TreatmentPlanModal = ({
 
                         <View style={styles.modalViewContainer}>
                             <Text style={styles.labelTxt}>Administration Route</Text>
-                            <SingleSearchableDropdown
-                                selectedItem={selectedAdminRoute}
-                                items={adminRoutes}
-                                placeholderStr={"Select administration route..."}
-                                textInputStr={"Select administration route..."}
-                                onItemSelect={handleAdminRouteSelect}
-                                defaultIndex={selectedAdminRoute ? selectedAdminRoute.id - 1 : 0}
+                            <CustomSingleSelectDropdown
+                                data={adminRoutes}
+                                setSelected={handleAdminRouteItemSelect}
+                                placeholder='Select administartion route'
+
                             />
                         </View>
 
@@ -179,8 +184,8 @@ const TreatmentPlanModal = ({
 }
 
 const handleAddDrug = (
-    selectedDrug: Option,
-    drugInfo: any,
+    selectedDrug: string,
+    drugInfo: IPrescriptionDrug,
     addedDrugs: IPrescriptionDrug[],
     setAddedDrugs: React.Dispatch<React.SetStateAction<any>>,
     resetDrugInfo: () => void
@@ -209,11 +214,10 @@ const handleAddDrug = (
         displayMessage(`Please enter quantity`)
         return
     }
-    const exists = addedDrugs.some((drug: IPrescriptionDrug) => drug.id === selectedDrug.id)
+    const exists = addedDrugs.some((drug: IPrescriptionDrug) => drug.name === selectedDrug)
     if (!exists) {
         const newDrug: IPrescriptionDrug = {
-            id: parseInt(selectedDrug.id.toString()),
-            name: selectedDrug.name,
+            name: selectedDrug,
             instructions: drugInfo.instructions,
             route_of_admin: drugInfo.route_of_admin,
             dosage: drugInfo.dosage,
@@ -223,7 +227,7 @@ const handleAddDrug = (
         setAddedDrugs([...addedDrugs, newDrug])
         resetDrugInfo()
     } else {
-        displayMessage(`Drug ${selectedDrug.name} already added`)
+        displayMessage(`Drug ${selectedDrug} already added`)
     }
 }
 
@@ -245,6 +249,7 @@ const styles = StyleSheet.create({
     },
 
     modalBody: {
+        flex: 1,
         marginTop: 15
     },
 
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     },
 
     modalViewContainer: {
-        marginVertical: 5
+        marginBottom: 16,
     },
     labelTxt: {
         fontSize: config.fonts.normal,
