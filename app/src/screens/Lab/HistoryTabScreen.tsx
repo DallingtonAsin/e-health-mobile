@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, KeyboardAvoidingView, View, Text, StyleSheet } from 'react-native'
+import { SafeAreaView, ScrollView, View, Text, StyleSheet } from 'react-native'
 import * as config from '../../configs'
 import { TextInput } from 'react-native-paper'
 import { IMedicalHistData } from '../../interfaces'
@@ -12,7 +12,11 @@ const HistoryTabScreen = ({
     setHistoryInfo: React.Dispatch<React.SetStateAction<IMedicalHistData>>,
 }) => (
     <SafeAreaView style={[config.styles.registration.doctor.container, { marginHorizontal: 10 }]}>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <ScrollView
+            style={{ marginTop: 0 }}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+        >
             <View style={styles.viewContainer}>
                 <Text style={styles.labelTxt}>Presenting complaint<Text style={config.styles.registration.doctor.required}>*</Text></Text>
                 <TextInput
@@ -78,32 +82,35 @@ const HistoryTabScreen = ({
                 />
             </View>
 
-            <View style={[config.styles.bottomFooter, { paddingHorizontal: 5, left: 15 }]}>
+
+            <View style={styles.viewContainer}>
                 <Text style={styles.infoText}>*For any mandatory field, if it is not applicable, please enter "None or N/A".</Text>
             </View>
-        </KeyboardAvoidingView>
+
+        </ScrollView>
     </SafeAreaView>
 )
 
 export default HistoryTabScreen
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        backgroundColor: config.colors.white
+    },
     viewContainer: {
         marginVertical: 5,
         paddingHorizontal: 10
     },
-
     textInput: {
         backgroundColor: config.colors.white,
         color: config.colors.silver,
         fontSize: config.fonts.normal
     },
-
     infoText: {
         color: config.colors.red,
         textAlign: 'center'
     },
-
     labelTxt: {
         fontSize: config.fonts.normal,
         color: config.colors.black
