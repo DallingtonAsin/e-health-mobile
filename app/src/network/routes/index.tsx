@@ -78,6 +78,10 @@ const routes = {
       doctor: {
          myappointments: 'appointments/doctor',
       }
+   },
+
+   app: {
+      company_info: 'company-information',
    }
 
 

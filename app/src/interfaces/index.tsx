@@ -358,6 +358,31 @@ interface IPrescriptionDrug {
     quantity?: number;
 }
 
+interface CompanyInformation {
+    id: number;
+    name: string;
+    mobile_phone_no: string;
+    sms_phone_no: string;
+    whatsapp_number: string;
+    email: string;
+}
+
+interface ContactListItem {
+    id: number,
+    type: string,
+    value: string,
+    icon: string
+    method?: any,
+}
+
+interface ICompanyListItem {
+    id: number,
+    type: string,
+    value: string,
+    icon: string,
+    method: Function
+}
+
 type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -392,5 +417,8 @@ export type {
     ISelectItem,
     ILabTest,
     IMedicalHistData,
-    IPrescriptionDrug
+    IPrescriptionDrug,
+    CompanyInformation,
+    ContactListItem,
+    ICompanyListItem
 }

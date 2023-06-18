@@ -335,13 +335,30 @@ const postCallDetails = () => {
     };
 };
 
+const getCompanyInformation = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.app.company_info}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getPrescriptionDrugs, getMeetingDetails,
         getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus,
-        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails
+        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails, getCompanyInformation
     },
     { isAppLoading: true },
 );
