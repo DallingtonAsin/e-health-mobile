@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useWindowDimensions } from 'react-native'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import * as config from '../configs'
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { TabView, SceneMap } from 'react-native-tab-view'
 import { MyAppointmentInfo } from '../interfaces'
 import { Context as AppContext } from '../context/appContext'
 import { Context as AuthContext } from '../context/authContext'
@@ -137,7 +137,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const CompletedAppointmentsScreen = () => {
-
         const [refreshing, setRefreshing] = useState(false)
         const onRefresh = () => {
             setRefreshing(true)
@@ -168,7 +167,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const CancelledAppointmentsScreen = () => {
         const [refreshing, setRefreshing] = useState(false)
-
         const onRefresh = () => {
             setRefreshing(true)
             fetchCancelledAppointments()
@@ -182,7 +180,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                         <FlatList
                             data={cancelledAppointments}
                             renderItem={renderItem}
-                            keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
+                            keyExtractor={(_, index) => index.toString()} 
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}

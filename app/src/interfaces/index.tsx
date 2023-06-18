@@ -345,8 +345,7 @@ interface ISelectItem {
 }
 
 interface ILabTest {
-    id: number;
-    test: string;
+    name: string;
     findings: string;
 }
 

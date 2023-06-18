@@ -4,40 +4,6 @@ import SearchableDropdown from 'react-native-searchable-dropdown'
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
 import { Option } from '../interfaces'
 
-const MultiSearchableDropdown = ({ multi, items, selectedItems, placeholderStr, textInputStr, onItemSelect, onRemoveItem }: {
-    multi?: boolean,
-    items: Option[],
-    selectedItems: Option[],
-    placeholderStr: string,
-    textInputStr: string,
-    onItemSelect: (item: any) => void,
-    onRemoveItem: (item: any) => void
-}) => (
-    <SearchableDropdown
-        multi={multi ? multi : true}
-        items={items}
-        selectedItems={selectedItems}
-        onItemSelect={(item) => onItemSelect(item)}
-        onRemoveItem={(item) => onRemoveItem(item)}
-        containerStyle={styles.searchableContainerStyle}
-        textInputStyle={styles.searchableTextInputStyle}
-        itemStyle={styles.searchableItemStyle}
-        itemTextStyle={styles.searchableTextStyle}
-        itemsContainerStyle={{ maxHeight: 140 }}
-        chip={true}
-        placeholder={placeholderStr}
-        resetValue={false}
-        underlineColorAndroid="transparent"
-        textInputProps={{
-            placeholder: textInputStr,
-            underlineColorAndroid: "transparent",
-            style: styles.searchableTextInputPropsStyle,
-            onTextChange: (text: any) => console.log(text)
-        }}
-        listProps={{ nestedScrollEnabled: false }}
-    />
-)
-
 const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInputStr, defaultIndex, onItemSelect }: {
     selectedItem: Option,
     items: Option[],
@@ -102,8 +68,34 @@ const CustomSingleSelectDropdown = ({
     )
 }
 
+const CustomMultipleSelectDropdown = ({
+    data,
+    onSelect,
+    placeholder = 'Select option',
+}: {
+    data: any,
+    onSelect: any,
+    placeholder?: string,
+}) => {
 
-export { MultiSearchableDropdown, SingleSearchableDropdown, CustomSingleSelectDropdown }
+    const [selected, setSelected] = React.useState([])
+    const handleOnSelect = () => {
+        onSelect(selected)
+    }
+    return (
+        <MultipleSelectList
+            setSelected={(val: any) => setSelected(val)}
+            data={data}
+            save="value"
+            placeholder={placeholder}
+            onSelect={() => handleOnSelect()}
+            search={true}
+        />
+    )
+}
+
+
+export {  SingleSearchableDropdown, CustomSingleSelectDropdown, CustomMultipleSelectDropdown }
 
 const styles = StyleSheet.create({
 

@@ -210,7 +210,7 @@ const AppStackScreen = () => {
                         backgroundColor: configs.colors.white,
                     },
                     headerTintColor: configs.colors.primary,
-                    headerTitle: `Complete consultation`,
+                    headerTitle: `Complete Consultation`,
                     headerBackVisible: true,
                     headerShown: true,
                 }}

@@ -8,9 +8,9 @@ const renderRow = ({ item, index }: { item: any, index: number }) => {
     const isOddRow = (index: number) => index % 2 === 0;
     const rowStyle = isOddRow(index) ? styles.stripedRow : null;
     return (
-        <TouchableHighlight key={item.id} onPress={() => console.log(`Hey row ${item.id}: ${item.test}`)}>
+        <TouchableHighlight key={item.name} onPress={() => console.log(`Hey row ${item.name}`)}>
             <DataTable.Row style={rowStyle}>
-                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.test}</Text></DataTable.Cell>
+                <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.name}</Text></DataTable.Cell>
                 <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.findings}</Text></DataTable.Cell>
             </DataTable.Row>
         </TouchableHighlight>
@@ -37,7 +37,7 @@ const renderTable = (tests: ILabTest[], headerTitle: string) => {
                         <FlatList
                             data={tests}
                             renderItem={renderRow}
-                            keyExtractor={(item: any, index: number) => item.id.toString()} />
+                            keyExtractor={(_, index) => index.toString()} />
                     </DataTable>
                 </View>
             </ScrollView>
@@ -127,5 +127,5 @@ const styles = StyleSheet.create({
     },
     stripedRow: {
         backgroundColor: '#F2F2F2',
-    },
+    }
 })

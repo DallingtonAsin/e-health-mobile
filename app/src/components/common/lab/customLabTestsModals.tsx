@@ -1,25 +1,21 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native'
-import { SingleSearchableDropdown } from '../../CustomSearchableDropdown'
-import { ILabTest, Option } from '../../../interfaces'
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { CustomSingleSelectDropdown } from '../../customSelectDropdowns'
+import { ILabTest, ISelectItem } from '../../../interfaces'
 import Modal from "react-native-modal"
-import { TextInput, DataTable } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 import * as config from '../../../configs'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { renderHeader, renderRow } from './dataTable'
 import { displayMessage } from '../SharedHelper'
 
 const CustomAddTestModal = ({
     items,
-    selectedItem,
     isVisible,
     findingsText,
     modalTitle,
     selectTitle,
     findingsTitle,
     textInputLabel,
-    placeholder,
-    textInputStr,
     toggleModal,
     handleBackdropPress,
     handleItemSelect,
@@ -27,11 +23,8 @@ const CustomAddTestModal = ({
     onSubmit,
 }:
     {
-        items: Option[],
-        selectedItem: Option,
+        items: ISelectItem[],
         isVisible: boolean,
-        placeholder: string,
-        textInputStr: string,
         findingsText: string,
         modalTitle: string,
         selectTitle: string,
@@ -47,6 +40,7 @@ const CustomAddTestModal = ({
         <Modal
             isVisible={isVisible}
             onDismiss={toggleModal}
+            style={{ marginTop: 0 }}
             onBackdropPress={handleBackdropPress}
             scrollHorizontal={true}
             avoidKeyboard={true}>
@@ -60,16 +54,18 @@ const CustomAddTestModal = ({
                     </TouchableOpacity>
                 </View>
 
-                <View style={{ paddingHorizontal: 5, marginTop: 30 }}>
-                    <View>
+                <ScrollView
+                    nestedScrollEnabled={true}
+                    style={{ marginTop: 0 }}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}>
+
+                    <View style={styles.modalViewContainer}>
                         <Text style={styles.labelTxt}>{selectTitle}</Text>
-                        <SingleSearchableDropdown
-                            selectedItem={selectedItem}
-                            items={items}
-                            placeholderStr={placeholder}
-                            textInputStr={textInputStr}
-                            onItemSelect={handleItemSelect}
-                            defaultIndex={selectedItem ? selectedItem.id - 1 : 0}
+                        <CustomSingleSelectDropdown
+                            data={items}
+                            setSelected={handleItemSelect}
+                            placeholder='Select test'
                         />
                     </View>
 
@@ -86,11 +82,11 @@ const CustomAddTestModal = ({
                             style={styles.textInput}
                             textColor={config.colors.dark} />
                     </View>
-                </View>
 
-                <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
-                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                        <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         </Modal>
     )
@@ -125,12 +121,17 @@ const OtherTestsModal = ({
                     </TouchableOpacity>
                 </View>
 
-                <View style={{ marginTop: 30 }}>
-                    <View style={styles.viewContainer}>
+                <ScrollView
+                    nestedScrollEnabled={true}
+                    style={{ marginTop: 0 }}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}>
+
+                    <View style={styles.modalViewContainer}>
                         <Text style={styles.labelTxt}>Other Tests</Text>
                         <TextInput
                             multiline
-                            numberOfLines={4}
+                            numberOfLines={5}
                             label="Other Tests"
                             value={otherTests}
                             mode="outlined"
@@ -141,11 +142,11 @@ const OtherTestsModal = ({
                         />
                     </View>
 
-                    <View style={styles.viewContainer}>
+                    <View style={styles.modalViewContainer}>
                         <Text style={styles.labelTxt}>Other Test Findings</Text>
                         <TextInput
                             multiline
-                            numberOfLines={5}
+                            numberOfLines={6}
                             label="Other test findings"
                             value={otherTestFindings}
                             mode="outlined"
@@ -155,18 +156,18 @@ const OtherTestsModal = ({
                             onChangeText={text => setOtherTestFindings(text)}
                         />
                     </View>
-                </View>
 
-                <TouchableOpacity style={[config.styles.primaryBtn, styles.bottomBtn]}>
-                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                        <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         </Modal>
     )
 }
 
 const handleAddTest = (
-    selectedTest: Option,
+    selectedTest: string,
     labFindings: string,
     addedTests: ILabTest[],
     setAddedTests: React.Dispatch<React.SetStateAction<any>>,
@@ -180,17 +181,16 @@ const handleAddTest = (
         displayMessage(`Please enter test findings`)
         return
     }
-    const exists = addedTests.some((labTest: ILabTest) => labTest.id === selectedTest.id)
+    const exists = addedTests.some((labTest: ILabTest) => labTest.name === selectedTest)
     if (!exists) {
         const newTest = {
-            id: selectedTest.id,
-            test: selectedTest.name,
+            name: selectedTest,
             findings: labFindings
         }
         setAddedTests([...addedTests, newTest])
         resetFindings
     } else {
-        displayMessage(`Test ${selectedTest.name} already added`)
+        displayMessage(`Test ${selectedTest} already added`)
     }
 }
 
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     },
 
     modalViewContainer: {
-        marginVertical: 5
+        marginBottom: 16,
     },
     labelTxt: {
         fontSize: config.fonts.normal,

@@ -4,8 +4,7 @@ import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
-import { Context as AppContext } from '../../context/appContext'
-import { Option, ILabTest, IMedicalHistData } from '../../interfaces'
+import { Option, ILabTest, IMedicalHistData, ISelectItem } from '../../interfaces'
 import { TabView, SceneMap } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { renderTable } from '../../components/common/lab/dataTable'
@@ -24,11 +23,11 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const { completeAppointment } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
-    const [icd10Codes, setIcd10Codes] = useState<Option[] | any>()
+    const [icd10Codes, setIcd10Codes] = useState<ISelectItem[] | any>()
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
 
-    const [selectedIcdCodes, setSelectedIcdCodes] = useState<Option[]>([])
+    const [selectedIcdCodes, setSelectedIcdCodes] = useState<string[]>([])
     const [recordedLabTests, setRecordedLabTests] = useState<ILabTest[]>([])
     const [recordedImageTests, setRecordedImageTests] = useState<ILabTest[]>([])
     const [recordedOtherTests, setRecordedOtherTests] = useState<string>('')
@@ -51,8 +50,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
 
-    const { getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes } = useContext(DoctorContext)
-    const { getDrugs } = useContext(AppContext)
+    const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
 
     useEffect(() => {
         getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
@@ -61,7 +59,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     }, [])
 
 
-    const populateIcd10Codes = (data: Option[]) => {
+    const populateIcd10Codes = (data: ISelectItem[]) => {
         setIcd10Codes(data)
     }
 
@@ -74,15 +72,19 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     }
 
     // ICD-10 Codes
-    const onSelectICDCode = (item: any) => {
-        const items = selectedIcdCodes
-        items.push(item)
-        setSelectedIcdCodes(items)
-    }
-
-    const onRemoveICDCode = (item: any) => {
-        const items = selectedIcdCodes.filter((sitem: any) => sitem.id !== item.id)
-        setSelectedIcdCodes(items)
+    const onSelectICDCode = (newArray: string[]) => {
+        const oldArray = selectedIcdCodes
+        newArray.forEach((element) => {
+            if (!oldArray.includes(element)) {
+                oldArray.push(element);
+            }
+        });
+        oldArray.forEach((i, index) => {
+            if (!newArray.includes(i)) {
+                oldArray.splice(index, 1);
+            }
+        });
+        setSelectedIcdCodes(oldArray)
     }
 
     const [routes] = React.useState([
@@ -93,6 +95,9 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     ])
 
     const submit = () => {
+
+        console.log(`selected icd-10 codes`, selectedIcdCodes)
+        return
 
         if (!historyInfo?.presenting_complaint) {
             displayMessage("Please enter presenting complaint")
@@ -128,8 +133,8 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     }
 
     const LabTabScreen = () => {
-        const [selectedLabTestItem, setSelectedLabTestItem] = useState<Option>(initialOption)
-        const [selectedImageTestItem, setSelectedImageTestItem] = useState<Option>(initialOption)
+        const [selectedLabTestItem, setSelectedLabTestItem] = useState<string>('')
+        const [selectedImageTestItem, setSelectedImageTestItem] = useState<string>('')
 
         const [labTestFindings, setLabTestFindings] = useState('')
         const [imageTestFindings, setImageTestFindings] = useState('')
@@ -189,15 +194,12 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
                 <CustomAddTestModal
                     items={labTestCategories}
-                    selectedItem={selectedLabTestItem}
                     isVisible={isLabTestModalVisible}
                     findingsText={labTestFindings}
                     modalTitle={"Enter labtests carried out"}
                     selectTitle={"Select LabTest"}
                     findingsTitle={"LabTest Findings"}
                     textInputLabel={"Lab test findings"}
-                    placeholder={"Lab Tests"}
-                    textInputStr={"Lab Tests"}
                     toggleModal={toggleLabTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleLabTestItemSelect}
@@ -206,15 +208,12 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
 
                 <CustomAddTestModal
                     items={imageTestCategories}
-                    selectedItem={selectedImageTestItem}
                     isVisible={isImageTestModalVisible}
                     findingsText={imageTestFindings}
                     modalTitle={"Enter imagetests carried out"}
                     selectTitle={"Select ImageTest"}
                     findingsTitle={"ImageTest Findings"}
                     textInputLabel={"Image test findings"}
-                    placeholder={"Image Tests"}
-                    textInputStr={"Image Tests"}
                     toggleModal={toggleImageTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleImageTestItemSelect}
@@ -239,9 +238,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         lab: LabTabScreen,
         diagnosis: () => <DiagnosisTabScreen
             icd10Codes={icd10Codes}
-            selectedIcdCodes={selectedIcdCodes}
-            onSelectICDCode={onSelectICDCode}
-            onRemoveICDCode={onRemoveICDCode}
+            onSelect={onSelectICDCode}
             comments={diagnosisComments}
             setComments={setDiagnosisComments}
         />,

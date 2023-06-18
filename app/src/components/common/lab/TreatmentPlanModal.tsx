@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { CustomSingleSelectDropdown } from '../../CustomSearchableDropdown'
+import { CustomSingleSelectDropdown } from '../../customSelectDropdowns'
 import { IPrescriptionDrug, ISelectItem, Option } from '../../../interfaces'
 import Modal from "react-native-modal"
 import { TextInput } from 'react-native-paper'
@@ -67,12 +67,8 @@ const TreatmentPlanModal = ({
         setAdminRoutes(data)
     }
 
-    if (isFetchingDrugs || isFetchingAdminRoutes) {
-        return <AppLoader />
-    }
-
     return (
-        <React.Fragment>
+        <View>
             <Modal
                 isVisible={isVisible}
                 onDismiss={toggleModal}
@@ -179,7 +175,7 @@ const TreatmentPlanModal = ({
                 </ScrollView>
             </Modal>
             {(isFetchingDrugs || isFetchingAdminRoutes) && <AppLoader />}
-        </React.Fragment>
+        </View>
     )
 }
 

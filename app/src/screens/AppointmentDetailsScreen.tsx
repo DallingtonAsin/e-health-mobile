@@ -256,7 +256,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {!user.is_patient && (appointmentInfo.status == 'Confirmed' || appointmentInfo.status == 'Expired') &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                                 onPress={() => completeMedicalAppoitment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete consultation</Text>
                             </TouchableOpacity>
                         }
 
