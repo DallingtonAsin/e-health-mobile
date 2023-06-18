@@ -19,7 +19,7 @@ import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanDa
 
 const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { appointment_id, patient } = route.params
+    const { appointment_id } = route.params
     const { completeConsultation } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
