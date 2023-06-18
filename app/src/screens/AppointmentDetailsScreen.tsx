@@ -34,7 +34,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
     const [routes] = React.useState([
         { key: 'appointment', title: 'Details' },
-        { key: 'profile', title: user.is_patient ? 'Doctor Profile' : 'Patient Profile' },
+        { key: 'profile', title: user.is_patient ? 'Doctor details' : 'Patient details' },
     ])
 
     useEffect(() => {
@@ -330,12 +330,10 @@ const styles = StyleSheet.create({
 
     titles: {
         opacity: 0.9,
-        fontSize: config.fonts.large,
         textAlign: 'center',
     },
 
     userTitle: {
-        fontSize: config.fonts.large,
         color: config.colors.primary,
         textAlign: 'center',
     },
@@ -360,19 +358,16 @@ const styles = StyleSheet.create({
 
     subtitle: {
         fontWeight: 'normal',
-        fontSize: config.fonts.large,
         opacity: 0.9,
     },
 
     info: {
         color: config.colors.gray,
-        fontSize: config.fonts.large,
         fontWeight: '400',
         marginVertical: 0,
     },
 
     bookedTitle: {
-        fontSize: config.fonts.large,
         color: config.colors.white,
         marginVertical: 5,
     },
@@ -388,7 +383,6 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        fontSize: config.fonts.large,
         fontWeight: '700',
         textAlign: 'center'
     },
@@ -404,13 +398,11 @@ const styles = StyleSheet.create({
 
     infoTitle: {
         color: config.colors.black,
-        fontSize: 16,
         opacity: 0.6
     },
 
     date: {
         color: config.colors.white,
-        fontSize: 16,
         opacity: 0.7
     },
 
@@ -427,9 +419,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontSize: config.fonts.large,
-        fontWeight: '600',
-        textTransform: 'capitalize',
+        fontSize: config.fonts.large
     },
 
     dateSection: {
