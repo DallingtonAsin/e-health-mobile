@@ -7,7 +7,7 @@ import { TextInput } from 'react-native-paper'
 import AppLoader from '../components/AppLoader'
 import { getAppVersion, isValidEmail, removeLeadingZeros } from '../components/common/SharedHelper'
 import { Context as AuthContext } from '../context/authContext'
-import {  LoginPayload } from '../interfaces'
+import { LoginPayload } from '../interfaces'
 import { displayMessage } from '../components/common/SharedHelper'
 import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils'
 import TouchableImage from '../components/TouchableImage'
@@ -151,7 +151,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.header}>
                     <View style={styles.imageContainer}>
-                        <Text style={{ color: configs.colors.gray, fontWeight: 'bold', fontSize: configs.fonts.large }}>Choose Account Type</Text>
+                        <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>Choose Account Type</Text>
                         <View style={styles.row}>
                             <TouchableImage
                                 onPress={() => handleImagePress('image1')}
@@ -195,7 +195,7 @@ const SigninScreen = ({ navigation }: { navigation: any }) => {
                         ref={phoneInputRef}
                         defaultValue={value}
                         defaultCode="UG"
-
+                        containerStyle={{ alignSelf: 'center' }}
                         onChangeText={(text) => {
                             onChangePhoneNumber(text);
                         }}
@@ -277,7 +277,7 @@ export default SigninScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: configs.colors.white, 
+        backgroundColor: configs.colors.white,
     },
 
     header: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         paddingHorizontal: 5,
-        alignItems: 'center',
+        // alignItems: 'center',
     },
 
     footer: {
@@ -336,23 +336,23 @@ const styles = StyleSheet.create({
     },
 
     ephoneTxt: {
-        fontSize: configs.fonts.normal,
-        textAlign: 'center',
-        color: configs.colors.black,
-        opacity: 0.5
+        // fontSize: configs.fonts.normal,
+        // textAlign: 'center',
+        // color: configs.colors.black,
+        // opacity: 0.5
     },
 
     loginTxt: {
         fontSize: configs.fonts.extraLarge,
         color: configs.colors.secondary,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         opacity: 0.8,
         textTransform: 'uppercase'
     },
 
     roleText: {
         color: configs.colors.gray,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginTop: 15,
     },
 
@@ -376,9 +376,10 @@ const styles = StyleSheet.create({
     },
 
     loginOption: {
-        fontSize: configs.fonts.large,
+        fontSize: configs.fonts.medium,
         color: configs.colors.terms,
-        textDecorationLine: 'underline',
+        marginLeft: 30,
+        // textDecorationLine: 'underline',
     }
 
 });

@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
 
     name: {
         fontSize: 24,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginVertical: 8,
     },
 
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
 
     price: {
         fontSize: 24,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginVertical: 8,
         color: configs.colors.primary,
     },
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 20,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     drugStatus: {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         right: 0,
         color: configs.colors.white,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     quantityContainer: {

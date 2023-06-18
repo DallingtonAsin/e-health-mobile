@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         right: 0,
         color: configs.colors.white,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 });
 

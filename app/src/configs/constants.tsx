@@ -1,5 +1,8 @@
 
-import { SignedinUser, DoctorsDetail, FileUpload, Registration, DrCompleteProfilePayload } from "../interfaces";
+import {
+  SignedinUser, DoctorsDetail, FileUpload, Registration,
+  DrCompleteProfilePayload, IMedicalHistData, Option, IPrescriptionDrug, ISelectItem
+} from "../interfaces";
 
 const initialUser = {
   first_name: '',
@@ -94,72 +97,104 @@ const InitialAppointmentDetailState = {
   appointment_type_id: 0,
   appointment_date: '',
   reason: '',
-  notes: '' ,
+  notes: '',
   status: '',
   confirmed_at: '',
   reminded_at: '',
-  completed_at: '' ,
-  rescheduled_at: '' ,
-  cancelled_at: '' ,
+  completed_at: '',
+  rescheduled_at: '',
+  cancelled_at: '',
   is_doctor_notified: 0,
   alert_status: '',
   is_online: false,
   is_video: false,
   appointment_time: '',
   patient: {
-      id: 0,
-      first_name: '',
-      last_name: '',
-      country_code: '',
-      phone_number: '',
-      email: '',
-      address: '',
-      dob: '',
-      age: '',
-      image: '',
-      thumbnail: ''
+    id: 0,
+    first_name: '',
+    last_name: '',
+    country_code: '',
+    phone_number: '',
+    email: '',
+    address: '',
+    dob: '',
+    age: '',
+    image: '',
+    thumbnail: ''
   },
   doctor: {
-      id: 0,
-      first_name: '',
-      last_name: '',
-      specialty_id: 0,
-      primary_facility_id: 0,
-      country_code: '',
-      phone_number: '',
-      email: '',
-      qualification: '',
-      address: '',
-      image: '',
-      service_fee: '',
-      fcm_token: '' ,
-      thumbnail: '',
-      specialty: '',
-      primary_facility: '',
-      is_online: false
+    id: 0,
+    first_name: '',
+    last_name: '',
+    specialty_id: 0,
+    primary_facility_id: 0,
+    country_code: '',
+    phone_number: '',
+    email: '',
+    qualification: '',
+    address: '',
+    image: '',
+    service_fee: '',
+    fcm_token: '',
+    thumbnail: '',
+    specialty: '',
+    primary_facility: '',
+    is_online: false
   },
   appointment_type: {
-      id: 0,
-      name: ''
+    id: 0,
+    name: ''
   },
   meeting_access: {
-      appId: '',
-      channel: '',
-      token: ''
+    appId: '',
+    channel: '',
+    token: ''
   },
   medical_history: {
-      id: 0,
-      patient_id: 0,
-      appointment_id: 0,
-      past_medical_history: '' ,
-      current_treatment: '' ,
-      illness: '' ,
-      diagnosis_date: '' ,
-      treatment: '' 
+    id: 0,
+    patient_id: 0,
+    appointment_id: 0,
+    past_medical_history: '',
+    current_treatment: '',
+    illness: '',
+    diagnosis_date: '',
+    treatment: ''
   }
 }
 
+const initialOption: Option = {
+  id: 0,
+  name: ''
+}
 
+const initialSelectItem: ISelectItem = {
+  key: 0,
+  value: ''
+}
+
+const InitialMedicalHistData: IMedicalHistData = {
+  presenting_complaint: '',
+  past_medical_history: '',
+  drug_allergies: '',
+  findings: ''
+}
+
+const initialPresDrugState: IPrescriptionDrug = {
+  name: '',
+  instructions: '',
+  route_of_admin: '',
+  dosage: '',
+  duration: 0,
+  quantity: 0
+}
+
+const numberOfItemsPerPageList = [2, 3, 4]
+
+const dataTablePageItems = [
+  { key: 1, name: 'Page 1' },
+  { key: 2, name: 'Page 2' },
+  { key: 3, name: 'Page 3' }
+]
 
 
 export {
@@ -168,7 +203,13 @@ export {
   initialDoctorInfo,
   initialFileUpload,
   registrationState,
+  InitialMedicalHistData,
   DrCompleteProfileInitialState,
   agoraConnectionInitialState,
-  InitialAppointmentDetailState
+  InitialAppointmentDetailState,
+  numberOfItemsPerPageList,
+  dataTablePageItems,
+  initialOption,
+  initialSelectItem,
+  initialPresDrugState
 }

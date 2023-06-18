@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 14,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         color: configs.colors.white,
         marginLeft: 10,
     },

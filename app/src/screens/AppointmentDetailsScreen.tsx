@@ -10,11 +10,12 @@ import { Context as DoctorContext } from '../context/doctorContext'
 import { displayMessage, getUserInitials } from '../components/common/SharedHelper'
 import AppLoader from '../components/AppLoader'
 import MeetingRoomScreen from './MeetingRoomScreen'
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { TabView, SceneMap } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { callPhoneNumber, sendSms } from '../components/common/communications'
 import { AppointmentDetail } from '../interfaces'
 import { InitialAppointmentDetailState } from '../configs/constants'
+import { renderTabBar } from '../components/common/tabView'
 
 
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
@@ -255,7 +256,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         {!user.is_patient && (appointmentInfo.status == 'Confirmed' || appointmentInfo.status == 'Expired') &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
                                 onPress={() => completeMedicalAppoitment()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete Appointment</Text>
+                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete consultation</Text>
                             </TouchableOpacity>
                         }
 
@@ -278,20 +279,6 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         appointment: AppointmentDetails,
         profile: ProfileDetails
     })
-
-
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.large, fontWeight: '400' }}>
-                    {route.title}
-                </Text>
-            )}
-            indicatorStyle={{ backgroundColor: config.colors.primary }}
-            style={{ backgroundColor: config.colors.white }}
-        />
-    )
 
     return (
         <React.Fragment>

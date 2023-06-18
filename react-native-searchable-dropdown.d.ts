@@ -11,6 +11,7 @@ declare module 'react-native-searchable-dropdown' {
         onItemSelect: (item: Option | any) => void;
         onRemoveItem?: (item: Option | any) => void;
         multi?: boolean;
+        selectedItem?: Option,
         containerStyle?: ViewStyle;
         textInputStyle?: TextStyle;
         itemStyle?: ViewStyle;

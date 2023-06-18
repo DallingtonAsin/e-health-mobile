@@ -200,7 +200,6 @@ const getDrugs = () => {
             routes.drugs.index
         ).then(async (res) => {
             if (res && res.data) {
-
                 const data = res.data;
                 onSuccess(data);
             }
@@ -211,6 +210,24 @@ const getDrugs = () => {
         });
     };
 };
+
+const getPrescriptionDrugs = () => {
+    return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            routes.drugs.prescription
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 const getNotifications = () => {
     return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -322,7 +339,7 @@ const postCallDetails = () => {
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-        updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getMeetingDetails,
+        updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getPrescriptionDrugs, getMeetingDetails,
         getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus,
         getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails
     },

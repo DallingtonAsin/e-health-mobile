@@ -13,8 +13,9 @@ import AppLoader from "../components/AppLoader"
 import { Searchbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MedicalSpecialtyScreen from "./MedicalSpecialtyScreen"
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { TabView, SceneMap } from 'react-native-tab-view'
 import { AirbnbRating } from 'react-native-ratings';
+import { renderTabBar } from "../components/common/tabView"
 
 const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -255,19 +256,6 @@ const SpecialitiesListScreen = ({ route, navigation }: { route: any, navigation:
         specialties: () => <MedicalSpecialtyScreen navigation={navigation} />,
     })
 
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: focused ? configs.colors.primary : configs.colors.black, fontSize: configs.fonts.large, fontWeight: '400' }}>
-                    {route.title}
-                </Text>
-            )}
-            indicatorStyle={{ backgroundColor: configs.colors.primary }}
-            style={{ backgroundColor: configs.colors.white }}
-        />
-    )
-
     return (
         <TabView
             navigationState={{ index, routes }}
@@ -396,7 +384,7 @@ const styles = StyleSheet.create({
 
     amount: {
         color: configs.colors.primary,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     searchbar: {
