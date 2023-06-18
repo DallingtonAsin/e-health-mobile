@@ -17,11 +17,9 @@ import { AppointmentDetail } from '../interfaces'
 import { InitialAppointmentDetailState } from '../configs/constants'
 import { renderTabBar } from '../components/common/tabView'
 
-
 const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointment_id } = route.params
-
     const { state } = useContext(AuthContext)
     const { getAppointmentDetails, checkAppointmentStatus } = useContext(AppContext)
     const { confirmAppointment } = useContext(DoctorContext)
@@ -113,12 +111,10 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
         navigation.navigate(`MyAppointments`)
     }
 
-    const completeMedicalAppoitment = () => {
+    const completeConsultation = () => {
         navigation.navigate('CompleteAppointment', {
             appointment_id: appointment_id,
-            appointment_number: appointmentInfo.appointment_number,
-            patient: appointmentInfo.patient,
-            medical_history: appointmentInfo.medical_history
+            patient_id: appointmentInfo.patient.id
         })
     }
 
@@ -255,7 +251,7 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
 
                         {!user.is_patient && (appointmentInfo.status == 'Confirmed' || appointmentInfo.status == 'Expired') &&
                             <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
-                                onPress={() => completeMedicalAppoitment()}>
+                                onPress={() => completeConsultation()}>
                                 <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete consultation</Text>
                             </TouchableOpacity>
                         }
@@ -265,7 +261,6 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                                 <Text style={[styles.buttonText, { color: config.colors.primary }]}>Cancel Appointment</Text>
                             </TouchableOpacity>
                         }
-
                     </View>
                 </View>
             </ScrollView>
@@ -448,8 +443,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 15,
         marginBottom: 20,
-    },
-
-
-
+    }
 })

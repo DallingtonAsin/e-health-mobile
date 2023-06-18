@@ -14,10 +14,10 @@ import MedicalHistoryScreen from "../screens/MedicalHistoryScreen"
 import MyScheduleScreen from "../screens/Doctor/MyScheduleScreen"
 import DrugScreen from "../screens/DrugScreen"
 import DrugDetailsScreen from "../screens/DrugDetailsScreen"
-import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/common/index"
-import CartIcon from "../screens/common/CartIcon"
+import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/Common/index"
+import CartIcon from "../screens/Common/CartIcon"
 import CartScreen from "../screens/CartScreen"
-import CompleteMedicalAppointmentScreen from "../screens/Doctor/CompleteMedicalAppointmentScreen"
+import CompleteConsultationScreen from "../screens/Doctor/CompleteConsultationScreen"
 import TabNavigator from "./TabNavigator"
 import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen"
 import HomeScreen from "../screens/HomeScreen"
@@ -214,7 +214,7 @@ const AppStackScreen = () => {
                     headerBackVisible: true,
                     headerShown: true,
                 }}
-                component={CompleteMedicalAppointmentScreen}
+                component={CompleteConsultationScreen}
             />
 
             <Stack.Screen
