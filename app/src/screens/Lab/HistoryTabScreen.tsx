@@ -84,7 +84,7 @@ const HistoryTabScreen = ({
 
 
             <View style={styles.viewContainer}>
-                <Text style={styles.infoText}>*For any mandatory field, if it is not applicable, please enter "None or N/A".</Text>
+                <Text style={styles.infoText}>*For any mandatory field, enter "None or N/A" if not applicable.</Text>
             </View>
 
         </ScrollView>

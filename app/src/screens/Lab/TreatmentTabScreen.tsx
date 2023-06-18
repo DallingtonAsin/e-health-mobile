@@ -49,6 +49,11 @@ const TreatmentTabScreen = ({
                     onChangeText={(text: string) => setTreatmentPlan(text)}
                 />
             </View>
+
+            <View style={styles.viewContainer}>
+                <Text style={styles.infoText}>*For any mandatory field, enter "None or N/A" if not applicable.</Text>
+            </View>
+
             <TreatmentPlanModal
                 isVisible={isDrugModalVisible}
                 drugInfo={drugInfo}
@@ -68,7 +73,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         paddingHorizontal: 10
     },
-
     labelTxt: {
         fontSize: config.fonts.normal,
         color: config.colors.black
@@ -90,18 +94,19 @@ const styles = StyleSheet.create({
         padding: 18,
         elevation: 5,
     },
-
     itemTitle: {
         color: '#000',
         fontSize: config.fonts.medium,
     },
-
     textInput: {
         backgroundColor: config.colors.white,
         color: config.colors.silver,
         fontSize: config.fonts.normal
     },
-
+    infoText: {
+        color: config.colors.red,
+        textAlign: 'center'
+    },
     arrow: {
         right: 0
     }

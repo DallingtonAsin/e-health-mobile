@@ -144,13 +144,19 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         formData.append('diagnosisData', diagnosisData)
         formData.append('treatmentData', treatmentData)
 
-        console.log(`Consulation data`, formData)
+        console.log(`is draft`, isDraft)
+        console.log(`History data`, historyInfo)
+        console.log(`Labtest data`, labTestData)
+        console.log(`Diagnosis data`, diagnosisData)
+        console.log(`Treatment data`, treatmentData)
+        // console.log(`Consulation data`, formData)
+        return
         setIsLoading(true)
         completeConsultation({ appointment_id: appointment_id, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const confirmBeforeSubmitting = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
-        const message = `Are you sure you want to complete this appointment?`
+        const message = `Are you sure you want to complete this appointment now?`
         Alert.alert(
             `Confirm submission`,
             message,
@@ -238,7 +244,7 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     modalTitle={"Enter labtests carried out"}
                     selectTitle={"Select LabTest"}
                     findingsTitle={"LabTest Findings"}
-                    textInputLabel={"Lab test findings"}
+                    textInputLabel={"Enter outcome or test result value(s)"}
                     toggleModal={toggleLabTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleLabTestItemSelect}
@@ -252,7 +258,7 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     modalTitle={"Enter imagetests carried out"}
                     selectTitle={"Select ImageTest"}
                     findingsTitle={"ImageTest Findings"}
-                    textInputLabel={"Image test findings"}
+                    textInputLabel={"Enter outcome or test result value(s)"}
                     toggleModal={toggleImageTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleImageTestItemSelect}
