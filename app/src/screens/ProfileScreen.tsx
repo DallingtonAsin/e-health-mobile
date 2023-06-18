@@ -281,7 +281,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 {<><Text> {user.is_patient ? `Patient Account` : `Doctor Account`} </Text></>}
                             </Text>
                             <TouchableOpacity style={styles.editProfileBtn} onPress={() => setIsDisabled(!isDisabled)}>
-                                <Text style={styles.editProfileTxt}><Icon5 name={isDisabled ? 'pen' : 'eye'} size={10} color={config.colors.silver} /> {isDisabled ? 'Edit' : 'View'} profile</Text>
+                                <Text style={styles.editProfileTxt}>
+                                    {/* <Icon5 name={isDisabled ? 'pen' : 'eye'} size={10} color={config.colors.silver} />  */}
+                                    {isDisabled ? 'Edit' : 'View'} profile</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -383,7 +385,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                                 showSoftInputOnFocus={false}
                                 onChangeText={text => setUser(prev => ({ ...prev, dob: text }))}
                             />
-                            <AppDatePicker title={"Select date of birth"} open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm}/>
+                            <AppDatePicker title={"Select date of birth"} open={open} setOpen={setOpen} date={date} handleConfirm={handleConfirm} />
                         </View>
 
 
@@ -780,13 +782,14 @@ const styles = StyleSheet.create({
     editProfileBtn: {
         borderWidth: 0.5,
         borderColor: config.colors.silver,
-        borderRadius: 25,
+        borderRadius: 5,
         paddingVertical: 5,
         paddingHorizontal: 12,
     },
 
     editProfileTxt: {
-        color: config.colors.silver
+        color: config.colors.silver,
+        fontSize: config.fonts.normal
     }
 
 })
