@@ -1,52 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import SearchableDropdown from 'react-native-searchable-dropdown'
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
-import { Option } from '../interfaces'
-
-const SingleSearchableDropdown = ({ selectedItem, items, placeholderStr, textInputStr, defaultIndex, onItemSelect }: {
-    selectedItem: Option,
-    items: Option[],
-    placeholderStr: string,
-    textInputStr: string,
-    defaultIndex?: number,
-    onItemSelect: (item: any) => void
-}) => (
-    <SearchableDropdown
-        onItemSelect={(item) => onItemSelect(item)}
-        containerStyle={{ padding: 5 }}
-        textInputStyle={styles.searchableTextInputStyle}
-        itemStyle={{
-            padding: 10,
-            marginTop: 2,
-            backgroundColor: '#ddd',
-            borderColor: '#bbb',
-            borderWidth: 1,
-            borderRadius: 5,
-        }}
-        itemTextStyle={{ color: '#222' }}
-        itemsContainerStyle={{ maxHeight: 140 }}
-        items={items}
-        defaultIndex={defaultIndex}
-        placeholder={placeholderStr}
-        resetValue={false}
-        underlineColorAndroid="transparent"
-        textInputProps={{
-            placeholder: textInputStr,
-            underlineColorAndroid: "transparent",
-            style: {
-                padding: 12,
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 5,
-            },
-            editable: true,
-            value: selectedItem ? selectedItem.name : '',
-            onTextChange: (text: any) => console.log(text)
-        }}
-        listProps={{ nestedScrollEnabled: true }}
-    />
-)
 
 const CustomSingleSelectDropdown = ({
     data,
@@ -63,8 +17,7 @@ const CustomSingleSelectDropdown = ({
             data={data}
             save="value"
             placeholder={placeholder}
-            search={true}
-        />
+            search={true} />
     )
 }
 
@@ -89,13 +42,12 @@ const CustomMultipleSelectDropdown = ({
             save="value"
             placeholder={placeholder}
             onSelect={() => handleOnSelect()}
-            search={true}
-        />
+            search={true} />
     )
 }
 
 
-export {  SingleSearchableDropdown, CustomSingleSelectDropdown, CustomMultipleSelectDropdown }
+export { CustomSingleSelectDropdown, CustomMultipleSelectDropdown }
 
 const styles = StyleSheet.create({
 

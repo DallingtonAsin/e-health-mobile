@@ -12,22 +12,24 @@ import { renderTabBar } from '../components/common/tabView'
 
 const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
-    const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>()
-    const [confirmedAppiontments, setConfirmedAppointments] = useState<MyAppointmentInfo[]>()
-    const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>()
-    const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>()
     const [isPendingLoading, setIsPendingLoading] = useState(true)
     const [isConfirmedLoading, setIsConfirmedLoading] = useState(true)
     const [isCompletedLoading, setIsCompletedLoading] = useState(true)
     const [isCancelledLoading, setIsCancelledLoading] = useState(true)
+
+    // appointments data
+    const [pendingAppointments, setPendingAppointments] = useState<MyAppointmentInfo[]>()
+    const [confirmedAppiontments, setConfirmedAppointments] = useState<MyAppointmentInfo[]>()
+    const [completedAppiontments, setCompletedAppointments] = useState<MyAppointmentInfo[]>()
+    const [cancelledAppointments, setCancelledAppointments] = useState<MyAppointmentInfo[]>()
 
     const { state } = useContext(AuthContext)
     const { getMyAppointments } = useContext(AppContext)
     const user = state.user
 
     const layout = useWindowDimensions()
-
     const [index, setIndex] = React.useState(0)
+
     const [routes] = React.useState([
         { key: 'pending', title: 'Pending' },
         { key: 'confirmed', title: 'Confirmed' },
@@ -35,7 +37,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         { key: 'cancelled', title: 'Cancelled' }
     ])
 
-    let payload = { user_id: user.id, is_patient: user.is_patient }
+    const payload = { user_id: user.id, is_patient: user.is_patient }
 
     const fetchPendingAppointments = () => {
         getMyAppointments({ payload: { ...payload, path: 'pending' }, onSuccess: setPendingAppointmentData, onFailure: displayMessage, onCompletion: () => setIsPendingLoading(false) })
@@ -78,13 +80,11 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const PendingAppointmentsScreen = () => {
         const [refreshing, setRefreshing] = useState(false)
-
         const onRefresh = () => {
             setRefreshing(true)
             fetchPendingAppointments()
             setRefreshing(false)
         }
-
         return (
             <React.Fragment>
                 <SafeAreaView style={styles.container}>
@@ -107,14 +107,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const ConfirmedAppointmentsScreen = () => {
-
         const [refreshing, setRefreshing] = useState(false)
         const onRefresh = () => {
             setRefreshing(true)
             fetchConfirmedAppointments()
             setRefreshing(false)
         }
-
         return (
             <React.Fragment>
                 <SafeAreaView style={styles.container}>
@@ -143,7 +141,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             fetchCompletedAppointments()
             setRefreshing(false)
         }
-
         return (
             <React.Fragment>
                 <SafeAreaView style={styles.container}>
@@ -172,7 +169,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
             fetchCancelledAppointments()
             setRefreshing(false)
         }
-
         return (
             <React.Fragment>
                 <SafeAreaView style={styles.container}>
@@ -180,7 +176,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                         <FlatList
                             data={cancelledAppointments}
                             renderItem={renderItem}
-                            keyExtractor={(_, index) => index.toString()} 
+                            keyExtractor={(_, index) => index.toString()}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
@@ -200,7 +196,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
         cancelled: CancelledAppointmentsScreen,
         completed: CompletedAppointmentsScreen
     })
-
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
         <TouchableOpacity style={styles.item}
@@ -249,7 +244,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 }
 
 export default MyAppointmentScreen
-
 
 const styles = StyleSheet.create({
     container: {
