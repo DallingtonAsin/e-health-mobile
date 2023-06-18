@@ -29,7 +29,7 @@ const createContext = (defaultValue: any) => {
         getAppointmentTypes: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMeetingDetails: ({ appointmentId, onSuccess, onFailure, onCompletion }: { appointmentId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         submitAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        completeAppointment: ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        completeConsultation: ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         confirmAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         cancelAppointment: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMyAppointments: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },

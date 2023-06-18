@@ -131,9 +131,9 @@ const getDoctorsCalendar = () => {
 };
 
 
-const completeAppointment = () => {
-    return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        services.put(
+const completeConsultation = () => {
+    return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.post(
             `${routes.appointments.index}/${appointment_id}/complete`,
             payload
         ).then(async (res: any) => {
@@ -352,7 +352,7 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
-        getMedicalFacilities, submitDoctorSchedule, completeAppointment, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
+        getMedicalFacilities, submitDoctorSchedule, completeConsultation, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
         getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes
     },
     { isAppLoading: true },

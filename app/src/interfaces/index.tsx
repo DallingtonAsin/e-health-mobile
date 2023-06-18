@@ -110,13 +110,6 @@ interface MedicalSpecialty {
     name: string,
 }
 
-interface IMedicalHistData {
-    presenting_complaint: string,
-    past_medical_history: string,
-    drug_allergies: string,
-    findings: string,
-}
-
 interface DoctorsDetail {
     id: number,
     first_name: string,
@@ -383,7 +376,35 @@ interface ICompanyListItem {
     method: Function
 }
 
-type setPasswordError = React.Dispatch<React.SetStateAction<string>>;
+type setPasswordError = React.Dispatch<React.SetStateAction<string>>
+
+// Post consultation data
+
+interface IMedicalHistData {
+    presenting_complaint: string,
+    past_medical_history: string,
+    drug_allergies: string,
+    findings: string,
+}
+
+interface ILabTestData {
+    labTests: ILabTest[],
+    imageTests: ILabTest[],
+    otherTests: string,
+    otherTestFindings: string
+}
+
+interface IDiagnosisData {
+    icd10Codes: string[],
+    comments: string
+}
+
+interface ITreatmentPlanData {
+    drugs: IPrescriptionDrug[],
+    treatmentPlan: string
+}
+
+
 
 
 export type {
@@ -416,9 +437,13 @@ export type {
     Option,
     ISelectItem,
     ILabTest,
-    IMedicalHistData,
     IPrescriptionDrug,
     CompanyInformation,
     ContactListItem,
-    ICompanyListItem
+    ICompanyListItem,
+    
+    IMedicalHistData,
+    ILabTestData,
+    IDiagnosisData,
+    ITreatmentPlanData
 }

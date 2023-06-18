@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, Alert } from 'react-native'
 import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
-import { Option, ILabTest, IMedicalHistData, ISelectItem } from '../../interfaces'
+import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
 import { TabView, SceneMap } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { renderTable } from '../../components/common/lab/dataTable'
@@ -15,11 +15,12 @@ import TreatmentTabScreen from '../Lab/TreatmentTabScreen'
 import { InitialMedicalHistData } from '../../configs/constants'
 import { renderTabBar } from '../../components/common/tabView'
 import { ScrollView } from 'react-native-gesture-handler'
+import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanData } from '../../components/common/validation'
 
 const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointment_id, patient } = route.params
-    const { completeAppointment } = useContext(DoctorContext)
+    const { completeConsultation } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
     const [icd10Codes, setIcd10Codes] = useState<ISelectItem[] | any>()
@@ -40,8 +41,8 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     const [diagnosisComments, setDiagnosisComments] = useState<string>('')
 
     // Treatment plan data
-    const [recordedDrugs, setRecordedDrugs] = useState<any>([])
-    const [treatmentPlan, setTreatmentPlan] = useState<any>()
+    const [recordedDrugs, setRecordedDrugs] = useState<IPrescriptionDrug[]>([])
+    const [treatmentPlan, setTreatmentPlan] = useState<string>('')
 
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
     const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
@@ -93,34 +94,76 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         { key: 'treatment', title: 'Treatment' },
     ])
 
-    const submit = () => {
+    const submit = (isDraft: boolean = true) => {
 
-        if (!historyInfo?.presenting_complaint) {
-            displayMessage("Please enter presenting complaint")
+        const histDataError = validateMedicalHistData(historyInfo)
+        if (histDataError) {
+            displayMessage(histDataError)
             return
         }
-        if (!historyInfo.past_medical_history) {
-            displayMessage("Please enter past medical history")
-            return
+        const diagnosisData: IDiagnosisData = {
+            icd10Codes: selectedIcdCodes,
+            comments: diagnosisComments
         }
-        if (!historyInfo.drug_allergies) {
-            displayMessage("Please enter drug allergies")
-            return
-        }
-        if (!historyInfo.findings) {
-            displayMessage("Please enter findings")
+        const diagnosisDataError = validateDiagnosisData(diagnosisData)
+        if (diagnosisDataError) {
+            displayMessage(diagnosisDataError)
             return
         }
 
-        const payload = {
-            patient_id: patient.id,
-            presenting_complaint: historyInfo.presenting_complaint,
-            past_medical_history: historyInfo.past_medical_history,
-            drug_allergies: historyInfo.drug_allergies,
-            findings: historyInfo.findings
+        const treatmentPlanData: ITreatmentPlanData = {
+            drugs: recordedDrugs,
+            treatmentPlan: treatmentPlan
         }
+        const treatmentDataError = validateTreatmentPlanData(treatmentPlanData)
+        if (treatmentDataError) {
+            displayMessage(treatmentDataError)
+            return
+        }
+
+        const labTestData: ILabTestData = {
+            labTests: recordedLabTests,
+            imageTests: recordedImageTests,
+            otherTests: recordedOtherTests,
+            otherTestFindings: otherTestFindings
+        }
+
+        if (isDraft) {
+            submitPostConsultationData(isDraft, labTestData, diagnosisData, treatmentPlanData)
+        } else {
+            confirmBeforeSubmitting(isDraft, labTestData, diagnosisData, treatmentPlanData)
+        }
+    }
+
+    const submitPostConsultationData = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
+        const formData = new FormData()
+        formData.append('_method', 'put')
+        formData.append('isDraft', isDraft)
+        formData.append('historyData', historyInfo)
+        formData.append('labTestData', labTestData)
+        formData.append('diagnosisData', diagnosisData)
+        formData.append('treatmentData', treatmentData)
+
+        console.log(`Consulation data`, formData)
         setIsLoading(true)
-        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        completeConsultation({ appointment_id: appointment_id, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+    }
+
+    const confirmBeforeSubmitting = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
+        const message = `Are you sure you want to complete this appointment?`
+        Alert.alert(
+            `Confirm submission`,
+            message,
+            [
+                { text: 'No', onPress: () => { } },
+                {
+                    text: 'Yes', onPress: () => {
+                        submitPostConsultationData(isDraft, labTestData, diagnosisData, treatmentData)
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
     }
 
     const onSuccess = (message: string) => {
@@ -224,7 +267,6 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     setOtherTests={setRecordedOtherTests}
                     otherTestFindings={otherTestFindings}
                     setOtherTestFindings={setOtherTestFindings} />
-
             </SafeAreaView>
         )
     }
@@ -256,8 +298,14 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }} />
             <View style={styles.footer}>
-                <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 20 }]}
-                    onPress={() => submit()}>
+
+                <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
+                    onPress={() => submit(true)}>
+                    <Text style={[config.styles.btnText, { color: config.colors.primary }]}>Save as Draft</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 10 }]}
+                    onPress={() => submit(false)}>
                     <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                 </TouchableOpacity>
             </View>
