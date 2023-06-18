@@ -120,11 +120,6 @@ const styles = StyleSheet.create({
         top: 15,
     },
 
-    itemTitle: {
-        color: '#000',
-        fontSize: configs.fonts.medium,
-    },
-
     item: {
         shadowColor: configs.colors.black,
         shadowOffset: {
@@ -141,6 +136,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 20,
         elevation: 5,
+    },
+
+    itemTitle: {
+        color: '#000',
+        fontSize: configs.fonts.medium,
     },
 
     arrow: {

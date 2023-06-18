@@ -138,7 +138,7 @@ const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {
             <SafeAreaView style={styles.container} >
                 <View style={styles.header}>
                     <View style={styles.imageContainer}>
-                        <Text style={{ color: configs.colors.gray, fontWeight: 'bold', fontSize: configs.fonts.large }}>Choose Account Type</Text>
+                        <Text style={{ color: configs.colors.gray, fontSize: configs.fonts.large }}>Choose Account Type</Text>
                         <View style={styles.row}>
                             <TouchableImage
                                 onPress={() => handleImagePress('image1')}
@@ -289,14 +289,14 @@ const styles = StyleSheet.create({
     loginTxt: {
         fontSize: configs.fonts.extraLarge,
         color: configs.colors.secondary,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         opacity: 0.8,
         textTransform: 'uppercase'
     },
 
     roleText: {
         color: configs.colors.gray,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginTop: 15,
     },
 

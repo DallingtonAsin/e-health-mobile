@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     name: {
         color: configs.colors.black,
         fontSize: 18,
-        fontWeight: 'bold'
+        // fontWeight: 'bold'
     },
 
     doctorInfo: {
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     confirmText: {
         fontSize: configs.fonts.extraLarge,
         color: configs.colors.primary,
-        fontWeight: '500'
+        // fontWeight: '500'
     },
 
     titleText: {
@@ -437,13 +437,13 @@ const styles = StyleSheet.create({
     },
 
     hrText: {
-        fontSize: 16,
-        fontWeight: '400',
+        // fontSize: 16,
+        // fontWeight: '400',
     },
 
     symptomText: {
-        fontSize: 16,
-        fontWeight: '400',
+        // fontSize: 16,
+        // fontWeight: '400',
     },
 
     textarea: {

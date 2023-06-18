@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 
     paymentAmount: {
         fontSize: 20,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         textAlign: 'left'
     },
 

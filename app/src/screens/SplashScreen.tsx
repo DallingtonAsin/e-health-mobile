@@ -1,3 +1,4 @@
+import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native'
 import * as configs from '../configs';
 import Avatar from '../components/Avatar';
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     slogan: {
         fontSize: 20,
         color: configs.colors.primary,
-        fontWeight: '700',
+        // fontWeight: '700',
         textAlign: 'center',
         paddingVertical: 15,
         marginHorizontal: 80,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     btnText: {
         color: configs.colors.white,
         fontSize: configs.fonts.extraLarge,
-        fontWeight: 'bold'
+        // fontWeight: 'bold'
     },
 
     logo: {

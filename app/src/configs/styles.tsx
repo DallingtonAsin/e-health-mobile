@@ -41,7 +41,6 @@ export const styles = {
 
   continueText: {
     color: colors.white,
-    fontWeight: 'bold',
     fontSize: fonts.extraLarge,
   },
 
@@ -54,6 +53,12 @@ export const styles = {
     flex: 1,
     alignItems: 'center',
     backgroundColor: colors.white,
+  },
+
+  bottomFooter: {
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: 20
   },
 
   btnText: {
@@ -226,7 +231,7 @@ export const styles = {
         marginVertical: 10,
         textAlign: 'center',
         fontSize: fonts.extraLarge,
-        fontWeight: '800',
+        // fontWeight: '800',
         textTransform: 'uppercase',
       },
 
@@ -242,7 +247,7 @@ export const styles = {
       },
 
       required: {
-        color: colors.danger,
+        color: colors.red
       },
 
       textInput: {
@@ -268,14 +273,14 @@ export const styles = {
   online: {
     color: colors.success,
     fontSize: fonts.small,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textTransform: 'capitalize'
   },
 
   offline: {
     color: colors.light_gray,
     fontSize: fonts.small,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textTransform: 'capitalize'
   }
 

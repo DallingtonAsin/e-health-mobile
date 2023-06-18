@@ -126,7 +126,7 @@ const MyScheduleScreen = () => {
         fetchDoctorCalendar()
     }
 
-    const CustomDataTable = ({ item }: { item: any }) => (
+    const renderRow = ({ item }: { item: any }) => (
         <DataTable.Row>
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.date}</Text></DataTable.Cell>
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
@@ -134,15 +134,14 @@ const MyScheduleScreen = () => {
         </DataTable.Row>
     )
 
-    const HeaderComponent = () => {
-        return (
+    const renderHeader = () => (
             <DataTable.Header style={styles.tableHead}>
                 <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
                 <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Start Time</Text></DataTable.Title>
                 <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>End Time</Text></DataTable.Title>
             </DataTable.Header>
         )
-    }
+    
 
     const EmptyComponent = () => {
         return (
@@ -197,10 +196,10 @@ const MyScheduleScreen = () => {
     return (
         <React.Fragment>
             <SafeAreaView style={styles.container}>
-                <HeaderComponent />
+                {renderHeader()}
                 <FlatList
                     data={schedule}
-                    renderItem={CustomDataTable}
+                    renderItem={renderRow}
                     keyExtractor={(item: DoctorCalendar, index: number) => item.id.toString()}
                     ListEmptyComponent={!isLoading ? EmptyComponent : null}
                     refreshControl={
@@ -261,6 +260,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 
+    tableHead: {
+        backgroundColor: config.colors.primary
+    },
+
+    tableCell: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
     cellText: {
         fontSize: 16,
         color: '#000',
@@ -269,24 +277,15 @@ const styles = StyleSheet.create({
     },
 
     rowHeaderText: {
-        fontWeight: 'bold',
         color: config.colors.white,
         textTransform: 'uppercase',
         fontSize: config.fonts.normal
     },
 
-    tableCell: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
 
     emptyCalendarView: {
         justifyContent: 'center',
         alignItems: 'center'
-    },
-
-    tableHead: {
-        backgroundColor: config.colors.primary
     },
 
     circularButton: {

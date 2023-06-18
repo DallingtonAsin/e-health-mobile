@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
 
     fee: {
         fontSize: 16,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         color: config.colors.warning
     },
     consultBtn: {

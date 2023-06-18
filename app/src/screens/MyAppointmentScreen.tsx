@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useWindowDimensions } from 'react-native'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import * as config from '../configs'
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { TabView, SceneMap } from 'react-native-tab-view'
 import { MyAppointmentInfo } from '../interfaces'
 import { Context as AppContext } from '../context/appContext'
 import { Context as AuthContext } from '../context/authContext'
 import { displayMessage, getDayMonth, strContains } from '../components/common/SharedHelper'
 import AppLoader from '../components/AppLoader'
+import { renderTabBar } from '../components/common/tabView'
 
 const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
@@ -136,7 +137,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const CompletedAppointmentsScreen = () => {
-
         const [refreshing, setRefreshing] = useState(false)
         const onRefresh = () => {
             setRefreshing(true)
@@ -167,7 +167,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
     const CancelledAppointmentsScreen = () => {
         const [refreshing, setRefreshing] = useState(false)
-
         const onRefresh = () => {
             setRefreshing(true)
             fetchCancelledAppointments()
@@ -181,7 +180,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                         <FlatList
                             data={cancelledAppointments}
                             renderItem={renderItem}
-                            keyExtractor={(item: MyAppointmentInfo, index: number) => item.id.toString()}
+                            keyExtractor={(_, index) => index.toString()} 
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{ flexGrow: 1 }}
@@ -204,7 +203,8 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 
 
     const renderItem = ({ item }: { item: MyAppointmentInfo }) => (
-        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('AppointmentDetails', { appointment_id: item.id })}>
+        <TouchableOpacity style={styles.item}
+            onPress={() => navigation.navigate('AppointmentDetails', { appointment_id: item.id })}>
             <View style={styles.circle}>
                 <Text style={styles.day}>{getDayMonth(item.appointment_date)[0]}</Text>
                 <Text style={styles.month}>{getDayMonth(item.appointment_date)[1]}</Text>
@@ -221,12 +221,12 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.typeView}>
-                    <TouchableOpacity style={[styles.type, strContains(item.appointment_type.name, 'audio') && { backgroundColor: config.colors.silver },
+                    <View style={[styles.type, strContains(item.appointment_type.name, 'audio') && { backgroundColor: config.colors.silver },
                     strContains(item.appointment_type.name, 'video') && { backgroundColor: config.colors.warning },
                     strContains(item.appointment_type.name, 'person') && { backgroundColor: config.colors.confirmedColor },
                     ]}>
                         <Text style={styles.typeTxt}>{item.appointment_type.name}</Text>
-                    </TouchableOpacity>
+                    </View>
                     <View style={styles.statusView}>
                         <Text style={styles.info}>Status:</Text>
                         <Text style={[styles.status, item.status === 'Completed' && config.styles.completedTxt,
@@ -235,19 +235,6 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
                 </View>
             </View>
         </TouchableOpacity>
-    )
-
-    const renderTabBar = (props: any) => (
-        <TabBar
-            {...props}
-            renderLabel={({ route, focused, color }) => (
-                <Text style={{ color: focused ? config.colors.primary : config.colors.black, fontSize: config.fonts.medium_15, fontWeight: '400' }}>
-                    {route.title}
-                </Text>
-            )}
-            indicatorStyle={{ backgroundColor: config.colors.primary }}
-            style={{ backgroundColor: config.colors.white }}
-        />
     )
 
     return (
@@ -303,7 +290,7 @@ const styles = StyleSheet.create({
 
     typeTxt: {
         color: config.colors.white,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: config.fonts.normal
     },
 
@@ -352,13 +339,13 @@ const styles = StyleSheet.create({
     day: {
         fontSize: 24,
         color: 'white',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     month: {
         fontSize: 14,
         color: 'white',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
 })

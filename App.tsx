@@ -17,6 +17,7 @@ import { Notification, Notifications, Registered, RegistrationError } from 'reac
 import { showLocalNotification } from './app/src/components/common/communications'
 import { useDispatch } from 'react-redux'
 import { fetchNotifications } from './app/src/redux/reducers/notificationSlice'
+import GlobalFont from 'react-native-global-font'
 const Stack = createNativeStackNavigator()
 
 LogBox.ignoreLogs(['new NativeEventEmitter'])
@@ -27,6 +28,11 @@ const App = () => {
 
   const { state } = useContext(AuthContext)
   const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    let fontName = 'Roboto-Regular'
+    GlobalFont.applyGlobal(fontName)
+  },[])
 
   useEffect(() => {
     if (state.token) {

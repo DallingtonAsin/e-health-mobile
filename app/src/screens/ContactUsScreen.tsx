@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         fontSize: configs.fonts.extraLarge,
         textAlign: 'center',
         color: configs.colors.dark,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginVertical: 10,
         opacity: 0.8
     },
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
 
     contactTitle: {
         fontSize: configs.fonts.medium,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
 
     verticleLine: {

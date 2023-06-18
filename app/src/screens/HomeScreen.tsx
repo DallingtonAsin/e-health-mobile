@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     centerText: {
         fontSize: 17,
         textAlign: 'center',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontStyle: 'normal',
         textTransform: 'capitalize',
         color: configs.colors.darkBlue,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
 
     subtitle: {
         fontSize: configs.fonts.normal,
-        fontWeight: 'bold',
+        // // fontWeight: 'bold',
         top: 10,
         textAlign: 'center',
         color: configs.colors.darkBlue
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     greeting: {
         fontSize: 24,
         textAlign: 'left',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontStyle: 'normal',
         textTransform: 'capitalize',
         color: configs.colors.white,
