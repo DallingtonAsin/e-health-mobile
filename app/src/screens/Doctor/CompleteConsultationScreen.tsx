@@ -12,14 +12,13 @@ import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../compon
 import HistoryTabScreen from '../Lab/HistoryTabScreen'
 import DiagnosisTabScreen from '../Lab/DiagnosisTabScreen'
 import TreatmentTabScreen from '../Lab/TreatmentTabScreen'
-import { InitialMedicalHistData, dataTablePageItems, initialOption, numberOfItemsPerPageList } from '../../configs/constants'
+import { InitialMedicalHistData } from '../../configs/constants'
 import { renderTabBar } from '../../components/common/tabView'
 import { ScrollView } from 'react-native-gesture-handler'
 
-const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, navigation: any }) => {
+const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointment_id, patient } = route.params
-    const [historyInfo, setHistoryInfo] = useState<IMedicalHistData>(InitialMedicalHistData)
     const { completeAppointment } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
@@ -27,25 +26,26 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
 
-    const [selectedIcdCodes, setSelectedIcdCodes] = useState<string[]>([])
+    // history data
+    const [historyInfo, setHistoryInfo] = useState<IMedicalHistData>(InitialMedicalHistData)
+
+    // Lab tests data
     const [recordedLabTests, setRecordedLabTests] = useState<ILabTest[]>([])
     const [recordedImageTests, setRecordedImageTests] = useState<ILabTest[]>([])
     const [recordedOtherTests, setRecordedOtherTests] = useState<string>('')
     const [otherTestFindings, setOtherTestFindings] = useState<string>('')
+
+    // daiagnosis daat
+    const [selectedIcdCodes, setSelectedIcdCodes] = useState<string[]>([])
     const [diagnosisComments, setDiagnosisComments] = useState<string>('')
+
+    // Treatment plan data
     const [recordedDrugs, setRecordedDrugs] = useState<any>([])
     const [treatmentPlan, setTreatmentPlan] = useState<any>()
 
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
     const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
     const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
-
-
-    const [page, setPage] = React.useState<number>(0)
-
-    const [numberOfItemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0])
-    const from = page * numberOfItemsPerPage
-    const to = Math.min((page + 1) * numberOfItemsPerPage, dataTablePageItems.length)
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
@@ -71,7 +71,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
         setImageTestCategories(data)
     }
 
-    // ICD-10 Codes
     const onSelectICDCode = (newArray: string[]) => {
         const oldArray = selectedIcdCodes
         newArray.forEach((element) => {
@@ -79,8 +78,8 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
                 oldArray.push(element);
             }
         });
-        oldArray.forEach((i, index) => {
-            if (!newArray.includes(i)) {
+        oldArray.forEach((element, index) => {
+            if (!newArray.includes(element)) {
                 oldArray.splice(index, 1);
             }
         });
@@ -95,9 +94,6 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     ])
 
     const submit = () => {
-
-        console.log(`selected icd-10 codes`, selectedIcdCodes)
-        return
 
         if (!historyInfo?.presenting_complaint) {
             displayMessage("Please enter presenting complaint")
@@ -270,7 +266,7 @@ const CompleteMedicalAppointmentScreen = ({ route, navigation }: { route: any, n
     )
 }
 
-export default CompleteMedicalAppointmentScreen
+export default CompleteConsultationScreen
 
 const styles = StyleSheet.create({
 

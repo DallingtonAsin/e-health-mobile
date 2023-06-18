@@ -5,10 +5,10 @@ import { Drug } from '../interfaces';
 import { incrementQuantity, decrementQuantity, removeFromCart, selectCart } from '../redux/reducers/drugsSlice';
 import * as config from '../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { CartIncrementButton, CartDecrementButton } from './common';
+import { CartIncrementButton, CartDecrementButton } from './Common';
 import { numberWithCommas } from '../components/common/SharedHelper';
 import BottomSheet from '@gorhom/bottom-sheet';
-import Checkout from './common/Checkout';
+import Checkout from './Common/Checkout';
 
 
 function CartScreen() {
