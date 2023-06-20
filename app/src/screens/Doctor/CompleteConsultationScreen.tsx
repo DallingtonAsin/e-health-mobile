@@ -5,7 +5,7 @@ import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
 import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
-import { TabView, SceneMap } from 'react-native-tab-view'
+import { TabView } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { renderTable } from '../../components/common/lab/dataTable'
 import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
@@ -17,7 +17,7 @@ import { renderTabBar } from '../../components/common/tabView'
 import { ScrollView } from 'react-native-gesture-handler'
 import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanData } from '../../components/common/validation'
 
-const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
+const CompleteConsultationScreen = ({ route }: { route: any }) => {
 
     const { appointment_id } = route.params
     const { getAppointmentPostConsultationData, completeConsultation } = useContext(DoctorContext)
@@ -292,20 +292,20 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         )
     }
 
-    const CustomRenderScene = ({ route }: {route: any}) => {
+    const CustomRenderScene = ({ route }: { route: any }) => {
         switch (route.key) {
-          case 'history':
-            return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo}/>;
-          case 'lab':
-            return <LabTabScreen/>;
-          case 'diagnosis':
-            return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode}  comments={diagnosisComments} setComments={setDiagnosisComments} />;
-          case 'treatment':
-                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs}  treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan}/>;
-          default:
-            return null;
+            case 'history':
+                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />;
+            case 'lab':
+                return <LabTabScreen />;
+            case 'diagnosis':
+                return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} />;
+            case 'treatment':
+                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} />;
+            default:
+                return null;
         }
-      };
+    };
 
     return (
         <View style={styles.container}>
