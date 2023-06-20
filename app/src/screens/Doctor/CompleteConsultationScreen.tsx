@@ -20,9 +20,14 @@ import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanDa
 const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const { appointment_id } = route.params
-    const { completeConsultation } = useContext(DoctorContext)
+    const { getAppointmentPostConsultationData, completeConsultation } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isFetchingConsultData, setFetchingConsultData] = useState(true)
+    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
+    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
+    const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
+
     const [icd10Codes, setIcd10Codes] = useState<ISelectItem[] | any>()
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
@@ -44,9 +49,6 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     const [recordedDrugs, setRecordedDrugs] = useState<IPrescriptionDrug[]>([])
     const [treatmentPlan, setTreatmentPlan] = useState<string>('')
 
-    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
-    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
-    const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
@@ -54,11 +56,23 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
 
     useEffect(() => {
+        getAppointmentPostConsultationData({ appointment_id: appointment_id, onSuccess: populateConsulationData, onFailure: displayMessage, onCompletion: () => setFetchingConsultData(false) })
         getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
         getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) })
         getImageTestCategories({ onSuccess: populateImageCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingImageTests(false) })
     }, [])
 
+    const populateConsulationData = (data: any) => {
+        setHistoryInfo(data.medical_history)
+        setRecordedLabTests(data.lab_tests)
+        setRecordedImageTests(data.image_tests)
+        setRecordedOtherTests(data.other_tests.tests)
+        setOtherTestFindings(data.other_tests.findings)
+        setSelectedIcdCodes(data.diagnosisIcdCodes)
+        setDiagnosisComments(data.diagnosis_comments.comments)
+        setRecordedDrugs(data.prescriptions)
+        setTreatmentPlan(data.treatment_plan.treatment_plan)
+    }
 
     const populateIcd10Codes = (data: ISelectItem[]) => {
         setIcd10Codes(data)
@@ -136,23 +150,23 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     }
 
     const submitPostConsultationData = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
-        const formData = new FormData()
-        formData.append('_method', 'put')
-        formData.append('isDraft', isDraft)
-        formData.append('historyData', historyInfo)
-        formData.append('labTestData', labTestData)
-        formData.append('diagnosisData', diagnosisData)
-        formData.append('treatmentData', treatmentData)
 
         console.log(`is draft`, isDraft)
         console.log(`History data`, historyInfo)
         console.log(`Labtest data`, labTestData)
         console.log(`Diagnosis data`, diagnosisData)
         console.log(`Treatment data`, treatmentData)
-        // console.log(`Consulation data`, formData)
-        return
+        const payload = {
+            appointmentId: appointment_id,
+            isDraft: isDraft,
+            historyData: historyInfo,
+            labTestData: labTestData,
+            diagnosisData: diagnosisData,
+            treatmentData: treatmentData,
+        }
+        console.log(`Payload data`, payload)
         setIsLoading(true)
-        completeConsultation({ appointment_id: appointment_id, payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const confirmBeforeSubmitting = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
@@ -174,7 +188,6 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
 
     const onSuccess = (message: string) => {
         displayMessage(message)
-        navigation.navigate('MyAppointments')
     }
 
     const LabTabScreen = () => {
@@ -230,9 +243,11 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                         style={{ top: 5 }} />
                 </View>
 
+
                 <ScrollView
                     style={{ marginBottom: 20 }}
                     contentContainerStyle={{ flexGrow: 1, top: 10 }}>
+
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
                 </ScrollView>
@@ -277,22 +292,20 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         )
     }
 
-    const renderScene = SceneMap({
-        history: () => <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />,
-        lab: LabTabScreen,
-        diagnosis: () => <DiagnosisTabScreen
-            icd10Codes={icd10Codes}
-            onSelect={onSelectICDCode}
-            comments={diagnosisComments}
-            setComments={setDiagnosisComments}
-        />,
-        treatment: () => <TreatmentTabScreen
-            recordedDrugs={recordedDrugs}
-            setRecordedDrugs={setRecordedDrugs}
-            treatmentPlan={treatmentPlan}
-            setTreatmentPlan={setTreatmentPlan}
-        />
-    })
+    const CustomRenderScene = ({ route }: {route: any}) => {
+        switch (route.key) {
+          case 'history':
+            return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo}/>;
+          case 'lab':
+            return <LabTabScreen/>;
+          case 'diagnosis':
+            return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode}  comments={diagnosisComments} setComments={setDiagnosisComments} />;
+          case 'treatment':
+                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs}  treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan}/>;
+          default:
+            return null;
+        }
+      };
 
     return (
         <View style={styles.container}>
@@ -300,7 +313,7 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
             <TabView
                 navigationState={{ index, routes }}
                 renderTabBar={renderTabBar}
-                renderScene={renderScene}
+                renderScene={CustomRenderScene}
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }} />
             <View style={styles.footer}>
@@ -315,7 +328,7 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                 </TouchableOpacity>
             </View>
-            {(isLoading || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
+            {(isLoading || isFetchingConsultData || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
         </View>
     )
 }

@@ -315,7 +315,7 @@ interface AppointmentDetail {
         channel: string,
         token: string
     },
-    medical_history: {
+    patient_medical_history: {
         id: number,
         patient_id: number,
         appointment_id: number,

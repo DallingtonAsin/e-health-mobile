@@ -222,8 +222,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     <ContentItem title={"Appointment type"} value={appointmentInfo.appointment_type.name} />
                     <ContentItem title={"Appointment Time"} value={`${appointmentInfo.appointment_date} ${appointmentInfo.appointment_time}`} />
                     <ContentItem title={"Reason"} value={appointmentInfo.reason} />
-                    <ContentItem title={"Medical history"} value={appointmentInfo.medical_history.past_medical_history} />
-                    <ContentItem title={"Current treatment"} value={appointmentInfo.medical_history.current_treatment} />
+                    <ContentItem title={"Medical history"} value={appointmentInfo.patient_medical_history.past_medical_history} />
+                    <ContentItem title={"Current treatment"} value={appointmentInfo.patient_medical_history.current_treatment} />
                     <ContentItem title={"Consultation fee per 15 min"} value={appointmentInfo.doctor.service_fee} />
                     <View style={styles.appointmentInfo}>
                         <Text style={styles.subtitle}>Status</Text>

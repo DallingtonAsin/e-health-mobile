@@ -1,14 +1,13 @@
 import createDataContext from './createDataContext';
 import { routes } from '../network/routes';
 import Service from '../network/services/httpService';
-import { IUser, LoginData } from '../interfaces';
+import { LoginData } from '../interfaces';
 import { storeUser, storeAuthToken, storeAccessToken } from '../network/services/asyncStorageService';
 import { appReducer } from './reducers/appReducer';
 import { displayErrorMessage } from '../components/common/SharedHelper';
 import * as types from './actions';
 
 const services = new Service();
-
 
 const authenticateDoctor = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -132,8 +131,8 @@ const getDoctorsCalendar = () => {
 
 
 const completeConsultation = () => {
-    return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        services.post(
+    return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
             `${routes.appointments.index}/${appointment_id}/complete`,
             payload
         ).then(async (res: any) => {
@@ -347,13 +346,30 @@ const getAdministrationRoutes = () => {
     };
 };
 
+const getAppointmentPostConsultationData = () => {
+    return ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.appointments.index}/${appointment_id}/post-consultation-data`
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data;
+                onSuccess(data);
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure);
+        }).finally(() => {
+            onCompletion();
+        });
+    };
+};
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
         getMedicalFacilities, submitDoctorSchedule, completeConsultation, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
-        getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes
+        getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes, getAppointmentPostConsultationData
     },
     { isAppLoading: true },
 );

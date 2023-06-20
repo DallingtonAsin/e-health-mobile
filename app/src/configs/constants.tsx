@@ -150,7 +150,7 @@ const InitialAppointmentDetailState = {
     channel: '',
     token: ''
   },
-  medical_history: {
+  patient_medical_history: {
     id: 0,
     patient_id: 0,
     appointment_id: 0,

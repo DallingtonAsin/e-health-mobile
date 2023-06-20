@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { TreatmentPlanModal, handleAddDrug } from "../../components/common/lab/TreatmentPlanModal"
 import { IPrescriptionDrug } from "../../interfaces"
 import { renderDrugTable } from '../../components/common/lab/dataTable'
@@ -27,7 +27,11 @@ const TreatmentTabScreen = ({
     const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
 
     return (
-        <View>
+        <ScrollView
+            nestedScrollEnabled={true}
+            style={{ marginTop: 0 }}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}>
             <TouchableOpacity style={[styles.item, { marginVertical: 10 }]} onPress={toggleDrugModal}>
                 <Text style={styles.itemTitle}>Add prescription drug</Text>
                 <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
@@ -62,15 +66,17 @@ const TreatmentTabScreen = ({
                 setSelectedDrugItem={setSelectedDrugItem}
                 onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
             />
-        </View>
+        </ScrollView>
     )
 }
 
 export default TreatmentTabScreen
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1
+    },
     viewContainer: {
-        marginVertical: 5,
         paddingHorizontal: 10
     },
     labelTxt: {
