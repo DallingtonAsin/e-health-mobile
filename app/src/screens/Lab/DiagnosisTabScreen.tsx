@@ -6,11 +6,13 @@ import { CustomMultipleSelectDropdown } from '../../components/customSelectDropd
 
 const DiagnosisTabScreen = ({
     icd10Codes,
+    selectedIcd10Codes = [],
     onSelect,
     comments,
     setComments
 }: {
     icd10Codes: any,
+    selectedIcd10Codes: any,
     onSelect: any,
     comments: string,
     setComments: React.Dispatch<React.SetStateAction<string>>,
@@ -27,6 +29,7 @@ const DiagnosisTabScreen = ({
                 <Text style={styles.labelTxt}>Select ICD-10 Code</Text>
                 <CustomMultipleSelectDropdown
                     data={icd10Codes}
+                    selected={selectedIcd10Codes}
                     onSelect={onSelect}
                 />
             </View>
@@ -60,6 +63,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         backgroundColor: config.colors.white
     },
+
     viewContainer: {
         marginVertical: 5,
         paddingHorizontal: 10,
