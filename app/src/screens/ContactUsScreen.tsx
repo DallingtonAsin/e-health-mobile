@@ -58,7 +58,7 @@ const ContactUsScreen = () => {
     );
 
     if (isLoading) {
-        return <AppLoader />
+        return <AppLoader bgColor={configs.colors.white}/>
     }
 
     return (
