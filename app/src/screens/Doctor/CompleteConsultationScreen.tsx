@@ -1,21 +1,31 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, Alert } from 'react-native'
 import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
-import { displayMessage } from '../../components/common/SharedHelper'
-import { Context as DoctorContext } from '../../context/doctorContext'
-import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
 import { TabView } from 'react-native-tab-view'
-import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import { renderTable } from '../../components/common/lab/dataTable'
-import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
 import HistoryTabScreen from '../Lab/HistoryTabScreen'
+import { ScrollView } from 'react-native-gesture-handler'
 import DiagnosisTabScreen from '../Lab/DiagnosisTabScreen'
 import TreatmentTabScreen from '../Lab/TreatmentTabScreen'
-import { InitialMedicalHistData } from '../../configs/constants'
 import { renderTabBar } from '../../components/common/tabView'
-import { ScrollView } from 'react-native-gesture-handler'
+import { InitialMedicalHistData } from '../../configs/constants'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import { renderTable } from '../../components/common/lab/dataTable'
+import { displayMessage } from '../../components/common/SharedHelper'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
 import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanData } from '../../components/common/validation'
+import DocumentPicker, { isCancel, isInProgress, types } from 'react-native-document-picker'
+import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, Alert, Image } from 'react-native'
+var RNFS = require('react-native-fs')
+import PDFView from 'react-native-pdf'
+
+interface UploadedFile {
+    uri: string
+    type: string
+    content?: string
+    isImage: boolean
+}
 
 const CompleteConsultationScreen = ({ route }: { route: any }) => {
 
@@ -49,6 +59,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     // Treatment plan data
     const [recordedDrugs, setRecordedDrugs] = useState<IPrescriptionDrug[]>([])
     const [treatmentPlan, setTreatmentPlan] = useState<string>('')
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
@@ -67,7 +78,6 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     }
 
     const populateConsulationData = (data: any) => {
-        console.log(`data is_draft`, data.is_draft)
         setIsAppointmentDraft(data.is_draft)
         if (data && data.medical_history) {
             setHistoryInfo(data.medical_history)
@@ -93,8 +103,6 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
             setRecordedDrugs(data.prescriptions)
         }
 
-        // onSelectICDCode(data.diagnosisIcdCodes)
-        // console.log(`selected codes`, data.diagnosisIcdCodes)
         if (data && data.diagnosis_comments && data.diagnosis_comments.comments) {
             setDiagnosisComments(data.diagnosis_comments.comments)
         }
@@ -188,7 +196,6 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
             diagnosisData: diagnosisData,
             treatmentData: treatmentData,
         }
-        console.log(`Payload data`, payload)
         setIsLoading(true)
         completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
@@ -216,6 +223,80 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         )
     }
 
+    const removeFile = (uri: string) => {
+        setUploadedFiles(prevFiles =>
+            prevFiles.filter(file => file.uri !== uri)
+        )
+    }
+
+    const confirmRemoveImage = (uri: string) => {
+        Alert.alert(
+            `Confirm`,
+            `Are you sure you want to remove this file?`,
+            [
+                { text: 'No', onPress: () => { } },
+                {
+                    text: 'Yes', onPress: () => {
+                        removeFile(uri)
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+
+    const renderFileItem = ({ item }: { item: UploadedFile }) => {
+        if (item.isImage) {
+            return (
+                <TouchableOpacity style={styles.fileView} onPress={() => confirmRemoveImage(item.uri)}>
+                    <Image source={{ uri: item.uri }} style={{ width: '100%', height: 150 }} />
+                </TouchableOpacity>
+            )
+        } else {
+            return (
+                <TouchableOpacity style={styles.fileView} onPress={() => confirmRemoveImage(item.uri)}>
+                    <PDFView style={styles.image} source={{ uri: item.uri }} />
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    const handleLabTestFilesUpload = async () => {
+        try {
+            const results = await DocumentPicker.pick({
+                allowMultiSelection: true,
+                type: [types.images, types.pdf]
+            })
+            const files: UploadedFile[] = []
+            for (const result of results) {
+                const fileUri = result.uri
+                const fileType = result.type
+                const fileContent = await RNFS.readFile(fileUri, 'base64')
+                const isImage: any = fileType && fileType.startsWith('image/')
+
+                files.push({
+                    uri: fileUri,
+                    type: fileType!,
+                    content: fileContent,
+                    isImage: isImage,
+                })
+            }
+            setUploadedFiles(prevFiles => [...prevFiles, ...files])
+        } catch (err: unknown) {
+            handleError(err)
+        }
+    }
+
+    const handleError = (err: unknown) => {
+        if (isCancel(err)) {
+            console.log('cancelled')
+        } else if (isInProgress(err)) {
+            console.warn('multiple pickers were opened, only the last will be considered')
+        } else {
+            throw err
+        }
+    }
+
     const LabTabScreen = () => {
         const [selectedLabTestItem, setSelectedLabTestItem] = useState<string>('')
         const [selectedImageTestItem, setSelectedImageTestItem] = useState<string>('')
@@ -234,7 +315,8 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         const tests = [
             { id: 1, text: 'Add lab tests', action: toggleLabTestModal },
             { id: 2, text: 'Add image tests', action: toggleImageTestModal },
-            { id: 3, text: 'Add other tests', action: toggleOtherTestModal }
+            { id: 3, text: 'Add other tests', action: toggleOtherTestModal },
+            { id: 4, text: 'Upload labtest files if any', action: handleLabTestFilesUpload }
         ]
 
         const handleLabTestItemSelect = (item: any) => {
@@ -269,10 +351,25 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                         style={{ top: 5 }} />
                 </View>
 
-                <ScrollView
-                    style={{ marginBottom: 20 }}
-                    contentContainerStyle={{ flexGrow: 1, top: 10 }}>
 
+
+                <ScrollView
+                    style={{ marginBottom: 20, flex: 1, }}
+                    contentContainerStyle={{ flexGrow: 1, top: 10 }}
+                    horizontal={false}>
+                    <ScrollView horizontal={false}>
+                        {uploadedFiles && uploadedFiles.length > 0 && (
+                            <>
+                                <Text style={{ color: config.colors.green_1, marginLeft: 20 }}>{uploadedFiles.length} uploaded file{uploadedFiles.length > 1 ? 's' : ''}</Text>
+                                <FlatList
+                                    data={uploadedFiles}
+                                    keyExtractor={(_, index) => index.toString()}
+                                    renderItem={renderFileItem}
+                                />
+                            </>
+                        )}
+
+                    </ScrollView>
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
                 </ScrollView>
@@ -323,13 +420,13 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     const CustomRenderScene = ({ route }: { route: any }) => {
         switch (route.key) {
             case 'history':
-                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} isAppointmentDraft={isAppointmentDraft}/>
+                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} isAppointmentDraft={isAppointmentDraft} />
             case 'lab':
                 return <LabTabScreen />
             case 'diagnosis':
-                return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} isAppointmentDraft={isAppointmentDraft}/>
+                return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} isAppointmentDraft={isAppointmentDraft} />
             case 'treatment':
-                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} isAppointmentDraft={isAppointmentDraft}/>
+                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} allergies={historyInfo.drug_allergies} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} isAppointmentDraft={isAppointmentDraft} />
             default:
                 return null
         }
@@ -345,7 +442,6 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }} />
             <View style={styles.footer}>
-
                 {isAppointmentDraft ?
                     <>
                         <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
@@ -414,5 +510,20 @@ const styles = StyleSheet.create({
 
     arrow: {
         right: 0
-    }
+    },
+
+    fileView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        padding: 18,
+        marginHorizontal: 16,
+        backgroundColor: config.colors.white,
+    },
+
+    image: {
+        width: 100,
+        height: 100,
+        marginRight: 10,
+    },
 })
