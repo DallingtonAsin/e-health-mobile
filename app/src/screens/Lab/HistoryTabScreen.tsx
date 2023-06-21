@@ -7,14 +7,17 @@ import { IMedicalHistData } from '../../interfaces'
 interface HistoryTabScreenProps {
     historyInfo: any;
     setHistoryInfo: any;
+    isAppointmentDraft: boolean;
 }
 
 const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
     historyInfo,
-    setHistoryInfo
+    setHistoryInfo,
+    isAppointmentDraft = true
 }: {
     historyInfo: IMedicalHistData,
     setHistoryInfo: React.Dispatch<React.SetStateAction<IMedicalHistData>>,
+    isAppointmentDraft: boolean
 }) => {
 
     return (
@@ -34,6 +37,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                         value={historyInfo.presenting_complaint}
                         mode="outlined"
                         activeOutlineColor={config.colors.primary}
+                        disabled={!isAppointmentDraft}
                         style={styles.textInput}
                         onChangeText={(text: string) => setHistoryInfo((prev: IMedicalHistData) => ({ ...prev, presenting_complaint: text }))}
                     />
@@ -51,6 +55,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                         placeholder="Past medical history can include patient current treatment"
                         activeOutlineColor={config.colors.primary}
                         style={styles.textInput}
+                        disabled={!isAppointmentDraft}
                         onChangeText={(text: string) => setHistoryInfo((prev: IMedicalHistData) => ({ ...prev, past_medical_history: text }))}
                     />
                 </View>
@@ -65,7 +70,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                         mode="outlined"
                         activeOutlineColor={config.colors.primary}
                         style={styles.textInput}
-                        textColor={config.colors.dark}
+                        disabled={!isAppointmentDraft}
                         onChangeText={(text: string) => setHistoryInfo((prev: IMedicalHistData) => ({ ...prev, drug_allergies: text }))}
                     />
                 </View>
@@ -82,7 +87,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                         mode="outlined"
                         activeOutlineColor={config.colors.primary}
                         style={styles.textInput}
-                        textColor={config.colors.dark}
+                        disabled={!isAppointmentDraft}
                         onChangeText={(text: string) => setHistoryInfo((prev: IMedicalHistData) => ({ ...prev, findings: text }))}
                     />
                 </View>

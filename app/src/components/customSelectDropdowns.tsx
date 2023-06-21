@@ -23,23 +23,21 @@ const CustomSingleSelectDropdown = ({
 
 const CustomMultipleSelectDropdown = ({
     data,
-    selected = [],
     onSelect,
     placeholder = 'Select option',
 }: {
     data: any,
-    selected?: any,
     onSelect: any,
     placeholder?: string,
 }) => {
 
-    const [selectedItem, setSelectedItem] = React.useState(selected)
+    const [selected, setSelected] = React.useState([])
     const handleOnSelect = () => {
-        onSelect(selectedItem)
+        onSelect(selected)
     }
     return (
         <MultipleSelectList
-            setSelected={(val: any) => setSelectedItem(val)}
+            setSelected={(val: any) => setSelected(val)}
             data={data}
             save="value"
             placeholder={placeholder}

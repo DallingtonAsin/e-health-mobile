@@ -12,12 +12,14 @@ const TreatmentTabScreen = ({
     recordedDrugs,
     setRecordedDrugs,
     treatmentPlan,
-    setTreatmentPlan
+    setTreatmentPlan,
+    isAppointmentDraft = true,
 }: {
     recordedDrugs: any,
     setRecordedDrugs: React.Dispatch<React.SetStateAction<any>>,
     treatmentPlan: string,
-    setTreatmentPlan: React.Dispatch<React.SetStateAction<string>>
+    setTreatmentPlan: React.Dispatch<React.SetStateAction<string>>,
+    isAppointmentDraft: boolean
 }) => {
 
     const [selectedDrugItem, setSelectedDrugItem] = useState<string>('')
@@ -49,7 +51,7 @@ const TreatmentTabScreen = ({
                     mode="outlined"
                     activeOutlineColor={config.colors.primary}
                     style={styles.textInput}
-                    textColor={config.colors.dark}
+                    disabled={!isAppointmentDraft}
                     onChangeText={(text: string) => setTreatmentPlan(text)}
                 />
             </View>
@@ -64,6 +66,7 @@ const TreatmentTabScreen = ({
                 setDrugInfo={setDrugInfo}
                 toggleModal={toggleDrugModal}
                 setSelectedDrugItem={setSelectedDrugItem}
+                isAppointmentDraft={isAppointmentDraft}
                 onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
             />
         </ScrollView>

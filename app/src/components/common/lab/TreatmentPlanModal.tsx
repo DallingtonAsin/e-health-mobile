@@ -17,7 +17,8 @@ const TreatmentPlanModal = ({
     setDrugInfo,
     toggleModal,
     setSelectedDrugItem,
-    onSubmit
+    onSubmit,
+    isAppointmentDraft = true
 }:
     {
         isVisible: boolean,
@@ -25,7 +26,8 @@ const TreatmentPlanModal = ({
         toggleModal: () => void,
         setSelectedDrugItem: React.Dispatch<React.SetStateAction<string>>,
         setDrugInfo: any,
-        onSubmit: () => void
+        onSubmit: () => void,
+        isAppointmentDraft: boolean
     }) => {
 
 
@@ -111,7 +113,7 @@ const TreatmentPlanModal = ({
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                textColor={config.colors.dark} />
+                                disabled={!isAppointmentDraft}/>
                         </View>
 
                         <View style={styles.modalViewContainer}>
@@ -120,7 +122,6 @@ const TreatmentPlanModal = ({
                                 data={adminRoutes}
                                 setSelected={handleAdminRouteItemSelect}
                                 placeholder='Select administartion route'
-
                             />
                         </View>
 
@@ -133,7 +134,7 @@ const TreatmentPlanModal = ({
                                 mode="outlined"
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                textColor={config.colors.dark} />
+                                disabled={!isAppointmentDraft}/>
                         </View>
 
                         <View style={styles.modalViewContainer}>
@@ -147,7 +148,7 @@ const TreatmentPlanModal = ({
                                 keyboardType={'numeric'}
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                textColor={config.colors.dark} />
+                                disabled={!isAppointmentDraft}/>
                         </View>
 
                         <View style={styles.modalViewContainer}>
@@ -161,14 +162,16 @@ const TreatmentPlanModal = ({
                                 keyboardType={'numeric'}
                                 activeOutlineColor={config.colors.primary}
                                 style={styles.textInput}
-                                textColor={config.colors.dark} />
+                                disabled={!isAppointmentDraft}/>
                         </View>
 
                         <View style={styles.modalViewContainer}>
                             <Text style={styles.infoText}>*Enter None or N/A if not applicable.</Text>
                         </View>
 
-                        <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                        <TouchableOpacity
+                            disabled={!isAppointmentDraft}
+                            onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                             <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
                         </TouchableOpacity>
                     </View>
@@ -279,13 +282,12 @@ const styles = StyleSheet.create({
 
     infoText: {
         color: config.colors.red,
-        textAlign: 'left',
-        top: 20
+        textAlign: 'left'
     },
 
     bottomBtn: {
-        marginTop: 40,
-        marginBottom: 40,
+        marginTop: 10,
+        marginBottom: 30,
         borderWidth: 1,
         borderRadius: 5,
         width: '99%'

@@ -23,6 +23,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     const { getAppointmentPostConsultationData, completeConsultation } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isAppointmentDraft, setIsAppointmentDraft] = useState(true)
     const [isFetchingConsultData, setFetchingConsultData] = useState(true)
     const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
     const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
@@ -55,29 +56,45 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
 
     useEffect(() => {
-        getAppointmentPostConsultationData({ appointment_id: appointment_id, onSuccess: populateConsulationData, onFailure: displayMessage, onCompletion: () => setFetchingConsultData(false) })
+        getConsultationData()
         getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
         getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) })
         getImageTestCategories({ onSuccess: populateImageCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingImageTests(false) })
     }, [])
 
-    const selectedIcdItems = [
-        "A009 Cholera. unspecified",
-        "\ufeffA00 Cholera",
-        "A001 Cholera due to Vibrio cholerae 01. biovar eltor"
-    ]
+    const getConsultationData = () => {
+        getAppointmentPostConsultationData({ appointment_id: appointment_id, onSuccess: populateConsulationData, onFailure: displayMessage, onCompletion: () => setFetchingConsultData(false) })
+    }
+
     const populateConsulationData = (data: any) => {
-        setHistoryInfo(data.medical_history)
-        setRecordedLabTests(data.lab_tests)
-        setRecordedImageTests(data.image_tests)
-        setRecordedOtherTests(data.other_tests.tests)
-        setOtherTestFindings(data.other_tests.findings)
-        setSelectedIcdCodes(data.diagnosisIcdCodes)
-        setRecordedDrugs(data.prescriptions)
+        console.log(`data is_draft`, data.is_draft)
+        setIsAppointmentDraft(data.is_draft)
+        if (data && data.medical_history) {
+            setHistoryInfo(data.medical_history)
+        }
+        if (data && data.lab_tests) {
+            setRecordedLabTests(data.lab_tests)
+        }
+        if (data && data.image_tests) {
+            setRecordedImageTests(data.image_tests)
+        }
+        if (data && data.other_tests) {
+            if (data.other_tests.tests) {
+                setRecordedOtherTests(data.other_tests.tests)
+            }
+            if (data.other_tests.findings) {
+                setOtherTestFindings(data.other_tests.findings)
+            }
+        }
+        if (data && data.diagnosisIcdCodes) {
+            setSelectedIcdCodes(data.diagnosisIcdCodes)
+        }
+        if (data && data.prescriptions) {
+            setRecordedDrugs(data.prescriptions)
+        }
 
-        console.log(`selected codes 1`, data.diagnosisIcdCodes)
-        console.log(`selected codes 2`, selectedIcdCodes)
-
+        // onSelectICDCode(data.diagnosisIcdCodes)
+        // console.log(`selected codes`, data.diagnosisIcdCodes)
         if (data && data.diagnosis_comments && data.diagnosis_comments.comments) {
             setDiagnosisComments(data.diagnosis_comments.comments)
         }
@@ -103,14 +120,14 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         const oldArray = selectedIcdCodes
         newArray.forEach((element) => {
             if (!oldArray.includes(element)) {
-                oldArray.push(element);
+                oldArray.push(element)
             }
-        });
+        })
         oldArray.forEach((element, index) => {
             if (!newArray.includes(element)) {
-                oldArray.splice(index, 1);
+                oldArray.splice(index, 1)
             }
-        });
+        })
         setSelectedIcdCodes(oldArray)
     }
 
@@ -173,7 +190,13 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         }
         console.log(`Payload data`, payload)
         setIsLoading(true)
-        completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: displayMessage, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+    }
+
+    const onSuccessPosting = (message: string) => {
+        displayMessage(message)
+        setFetchingConsultData(true)
+        getConsultationData()
     }
 
     const confirmBeforeSubmitting = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
@@ -190,7 +213,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                 },
             ],
             { cancelable: false }
-        );
+        )
     }
 
     const LabTabScreen = () => {
@@ -266,6 +289,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleLabTestItemSelect}
                     setFindingsText={setLabTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     onSubmit={() => handleAddTest(selectedLabTestItem, labTestFindings, recordedLabTests, setRecordedLabTests, () => setLabTestFindings(''))} />
 
                 <CustomAddTestModal
@@ -280,6 +304,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleImageTestItemSelect}
                     setFindingsText={setImageTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     onSubmit={() => handleAddTest(selectedImageTestItem, imageTestFindings, recordedImageTests, setRecordedImageTests, () => setImageTestFindings(''))} />
 
                 <OtherTestsModal
@@ -289,6 +314,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                     otherTests={recordedOtherTests}
                     setOtherTests={setRecordedOtherTests}
                     otherTestFindings={otherTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     setOtherTestFindings={setOtherTestFindings} />
             </SafeAreaView>
         )
@@ -297,17 +323,17 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     const CustomRenderScene = ({ route }: { route: any }) => {
         switch (route.key) {
             case 'history':
-                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />
+                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} isAppointmentDraft={isAppointmentDraft}/>
             case 'lab':
                 return <LabTabScreen />
             case 'diagnosis':
-                return <DiagnosisTabScreen icd10Codes={icd10Codes} selectedIcd10Codes={selectedIcdItems} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} />
+                return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} isAppointmentDraft={isAppointmentDraft}/>
             case 'treatment':
-                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} />
+                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} isAppointmentDraft={isAppointmentDraft}/>
             default:
-                return null;
+                return null
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
@@ -320,15 +346,20 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                 initialLayout={{ width: layout.width }} />
             <View style={styles.footer}>
 
-                <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
-                    onPress={() => submit(true)}>
-                    <Text style={[config.styles.btnText, { color: config.colors.primary }]}>Save as Draft</Text>
-                </TouchableOpacity>
+                {isAppointmentDraft ?
+                    <>
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
+                            onPress={() => submit(true)}>
+                            <Text style={[config.styles.btnText, { color: config.colors.primary }]}>Save as Draft</Text>
+                        </TouchableOpacity>
 
-                <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 10 }]}
-                    onPress={() => submit(false)}>
-                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
-                </TouchableOpacity>
+                        <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 20 }]}
+                            onPress={() => submit(false)}>
+                            <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
+                        </TouchableOpacity>
+                    </>
+                    : null
+                }
             </View>
             {(isLoading || isFetchingConsultData || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
         </View>
