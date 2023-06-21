@@ -404,7 +404,12 @@ interface ITreatmentPlanData {
     treatmentPlan: string
 }
 
-
+interface UploadedFile {
+    uri: string
+    type: string
+    content?: string
+    isImage: boolean
+}
 
 
 export type {
@@ -445,5 +450,7 @@ export type {
     IMedicalHistData,
     ILabTestData,
     IDiagnosisData,
-    ITreatmentPlanData
+    ITreatmentPlanData,
+
+    UploadedFile
 }

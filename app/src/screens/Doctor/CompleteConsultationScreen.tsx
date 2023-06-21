@@ -15,17 +15,11 @@ import { Context as DoctorContext } from '../../context/doctorContext'
 import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
 import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanData } from '../../components/common/validation'
 import DocumentPicker, { isCancel, isInProgress, types } from 'react-native-document-picker'
-import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
+import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData, UploadedFile } from '../../interfaces'
 import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, Alert, Image } from 'react-native'
 var RNFS = require('react-native-fs')
 import PDFView from 'react-native-pdf'
 
-interface UploadedFile {
-    uri: string
-    type: string
-    content?: string
-    isImage: boolean
-}
 
 const CompleteConsultationScreen = ({ route }: { route: any }) => {
 
@@ -289,9 +283,8 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
 
     const handleError = (err: unknown) => {
         if (isCancel(err)) {
-            console.log('cancelled')
         } else if (isInProgress(err)) {
-            console.warn('multiple pickers were opened, only the last will be considered')
+            console.log('multiple pickers were opened, only the last will be considered')
         } else {
             throw err
         }
@@ -351,25 +344,20 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                         style={{ top: 5 }} />
                 </View>
 
-
-
                 <ScrollView
                     style={{ marginBottom: 20, flex: 1, }}
                     contentContainerStyle={{ flexGrow: 1, top: 10 }}
-                    horizontal={false}>
-                    <ScrollView horizontal={false}>
-                        {uploadedFiles && uploadedFiles.length > 0 && (
-                            <>
-                                <Text style={{ color: config.colors.green_1, marginLeft: 20 }}>{uploadedFiles.length} uploaded file{uploadedFiles.length > 1 ? 's' : ''}</Text>
-                                <FlatList
-                                    data={uploadedFiles}
-                                    keyExtractor={(_, index) => index.toString()}
-                                    renderItem={renderFileItem}
-                                />
-                            </>
-                        )}
-
-                    </ScrollView>
+                    horizontal={false} nestedScrollEnabled={true}>
+                    {uploadedFiles && uploadedFiles.length > 0 && (
+                        <>
+                            <Text style={{ color: config.colors.green_1, marginLeft: 20 }}>{uploadedFiles.length} uploaded file{uploadedFiles.length > 1 ? 's' : ''}</Text>
+                            <FlatList
+                                data={uploadedFiles}
+                                keyExtractor={(_, index) => index.toString()}
+                                renderItem={renderFileItem}
+                                scrollEnabled={false} />
+                        </>
+                    )}
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
                 </ScrollView>
@@ -444,12 +432,12 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
             <View style={styles.footer}>
                 {isAppointmentDraft ?
                     <>
-                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 5 }]}
                             onPress={() => submit(true)}>
                             <Text style={[config.styles.btnText, { color: config.colors.primary }]}>Save as Draft</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 20 }]}
+                        <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 10 }]}
                             onPress={() => submit(false)}>
                             <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
                         </TouchableOpacity>
