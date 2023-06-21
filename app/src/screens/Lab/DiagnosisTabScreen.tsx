@@ -8,12 +8,14 @@ const DiagnosisTabScreen = ({
     icd10Codes,
     onSelect,
     comments,
-    setComments
+    setComments,
+    isAppointmentDraft= true
 }: {
     icd10Codes: any,
     onSelect: any,
     comments: string,
     setComments: React.Dispatch<React.SetStateAction<string>>,
+    isAppointmentDraft: boolean
 }) => {
 
     return (
@@ -41,7 +43,7 @@ const DiagnosisTabScreen = ({
                     mode="outlined"
                     activeOutlineColor={config.colors.primary}
                     style={styles.textInput}
-                    textColor={config.colors.dark}
+                    disabled={!isAppointmentDraft}
                     onChangeText={(text: string) => setComments(text)} />
             </View>
 

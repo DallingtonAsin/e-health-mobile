@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, StatusBar, StyleSheet, useWindowDimensions, FlatList, Alert } from 'react-native'
 import * as config from '../../configs'
 import AppLoader from '../../components/AppLoader'
 import { displayMessage } from '../../components/common/SharedHelper'
 import { Context as DoctorContext } from '../../context/doctorContext'
-import { Option, ILabTest, IMedicalHistData, ISelectItem } from '../../interfaces'
-import { TabView, SceneMap } from 'react-native-tab-view'
+import { Option, ILabTest, IMedicalHistData, ISelectItem, IPrescriptionDrug, IDiagnosisData, ITreatmentPlanData, ILabTestData } from '../../interfaces'
+import { TabView } from 'react-native-tab-view'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { renderTable } from '../../components/common/lab/dataTable'
 import { CustomAddTestModal, OtherTestsModal, handleAddTest } from '../../components/common/lab/customLabTestsModals'
@@ -15,13 +15,20 @@ import TreatmentTabScreen from '../Lab/TreatmentTabScreen'
 import { InitialMedicalHistData } from '../../configs/constants'
 import { renderTabBar } from '../../components/common/tabView'
 import { ScrollView } from 'react-native-gesture-handler'
+import { validateDiagnosisData, validateMedicalHistData, validateTreatmentPlanData } from '../../components/common/validation'
 
-const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigation: any }) => {
+const CompleteConsultationScreen = ({ route }: { route: any }) => {
 
-    const { appointment_id, patient } = route.params
-    const { completeAppointment } = useContext(DoctorContext)
+    const { appointment_id } = route.params
+    const { getAppointmentPostConsultationData, completeConsultation } = useContext(DoctorContext)
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isAppointmentDraft, setIsAppointmentDraft] = useState(true)
+    const [isFetchingConsultData, setFetchingConsultData] = useState(true)
+    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
+    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
+    const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
+
     const [icd10Codes, setIcd10Codes] = useState<ISelectItem[] | any>()
     const [labTestCategories, setLabTestCategories] = useState<Option[] | any>()
     const [imageTestCategories, setImageTestCategories] = useState<Option[] | any>()
@@ -35,17 +42,13 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     const [recordedOtherTests, setRecordedOtherTests] = useState<string>('')
     const [otherTestFindings, setOtherTestFindings] = useState<string>('')
 
-    // daiagnosis daat
+    // daiagnosis data
     const [selectedIcdCodes, setSelectedIcdCodes] = useState<string[]>([])
     const [diagnosisComments, setDiagnosisComments] = useState<string>('')
 
     // Treatment plan data
-    const [recordedDrugs, setRecordedDrugs] = useState<any>([])
-    const [treatmentPlan, setTreatmentPlan] = useState<any>()
-
-    const [isFetchingIcdCodes, setFetchingIcdCodes] = useState(true)
-    const [isFetchingLabTests, setIsFetchingLabTests] = useState(true)
-    const [isFetchingImageTests, setIsFetchingImageTests] = useState(true)
+    const [recordedDrugs, setRecordedDrugs] = useState<IPrescriptionDrug[]>([])
+    const [treatmentPlan, setTreatmentPlan] = useState<string>('')
 
     const [index, setIndex] = React.useState(0)
     const layout = useWindowDimensions()
@@ -53,11 +56,53 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
     const { getIcd10Codes, getLabTestCategories, getImageTestCategories } = useContext(DoctorContext)
 
     useEffect(() => {
+        getConsultationData()
         getIcd10Codes({ onSuccess: populateIcd10Codes, onFailure: displayMessage, onCompletion: () => setFetchingIcdCodes(false) })
         getLabTestCategories({ onSuccess: populateLabCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingLabTests(false) })
         getImageTestCategories({ onSuccess: populateImageCategories, onFailure: displayMessage, onCompletion: () => setIsFetchingImageTests(false) })
     }, [])
 
+    const getConsultationData = () => {
+        getAppointmentPostConsultationData({ appointment_id: appointment_id, onSuccess: populateConsulationData, onFailure: displayMessage, onCompletion: () => setFetchingConsultData(false) })
+    }
+
+    const populateConsulationData = (data: any) => {
+        console.log(`data is_draft`, data.is_draft)
+        setIsAppointmentDraft(data.is_draft)
+        if (data && data.medical_history) {
+            setHistoryInfo(data.medical_history)
+        }
+        if (data && data.lab_tests) {
+            setRecordedLabTests(data.lab_tests)
+        }
+        if (data && data.image_tests) {
+            setRecordedImageTests(data.image_tests)
+        }
+        if (data && data.other_tests) {
+            if (data.other_tests.tests) {
+                setRecordedOtherTests(data.other_tests.tests)
+            }
+            if (data.other_tests.findings) {
+                setOtherTestFindings(data.other_tests.findings)
+            }
+        }
+        if (data && data.diagnosisIcdCodes) {
+            setSelectedIcdCodes(data.diagnosisIcdCodes)
+        }
+        if (data && data.prescriptions) {
+            setRecordedDrugs(data.prescriptions)
+        }
+
+        // onSelectICDCode(data.diagnosisIcdCodes)
+        // console.log(`selected codes`, data.diagnosisIcdCodes)
+        if (data && data.diagnosis_comments && data.diagnosis_comments.comments) {
+            setDiagnosisComments(data.diagnosis_comments.comments)
+        }
+        if (data && data.treatment_plan && data.treatment_plan.treatment_plan) {
+            setTreatmentPlan(data.treatment_plan.treatment_plan)
+        }
+
+    }
 
     const populateIcd10Codes = (data: ISelectItem[]) => {
         setIcd10Codes(data)
@@ -75,14 +120,14 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         const oldArray = selectedIcdCodes
         newArray.forEach((element) => {
             if (!oldArray.includes(element)) {
-                oldArray.push(element);
+                oldArray.push(element)
             }
-        });
+        })
         oldArray.forEach((element, index) => {
             if (!newArray.includes(element)) {
-                oldArray.splice(index, 1);
+                oldArray.splice(index, 1)
             }
-        });
+        })
         setSelectedIcdCodes(oldArray)
     }
 
@@ -93,39 +138,82 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
         { key: 'treatment', title: 'Treatment' },
     ])
 
-    const submit = () => {
+    const submit = (isDraft: boolean = true) => {
 
-        if (!historyInfo?.presenting_complaint) {
-            displayMessage("Please enter presenting complaint")
+        const histDataError = validateMedicalHistData(historyInfo)
+        if (histDataError) {
+            displayMessage(histDataError)
             return
         }
-        if (!historyInfo.past_medical_history) {
-            displayMessage("Please enter past medical history")
-            return
+        const diagnosisData: IDiagnosisData = {
+            icd10Codes: selectedIcdCodes,
+            comments: diagnosisComments
         }
-        if (!historyInfo.drug_allergies) {
-            displayMessage("Please enter drug allergies")
-            return
-        }
-        if (!historyInfo.findings) {
-            displayMessage("Please enter findings")
+        const diagnosisDataError = validateDiagnosisData(diagnosisData)
+        if (diagnosisDataError) {
+            displayMessage(diagnosisDataError)
             return
         }
 
-        const payload = {
-            patient_id: patient.id,
-            presenting_complaint: historyInfo.presenting_complaint,
-            past_medical_history: historyInfo.past_medical_history,
-            drug_allergies: historyInfo.drug_allergies,
-            findings: historyInfo.findings
+        const treatmentPlanData: ITreatmentPlanData = {
+            drugs: recordedDrugs,
+            treatmentPlan: treatmentPlan
         }
-        setIsLoading(true)
-        completeAppointment({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        const treatmentDataError = validateTreatmentPlanData(treatmentPlanData)
+        if (treatmentDataError) {
+            displayMessage(treatmentDataError)
+            return
+        }
+
+        const labTestData: ILabTestData = {
+            labTests: recordedLabTests,
+            imageTests: recordedImageTests,
+            otherTests: recordedOtherTests,
+            otherTestFindings: otherTestFindings
+        }
+
+        if (isDraft) {
+            submitPostConsultationData(isDraft, labTestData, diagnosisData, treatmentPlanData)
+        } else {
+            confirmBeforeSubmitting(isDraft, labTestData, diagnosisData, treatmentPlanData)
+        }
     }
 
-    const onSuccess = (message: string) => {
+    const submitPostConsultationData = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
+        const payload = {
+            appointmentId: appointment_id,
+            isDraft: isDraft,
+            historyData: historyInfo,
+            labTestData: labTestData,
+            diagnosisData: diagnosisData,
+            treatmentData: treatmentData,
+        }
+        console.log(`Payload data`, payload)
+        setIsLoading(true)
+        completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+    }
+
+    const onSuccessPosting = (message: string) => {
         displayMessage(message)
-        navigation.navigate('MyAppointments')
+        setFetchingConsultData(true)
+        getConsultationData()
+    }
+
+    const confirmBeforeSubmitting = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
+        const message = `Are you sure you want to complete this appointment now?`
+        Alert.alert(
+            `Confirm submission`,
+            message,
+            [
+                { text: 'No', onPress: () => { } },
+                {
+                    text: 'Yes', onPress: () => {
+                        submitPostConsultationData(isDraft, labTestData, diagnosisData, treatmentData)
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
     }
 
     const LabTabScreen = () => {
@@ -184,6 +272,7 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                 <ScrollView
                     style={{ marginBottom: 20 }}
                     contentContainerStyle={{ flexGrow: 1, top: 10 }}>
+
                     {renderTable(recordedLabTests, 'Lab Tests')}
                     {renderTable(recordedImageTests, 'Image Tests')}
                 </ScrollView>
@@ -195,11 +284,12 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     modalTitle={"Enter labtests carried out"}
                     selectTitle={"Select LabTest"}
                     findingsTitle={"LabTest Findings"}
-                    textInputLabel={"Lab test findings"}
+                    textInputLabel={"Enter outcome or test result value(s)"}
                     toggleModal={toggleLabTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleLabTestItemSelect}
                     setFindingsText={setLabTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     onSubmit={() => handleAddTest(selectedLabTestItem, labTestFindings, recordedLabTests, setRecordedLabTests, () => setLabTestFindings(''))} />
 
                 <CustomAddTestModal
@@ -209,11 +299,12 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     modalTitle={"Enter imagetests carried out"}
                     selectTitle={"Select ImageTest"}
                     findingsTitle={"ImageTest Findings"}
-                    textInputLabel={"Image test findings"}
+                    textInputLabel={"Enter outcome or test result value(s)"}
                     toggleModal={toggleImageTestModal}
                     handleBackdropPress={handleBackdropPress}
                     handleItemSelect={handleImageTestItemSelect}
                     setFindingsText={setImageTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     onSubmit={() => handleAddTest(selectedImageTestItem, imageTestFindings, recordedImageTests, setRecordedImageTests, () => setImageTestFindings(''))} />
 
                 <OtherTestsModal
@@ -223,28 +314,26 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
                     otherTests={recordedOtherTests}
                     setOtherTests={setRecordedOtherTests}
                     otherTestFindings={otherTestFindings}
+                    isAppointmentDraft={isAppointmentDraft}
                     setOtherTestFindings={setOtherTestFindings} />
-
             </SafeAreaView>
         )
     }
 
-    const renderScene = SceneMap({
-        history: () => <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} />,
-        lab: LabTabScreen,
-        diagnosis: () => <DiagnosisTabScreen
-            icd10Codes={icd10Codes}
-            onSelect={onSelectICDCode}
-            comments={diagnosisComments}
-            setComments={setDiagnosisComments}
-        />,
-        treatment: () => <TreatmentTabScreen
-            recordedDrugs={recordedDrugs}
-            setRecordedDrugs={setRecordedDrugs}
-            treatmentPlan={treatmentPlan}
-            setTreatmentPlan={setTreatmentPlan}
-        />
-    })
+    const CustomRenderScene = ({ route }: { route: any }) => {
+        switch (route.key) {
+            case 'history':
+                return <HistoryTabScreen historyInfo={historyInfo} setHistoryInfo={setHistoryInfo} isAppointmentDraft={isAppointmentDraft}/>
+            case 'lab':
+                return <LabTabScreen />
+            case 'diagnosis':
+                return <DiagnosisTabScreen icd10Codes={icd10Codes} onSelect={onSelectICDCode} comments={diagnosisComments} setComments={setDiagnosisComments} isAppointmentDraft={isAppointmentDraft}/>
+            case 'treatment':
+                return <TreatmentTabScreen recordedDrugs={recordedDrugs} setRecordedDrugs={setRecordedDrugs} treatmentPlan={treatmentPlan} setTreatmentPlan={setTreatmentPlan} isAppointmentDraft={isAppointmentDraft}/>
+            default:
+                return null
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -252,16 +341,27 @@ const CompleteConsultationScreen = ({ route, navigation }: { route: any, navigat
             <TabView
                 navigationState={{ index, routes }}
                 renderTabBar={renderTabBar}
-                renderScene={renderScene}
+                renderScene={CustomRenderScene}
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }} />
             <View style={styles.footer}>
-                <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 20 }]}
-                    onPress={() => submit()}>
-                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
-                </TouchableOpacity>
+
+                {isAppointmentDraft ?
+                    <>
+                        <TouchableOpacity style={[config.styles.secondaryBtn, { width: '100%', marginBottom: 10 }]}
+                            onPress={() => submit(true)}>
+                            <Text style={[config.styles.btnText, { color: config.colors.primary }]}>Save as Draft</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[config.styles.primaryBtn, { width: '100%', marginBottom: 20 }]}
+                            onPress={() => submit(false)}>
+                            <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
+                        </TouchableOpacity>
+                    </>
+                    : null
+                }
             </View>
-            {(isLoading || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
+            {(isLoading || isFetchingConsultData || isFetchingLabTests || isFetchingIcdCodes || isFetchingImageTests) && <AppLoader />}
         </View>
     )
 }
@@ -272,10 +372,6 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1
-    },
-    viewContainer: {
-        marginVertical: 5,
-        paddingHorizontal: 10
     },
 
     footer: {

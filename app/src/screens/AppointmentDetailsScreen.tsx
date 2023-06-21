@@ -222,8 +222,8 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                     <ContentItem title={"Appointment type"} value={appointmentInfo.appointment_type.name} />
                     <ContentItem title={"Appointment Time"} value={`${appointmentInfo.appointment_date} ${appointmentInfo.appointment_time}`} />
                     <ContentItem title={"Reason"} value={appointmentInfo.reason} />
-                    <ContentItem title={"Medical history"} value={appointmentInfo.medical_history.past_medical_history} />
-                    <ContentItem title={"Current treatment"} value={appointmentInfo.medical_history.current_treatment} />
+                    <ContentItem title={"Medical history"} value={appointmentInfo.patient_medical_history.past_medical_history} />
+                    <ContentItem title={"Current treatment"} value={appointmentInfo.patient_medical_history.current_treatment} />
                     <ContentItem title={"Consultation fee per 15 min"} value={appointmentInfo.doctor.service_fee} />
                     <View style={styles.appointmentInfo}>
                         <Text style={styles.subtitle}>Status</Text>
@@ -250,11 +250,18 @@ const AppointmentDetailsScreen = ({ route, navigation }: { route: any, navigatio
                         }
 
                         {!user.is_patient && (appointmentInfo.status == 'Confirmed' || appointmentInfo.status == 'Expired') &&
-                            <TouchableOpacity style={[config.styles.primaryBtn, { marginVertical: 10, width: '98%' }]}
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]}
                                 onPress={() => completeConsultation()}>
-                                <Text style={[styles.buttonText, { color: config.colors.white }]}>Complete consultation</Text>
+                                <Text style={[styles.buttonText, { color: config.colors.primary }]}>Complete consultation</Text>
                             </TouchableOpacity>
                         }
+
+                        {/* {!user.is_patient && (appointmentInfo.status == 'Completed' || appointmentInfo.status == 'Expired') &&
+                            <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%', borderColor: config.colors.green_1 }]}
+                                onPress={() => completeConsultation()}>
+                                <Text style={[styles.buttonText, { color: config.colors.green_1 }]}>View consultation data</Text>
+                            </TouchableOpacity>
+                        } */}
 
                         {(appointmentInfo.status == 'Pending' || appointmentInfo.status == 'Confirmed') &&
                             <TouchableOpacity style={[config.styles.secondaryBtn, { marginVertical: 10, width: '98%' }]} onPress={() => cancelMedicalAppointment()}>

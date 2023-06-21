@@ -20,6 +20,7 @@ const CustomAddTestModal = ({
     handleBackdropPress,
     handleItemSelect,
     setFindingsText,
+    isAppointmentDraft = true,
     onSubmit,
 }:
     {
@@ -34,6 +35,7 @@ const CustomAddTestModal = ({
         handleBackdropPress: () => void,
         handleItemSelect: (item: any) => void,
         setFindingsText: any,
+        isAppointmentDraft: boolean,
         onSubmit: () => void,
     }) => {
     return (
@@ -80,10 +82,14 @@ const CustomAddTestModal = ({
                             mode="outlined"
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
-                            textColor={config.colors.dark} />
+                            textColor={config.colors.dark}
+                            disabled={!isAppointmentDraft}
+                        />
                     </View>
 
-                    <TouchableOpacity onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                    <TouchableOpacity
+                        disabled={!isAppointmentDraft}
+                        onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                         <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
                     </TouchableOpacity>
                 </ScrollView>
@@ -99,7 +105,8 @@ const OtherTestsModal = ({
     otherTests,
     setOtherTests,
     otherTestFindings,
-    setOtherTestFindings
+    setOtherTestFindings,
+    isAppointmentDraft = true
 }: {
     modalTitle: string,
     isVisible: boolean,
@@ -108,6 +115,7 @@ const OtherTestsModal = ({
     setOtherTests: React.Dispatch<React.SetStateAction<string>>,
     otherTestFindings: string,
     setOtherTestFindings: React.Dispatch<React.SetStateAction<string>>,
+    isAppointmentDraft: boolean,
 }) => {
     return (
         <Modal isVisible={isVisible} onDismiss={toggleModal}>
@@ -138,6 +146,7 @@ const OtherTestsModal = ({
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
                             textColor={config.colors.dark}
+                            disabled={!isAppointmentDraft}
                             onChangeText={(text: string) => setOtherTests(text)}
                         />
                     </View>
@@ -153,11 +162,12 @@ const OtherTestsModal = ({
                             activeOutlineColor={config.colors.primary}
                             style={styles.textInput}
                             textColor={config.colors.dark}
+                            disabled={!isAppointmentDraft}
                             onChangeText={text => setOtherTestFindings(text)}
                         />
                     </View>
 
-                    <TouchableOpacity style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                    <TouchableOpacity disabled={!isAppointmentDraft} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                         <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
                     </TouchableOpacity>
                 </ScrollView>

@@ -19,7 +19,7 @@ const renderRow = ({ item, index }: { item: any, index: number }) => {
 
 const renderHeader = () => (
     <DataTable.Header style={styles.tableHead}>
-        <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Test</Text></DataTable.Title>
+        <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Test Name</Text></DataTable.Title>
         <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Findings</Text></DataTable.Title>
     </DataTable.Header>
 )
@@ -28,7 +28,7 @@ const renderTable = (tests: ILabTest[], headerTitle: string) => {
     return (
         tests && tests.length > 0 ?
             <ScrollView contentContainerStyle={styles.datatableContainer} horizontal={true}>
-                <View style={{ width: 350, paddingHorizontal: 5 }}>
+                <View style={{ width: 450, paddingHorizontal: 5 }}>
                     <DataTable>
                         <View style={{ alignItems: 'center', marginTop: 16 }}>
                             <Text style={{ color: config.colors.primaryBlue, textTransform: 'uppercase', fontWeight: '800', fontSize: 14, opacity: 0.8 }}>{headerTitle}</Text>

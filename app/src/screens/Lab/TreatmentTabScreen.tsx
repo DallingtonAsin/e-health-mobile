@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { TreatmentPlanModal, handleAddDrug } from "../../components/common/lab/TreatmentPlanModal"
 import { IPrescriptionDrug } from "../../interfaces"
 import { renderDrugTable } from '../../components/common/lab/dataTable'
@@ -12,12 +12,14 @@ const TreatmentTabScreen = ({
     recordedDrugs,
     setRecordedDrugs,
     treatmentPlan,
-    setTreatmentPlan
+    setTreatmentPlan,
+    isAppointmentDraft = true,
 }: {
     recordedDrugs: any,
     setRecordedDrugs: React.Dispatch<React.SetStateAction<any>>,
     treatmentPlan: string,
-    setTreatmentPlan: React.Dispatch<React.SetStateAction<string>>
+    setTreatmentPlan: React.Dispatch<React.SetStateAction<string>>,
+    isAppointmentDraft: boolean
 }) => {
 
     const [selectedDrugItem, setSelectedDrugItem] = useState<string>('')
@@ -27,7 +29,11 @@ const TreatmentTabScreen = ({
     const toggleDrugModal = () => setIsDrugModalVisible(!isDrugModalVisible)
 
     return (
-        <View>
+        <ScrollView
+            nestedScrollEnabled={true}
+            style={{ marginTop: 0 }}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}>
             <TouchableOpacity style={[styles.item, { marginVertical: 10 }]} onPress={toggleDrugModal}>
                 <Text style={styles.itemTitle}>Add prescription drug</Text>
                 <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
@@ -45,30 +51,37 @@ const TreatmentTabScreen = ({
                     mode="outlined"
                     activeOutlineColor={config.colors.primary}
                     style={styles.textInput}
-                    textColor={config.colors.dark}
+                    disabled={!isAppointmentDraft}
                     onChangeText={(text: string) => setTreatmentPlan(text)}
                 />
             </View>
+
+            <View style={styles.viewContainer}>
+                <Text style={styles.infoText}>*For any mandatory field, enter "None or N/A" if not applicable.</Text>
+            </View>
+
             <TreatmentPlanModal
                 isVisible={isDrugModalVisible}
                 drugInfo={drugInfo}
                 setDrugInfo={setDrugInfo}
                 toggleModal={toggleDrugModal}
                 setSelectedDrugItem={setSelectedDrugItem}
+                isAppointmentDraft={isAppointmentDraft}
                 onSubmit={() => handleAddDrug(selectedDrugItem, drugInfo, recordedDrugs, setRecordedDrugs, () => setDrugInfo(initialPresDrugState))}
             />
-        </View>
+        </ScrollView>
     )
 }
 
 export default TreatmentTabScreen
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1
+    },
     viewContainer: {
-        marginVertical: 5,
         paddingHorizontal: 10
     },
-
     labelTxt: {
         fontSize: config.fonts.normal,
         color: config.colors.black
@@ -90,18 +103,19 @@ const styles = StyleSheet.create({
         padding: 18,
         elevation: 5,
     },
-
     itemTitle: {
         color: '#000',
         fontSize: config.fonts.medium,
     },
-
     textInput: {
         backgroundColor: config.colors.white,
         color: config.colors.silver,
         fontSize: config.fonts.normal
     },
-
+    infoText: {
+        color: config.colors.red,
+        textAlign: 'center'
+    },
     arrow: {
         right: 0
     }
