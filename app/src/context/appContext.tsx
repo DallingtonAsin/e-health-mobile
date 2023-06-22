@@ -6,7 +6,7 @@ import { appReducer } from './reducers/appReducer'
 import { displayErrorMessage } from '../components/common/SharedHelper'
 import * as types from './actions'
 
-const services = new Service();
+const services = new Service()
 
 const updateProfile = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -18,31 +18,31 @@ const updateProfile = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                const user = data.user;
-                const message = res.data.message;
+                const data = res.data
+                const user = data.user
+                const message = res.data.message
 
-                await storeAccessToken(user.access_token);
-                await storeUser(user);
+                await storeAccessToken(user.access_token)
+                await storeUser(user)
 
                 dispatch({
                     type: types.HOME,
                     payload: user
-                });
+                })
 
-                onSuccess(message);
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const updateProfileImage = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: FormData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? routes.patient.update_profile_pic : routes.doctor.update_profile_pic;
+        const endpoint = is_patient ? routes.patient.update_profile_pic : routes.doctor.update_profile_pic
         services.post(
             endpoint,
             payload,
@@ -60,7 +60,7 @@ const updateProfileImage = (dispatch: any) => {
                 dispatch({
                     type: types.HOME,
                     payload: user
-                });
+                })
 
                 onSuccess(message)
             }
@@ -68,40 +68,40 @@ const updateProfileImage = (dispatch: any) => {
             displayErrorMessage(error, onFailure)
         }).finally(() => {
             onCompletion()
-        });
-    };
-};
+        })
+    }
+}
 
 const deleteProfileImage = (dispatch: any) => {
     return ({ user, onSuccess, onFailure, onCompletion }: { user: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = user.is_patient ? routes.patient.delete_profile_pic : routes.doctor.delete_profile_pic;
+        const endpoint = user.is_patient ? routes.patient.delete_profile_pic : routes.doctor.delete_profile_pic
 
         services.delete(
             endpoint
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                const user = data.user;
-                const message = data.message;
+                const data = res.data
+                const user = data.user
+                const message = data.message
 
-                await storeAccessToken(user.access_token);
-                await storeUser(user);
+                await storeAccessToken(user.access_token)
+                await storeUser(user)
 
                 dispatch({
                     type: types.HOME,
                     payload: user
-                });
+                })
 
-                onSuccess(message);
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 const getMedicalSpecialties = () => {
@@ -111,16 +111,16 @@ const getMedicalSpecialties = () => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getDoctorsBySpecialty = () => {
     return ({ specialtyId, onSuccess, onFailure, onCompletion }: { specialtyId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -128,16 +128,16 @@ const getDoctorsBySpecialty = () => {
             `${routes.medical.doctors_by_specialty}/${specialtyId}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getAppointmentTypes = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -146,16 +146,16 @@ const getAppointmentTypes = () => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getMeetingDetails = () => {
     return ({ appointmentId, onSuccess, onFailure, onCompletion }: { appointmentId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -163,35 +163,35 @@ const getMeetingDetails = () => {
             `${routes.appointments.meeting}/${appointmentId}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 const getMyAppointments = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments;
+        const endpoint = payload.is_patient ? routes.appointments.patient.myappointments : routes.appointments.doctor.myappointments
         services.get(
             `${endpoint}/${payload.user_id}/${payload.path}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 const getDrugs = () => {
@@ -200,16 +200,16 @@ const getDrugs = () => {
             routes.drugs.index
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getPrescriptionDrugs = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -217,53 +217,53 @@ const getPrescriptionDrugs = () => {
             routes.drugs.prescription
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 const getNotifications = () => {
     return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? routes.patient.notifications.all : routes.doctor.notifications.all;
+        const endpoint = is_patient ? routes.patient.notifications.all : routes.doctor.notifications.all
         services.get(
             endpoint
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const markNotificationRead = () => {
     return ({ notification_id, is_patient, onSuccess, onFailure, onCompletion }: { notification_id: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? `${routes.patient.notifications.mark_as_read}/${notification_id}` : `${routes.doctor.notifications.mark_as_read}/${notification_id}`;
+        const endpoint = is_patient ? `${routes.patient.notifications.mark_as_read}/${notification_id}` : `${routes.doctor.notifications.mark_as_read}/${notification_id}`
         services.post(
             endpoint,
             {}
         ).then(async (res) => {
             if (res && res.data) {
-                onSuccess(res.data.message);
+                onSuccess(res.data.message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getDoctorLanguages = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -271,16 +271,16 @@ const getDoctorLanguages = () => {
             `${routes.doctor.languages}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getAppointmentDetails = () => {
     return ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -293,12 +293,12 @@ const getAppointmentDetails = () => {
                 onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const checkAppointmentStatus = () => {
     return ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -306,34 +306,34 @@ const checkAppointmentStatus = () => {
             `${routes.medical.appointment_status}/${appointment_id}/status`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const postCallDetails = () => {
     return ({ is_patient, payload, onSuccess, onFailure, onCompletion }: { is_patient: boolean, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? `${routes.patient.call_details}` : `${routes.doctor.call_details}`;
+        const endpoint = is_patient ? `${routes.patient.call_details}` : `${routes.doctor.call_details}`
         services.post(
             endpoint,
             payload
         ).then(async (res) => {
             if (res && res.data) {
-                onSuccess(res.data.message);
+                onSuccess(res.data.message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getCompanyInformation = () => {
     return ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -341,16 +341,16 @@ const getCompanyInformation = () => {
             `${routes.app.company_info}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 export const { Provider, Context } = createDataContext(
@@ -361,4 +361,4 @@ export const { Provider, Context } = createDataContext(
         getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails, getCompanyInformation
     },
     { isAppLoading: true },
-);
+)

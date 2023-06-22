@@ -1,76 +1,76 @@
-import createDataContext from './createDataContext';
-import { routes } from '../network/routes';
-import Service from '../network/services/httpService';
-import { IUser, LoginData, LoginPayload, PatientRegistrationPayload } from '../interfaces';
-import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken, removeUser, getUser } from '../network/services/asyncStorageService';
-import { appReducer } from './reducers/appReducer';
-import { initialUserState } from '../configs/constants';
-import { displayErrorMessage } from '../components/common/SharedHelper';
-import * as types from './actions';
-const services = new Service();
+import createDataContext from './createDataContext'
+import { routes } from '../network/routes'
+import Service from '../network/services/httpService'
+import { IUser, LoginData, LoginPayload, PatientRegistrationPayload } from '../interfaces'
+import { storeUser, storeAuthToken, storeAccessToken, removeAuthToken, removeAccessToken, removeUser, getUser } from '../network/services/asyncStorageService'
+import { appReducer } from './reducers/appReducer'
+import { initialUserState } from '../configs/constants'
+import { displayErrorMessage } from '../components/common/SharedHelper'
+import * as types from './actions'
+const services = new Service()
 
 const signin = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginPayload, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? routes.patient.signin : routes.doctor.signin;
+        const endpoint = is_patient ? routes.patient.signin : routes.doctor.signin
         services.post(
             endpoint,
             payload
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                let access_token = data.access_token;
+                const data = res.data
+                let access_token = data.access_token
 
-                await storeAuthToken(access_token);
-                await storeAccessToken(access_token);
-                await storeUser(data);
+                await storeAuthToken(access_token)
+                await storeAccessToken(access_token)
+                await storeUser(data)
 
                 dispatch({
                     type: types.HOME,
                     payload: data
-                });
+                })
 
-                onSuccess(data);
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const sendVerificationCode = (dispatch: any) => {
     return ({ payload, is_patient, onSuccess, onFailure, onCompletion }: { payload: LoginData, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? routes.patient.send_otp : routes.doctor.send_otp;
+        const endpoint = is_patient ? routes.patient.send_otp : routes.doctor.send_otp
         services.post(
             endpoint,
             payload
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                await storeAuthToken(data.access_token);
+                const data = res.data
+                await storeAuthToken(data.access_token)
 
                 dispatch({
                     type: types.USER_SIGNIN,
                     payload: data
-                });
+                })
 
-                onSuccess(data);
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 
 const verifyCode = (dispatch: any) => {
     return ({ code, is_patient, onSuccess, onFailure, onCompletion }: { code: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        const endpoint = is_patient ? routes.patient.verify : routes.doctor.verify;
+        const endpoint = is_patient ? routes.patient.verify : routes.doctor.verify
         services.post(
             endpoint,
             { otp: code }
@@ -78,33 +78,33 @@ const verifyCode = (dispatch: any) => {
 
             if (res && res.data) {
 
-                const data = res.data;
-                let access_token = data.access_token;
-                await storeAuthToken(access_token);
+                const data = res.data
+                let access_token = data.access_token
+                await storeAuthToken(access_token)
 
                 if (data.profile_status == 1) {
-                    await storeAccessToken(access_token);
-                    await storeUser(data);
+                    await storeAccessToken(access_token)
+                    await storeUser(data)
                     dispatch({
                         type: types.HOME,
                         payload: data
-                    });
+                    })
                 } else {
                     dispatch({
                         type: types.USER_SIGNUP,
                         payload: data
-                    });
+                    })
                 }
 
-                onSuccess(data);
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const signup = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: PatientRegistrationPayload, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -114,25 +114,25 @@ const signup = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
+                const data = res.data
 
-                await storeAccessToken(data.access_token);
-                await storeUser(data);
+                await storeAccessToken(data.access_token)
+                await storeUser(data)
 
                 dispatch({
                     type: types.HOME,
                     payload: data
-                });
+                })
 
-                onSuccess();
+                onSuccess()
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const authenticateDoctor = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: LoginData, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -142,33 +142,33 @@ const authenticateDoctor = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                let access_token = data.access_token;
-                await storeAuthToken(access_token);
+                const data = res.data
+                let access_token = data.access_token
+                await storeAuthToken(access_token)
 
                 if (data.profile_status == 1) {
-                    await storeAccessToken(access_token);
-                    await storeUser(data);
+                    await storeAccessToken(access_token)
+                    await storeUser(data)
                     dispatch({
                         type: types.HOME,
                         payload: data
-                    });
+                    })
                 } else {
                     dispatch({
                         type: types.USER_SIGNUP,
                         payload: data
-                    });
+                    })
                 }
 
-                onSuccess(data);
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const registerDoctor = (dispatch: any) => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -178,54 +178,54 @@ const registerDoctor = (dispatch: any) => {
         ).then(async (res) => {
             if (res && res.data) {
 
-                const data = res.data;
-                await storeAccessToken(data.access_token);
-                await storeUser(data);
+                const data = res.data
+                await storeAccessToken(data.access_token)
+                await storeUser(data)
 
                 dispatch({
                     type: types.HOME,
                     payload: data
-                });
+                })
 
-                onSuccess();
+                onSuccess()
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const signout = (dispatch: any) => {
     return async () => {
         await removeUser()
-        await removeAuthToken();
-        await removeAccessToken();
+        await removeAuthToken()
+        await removeAccessToken()
         dispatch({
             type: types.USER_SIGNOUT,
             payload: { isAppLoading: false }
-        });
-    };
-};
+        })
+    }
+}
 
 const updateUserState = (dispatch: any) => {
     return async ({ onSuccess }: { onSuccess: any }) => {
-        const user = await getUser();
+        const user = await getUser()
         if (user && user.access_token) {
             dispatch({
                 type: types.HYDRATE,
                 payload: user
-            });
+            })
 
-            onSuccess();
+            onSuccess()
         }
-    };
-};
+    }
+}
 
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     { signin, sendVerificationCode, verifyCode, signup, authenticateDoctor, registerDoctor, updateUserState, signout },
     { user: initialUserState, token: null, authorization: null, isAppLoading: true },
-);
+)

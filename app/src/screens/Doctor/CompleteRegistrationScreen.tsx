@@ -15,72 +15,72 @@ import { choosePhotoFromLibrary, getImageData } from '../../components/common/Fi
 
 const CompleteRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
-    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true);
-    const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-    const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload);
-    const [backImage, setBackImage] = useState<FileUpload>(initialFileUpload);
-    const [user, setUser] = useState<DrCompleteProfilePayload>(DrCompleteProfileInitialState);
-    const [specialties, setSpecialties] = useState([]);
-    const [facilities, setFacilities] = useState([]);
-    const [isFetchingFacilities, setIsFetchingFacilities] = useState(true);
-    const { updateUserState } = useContext(AuthContext);
-    const { getMedicalSpecialties } = useContext(AppContext);
-    const { completeRegistration, getMedicalFacilities } = useContext(DoctorContext);
+    const [isLoading, setIsLoading] = useState(false)
+    const [hasAgreedTerms, setHasAgreedTerms] = useState(false)
+    const [isFetchingSpecialties, setIsFetchingSpecialties] = useState(true)
+    const [selectedFacilities, setSelectedFacilities] = useState<string[]>([])
+    const [frontImage, setFrontImage] = useState<FileUpload>(initialFileUpload)
+    const [backImage, setBackImage] = useState<FileUpload>(initialFileUpload)
+    const [user, setUser] = useState<DrCompleteProfilePayload>(DrCompleteProfileInitialState)
+    const [specialties, setSpecialties] = useState([])
+    const [facilities, setFacilities] = useState([])
+    const [isFetchingFacilities, setIsFetchingFacilities] = useState(true)
+    const { updateUserState } = useContext(AuthContext)
+    const { getMedicalSpecialties } = useContext(AppContext)
+    const { completeRegistration, getMedicalFacilities } = useContext(DoctorContext)
 
     useEffect(() => {
-        getMedicalSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } });
-        getMedicalFacilities({ onSuccess: populateFacilities, onFailure: displayMessage, onCompletion: () => { setIsFetchingFacilities(false) } });
-    }, []);
+        getMedicalSpecialties({ onSuccess: populateSpecialties, onFailure: displayMessage, onCompletion: () => { setIsFetchingSpecialties(false) } })
+        getMedicalFacilities({ onSuccess: populateFacilities, onFailure: displayMessage, onCompletion: () => { setIsFetchingFacilities(false) } })
+    }, [])
 
     const populateSpecialties = (data: any) => {
         const arr = data.map((item: { id: number, name: string }) => {
             return { key: item.id, value: item.name }
         })
-        setSpecialties(arr);
+        setSpecialties(arr)
     }
 
     const populateFacilities = (data: any) => {
         const newArr = data.map((item: { id: number, name: string }) => {
             return { key: item.id, value: item.name }
         })
-        setFacilities(newArr);
+        setFacilities(newArr)
     }
 
     const handleServiceFeeChange = (text: string) => {
-        const formattedValue = formatNumber(text.replace(/,/g, ''));
-        setUser(prev => ({ ...prev, service_fee: formattedValue }));
+        const formattedValue = formatNumber(text.replace(/,/g, ''))
+        setUser(prev => ({ ...prev, service_fee: formattedValue }))
     }
 
     const handleMWorkerTermsPress = () => {
-        Linking.openURL('https://example.com/terms-and-conditions');
+        Linking.openURL('https://example.com/terms-and-conditions')
     }
 
     const submitDetails = () => {
 
-        const validationError = ValidateDrCompleteProfile(user, selectedFacilities, hasAgreedTerms, frontImage, backImage);
+        const validationError = ValidateDrCompleteProfile(user, selectedFacilities, hasAgreedTerms, frontImage, backImage)
         if (validationError) {
             displayMessage(validationError)
-            return;
+            return
         }
-        let service_fee = removeCommas(user.service_fee);
+        let service_fee = removeCommas(user.service_fee)
 
-        const formData = new FormData();
-        formData.append('specialty', user.specialty);
-        formData.append('primary_facility', user.primary_facility);
-        formData.append('other_facilities', JSON.stringify(selectedFacilities));
-        formData.append('address', user.address);
-        formData.append('bio_summary', user.bio_summary);
-        formData.append('qualification', user.qualification);
-        formData.append('training_institute', user.training_institute);
-        formData.append('umdp_license_id', user.umdp_license_id,);
-        formData.append('service_fee', service_fee);
-        formData.append('front_image', frontImage);
-        formData.append('back_image', backImage);
+        const formData = new FormData()
+        formData.append('specialty', user.specialty)
+        formData.append('primary_facility', user.primary_facility)
+        formData.append('other_facilities', JSON.stringify(selectedFacilities))
+        formData.append('address', user.address)
+        formData.append('bio_summary', user.bio_summary)
+        formData.append('qualification', user.qualification)
+        formData.append('training_institute', user.training_institute)
+        formData.append('umdp_license_id', user.umdp_license_id,)
+        formData.append('service_fee', service_fee)
+        formData.append('front_image', frontImage)
+        formData.append('back_image', backImage)
 
-        setIsLoading(true);
-        completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) });
+        setIsLoading(true)
+        completeRegistration({ payload: formData, onSuccess: onSuccess, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const onSuccess = async (message: string) => {
