@@ -13,7 +13,7 @@ const AppointmentsScreen = ({
     onPress,
 }: {
     appointment_type: string,
-    onPress: Function
+    onPress: (appointment_id: number) => void
 
 }) => {
     const [refreshing, setRefreshing] = useState(false)
