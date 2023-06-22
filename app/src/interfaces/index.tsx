@@ -408,7 +408,8 @@ interface UploadedFile {
     uri: string
     type: string
     content?: string
-    isImage: boolean
+    isImage: boolean,
+    isOnline: boolean
 }
 
 

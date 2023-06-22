@@ -103,6 +103,9 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         if (data && data.treatment_plan && data.treatment_plan.treatment_plan) {
             setTreatmentPlan(data.treatment_plan.treatment_plan)
         }
+        if (data && data.lab_test_documents) {
+            setUploadedFiles(data.lab_test_documents)
+        }
     }
 
     const populateIcd10Codes = (data: ISelectItem[]) => {
@@ -181,40 +184,37 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     }
 
     const submitPostConsultationData = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
-        // const payload = {
-        //     appointmentId: appointment_id,
-        //     isDraft: isDraft,
-        //     historyData: historyInfo,
-        //     labTestData: labTestData,
-        //     diagnosisData: diagnosisData,
-        //     treatmentData: treatmentData,
-        //     labTestDocuments: uploadedFiles
-        // }
-        const payload = new FormData()
 
-        // payload.append('_method', 'put')
-        payload.append('appointmentId', appointment_id)
-        payload.append('isDraft', isDraft.toString())
-        payload.append('historyData', JSON.stringify(historyInfo))
-        payload.append('labTestData', JSON.stringify(labTestData))
-        payload.append('diagnosisData', JSON.stringify(diagnosisData))
-        payload.append('treatmentData', JSON.stringify(treatmentData))
-        setIsLoading(true)
+        const payload = {
+            appointmentId: appointment_id,
+            isDraft: isDraft,
+            historyData: historyInfo,
+            labTestData: labTestData,
+            diagnosisData: diagnosisData,
+            treatmentData: treatmentData
+        }
+        const formData = new FormData()
+        formData.append('payload', JSON.stringify(payload))
 
         if (uploadedFiles.length > 0) {
             uploadedFiles.forEach((file, index) => {
-                payload.append(`labTestDocuments[${index}]`, {
-                    uri: file.uri,
-                    type: file.type,
-                    name: `file_${index}.${file.type.split('/')[1]}`,
-                })
+                if (!file.isOnline) {
+                    const fileObj = {
+                        uri: file.uri,
+                        type: file.type,
+                        name: `file_${index}.${file.type.split('/')[1]}`,
+                    }
+                    formData.append(`labTestDocuments[${index}]`, fileObj)
+                }
             })
         }
-        completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        setIsLoading(true)
+        completeConsultation({ appointment_id: appointment_id, payload: formData, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
     const onSuccessPosting = (message: string) => {
         displayMessage(message)
+        setUploadedFiles([])
         setFetchingConsultData(true)
         getConsultationData()
     }
@@ -268,7 +268,10 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         } else {
             return (
                 <TouchableOpacity style={styles.fileView} onPress={() => confirmRemoveImage(item.uri)}>
-                    <PDFView style={styles.image} source={{ uri: item.uri }} />
+                    <PDFView
+                        style={styles.image} source={{ uri: item.uri, cache: true }}
+                        renderActivityIndicator={() => <AppLoader />}
+                    />
                 </TouchableOpacity>
             )
         }
@@ -292,9 +295,16 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
                     type: fileType!,
                     content: fileContent,
                     isImage: isImage,
+                    isOnline: false
                 })
             }
             setUploadedFiles(prevFiles => [...prevFiles, ...files])
+            Alert.alert(
+                `Information`,
+                `Before saving any uploaded files, make sure that you have uploaded the correct file. If it's not the intended file, you can click on the uploaded file to remove it before proceeding with the data saving process.`
+            )
+
+
         } catch (err: unknown) {
             handleError(err)
         }

@@ -132,7 +132,7 @@ const getDoctorsCalendar = () => {
 
 const completeConsultation = () => {
     return ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => {
-        services.put(
+        services.post(
             `${routes.appointments.index}/${appointment_id}/complete`,
             payload,
             true
