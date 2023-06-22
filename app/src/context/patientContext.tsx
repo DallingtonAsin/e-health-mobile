@@ -1,11 +1,11 @@
-import createDataContext from './createDataContext';
-import { routes } from '../network/routes';
-import Service from '../network/services/httpService';
-import { AppointmentInfo } from '../interfaces';
-import { appReducer } from './reducers/appReducer';
-import { displayErrorMessage } from '../components/common/SharedHelper';
+import createDataContext from './createDataContext'
+import { routes } from '../network/routes'
+import Service from '../network/services/httpService'
+import { AppointmentInfo } from '../interfaces'
+import { appReducer } from './reducers/appReducer'
+import { displayErrorMessage } from '../components/common/SharedHelper'
 
-const services = new Service();
+const services = new Service()
 
 const submitAppointment = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: AppointmentInfo, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -14,15 +14,15 @@ const submitAppointment = () => {
             payload
         ).then(async (res: any) => {
             if (res && res.data) {
-                onSuccess(res.data);
+                onSuccess(res.data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const cancelAppointment = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -31,16 +31,16 @@ const cancelAppointment = () => {
             payload
         ).then(async (res: any) => {
             if (res && res.data && res.data.message) {
-                let message = res.data.message;
-                onSuccess(message);
+                let message = res.data.message
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getMedicalHistory = () => {
     return ({ patient_id, onSuccess, onFailure, onCompletion }: { patient_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -48,16 +48,16 @@ const getMedicalHistory = () => {
             `${routes.medical.history}/${patient_id}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const markDoctorFavourite = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -66,16 +66,16 @@ const markDoctorFavourite = () => {
             payload
         ).then(async (res: any) => {
             if (res && res.data && res.data.message) {
-                const message = res.data.message;
-                onSuccess(message);
+                const message = res.data.message
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const unMarkDoctorFavourite = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -83,16 +83,16 @@ const unMarkDoctorFavourite = () => {
             `${routes.patient.unmark_doctor_favourite}/${payload.doctor_id}`
         ).then(async (res: any) => {
             if (res && res.data && res.data.message) {
-                const message = res.data.message;
-                onSuccess(message);
+                const message = res.data.message
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const postRating = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -101,16 +101,16 @@ const postRating = () => {
             payload
         ).then(async (res: any) => {
             if (res && res.data && res.data.message) {
-                const message = res.data.message;
-                onSuccess(message);
+                const message = res.data.message
+                onSuccess(message)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 const getDoctorsByOnlineStatus = () => {
     return ({ is_online, onSuccess, onFailure, onCompletion }: { is_online: number | null, onSuccess: any, onFailure: any, onCompletion: any }) => {
@@ -118,16 +118,16 @@ const getDoctorsByOnlineStatus = () => {
             `${routes.medical.doctors_by_online_status}/${is_online}`
         ).then(async (res) => {
             if (res && res.data) {
-                const data = res.data;
-                onSuccess(data);
+                const data = res.data
+                onSuccess(data)
             }
         }).catch((error) => {
-            displayErrorMessage(error, onFailure);
+            displayErrorMessage(error, onFailure)
         }).finally(() => {
-            onCompletion();
-        });
-    };
-};
+            onCompletion()
+        })
+    }
+}
 
 export const { Provider, Context } = createDataContext(
     appReducer,
@@ -136,4 +136,4 @@ export const { Provider, Context } = createDataContext(
         getDoctorsByOnlineStatus, markDoctorFavourite, unMarkDoctorFavourite, postRating
     },
     { isAppLoading: true },
-);
+)

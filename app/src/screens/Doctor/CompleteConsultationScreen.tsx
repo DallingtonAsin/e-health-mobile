@@ -103,7 +103,6 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         if (data && data.treatment_plan && data.treatment_plan.treatment_plan) {
             setTreatmentPlan(data.treatment_plan.treatment_plan)
         }
-
     }
 
     const populateIcd10Codes = (data: ISelectItem[]) => {
@@ -182,15 +181,35 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
     }
 
     const submitPostConsultationData = (isDraft: boolean, labTestData: ILabTestData, diagnosisData: IDiagnosisData, treatmentData: ITreatmentPlanData) => {
-        const payload = {
-            appointmentId: appointment_id,
-            isDraft: isDraft,
-            historyData: historyInfo,
-            labTestData: labTestData,
-            diagnosisData: diagnosisData,
-            treatmentData: treatmentData,
-        }
+        // const payload = {
+        //     appointmentId: appointment_id,
+        //     isDraft: isDraft,
+        //     historyData: historyInfo,
+        //     labTestData: labTestData,
+        //     diagnosisData: diagnosisData,
+        //     treatmentData: treatmentData,
+        //     labTestDocuments: uploadedFiles
+        // }
+        const payload = new FormData()
+
+        // payload.append('_method', 'put')
+        payload.append('appointmentId', appointment_id)
+        payload.append('isDraft', isDraft.toString())
+        payload.append('historyData', JSON.stringify(historyInfo))
+        payload.append('labTestData', JSON.stringify(labTestData))
+        payload.append('diagnosisData', JSON.stringify(diagnosisData))
+        payload.append('treatmentData', JSON.stringify(treatmentData))
         setIsLoading(true)
+
+        if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file, index) => {
+                payload.append(`labTestDocuments[${index}]`, {
+                    uri: file.uri,
+                    type: file.type,
+                    name: `file_${index}.${file.type.split('/')[1]}`,
+                })
+            })
+        }
         completeConsultation({ appointment_id: appointment_id, payload: payload, onSuccess: onSuccessPosting, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
     }
 
