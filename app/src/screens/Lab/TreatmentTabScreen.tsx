@@ -9,12 +9,14 @@ import { TextInput } from 'react-native-paper'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 
 const TreatmentTabScreen = ({
+    allergies,
     recordedDrugs,
     setRecordedDrugs,
     treatmentPlan,
     setTreatmentPlan,
     isAppointmentDraft = true,
 }: {
+    allergies: string,
     recordedDrugs: any,
     setRecordedDrugs: React.Dispatch<React.SetStateAction<any>>,
     treatmentPlan: string,
@@ -34,6 +36,12 @@ const TreatmentTabScreen = ({
             style={{ marginTop: 0 }}
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}>
+
+            <View style={[styles.viewContainer, { marginHorizontal: 15, marginVertical: 10 }]}>
+                <Text style={styles.labelTxt}>This patient has the following drug allergies:</Text>
+                <Text style={styles.allergiesText}>{allergies}</Text>
+            </View>
+
             <TouchableOpacity style={[styles.item, { marginVertical: 10 }]} onPress={toggleDrugModal}>
                 <Text style={styles.itemTitle}>Add prescription drug</Text>
                 <Icon5 name="angle-right" size={20} color={config.colors.primary} style={styles.arrow} />
@@ -83,7 +91,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     labelTxt: {
-        fontSize: config.fonts.normal,
+        fontSize: config.fonts.medium,
         color: config.colors.black
     },
     item: {
@@ -118,5 +126,8 @@ const styles = StyleSheet.create({
     },
     arrow: {
         right: 0
+    },
+    allergiesText: {
+        color: config.colors.red,
     }
 })
