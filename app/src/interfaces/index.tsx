@@ -128,8 +128,6 @@ interface DoctorsDetail {
     license_number?: string,
     image?: string,
     service_fee: number,
-    schedule_dates?: string[],
-    schedule?: string[],
     rating: number,
     thumbnail?: string,
     is_favourite: boolean,
@@ -412,6 +410,11 @@ interface UploadedFile {
     isOnline: boolean
 }
 
+interface DocAvailabilityWindow {
+    schedule_dates: string[],
+    schedule: any
+}
+
 
 export type {
     AppAction,
@@ -447,11 +450,12 @@ export type {
     CompanyInformation,
     ContactListItem,
     ICompanyListItem,
-    
+
     IMedicalHistData,
     ILabTestData,
     IDiagnosisData,
     ITreatmentPlanData,
 
-    UploadedFile
+    UploadedFile,
+    DocAvailabilityWindow
 }
