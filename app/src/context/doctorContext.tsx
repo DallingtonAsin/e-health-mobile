@@ -364,11 +364,28 @@ const getAppointmentPostConsultationData = () => {
     }
 }
 
+const getDoctorAvailability = () => {
+    return ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.get(
+            `${routes.doctor.availability}/${doctorId}`
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
-        authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors,
+        authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors, getDoctorAvailability,
         getMedicalFacilities, submitDoctorSchedule, completeConsultation, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
         getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes, getAppointmentPostConsultationData
     },
