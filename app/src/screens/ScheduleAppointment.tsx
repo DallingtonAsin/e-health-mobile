@@ -16,7 +16,6 @@ import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
-import Toast from 'react-native-simple-toast';
 import { Calendar } from 'react-native-calendars';
 import { CustomDay } from '../components/CustomDay';
 
@@ -129,7 +128,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
             displayMessage(`Please enter reason for appointment`); return;
         }
         if (appointmentDate && appointmentTime && appointmentType && reason) {
-            let appointmentDetails: AppointmentInfo = {
+            const appointmentDetails: AppointmentInfo = {
                 patient_id: user.id,
                 doctor_id: doctor_id,
                 appointment_type: appointmentType,
