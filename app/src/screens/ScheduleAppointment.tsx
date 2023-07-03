@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import * as contact from '../components/common/communications';
 import { RadioButton } from 'react-native-paper';
-import { AppointmentInfo, DoctorsDetail } from '../interfaces';
+import { AppointmentInfo, DocAvailabilityWindow, DoctorsDetail } from '../interfaces';
 import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
 import { Context as PatientContext } from '../context/patientContext';
@@ -16,7 +16,6 @@ import { initialDoctorInfo } from '../configs/constants';
 import { displayMessage, getCurrentDate, getUserInitials } from '../components/common/SharedHelper';
 import AppLoader from '../components/AppLoader';
 import { AppointmentType } from '../interfaces';
-import Toast from 'react-native-simple-toast';
 import { Calendar } from 'react-native-calendars';
 import { CustomDay } from '../components/CustomDay';
 
@@ -28,6 +27,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isAppointmentTypeLoading, setAppointmentTypeLoading] = useState(true);
+    const [isFetchingAvail, setIsFetchingAvail] = useState(true);
 
     const currentDate = getCurrentDate()
     const [appointmentDate, setAppointmentDate] = useState<string>(currentDate);
@@ -41,7 +41,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     const { state } = useContext(AuthContext);
     const { getAppointmentTypes } = useContext(AppContext);
     const { submitAppointment } = useContext(PatientContext);
-    const { getDoctorInfo } = useContext(DoctorContext);
+    const { getDoctorInfo, getDoctorAvailabilityWindows } = useContext(DoctorContext);
 
     const user = state.user;
     const [isFocused, setIsFocused] = useState(false);
@@ -54,17 +54,21 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
 
     useEffect(() => {
         getDoctorInfo({ doctorId: doctor_id, onSuccess: populateDoctorInfo, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } });
+        getDoctorAvailabilityWindows({ doctorId: doctor_id, onSuccess: populateAvailabilityWindows, onFailure: displayMessage, onCompletion: () => { setIsFetchingAvail(false) } });
         getAppointmentTypes({ onSuccess: populateAppointmentTypes, onFailure: displayMessage, onCompletion: () => { setAppointmentTypeLoading(false) } });
     }, []);
 
     const populateDoctorInfo = (doctorInfo: DoctorsDetail) => {
         setDoctorInfo(doctorInfo);
-        if (doctorInfo.schedule_dates && doctorInfo.schedule_dates.length > 0) {
-            const initialDate = doctorInfo.schedule_dates[0]
-            setScheduleDates(doctorInfo.schedule_dates);
+    }
+
+    const populateAvailabilityWindows = (data: DocAvailabilityWindow) => {
+        if (data.schedule_dates && data.schedule_dates.length > 0) {
+            const initialDate = data.schedule_dates[0]
+            setScheduleDates(data.schedule_dates);
             setAppointmentDate(initialDate)
-            if (doctorInfo.schedule) {
-                const doc_schedule: any = doctorInfo.schedule
+            if (data.schedule) {
+                const doc_schedule: any = data.schedule
                 setSchedule(doc_schedule);
                 setScheduleHours(doc_schedule[`${initialDate}`]);
             }
@@ -129,7 +133,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
             displayMessage(`Please enter reason for appointment`); return;
         }
         if (appointmentDate && appointmentTime && appointmentType && reason) {
-            let appointmentDetails: AppointmentInfo = {
+            const appointmentDetails: AppointmentInfo = {
                 patient_id: user.id,
                 doctor_id: doctor_id,
                 appointment_type: appointmentType,
@@ -176,7 +180,7 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
         }
     }
 
-    if (isLoading || isAppointmentTypeLoading) {
+    if (isLoading || isAppointmentTypeLoading || isFetchingAvail) {
         return (
             <AppLoader bgColor={configs.colors.white} />
         )

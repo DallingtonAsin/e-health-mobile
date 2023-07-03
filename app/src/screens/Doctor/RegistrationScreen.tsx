@@ -173,6 +173,7 @@ const RegistrationScreen = ({ navigation }: { navigation: any }) => {
                                 data={genderOptions}
                                 save="value"
                                 search={false}
+                                dropdownTextStyles={{ color: config.colors.black }}
                                 inputStyles={{ color: config.colors.black }}
                                 boxStyles={{ borderColor: config.colors.gray, borderWidth: 1, borderRadius: 4, marginTop: 6, height: 49, marginBottom: 10 }}
                             />

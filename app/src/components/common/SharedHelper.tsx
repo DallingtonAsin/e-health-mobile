@@ -41,6 +41,7 @@ const formatDate = (date: Date) => {
 }
 
 const displayMessage = (message: string | any) => {
+  console.log(`Error message`, message);
   if (message && typeof message === 'string') {
     Toast.show(message, Toast.LONG);
   }

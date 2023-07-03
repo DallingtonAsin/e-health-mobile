@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
+import * as config from '../configs'
 
 const CustomSingleSelectDropdown = ({
     data,
@@ -17,6 +18,7 @@ const CustomSingleSelectDropdown = ({
             data={data}
             save="value"
             placeholder={placeholder}
+            inputStyles={{ color: config.colors.black }}
             search={true} />
     )
 }

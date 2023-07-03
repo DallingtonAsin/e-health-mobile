@@ -37,7 +37,7 @@ const MyScheduleScreen = () => {
     const [openEndTime, setOpenEndTime] = useState(false)
 
     const addScheduleRef = useRef<BottomSheet>(null)
-    const snapPoints = useMemo(() => ['25%', '92%'], [])
+    const snapPoints = useMemo(() => ['25%', '100%'], [])
     const [markedDates, setMarkedDates] = useState<any>(initialState)
 
     const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)

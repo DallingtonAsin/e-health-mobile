@@ -17,8 +17,7 @@ const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
     ])
 
     const onPressCard = (appointment_id: number) => {
-        navigation.navigate('AppointmentDetails',
-            { appointment_id: appointment_id })
+        navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
     }
 
     const renderScene = SceneMap({

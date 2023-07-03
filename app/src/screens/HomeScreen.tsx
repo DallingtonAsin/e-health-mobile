@@ -171,9 +171,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 <Text style={styles.subtitle}>Settings</Text>
                             </TouchableOpacity>
                         </View>
-                        {
-                            !user.patient && (user.is_registered ? (!user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>) : null)
-                        }
+                        {!user.patient && (!user.is_registered ? <Text style={styles.underReviewTxt}>In order to get started, Please complete your profile</Text> : null)}
+                        {!user.patient && (user.is_registered ? (!user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>) : null)}
                     </View>
 
                 </ScrollView>

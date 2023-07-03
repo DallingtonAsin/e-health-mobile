@@ -69,6 +69,11 @@ const TreatmentPlanModal = ({
         setAdminRoutes(data)
     }
 
+    const addPrescription = () => {
+        onSubmit();
+        toggleModal()
+    }
+
     return (
         <View>
             <Modal
@@ -171,7 +176,7 @@ const TreatmentPlanModal = ({
 
                         <TouchableOpacity
                             disabled={!isAppointmentDraft}
-                            onPress={onSubmit} style={[config.styles.primaryBtn, styles.bottomBtn]}>
+                            onPress={addPrescription} style={[config.styles.primaryBtn, styles.bottomBtn]}>
                             <Text style={[config.styles.btnText, { color: config.colors.white }]}>Add</Text>
                         </TouchableOpacity>
                     </View>
