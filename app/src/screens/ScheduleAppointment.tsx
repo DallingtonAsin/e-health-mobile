@@ -63,7 +63,6 @@ const ScheduleAppointmentScreen = ({ route, navigation }: { route: any, navigati
     }
 
     const populateAvailabilityWindows = (data: DocAvailabilityWindow) => {
-        console.log(`Avail windows`, data)
         if (data.schedule_dates && data.schedule_dates.length > 0) {
             const initialDate = data.schedule_dates[0]
             setScheduleDates(data.schedule_dates);
