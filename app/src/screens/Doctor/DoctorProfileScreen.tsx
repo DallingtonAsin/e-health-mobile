@@ -18,6 +18,7 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
 
     const { doctor_id } = route.params
     const [isLoading, setIsLoading] = useState(true)
+    const [isCheckingAvail, setCheckingAvail] = useState(false)
     const { getDoctorInfo, getDoctorAvailability } = useContext(DoctorContext)
     const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
 
@@ -46,8 +47,8 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
     }
 
     const ScheduleAppointment = () => {
-        setIsLoading(true);
-        getDoctorAvailability({ doctorId: doctor_id, onSuccess: onCheckingAvailability, onFailure: displayMessage, onCompletion: () => setIsLoading(false) })
+        setCheckingAvail(true);
+        getDoctorAvailability({ doctorId: doctor_id, onSuccess: onCheckingAvailability, onFailure: displayMessage, onCompletion: () => setCheckingAvail(false) })
     }
 
     const onCheckingAvailability = (data: any) => {
@@ -156,8 +157,8 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
                     </View>
 
                 </ScrollView>
-
             </Animatable.View>
+            {isCheckingAvail && <AppLoader />}
         </View>
     )
 }
@@ -290,6 +291,6 @@ const styles = StyleSheet.create({
     },
 
     callBtn: {
-        backgroundColor: config.colors.primary
+        backgroundColor: config.colors.paleBlue
     }
 })
