@@ -50,7 +50,7 @@ const TreatmentTabScreen = ({
             {renderDrugTable(recordedDrugs, 'Prescription drugs')}
 
             <View style={[styles.viewContainer, { backgroundColor: config.colors.white, marginHorizontal: 15, padding: 20 }]}>
-                <Text style={styles.labelTxt}>Treatment Plan/Management<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                <Text style={styles.labelTxt}>Treatment Plan/Management</Text>
                 <TextInput
                     multiline
                     numberOfLines={6}

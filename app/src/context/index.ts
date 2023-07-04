@@ -40,12 +40,15 @@ const createContext = (defaultValue: any) => {
         postCallDetails: ({ is_patient, payload, onSuccess, onFailure, onCompletion }: { is_patient: boolean, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getCompanyInformation: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
 
-        // doctor api methods
+        // doctor api methods 
         authenticateDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         registerDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: IUser, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         completeRegistration: ({ payload, onSuccess, onFailure, onCompletion }: { payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
-        getDoctorsCalendar: ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorsCalendar: ({  onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         submitDoctorSchedule: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        updateDoctorSchedule: ({ id, payload, onSuccess, onFailure, onCompletion }: { id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        deleteDoctorSchedule: ({ id, onSuccess, onFailure, onCompletion }: { id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+    
         getNotifications: ({ is_patient, onFailure, onCompletion }: { is_patient: boolean, onFailure: any, onCompletion: any }) => { },
         markNotificationRead: ({ notification_id, is_patient, onSuccess, onFailure, onCompletion }: { notification_id: string, is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getMedicalHistory: ({ patient_id, onSuccess, onFailure, onCompletion }: { patient_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
@@ -57,6 +60,8 @@ const createContext = (defaultValue: any) => {
         getLabTestCategories: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getImageTestCategories: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getAdministrationRoutes: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorAvailability: ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getDoctorAvailabilityWindows: ({ doctorId, onSuccess, onFailure, onCompletion }: { doctorId: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getAppointmentPostConsultationData: ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         completeConsultation: ({ appointment_id, payload, onSuccess, onFailure, onCompletion }: { appointment_id: number, payload: FormData, onSuccess: any, onFailure: any, onCompletion: any }) => { },
     });

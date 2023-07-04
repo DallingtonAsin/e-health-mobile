@@ -18,7 +18,8 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
 
     const { doctor_id } = route.params
     const [isLoading, setIsLoading] = useState(true)
-    const { getDoctorInfo } = useContext(DoctorContext)
+    const [isCheckingAvail, setCheckingAvail] = useState(false)
+    const { getDoctorInfo, getDoctorAvailability } = useContext(DoctorContext)
     const [doctorInfo, setDoctorInfo] = useState<DoctorsDetail>(initialDoctorInfo);
 
     useEffect(() => {
@@ -45,8 +46,17 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
         }
     }
 
+    const ScheduleAppointment = () => {
+        setCheckingAvail(true);
+        getDoctorAvailability({ doctorId: doctor_id, onSuccess: onCheckingAvailability, onFailure: displayMessage, onCompletion: () => setCheckingAvail(false) })
+    }
+
+    const onCheckingAvailability = (data: any) => {
+        navigation.navigate('ScheduleAppointment', { doctor_id: doctorInfo.id })
+    }
+
     if (isLoading) {
-        return <AppLoader />
+        return <AppLoader bgColor={config.colors.white} />
     }
 
     return (
@@ -82,7 +92,7 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
                         <View style={{ marginVertical: 15 }}>
                             <Text style={styles.fee}>Fee: {doctorInfo.service_fee}</Text>
                             <Button mode="contained-tonal" style={styles.consultBtn}
-                                onPress={() => navigation.navigate('ScheduleAppointment', { doctor_id: doctorInfo.id })}>
+                                onPress={() => ScheduleAppointment()}>
                                 Book
                             </Button>
                         </View>
@@ -147,8 +157,8 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
                     </View>
 
                 </ScrollView>
-
             </Animatable.View>
+            {isCheckingAvail && <AppLoader />}
         </View>
     )
 }
@@ -281,6 +291,6 @@ const styles = StyleSheet.create({
     },
 
     callBtn: {
-        backgroundColor: config.colors.primary
+        backgroundColor: config.colors.paleBlue
     }
 })

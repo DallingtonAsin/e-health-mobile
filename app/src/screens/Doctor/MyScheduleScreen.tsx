@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
-import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, SafeAreaView, RefreshControl, View, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { DataTable, Divider, Button } from 'react-native-paper'
 import AppLoader from '../../components/AppLoader'
-import { displayMessage } from '../../components/common/SharedHelper'
+import { convertFrom24HrTime, displayMessage } from '../../components/common/SharedHelper'
 import * as config from '../../configs'
 import { Context as AuthContext } from '../../context/authContext'
 import { Context as DoctorContext } from '../../context/doctorContext'
@@ -23,8 +23,11 @@ const MyScheduleScreen = () => {
     const initialState = {
         [_today]: { 'selected': false, 'disabled': false }
     }
+
     const [schedule, setSchedule] = useState<DoctorCalendar[]>()
     const [isLoading, setIsLoading] = useState(true)
+    const [isUpdatingSchedule, setIsUpdatingSchedule] = useState(false)
+    const [selectedRowId, setSelectedRowId] = useState<number | any>(null)
     const [refreshing, setRefreshing] = useState(false)
     const { state } = useContext(AuthContext)
     const { user } = state
@@ -37,10 +40,10 @@ const MyScheduleScreen = () => {
     const [openEndTime, setOpenEndTime] = useState(false)
 
     const addScheduleRef = useRef<BottomSheet>(null)
-    const snapPoints = useMemo(() => ['25%', '92%'], [])
+    const snapPoints = useMemo(() => ['25%', '100%'], [])
     const [markedDates, setMarkedDates] = useState<any>(initialState)
 
-    const { getDoctorsCalendar, submitDoctorSchedule } = useContext(DoctorContext)
+    const { getDoctorsCalendar, submitDoctorSchedule, updateDoctorSchedule, deleteDoctorSchedule } = useContext(DoctorContext)
 
     useEffect(() => {
         fetchDoctorCalendar()
@@ -51,7 +54,7 @@ const MyScheduleScreen = () => {
     }
 
     const fetchDoctorCalendar = () => {
-        getDoctorsCalendar({ doctor_id: user.id, onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+        getDoctorsCalendar({ onSuccess: populateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
     }
 
     const onDaySelect = (day: any) => {
@@ -114,7 +117,15 @@ const MyScheduleScreen = () => {
         }
         setIsLoading(true)
 
-        submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+        if (isUpdatingSchedule) {
+            if (selectedRowId) {
+                updateDoctorSchedule({ id: selectedRowId, payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+            } else {
+                displayMessage('System is unable to get selected schedule to update')
+            }
+        } else {
+            submitDoctorSchedule({ payload: payload, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+        }
     }
 
     const updateCalendar = (message: string) => {
@@ -123,25 +134,78 @@ const MyScheduleScreen = () => {
         setMarkedDates(initialState)
         setStartTime("")
         setEndTime("")
+        setIsUpdatingSchedule(false)
+        setSelectedRowId(null)
         fetchDoctorCalendar()
     }
 
+    const confirmDelete = (item: any) => {
+        Alert.alert(
+            `Confirm deletion`,
+            `Are you sure you want to remove your availability on ${item.date}`,
+            [
+                {
+                    text: 'No', onPress: () => { }
+                },
+                {
+                    text: 'Yes', onPress: async () => {
+                        setIsLoading(true)
+                        deleteDoctorSchedule({ id: item.id, onSuccess: updateCalendar, onFailure: displayMessage, onCompletion: () => { setIsLoading(false) } })
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+
+    const onSelectScheduleRow = (item: any) => {
+        Alert.alert(
+            `Select Action`,
+            `Please select action for the scheduled date ${item.date}`,
+            [
+                {
+                    text: 'Cancel', onPress: async () => {
+                        setSelectedRowId(null)
+                    }
+                },
+                {
+                    text: 'Edit', onPress: () => {
+                        setIsUpdatingSchedule(true)
+                        setSelectedRowId(item.id)
+                        const updatedMarkedDates = { ...{ [item.date]: { 'selected': true } } }
+                        setMarkedDates(updatedMarkedDates)
+                        setStartTime(item.start_time)
+                        setEndTime(item.end_time)
+                        handleSnapPress(1)
+                    }
+                },
+                {
+                    text: 'Delete', onPress: async () => {
+                        confirmDelete(item)
+                    }
+                },
+
+            ],
+            { cancelable: false }
+        )
+    }
+
     const renderRow = ({ item }: { item: any }) => (
-        <DataTable.Row>
+        <DataTable.Row onPress={() => onSelectScheduleRow(item)}>
             <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.date}</Text></DataTable.Cell>
-            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.start_time}</Text></DataTable.Cell>
-            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{item.end_time}</Text></DataTable.Cell>
+            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{convertFrom24HrTime(item.start_time)}</Text></DataTable.Cell>
+            <DataTable.Cell style={styles.tableCell}><Text style={styles.cellText}>{convertFrom24HrTime(item.end_time)}</Text></DataTable.Cell>
         </DataTable.Row>
     )
 
     const renderHeader = () => (
-            <DataTable.Header style={styles.tableHead}>
-                <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
-                <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Start Time</Text></DataTable.Title>
-                <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>End Time</Text></DataTable.Title>
-            </DataTable.Header>
-        )
-    
+        <DataTable.Header style={styles.tableHead}>
+            <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Date</Text></DataTable.Title>
+            <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>Start Time</Text></DataTable.Title>
+            <DataTable.Title style={styles.tableCell}><Text style={styles.rowHeaderText}>End Time</Text></DataTable.Title>
+        </DataTable.Header>
+    )
+
 
     const EmptyComponent = () => {
         return (
@@ -182,6 +246,13 @@ const MyScheduleScreen = () => {
         setRefreshing(false)
     }
 
+    const renderFooter = () => (
+        schedule && schedule.length > 0 ?
+            <View style={{ paddingVertical: 20, backgroundColor: config.colors.silver }}>
+                <Text style={{ color: config.colors.primaryBlue, fontWeight: '400', textAlign: 'center' }}>*Click on added date to update or delete time frame</Text>
+            </View> : null
+    )
+
     const renderBackDrop = useCallback((props: any) => (<BottomSheetBackdrop {...props} opacity={0.2} />), [])
 
     const SetTimeButton = ({ time, buttonText, onPress }: { time: any, buttonText: any, onPress: any }) => (
@@ -197,6 +268,7 @@ const MyScheduleScreen = () => {
         <React.Fragment>
             <SafeAreaView style={styles.container}>
                 {renderHeader()}
+
                 <FlatList
                     data={schedule}
                     renderItem={renderRow}
@@ -207,7 +279,9 @@ const MyScheduleScreen = () => {
                             refreshing={refreshing}
                             onRefresh={onRefresh}
                         />}
+                    ListFooterComponent={renderFooter}
                 />
+
                 <BottomRightButton onPress={() => handleSnapPress(1)} />
             </SafeAreaView>
 
@@ -235,7 +309,7 @@ const MyScheduleScreen = () => {
 
                 <TouchableOpacity onPress={() => submitSchedule()}
                     style={[config.styles.primaryBtn, { alignSelf: 'center', bottom: 20 }]}>
-                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>Submit</Text>
+                    <Text style={[config.styles.btnText, { color: config.colors.white }]}>{isUpdatingSchedule ? 'Update' : 'Submit'}</Text>
                 </TouchableOpacity>
 
             </BottomSheet>
@@ -251,7 +325,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: config.colors.white,
+        backgroundColor: config.colors.white
     },
 
     emptyListStyle: {
@@ -272,7 +346,6 @@ const styles = StyleSheet.create({
     cellText: {
         fontSize: 16,
         color: '#000',
-        textTransform: 'capitalize',
         textAlign: 'center',
     },
 

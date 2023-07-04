@@ -34,7 +34,7 @@ const DiagnosisTabScreen = ({
             </View>
 
             <View style={styles.viewContainer}>
-                <Text style={styles.labelTxt}>Additional comments<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                <Text style={styles.labelTxt}>Additional comments</Text>
                 <TextInput
                     multiline
                     numberOfLines={5}

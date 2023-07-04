@@ -1,7 +1,7 @@
 import Toast from 'react-native-simple-toast';
 import { MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, PRE_RELEASE } from '@env';
 import { FacilityJson, setPasswordError } from '../../interfaces';
-
+import moment from 'moment';
 
 const removeLeadingZeros = (number: string) => {
   if (number) {
@@ -205,6 +205,11 @@ function getPairsByKeys(arr: FacilityJson[], keys: any) {
   }
 }
 
+function convertFrom24HrTime(time: string) {
+  const convertedTime = moment(time, 'HH:mm').format('h:mm A');
+  return convertedTime
+}
+
 export {
   removeLeadingZeros,
   getGreeting,
@@ -230,5 +235,6 @@ export {
   truncateString,
   validatePassword,
   toastShortMessage,
+  convertFrom24HrTime,
   validateConfirmPassword
 }
