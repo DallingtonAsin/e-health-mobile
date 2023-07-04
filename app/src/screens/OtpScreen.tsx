@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard, StatusBar, KeyboardAvoidingView } from 'react-native';
 import * as configs from '../configs';
-import Toast from 'react-native-simple-toast';
 import Avatar from '../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
