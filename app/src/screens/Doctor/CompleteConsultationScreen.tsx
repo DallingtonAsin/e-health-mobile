@@ -142,9 +142,9 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
         { key: 'treatment', title: 'Treatment' },
     ])
 
-    const submit = (isDraft: boolean = true) => {
+    const submit = (isDraft: boolean) => {
 
-        const histDataError = validateMedicalHistData(historyInfo)
+        const histDataError = validateMedicalHistData(historyInfo, isDraft)
         if (histDataError) {
             displayMessage(histDataError)
             return
@@ -153,7 +153,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
             icd10Codes: selectedIcdCodes,
             comments: diagnosisComments
         }
-        const diagnosisDataError = validateDiagnosisData(diagnosisData)
+        const diagnosisDataError = validateDiagnosisData(diagnosisData, isDraft)
         if (diagnosisDataError) {
             displayMessage(diagnosisDataError)
             return
@@ -163,7 +163,7 @@ const CompleteConsultationScreen = ({ route }: { route: any }) => {
             drugs: recordedDrugs,
             treatmentPlan: treatmentPlan
         }
-        const treatmentDataError = validateTreatmentPlanData(treatmentPlanData)
+        const treatmentDataError = validateTreatmentPlanData(treatmentPlanData, isDraft)
         if (treatmentDataError) {
             displayMessage(treatmentDataError)
             return

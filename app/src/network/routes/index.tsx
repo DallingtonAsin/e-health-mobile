@@ -36,7 +36,7 @@ const routes = {
       update_online_status: 'doctor/online-status',
       update_auto_approve_status: 'doctor/appointments/auto-approve',
       languages: 'doctor/languages',
-      calendar: 'doctor/schedule',
+      schedule: 'doctor/schedule',
       call_details: 'doctor/calls',
       availability: 'doctor/availability',
       availability_windows: 'doctor/availability/windows',

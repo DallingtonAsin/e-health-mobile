@@ -113,9 +113,9 @@ const getDoctorInfo = () => {
 }
 
 const getDoctorsCalendar = () => {
-    return ({ doctor_id, onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+    return ({ onSuccess, onFailure, onCompletion }: { doctor_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.get(
-            `${routes.doctor.calendar}/${doctor_id}`
+            `${routes.doctor.schedule}`
         ).then(async (res) => {
             if (res && res.data) {
                 const data = res.data
@@ -152,8 +152,41 @@ const completeConsultation = () => {
 const submitDoctorSchedule = () => {
     return ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
         services.post(
-            routes.doctor.calendar,
+            routes.doctor.schedule,
             payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                onSuccess(res.data.message)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
+const updateDoctorSchedule = () => {
+    return ({ id, payload, onSuccess, onFailure, onCompletion }: { id: number, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.put(
+            `${routes.doctor.schedule}/${id}`,
+            payload
+        ).then(async (res) => {
+            if (res && res.data) {
+                onSuccess(res.data.message)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
+const deleteDoctorSchedule = () => {
+    return ({ id, onSuccess, onFailure, onCompletion }: { id: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        services.delete(
+            `${routes.doctor.schedule}/${id}`
         ).then(async (res) => {
             if (res && res.data) {
                 onSuccess(res.data.message)
@@ -403,7 +436,7 @@ export const { Provider, Context } = createDataContext(
     appReducer,
     {
         authenticateDoctor, completeRegistration, confirmAppointment, getDoctorInfo, getDoctorsCalendar, getMedicalDoctors, getDoctorAvailability,
-        getMedicalFacilities, submitDoctorSchedule, completeConsultation, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
+        getMedicalFacilities, submitDoctorSchedule, updateDoctorSchedule, deleteDoctorSchedule, completeConsultation, isVerified, updateOnlineStatus, changeAutoApproveAppointmentStatus,
         getIcd10Codes, getLabTestCategories, getImageTestCategories, getAdministrationRoutes, getAppointmentPostConsultationData, getDoctorAvailabilityWindows
     },
     { isAppLoading: true },

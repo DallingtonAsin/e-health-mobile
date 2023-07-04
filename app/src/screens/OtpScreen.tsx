@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard, StatusBar, KeyboardAvoidingView } from 'react-native';
 import * as configs from '../configs';
-import Toast from 'react-native-simple-toast';
 import Avatar from '../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AppLoader from '../components/AppLoader';
@@ -12,9 +11,9 @@ const otpLength = 6;
 
 const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const { country_code, phone_number, sent_otp, is_doctor } = route.params;
+    const { is_doctor } = route.params;
     const [valid, setValid] = useState(false);
-    const [otp, setOTP] = useState(sent_otp);
+    const [otp, setOTP] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const { verifyCode } = useContext(AuthContext);
@@ -99,7 +98,7 @@ const OtpScreen = ({ route, navigation }: { route: any, navigation: any }) => {
                     <OTPInputView
                         style={styles.otpContainer}
                         pinCount={otpLength}
-                        code={otp ? otp : sent_otp}
+                        code={otp}
                         onCodeChanged={code => { onChangeOTP(code) }}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.underlineStyleBase}
