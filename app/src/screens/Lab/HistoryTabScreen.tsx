@@ -28,7 +28,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                 showsVerticalScrollIndicator={false}>
 
                 <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Presenting complaint<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <Text style={styles.labelTxt}>Presenting complaint</Text>
                     <TextInput
                         editable
                         multiline={true}
@@ -44,7 +44,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                 </View>
 
                 <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Past medical history<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <Text style={styles.labelTxt}>Past medical history</Text>
                     <TextInput
                         editable
                         multiline={true}
@@ -60,7 +60,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                     />
                 </View>
                 <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Drug allergies<Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <Text style={styles.labelTxt}>Drug allergies</Text>
                     <TextInput
                         editable
                         multiline={true}
@@ -76,8 +76,7 @@ const HistoryTabScreen: React.FC<HistoryTabScreenProps> = ({
                 </View>
 
                 <View style={styles.viewContainer}>
-                    <Text style={styles.labelTxt}>Findings
-                        <Text style={config.styles.registration.doctor.required}>*</Text></Text>
+                    <Text style={styles.labelTxt}>Findings</Text>
                     <TextInput
                         editable
                         multiline={true}

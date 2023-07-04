@@ -215,33 +215,39 @@ const validateProfileUpdate = (user: IUser, selectedFacilities: number[],) => {
     return undefined
 }
 
-const validateMedicalHistData = (data: IMedicalHistData) => {
-    if (!data?.presenting_complaint) {
-        return 'Please enter presenting complaint'
-    }
-    if (!data.past_medical_history) {
-        return 'Please enter past medical history'
-    }
-    if (!data.drug_allergies) {
-        return 'Please enter drug allergies'
-    }
-    if (!data.findings) {
-        return 'Please enter findings'
-    }
-    return undefined
-}
-
-const validateDiagnosisData = (data: IDiagnosisData) => {
-    if (!data?.comments) {
-        return 'Please enter additional comments under diagnosis'
+const validateMedicalHistData = (data: IMedicalHistData, isDraft: boolean) => {
+    if (!isDraft) {
+        if (!data?.presenting_complaint) {
+            return 'Please enter presenting complaint'
+        }
+        if (!data.past_medical_history) {
+            return 'Please enter past medical history'
+        }
+        if (!data.drug_allergies) {
+            return 'Please enter drug allergies'
+        }
+        if (!data.findings) {
+            return 'Please enter findings'
+        }
     }
     return undefined
 }
 
-const validateTreatmentPlanData = (data: ITreatmentPlanData) => {
-    if (!data?.treatmentPlan) {
-        return 'Please enter treatment plan under treatment tab'
+const validateDiagnosisData = (data: IDiagnosisData, isDraft: boolean) => {
+    if (!isDraft) {
+        if (!data?.comments) {
+            return 'Please enter additional comments under diagnosis'
+        }
     }
+    return undefined
+}
+
+const validateTreatmentPlanData = (data: ITreatmentPlanData, isDraft: boolean) => {
+    // if (!isDraft) {
+    //     if (!data?.treatmentPlan) {
+    //         return 'Please enter treatment plan under treatment tab'
+    //     }
+    // }
     return undefined
 }
 
