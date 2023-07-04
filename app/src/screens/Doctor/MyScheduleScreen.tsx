@@ -207,11 +207,12 @@ const MyScheduleScreen = () => {
     )
 
 
-    const EmptyComponent = () => {
+    const renderEmptyComponent = () => {
         return (
-            <View style={styles.emptyCalendarView}>
-                <Text style={styles.emptyListStyle}>Looks like you haven't added any calendar dates</Text>
-            </View>
+            !isLoading ? <View style={config.styles.emptyViewContainer}>
+                <Icon5 name="info-circle" size={60} color={config.colors.silver} />
+                <Text style={config.styles.noInfoText}>You have set your availability yet</Text>
+            </View> : null
         )
     }
 
@@ -264,23 +265,26 @@ const MyScheduleScreen = () => {
         </View>
     )
 
+    const renderFlatList = () => (
+        <FlatList
+            data={schedule}
+            renderItem={renderRow}
+            keyExtractor={(item: DoctorCalendar, index: number) => item.id.toString()}
+            ListHeaderComponent={renderHeader}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
+            ListFooterComponent={renderFooter}
+        />
+    );
+
     return (
         <React.Fragment>
             <SafeAreaView style={styles.container}>
-                {renderHeader()}
 
-                <FlatList
-                    data={schedule}
-                    renderItem={renderRow}
-                    keyExtractor={(item: DoctorCalendar, index: number) => item.id.toString()}
-                    ListEmptyComponent={!isLoading ? EmptyComponent : null}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />}
-                    ListFooterComponent={renderFooter}
-                />
+                {schedule && schedule.length > 0 ? renderFlatList() : renderEmptyComponent()}
 
                 <BottomRightButton onPress={() => handleSnapPress(1)} />
             </SafeAreaView>
@@ -357,6 +361,7 @@ const styles = StyleSheet.create({
 
 
     emptyCalendarView: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
