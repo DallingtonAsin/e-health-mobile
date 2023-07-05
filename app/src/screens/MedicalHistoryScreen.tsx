@@ -1,20 +1,24 @@
+import React from 'react'
 import { useState, useContext, useEffect } from "react";
-import { Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, FlatList, View, StyleSheet, StatusBar, useWindowDimensions } from "react-native";
 import { MedicalHistoryRecord } from "../interfaces";
 import * as configs from '../configs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
-import { Context as AppContext } from '../context/appContext';
 import { Context as AuthContext } from '../context/authContext';
 import { Context as PatientContext } from '../context/patientContext';
 import { displayMessage } from "../components/common/SharedHelper";
 import AppLoader from "../components/AppLoader";
+import { TabView } from 'react-native-tab-view'
+import { renderTabBar } from '../components/common/tabView'
 
 
 const MedicalHistoryScreen = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryRecord[]>([]);
+    const [index, setIndex] = React.useState(0)
+    const layout = useWindowDimensions()
 
     const { state } = useContext(AuthContext);
     const { getMedicalHistory } = useContext(PatientContext);
@@ -45,6 +49,60 @@ const MedicalHistoryScreen = () => {
             </View>
         );
     };
+
+    const [routes] = React.useState([
+        { key: 'calls', title: 'Calls' },
+        { key: 'lab', title: 'Lab' },
+        { key: 'diagnosis', title: 'Diagnosis' },
+        { key: 'treatment', title: 'Treatment' },
+    ])
+
+    const CallsTabScreen = () => {
+        return (
+            <View>
+                <Text>Calls Screen</Text>
+            </View>
+        )
+    }
+
+    const LabTabScreen = () => {
+        return (
+            <View>
+                <Text>Lab Screen</Text>
+            </View>
+        )
+    }
+
+    const DiagnosisTabScreen = () => {
+        return (
+            <View>
+                <Text>Diagnosis Screen</Text>
+            </View>
+        )
+    }
+
+    const TreatmentTabScreen = () => {
+        return (
+            <View>
+                <Text>Treatment Screen</Text>
+            </View>
+        )
+    }
+
+    const CustomRenderScene = ({ route }: { route: any }) => {
+        switch (route.key) {
+            case 'calls':
+                return <CallsTabScreen />
+            case 'lab':
+                return <LabTabScreen />
+            case 'diagnosis':
+                return <DiagnosisTabScreen />
+            case 'treatment':
+                return <TreatmentTabScreen />
+            default:
+                return null
+        }
+    }
 
 
     const Item = ({ item }: { item: MedicalHistoryRecord }) => (
@@ -83,7 +141,15 @@ const MedicalHistoryScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View>
+
+            <StatusBar backgroundColor={configs.colors.primary} />
+            <TabView
+                navigationState={{ index, routes }}
+                renderTabBar={renderTabBar}
+                renderScene={CustomRenderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }} />
+            {/* <View>
                 <FlatList
                     data={medicalHistory}
                     renderItem={renderItem}
@@ -92,7 +158,7 @@ const MedicalHistoryScreen = () => {
                     ListEmptyComponent={EmptyListComponent}
                     showsVerticalScrollIndicator={false}
                 />
-            </View>
+            </View> */}
         </View>
 
     );
@@ -104,8 +170,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: configs.colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 
     item: {
