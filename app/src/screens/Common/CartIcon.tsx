@@ -6,11 +6,11 @@ import { selectCart } from '../../redux/reducers/drugsSlice'
 import { Drug } from '../../interfaces';
 import * as config from '../../configs';
 import { useNavigation } from '@react-navigation/native';
-
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 function CartIcon() {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const cart = useSelector(selectCart);
     const totalQuantity = cart.reduce((total: number, item: Drug) => total + item.quantity, 0);
 

@@ -352,12 +352,30 @@ const getCompanyInformation = () => {
     }
 }
 
+const getHeldAppointments = () => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.medical.history.patient.held_calls : routes.medical.history.doctor.held_calls
+        services.get(
+            endpoint
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getPrescriptionDrugs, getMeetingDetails,
-        getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus,
+        getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus, getHeldAppointments,
         getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails, getCompanyInformation
     },
     { isAppLoading: true },

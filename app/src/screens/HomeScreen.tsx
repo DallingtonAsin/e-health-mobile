@@ -109,7 +109,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </View>
                         </View>
 
-                        {!user.is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 50 }}>
+                        {!user.is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 40 }}>
                             <Switch value={isSwitchOn} onValueChange={changeOnlineStatus} color={configs.colors.success} style={{ top: 4 }} />
                             <Text style={{ color: configs.colors.silver }}>Switch to {isSwitchOn ? 'offline' : 'online'} mode</Text>
                         </View>}
@@ -148,18 +148,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         </View>
 
-                        {user.is_patient &&
-                            <View style={styles.cardContainer}>
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
-                                    <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
-                                    <Text style={styles.subtitle}>Specialties</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
-                                    <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
-                                    <Text style={styles.subtitle}>Medical History</Text>
-                                </TouchableOpacity>
-                            </View>
-                        }
+
+                        <View style={styles.cardContainer}>
+                            {user.is_patient && <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Specialties</Text>
+                            </TouchableOpacity>
+                            }
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
+                                <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Medical History</Text>
+                            </TouchableOpacity>
+                        </View>
+
 
                         <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
