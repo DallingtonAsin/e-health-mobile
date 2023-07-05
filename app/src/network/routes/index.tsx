@@ -56,11 +56,18 @@ const routes = {
       facilities: 'medical/facilities',
       doctors: 'medical/doctors',
       doctors_by_specialty: 'medical/doctors/specialty',
-      history: 'medical-history/patient',
       appointment_details: 'medical/appointments',
       appointment_status: 'medical/appointments',
       doctors_by_online_status: 'medical/doctors/status',
       administration_routes: 'medical/administration-routes',
+      history: {
+         patient: {
+            held_calls: 'medical-history/calls/patient'
+         },
+         doctor: {
+            held_calls: 'medical-history/calls/doctor'
+         }
+      },
    },
 
    drugs: {

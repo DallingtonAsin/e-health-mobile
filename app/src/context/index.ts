@@ -39,6 +39,7 @@ const createContext = (defaultValue: any) => {
         checkAppointmentStatus: ({ appointment_id, onSuccess, onFailure, onCompletion }: { appointment_id: number, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         postCallDetails: ({ is_patient, payload, onSuccess, onFailure, onCompletion }: { is_patient: boolean, payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
         getCompanyInformation: ({ onSuccess, onFailure, onCompletion }: { onSuccess: any, onFailure: any, onCompletion: any }) => { },
+        getHeldAppointments: ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: boolean, onSuccess: any, onFailure: any, onCompletion: any }) => { },
 
         // doctor api methods 
         authenticateDoctor: ({ payload, onSuccess, onFailure, onCompletion }: { payload: any, onSuccess: any, onFailure: any, onCompletion: any }) => { },
