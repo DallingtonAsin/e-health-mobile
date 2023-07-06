@@ -6,12 +6,12 @@ import {
 import { MultiBarProvider, BottomTabBarWrapper } from 'react-native-multibar';
 import * as configs from '../configs';
 import HomeScreen from '../screens/HomeScreen';
-import MoreItemsScreen from '../screens/MoreItemsScreen';
-import ContactUsScreen from '../screens/ContactUsScreen';
+import MoreItemsScreen from '../screens/Other/MoreItemsScreen';
+import ContactUsScreen from '../screens/Help/ContactUsScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HeaderLeftComponent } from '../components/HeaderLeftComponent';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/User/ProfileScreen';
 
 
 const TabNavigator: React.FC = () => {

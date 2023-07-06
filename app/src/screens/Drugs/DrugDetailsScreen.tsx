@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import * as configs from '../configs';
+import * as configs from '../../configs';
 import { useSelector, useDispatch } from 'react-redux';
-import { CartIncrementButton, CartDecrementButton } from './Common';
-import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../redux/reducers/drugsSlice';
-import { Drug } from '../interfaces';
+import { CartIncrementButton, CartDecrementButton } from '../Common';
+import { addToCart, incrementQuantity, decrementQuantity, selectCart } from '../../redux/reducers/drugsSlice';
+import { Drug } from '../../interfaces';
 
 const DrugDetailsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 

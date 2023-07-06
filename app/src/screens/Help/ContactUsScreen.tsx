@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import * as configs from '../configs';
+import * as configs from '../../configs';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail } from '../components/common/communications';
-import { Context as AppContext } from '../context/appContext'
-import { CompanyInformation, ContactListItem, ICompanyListItem } from "../interfaces";
-import { displayMessage } from "../components/common/SharedHelper";
-import AppLoader from "../components/AppLoader";
+import { callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail } from '../../components/common/communications';
+import { Context as AppContext } from '../../context/appContext'
+import { CompanyInformation, ContactListItem, ICompanyListItem } from "../../interfaces";
+import { displayMessage } from "../../components/common/SharedHelper";
+import AppLoader from "../../components/AppLoader";
 
 const ContactUsScreen = () => {
 

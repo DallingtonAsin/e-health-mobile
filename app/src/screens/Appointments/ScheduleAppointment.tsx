@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import { Avatar as AvatarRP, TextInput } from 'react-native-paper';
-import Avatar from '../components/Avatar';
-import * as configs from '../configs';
+import Avatar from '../../components/Avatar';
+import * as configs from '../../configs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import * as contact from '../components/common/communications';
+import * as contact from '../../components/common/communications';
 import { RadioButton } from 'react-native-paper';
-import { AppointmentInfo, DocAvailabilityWindow, DoctorsDetail } from '../interfaces';
-import { Context as AppContext } from '../context/appContext';
-import { Context as AuthContext } from '../context/authContext';
-import { Context as PatientContext } from '../context/patientContext';
-import { Context as DoctorContext } from '../context/doctorContext';
-import { initialDoctorInfo } from '../configs/constants';
-import { displayMessage, getCurrentDate, getUserInitials } from '../components/common/SharedHelper';
-import AppLoader from '../components/AppLoader';
-import { AppointmentType } from '../interfaces';
+import { AppointmentInfo, DocAvailabilityWindow, DoctorsDetail } from '../../interfaces';
+import { Context as AppContext } from '../../context/appContext';
+import { Context as AuthContext } from '../../context/authContext';
+import { Context as PatientContext } from '../../context/patientContext';
+import { Context as DoctorContext } from '../../context/doctorContext';
+import { initialDoctorInfo } from '../../configs/constants';
+import { displayMessage, getCurrentDate, getUserInitials } from '../../components/common/SharedHelper';
+import AppLoader from '../../components/AppLoader';
+import { AppointmentType } from '../../interfaces';
 import { Calendar } from 'react-native-calendars';
-import { CustomDay } from '../components/CustomDay';
+import { CustomDay } from '../../components/CustomDay';
 
 const screen = Dimensions.get('screen');
 

@@ -1,24 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Button, Image, StatusBar, Alert, ViewStyle, Pressable, TextStyle } from 'react-native'
 import { TextInput } from 'react-native-paper'
-import * as config from '../configs'
+import * as config from '../../configs'
 import { Avatar as AvatarRP, IconButton } from 'react-native-paper'
-import Avatar from '../components/Avatar'
+import Avatar from '../../components/Avatar'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import AppLoader from '../components/AppLoader'
-import { Context as AppContext } from '../context/appContext'
-import { Context as AuthContext } from '../context/authContext'
-import { Context as DoctorContext } from '../context/doctorContext'
-import { FileUpload, IUser } from '../interfaces'
-import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey } from '../components/common/SharedHelper'
+import AppLoader from '../../components/AppLoader'
+import { Context as AppContext } from '../../context/appContext'
+import { Context as AuthContext } from '../../context/authContext'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { FileUpload, IUser } from '../../interfaces'
+import { formatDate, displayMessage, getUserInitials, getJsonObjByValue, formatNumber, removeCommas, getPairByKey } from '../../components/common/SharedHelper'
 import { UIActivityIndicator } from 'react-native-indicators'
 import { BottomSheet } from 'react-native-btr'
 import { SelectList } from 'react-native-dropdown-select-list'
-import { validateProfileUpdate } from '../components/common/validation'
-import { initialFileUpload } from '../configs/constants'
-import { choosePhotoFromLibrary, getImageData, takePhotoFromCamera } from '../components/common/FileHelper'
-import AppDatePicker from '../components/AppDatePicker'
+import { validateProfileUpdate } from '../../components/common/validation'
+import { initialFileUpload } from '../../configs/constants'
+import { choosePhotoFromLibrary, getImageData, takePhotoFromCamera } from '../../components/common/FileHelper'
+import AppDatePicker from '../../components/AppDatePicker'
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
 
@@ -282,7 +282,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             </Text>
                             <TouchableOpacity style={styles.editProfileBtn} onPress={() => setIsDisabled(!isDisabled)}>
                                 <Text style={styles.editProfileTxt}>
-                                    {/* <Icon5 name={isDisabled ? 'pen' : 'eye'} size={10} color={config.colors.silver} />  */}
                                     {isDisabled ? 'Edit' : 'View'} profile</Text>
                             </TouchableOpacity>
                         </View>

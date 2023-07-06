@@ -1,8 +1,8 @@
 import React from 'react'
 import { useWindowDimensions } from 'react-native'
 import { TabView, SceneMap } from 'react-native-tab-view'
-import { renderTabBar } from '../components/common/tabView'
-import AppointmentsScreen from './Appointments/AppointmentsScreen'
+import { renderTabBar } from '../../components/common/tabView'
+import AppointmentsScreen from './AppointmentsScreen'
 
 const MyAppointmentScreen = ({ navigation }: { navigation: any }) => {
 

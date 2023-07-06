@@ -1,16 +1,16 @@
 import React, { useState, useRef, useContext } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
-import * as configs from '../configs'
+import * as configs from '../../configs'
 import PhoneNumberInput from "react-native-phone-number-input"
 import Toast from 'react-native-simple-toast'
 import { TextInput } from 'react-native-paper'
-import AppLoader from '../components/AppLoader'
-import { getAppVersion, isValidEmail, removeLeadingZeros } from '../components/common/SharedHelper'
-import { Context as AuthContext } from '../context/authContext'
-import { LoginPayload } from '../interfaces'
-import { displayMessage } from '../components/common/SharedHelper'
-import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils'
-import TouchableImage from '../components/TouchableImage'
+import AppLoader from '../../components/AppLoader'
+import { getAppVersion, isValidEmail, removeLeadingZeros } from '../../components/common/SharedHelper'
+import { Context as AuthContext } from '../../context/authContext'
+import { LoginPayload } from '../../interfaces'
+import { displayMessage } from '../../components/common/SharedHelper'
+import { getDeviceId, getIPAddress, getToken } from '../../components/common/AppUtils'
+import TouchableImage from '../../components/TouchableImage'
 
 const SigninScreen = ({ navigation }: { navigation: any }) => {
 

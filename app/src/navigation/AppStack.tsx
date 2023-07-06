@@ -1,27 +1,25 @@
 import React, { useContext } from "react"
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import SpecialityCategoryScreen from '../screens/MedicalSpecialtyScreen'
-import SpecialityListScreen from "../screens/MedicalDoctorsScreen"
-import ContactUsScreen from "../screens/ContactUsScreen"
-import ProfileScreen from "../screens/ProfileScreen"
-import ScheduleAppointmentScreen from "../screens/ScheduleAppointment"
-import AppointmentConfirmationScreen from "../screens/AppointmentConfirmationScreen"
-import MyAppointmentScreen from "../screens/MyAppointmentScreen"
-import AppointmentDetailsScreen from "../screens/AppointmentDetailsScreen"
-import MedicalRecordScreen from "../screens/MedicalRecordScreen"
-import NotificationScreen from "../screens/NotificationScreen"
-import MedicalHistoryScreen from "../screens/MedicalHistoryScreen"
+import SpecialityCategoryScreen from '../screens/Doctor/Specialties/MedicalSpecialtyScreen'
+import ContactUsScreen from "../screens/Help/ContactUsScreen"
+import ProfileScreen from "../screens/User/ProfileScreen"
+import ScheduleAppointmentScreen from "../screens/Appointments/ScheduleAppointment"
+import AppointmentConfirmationScreen from "../screens/Appointments/AppointmentConfirmationScreen"
+import MyAppointmentScreen from "../screens/Appointments/MyAppointmentScreen"
+import AppointmentDetailsScreen from "../screens/Appointments/AppointmentDetailsScreen"
+import NotificationScreen from "../screens/Notifications/NotificationScreen"
+import MedicalHistoryScreen from "../screens/MedicalHistory/MedicalHistoryScreen"
 import MyScheduleScreen from "../screens/Doctor/MyScheduleScreen"
-import DrugScreen from "../screens/DrugScreen"
-import DrugDetailsScreen from "../screens/DrugDetailsScreen"
+import DrugScreen from "../screens/Drugs/DrugScreen"
+import DrugDetailsScreen from "../screens/Drugs/DrugDetailsScreen"
 import { TermsConditionScreen, AboutUsScreen, SettingsScreen } from "../screens/Common/index"
 import CartIcon from "../screens/Common/CartIcon"
-import CartScreen from "../screens/CartScreen"
+import CartScreen from "../screens/Other/CartScreen"
 import CompleteConsultationScreen from "../screens/Doctor/CompleteConsultationScreen"
 import TabNavigator from "./TabNavigator"
-import CompleteRegistrationScreen from "../screens/Doctor/CompleteRegistrationScreen"
+import CompleteRegistrationScreen from "../screens/Registration/Doctor/CompleteRegistrationScreen"
 import HomeScreen from "../screens/HomeScreen"
-import SpecialitiesListScreen from '../screens/MedicalDoctorsScreen'
+import DoctorsSpecialitiesScreen from '../screens/Doctor/DoctorsScreen'
 import { Context as AuthContext } from '../context/authContext'
 import * as configs from '../configs'
 import DoctorProfileScreen from "../screens/Doctor/DoctorProfileScreen"
@@ -60,19 +58,7 @@ const AppStackScreen = () => {
                 }}
             />
 
-            <Stack.Screen
-                name="SpecialitiesList"
-                options={{
-                    headerStyle: {
-                        backgroundColor: configs.colors.white,
-                    },
-                    headerTintColor: configs.colors.primary,
-                    headerTitle: `Doctors & Specialties`,
-                    headerBackVisible: true,
-                    headerShown: true,
-                }}
-                component={SpecialityListScreen} />
-
+           
             <Stack.Screen
                 name="MedicalSpecialitiesList"
                 options={{
@@ -84,7 +70,7 @@ const AppStackScreen = () => {
                     headerBackVisible: true,
                     headerShown: true,
                 }}
-                component={SpecialitiesListScreen} />
+                component={DoctorsSpecialitiesScreen} />
 
             <Stack.Screen
                 name="Notifications"
@@ -124,20 +110,6 @@ const AppStackScreen = () => {
                     headerTitle: `Doctor Profile`,
                     headerBackVisible: false,
                     headerShown: false,
-                }}
-            />
-
-            <Stack.Screen
-                name="MedicalRecords"
-                component={MedicalRecordScreen}
-                options={{
-                    headerStyle: {
-                        backgroundColor: configs.colors.white,
-                    },
-                    headerTintColor: configs.colors.primary,
-                    headerTitle: `Medical Record History`,
-                    headerBackVisible: true,
-                    headerShown: true,
                 }}
             />
 
