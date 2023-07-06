@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import * as configs from '../configs';
-import { Drug } from '../interfaces';
+import * as configs from '../../configs';
+import { Drug } from '../../interfaces';
 import { Searchbar } from 'react-native-paper';
-import { Context as AppContext } from '../context/appContext';
-import { displayMessage } from '../components/common/SharedHelper';
-import AppLoader from '../components/AppLoader';
+import { Context as AppContext } from '../../context/appContext';
+import { displayMessage } from '../../components/common/SharedHelper';
+import AppLoader from '../../components/AppLoader';
 import FastImage from 'react-native-fast-image';
 
 const screen = Dimensions.get("screen")

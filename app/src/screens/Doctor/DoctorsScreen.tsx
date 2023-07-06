@@ -1,23 +1,23 @@
 import React, { useState, useContext, useRef, useEffect } from "react"
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity, useWindowDimensions } from "react-native"
-import * as configs from '../configs'
+import * as configs from '../../configs'
 import { Avatar as AvatarRP, RadioButton } from 'react-native-paper'
-import Avatar from '../components/Avatar'
-import { DoctorsDetail } from "../interfaces"
-import { Context as AppContext } from '../context/appContext'
-import { Context as AuthContext } from '../context/authContext'
-import { Context as PatientContext } from '../context/patientContext'
-import { Context as DoctorContext } from '../context/doctorContext'
-import { displayMessage, getUserInitials, truncateString } from '../components/common/SharedHelper'
-import AppLoader from "../components/AppLoader"
+import Avatar from '../../components/Avatar'
+import { DoctorsDetail } from "../../interfaces"
+import { Context as AppContext } from '../../context/appContext'
+import { Context as AuthContext } from '../../context/authContext'
+import { Context as PatientContext } from '../../context/patientContext'
+import { Context as DoctorContext } from '../../context/doctorContext'
+import { displayMessage, getUserInitials, truncateString } from '../../components/common/SharedHelper'
+import AppLoader from "../../components/AppLoader"
 import { Searchbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import MedicalSpecialtyScreen from "./MedicalSpecialtyScreen"
+import MedicalSpecialtyScreen from "./Specialties/MedicalSpecialtyScreen"
 import { TabView, SceneMap } from 'react-native-tab-view'
 import { AirbnbRating } from 'react-native-ratings';
-import { renderTabBar } from "../components/common/tabView"
+import { renderTabBar } from "../../components/common/tabView"
 
-const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
+const DoctorsScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
@@ -230,7 +230,7 @@ const MedicalDoctorsScreen = ({ route, navigation }: { route: any, navigation: a
     )
 }
 
-const SpecialitiesListScreen = ({ route, navigation }: { route: any, navigation: any }) => {
+const DoctorsSpecialitiesScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const [index, setIndex] = React.useState(0)
     const [routes] = React.useState([
@@ -252,7 +252,7 @@ const SpecialitiesListScreen = ({ route, navigation }: { route: any, navigation:
     }, [route.params?.tab, route.params?.specialty_id]);
 
     const renderScene = SceneMap({
-        doctors: () => <MedicalDoctorsScreen route={route} navigation={navigation} />,
+        doctors: () => <DoctorsScreen route={route} navigation={navigation} />,
         specialties: () => <MedicalSpecialtyScreen navigation={navigation} />,
     })
 
@@ -267,7 +267,7 @@ const SpecialitiesListScreen = ({ route, navigation }: { route: any, navigation:
     )
 }
 
-export default SpecialitiesListScreen
+export default DoctorsSpecialitiesScreen
 
 
 const styles = StyleSheet.create({

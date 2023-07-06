@@ -128,7 +128,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                         <View style={styles.cardContainer}>
                             {user.is_patient &&
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialitiesList')}>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalSpecialitiesList')}>
                                     <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
                                     <Text style={styles.subtitle}>Call Doctor</Text>
                                 </TouchableOpacity>

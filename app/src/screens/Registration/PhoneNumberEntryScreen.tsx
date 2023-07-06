@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Keyboard, Alert } from 'react-native';
-import * as configs from '../configs';
+import * as configs from '../../configs';
 import PhoneInput from "react-native-phone-number-input";
 import Toast from 'react-native-simple-toast';
-import AppLoader from '../components/AppLoader';
-import { getAppVersion, removeLeadingZeros } from '../components/common/SharedHelper';
-import { Context as AuthContext } from '../context/authContext';
-import { LoginData } from '../interfaces';
-import { displayMessage } from '../components/common/SharedHelper';
-import { getDeviceId, getIPAddress, getToken } from '../components/common/AppUtils';
-import TouchableImage from '../components/TouchableImage';
+import AppLoader from '../../components/AppLoader';
+import { getAppVersion, removeLeadingZeros } from '../../components/common/SharedHelper';
+import { Context as AuthContext } from '../../context/authContext';
+import { LoginData } from '../../interfaces';
+import { displayMessage } from '../../components/common/SharedHelper';
+import { getDeviceId, getIPAddress, getToken } from '../../components/common/AppUtils';
+import TouchableImage from '../../components/TouchableImage';
 
 
 const PhoneNumberEntryScreen = ({ navigation }: { navigation: any }) => {

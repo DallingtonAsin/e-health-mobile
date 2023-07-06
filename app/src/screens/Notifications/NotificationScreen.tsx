@@ -1,16 +1,16 @@
 import React, { useState, useContext, useEffect } from "react"
 import { SafeAreaView, Text, FlatList, View, StyleSheet, TouchableOpacity } from "react-native"
-import { Notification } from "../interfaces"
-import * as configs from '../configs'
+import { Notification } from "../../interfaces"
+import * as configs from '../../configs'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import { Context as AppContext } from '../context/appContext'
-import { Context as AuthContext } from '../context/authContext'
-import { displayMessage } from "../components/common/SharedHelper"
-import AppLoader from "../components/AppLoader"
-import { fetchNotifications, markAsRead } from "../redux/reducers/notificationSlice"
+import { Context as AppContext } from '../../context/appContext'
+import { Context as AuthContext } from '../../context/authContext'
+import { displayMessage } from "../../components/common/SharedHelper"
+import AppLoader from "../../components/AppLoader"
+import { fetchNotifications, markAsRead } from "../../redux/reducers/notificationSlice"
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from "../redux/store"
-import NotificationCard from "../components/NotificationCard"
+import { AppDispatch, RootState } from "../../redux/store"
+import NotificationCard from "../../components/NotificationCard"
 
 const NotificationScreen = ({ navigation }: { navigation: any }) => {
 
