@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react"
 import { SafeAreaView, FlatList, View, StyleSheet, Text, TouchableOpacity } from "react-native"
-import * as configs from '../configs'
+import * as configs from '../../../configs'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { Searchbar } from 'react-native-paper'
-import { Context as AppContext } from '../context/appContext'
-import { displayMessage } from '../components/common/SharedHelper'
-import AppLoader from '../components/AppLoader'
-import { MedicalSpecialty } from "../interfaces"
+import { Context as AppContext } from '../../../context/appContext'
+import { displayMessage } from '../../../components/common/SharedHelper'
+import AppLoader from '../../../components/AppLoader'
+import { MedicalSpecialty } from "../../../interfaces"
 
 const MedicalSpecialtyScreen = ({ navigation }: { navigation: any }) => {
 

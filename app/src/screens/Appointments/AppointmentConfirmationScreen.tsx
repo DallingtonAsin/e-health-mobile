@@ -1,10 +1,10 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
-import * as configs from '../configs';
+import * as configs from '../../configs';
 import { Avatar as AvatarRP } from 'react-native-paper';
-import Avatar from '../components/Avatar';
+import Avatar from '../../components/Avatar';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import { getUserInitials, readableDate, readableTime } from '../components/common/SharedHelper';
+import { getUserInitials, readableDate, readableTime } from '../../components/common/SharedHelper';
 
 
 const AppointmentConfirmationScreen = ({ route, navigation }: { route: any, navigation: any }) => {

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, View, StyleSheet, StatusBar, useWindowDimensions } from "react-native";
-import * as configs from '../configs';
+import * as configs from '../../configs';
 import { TabView } from 'react-native-tab-view'
-import { renderTabBar } from '../components/common/tabView'
-import CompletedCallsTabScreen from './MedicalHistory/CompletedCallsTabScreen';
+import { renderTabBar } from '../../components/common/tabView'
+import CompletedCallsTabScreen from './CompletedCallsTabScreen';
 
 const MedicalHistoryScreen = () => {
 

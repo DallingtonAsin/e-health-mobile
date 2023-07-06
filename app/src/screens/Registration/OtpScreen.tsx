@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard, StatusBar, KeyboardAvoidingView } from 'react-native';
-import * as configs from '../configs';
-import Avatar from '../components/Avatar';
+import * as configs from '../../configs';
+import Avatar from '../../components/Avatar';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import AppLoader from '../components/AppLoader';
-import { Context as AuthContext } from '../context/authContext';
-import { displayMessage } from '../components/common/SharedHelper';
+import AppLoader from '../../components/AppLoader';
+import { Context as AuthContext } from '../../context/authContext';
+import { displayMessage } from '../../components/common/SharedHelper';
 
 const otpLength = 6;
 
