@@ -92,9 +92,13 @@ const LabTestsTabScreen = () => {
         );
     };
 
+    const handlePress = (appointment_id: number) => {
+        navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
+    }
+
     const AppointmentDetails = ({ appointment }: { appointment: any }) => {
         return (
-            <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8} onPress={() => handlePress(appointment.id)}>
                 <TestsCard
                     labTests={appointment.lab_tests}
                     imageTests={appointment.image_tests}

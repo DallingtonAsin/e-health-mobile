@@ -40,8 +40,12 @@ const TreatmentTabScreen = () => {
         );
     };
 
+    const handlePress = (appointment_id: number) => {
+        navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
+    }
+
     const Item = ({ appointment }: { appointment: any }) => (
-        <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8} onPress={() => handlePress(appointment.id)}>
             <View style={styles.sectionContainer}>
                 <Text style={styles.sectionHeading}>Prescriptions:</Text>
                 {appointment.prescriptions.length > 0 ? (

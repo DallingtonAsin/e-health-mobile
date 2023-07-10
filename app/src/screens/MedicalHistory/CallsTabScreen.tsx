@@ -39,6 +39,9 @@ const CallsTabScreen = () => {
         <TouchableOpacity activeOpacity={0.8} style={styles.appointmentContainer} onPress={() => handlePress(appointment.id)}>
             <Text style={styles.appointmentType}>{appointment.appointment_type.name}</Text>
             <View key={appointment.id} style={styles.detailsItem}>
+            <Text style={styles.appointmentDetails}>
+                   Appointment No: {appointment.appointment_number}
+                </Text>
                 <Text style={styles.appointmentDetails}>
                     Start Date: {appointment.held_call.start_time}
                 </Text>
@@ -74,6 +77,7 @@ const CallsTabScreen = () => {
                 data={heldCalls}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => <RenderItem item={item} />}
+                ListEmptyComponent={EmptyListComponent}
             />
         </View>
     )

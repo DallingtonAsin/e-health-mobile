@@ -30,10 +30,6 @@ const DiagnosisTabScreen = () => {
         setDiagnoses(data)
     }
 
-    const gotToCallDetails = (appointment_id: number) => {
-        navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
-    }
-
     const DiagnosisCard = ({ diagnosis }: { diagnosis: any }) => {
         return (
             <View style={styles.diagnosisCard}>
@@ -58,14 +54,20 @@ const DiagnosisTabScreen = () => {
         );
     };
 
-    const Item = ({ appointment }: { appointment: any }) => (
-        <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8}>
-            <DiagnosisCard diagnosis={appointment.diagnosis} />
-            {appointment.diagnosis_comments && (
-                <DiagnosisCommentsCard comments={appointment.diagnosis_comments.comments} />
-            )}
-        </TouchableOpacity>
-    )
+    const handlePress = (appointment_id: number) => {
+        navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
+    }
+
+    const Item = ({ appointment }: { appointment: any }) => {
+        return ((appointment.diagnosis && appointment.diagnosis.length > 0) || appointment.diagnosis_comments) ?
+            <TouchableOpacity style={styles.appointmentContainer} activeOpacity={0.8} onPress={() => handlePress(appointment.id)}>
+                {appointment.diagnosis && appointment.diagnosis.length > 0 && <DiagnosisCard diagnosis={appointment.diagnosis} />}
+                {appointment.diagnosis_comments && (
+                    <DiagnosisCommentsCard comments={appointment.diagnosis_comments.comments} />
+                )}
+            </TouchableOpacity>
+            : null
+    }
 
     const renderItem = ({ item }: { item: any }) => (
         <Item appointment={item} />
