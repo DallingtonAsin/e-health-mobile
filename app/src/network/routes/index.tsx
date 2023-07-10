@@ -62,10 +62,16 @@ const routes = {
       administration_routes: 'medical/administration-routes',
       history: {
          patient: {
-            held_calls: 'medical-history/calls/patient'
+            held_calls: 'medical-history/calls/patient',
+            tests: 'medical-history/labtests/patient',
+            diagnosis: 'medical-history/diagnosis/patient',
+            treatment: 'medical-history/treatment/patient'
          },
          doctor: {
-            held_calls: 'medical-history/calls/doctor'
+            held_calls: 'medical-history/calls/doctor',
+            tests: 'medical-history/labtests/doctor',
+            diagnosis: 'medical-history/diagnosis/doctor',
+            treatment: 'medical-history/treatment/doctor'
          }
       },
    },
