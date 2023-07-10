@@ -82,6 +82,7 @@ const PatientRegistrationScreen = ({ navigation }: { navigation: any }) => {
 
         const validationError = validatePatientRegistration(user, hasAgreedTerms)
         if (validationError) {
+            console.debug(validationError)
             displayMessage(validationError)
             return
         }

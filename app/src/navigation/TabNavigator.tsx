@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HeaderLeftComponent } from '../components/HeaderLeftComponent';
 import ProfileScreen from '../screens/User/ProfileScreen';
+import HomeScreen2 from "../screens/HomeScreen2";
 
 
 const TabNavigator: React.FC = () => {
@@ -49,7 +50,7 @@ const TabNavigator: React.FC = () => {
 
         <Tab.Screen
           name="HomeTabScreen"
-          component={HomeScreen}
+          component={HomeScreen2}
           options={HeaderLeftComponent({ headerShown: false, headerTitle: 'Home', tabBarLabel: 'Home', tabIcon: 'home', onPressBackButton: navigateBack })}
         />
 
