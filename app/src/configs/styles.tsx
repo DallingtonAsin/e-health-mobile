@@ -119,7 +119,7 @@ export const styles = {
     alignItems: 'center',
     paddingVertical: 5,
     textAlign: 'center',
-    color: configs.colors.primaryBlue
+    color: configs.colors.gray
   },
 
   completedTxt: {
