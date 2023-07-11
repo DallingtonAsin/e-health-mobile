@@ -93,7 +93,7 @@ const DoctorProfileScreen = ({ route, navigation }: { route: any, navigation: an
                             <Text style={styles.fee}>Fee: {doctorInfo.service_fee}</Text>
                             <Button mode="contained-tonal" style={styles.consultBtn}
                                 onPress={() => ScheduleAppointment()}>
-                                Book
+                                <Text style={{ color: config.colors.white }}>Book</Text>
                             </Button>
                         </View>
 
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     consultBtn: {
         marginVertical: 8,
         borderWidth: 0.3,
-        borderColor: config.colors.paleBlue,
+        backgroundColor: config.colors.primary
     },
 
     introduction: {

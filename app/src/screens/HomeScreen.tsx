@@ -77,6 +77,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
             }
         })
     }
+    const comingSoon = () => {
+        displayMessage('coming soon...')
+    }
 
     return (
         <React.Fragment>
@@ -158,7 +161,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             }
 
                             {!is_patient &&
-                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
+                                <TouchableOpacity style={styles.card} onPress={comingSoon}>
                                     <Icon5 name="dollar-sign" size={iconSize} color={configs.colors.primary} />
                                     <Text style={styles.subtitle}>Earnings</Text>
                                 </TouchableOpacity>
@@ -170,7 +173,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                 <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Medical History</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
+                            <TouchableOpacity style={styles.card} onPress={comingSoon}>
                                 <Icon5 name={!is_patient ? "wallet" : "dollar-sign"} size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Transactions</Text>
                             </TouchableOpacity>

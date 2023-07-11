@@ -39,8 +39,8 @@ const CallsTabScreen = () => {
         <TouchableOpacity activeOpacity={0.8} style={styles.appointmentContainer} onPress={() => handlePress(appointment.id)}>
             <Text style={styles.appointmentType}>{appointment.appointment_type.name}</Text>
             <View key={appointment.id} style={styles.detailsItem}>
-            <Text style={styles.appointmentDetails}>
-                   Appointment No: {appointment.appointment_number}
+                <Text style={styles.appointmentDetails}>
+                    Appointment No: {appointment.appointment_number}
                 </Text>
                 <Text style={styles.appointmentDetails}>
                     Start Date: {appointment.held_call.start_time}
@@ -72,14 +72,13 @@ const CallsTabScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={heldCalls}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <RenderItem item={item} />}
-                ListEmptyComponent={EmptyListComponent}
-            />
-        </View>
+        <FlatList
+            data={heldCalls}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <RenderItem item={item} />}
+            ListEmptyComponent={EmptyListComponent}
+            contentContainerStyle={{ flexGrow: 1 }}
+        />
     )
 }
 
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 5,
         marginVertical: 8,
-        marginHorizontal: 5,
+        marginHorizontal: 20,
     },
     detailsItem: {
         backgroundColor: '#F4F4F4',

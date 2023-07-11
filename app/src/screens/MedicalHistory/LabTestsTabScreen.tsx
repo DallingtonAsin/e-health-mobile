@@ -37,8 +37,8 @@ const LabTestsTabScreen = () => {
                 <Text style={styles.labTestName}>{labTest.lab_test_category.name}</Text>
                 <Text style={styles.labTestFindings}>{labTest.findings}</Text>
             </View>
-        );
-    };
+        )
+    }
 
     const ImageTestItem = ({ imageTest }: { imageTest: any }) => {
         return (
@@ -47,8 +47,8 @@ const LabTestsTabScreen = () => {
                 <Text style={styles.imageTestName}>{imageTest.image_test_category.name}</Text>
                 <Text style={styles.imageTestFindings}>{imageTest.findings}</Text>
             </View>
-        );
-    };
+        )
+    }
 
     const OtherTestsCard = ({ otherTests }: { otherTests: any }) => {
         return (
@@ -57,8 +57,8 @@ const LabTestsTabScreen = () => {
                 <Text style={styles.otherTestsText}>{otherTests.tests}</Text>
                 <Text style={styles.otherTestsText}>Findings: {otherTests.findings}</Text>
             </View>
-        );
-    };
+        )
+    }
 
     const TestsCard = ({ labTests, imageTests, otherTests }: { labTests: any, imageTests: any, otherTests: any }) => {
         return (
@@ -89,8 +89,8 @@ const LabTestsTabScreen = () => {
                     <OtherTestsCard otherTests={otherTests} />
                 )}
             </View>
-        );
-    };
+        )
+    }
 
     const handlePress = (appointment_id: number) => {
         navigation.navigate('AppointmentDetails', { appointment_id: appointment_id })
@@ -105,8 +105,8 @@ const LabTestsTabScreen = () => {
                     otherTests={appointment.other_tests}
                 />
             </TouchableOpacity>
-        );
-    };
+        )
+    }
 
     const EmptyListComponent = () => (
         <View style={configs.styles.emptyViewContainer}>
