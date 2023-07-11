@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, Fragment } from 'react'
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable, Alert } from 'react-native'
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -12,6 +12,7 @@ import { selectUnreadNotifications } from "../redux/reducers/notificationSlice"
 import AppLoader from '../components/AppLoader'
 import { RootState } from '../redux/store'
 import { Switch } from 'react-native-paper'
+import TopupCard from './Home/TopupCard'
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
 
@@ -23,11 +24,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const user = state.user
     const [isSwitchOn, setIsSwitchOn] = React.useState(user.is_online)
     const iconSize = 40
+    const is_patient = Boolean(user.is_patient)
 
     const unreadCount = unreadNotifications.length
 
     const navigateScreen = (screen: string) => {
-        if (!user.is_patient) {
+        if (!is_patient) {
             if (user.is_registered) {
                 if (user.is_verified) {
                     navigation.navigate(screen)
@@ -48,7 +50,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const changeOnlineStatus = () => {
-        if (!user.is_patient) {
+        if (!is_patient) {
             const message = `Are you sure you want to go ${user.is_online ? 'offline' : 'online'}?`
             Alert.alert(
                 `Confirm change`,
@@ -87,7 +89,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.header}>
                         <View style={styles.headerImageSection}>
                             <Pressable style={styles.image} onPress={() => navigateScreen('Profile')}>
-                                <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Avatar size={80} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
+                                    <View style={{ top: 15 }}>
+                                        <View style={{ left: 10 }}>
+                                            <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
+                                            {is_patient && <Text style={styles.amazing}>Keep Healthy</Text>}
+                                            {!is_patient && <Text style={styles.amazing}>Status:
+                                                {!is_patient && (user.is_registered ? (user.is_verified === 0 && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
+                                                {!is_patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
+                                            </Text>}
+                                        </View>
+                                    </View>
+                                </View>
                             </Pressable>
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
@@ -98,21 +112,15 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
-                            <View style={{ left: 20 }}>
-                                <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
-                                {user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
-                                {!user.is_patient && <Text style={styles.amazing}>Status:
-                                    {!user.patient && (user.is_registered ? (user.is_verified === 0 && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
-                                    {!user.patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
-                                </Text>}
-                            </View>
-                        </View>
+                        <TopupCard balance={user.balance} />
 
-                        {!user.is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 40 }}>
+
+                        {!is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: -15 }}>
                             <Switch value={isSwitchOn} onValueChange={changeOnlineStatus} color={configs.colors.success} style={{ top: 4 }} />
                             <Text style={{ color: configs.colors.silver }}>Switch to {isSwitchOn ? 'offline' : 'online'} mode</Text>
                         </View>}
+
+
 
                     </View>
 
@@ -120,62 +128,61 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.body}>
 
                         <View style={styles.cardHeaderView}>
-                            <View style={styles.centerContainer}>
-                                <Text style={styles.centerText}>Quick Actions</Text>
-                            </View>
-                            {!user.is_patient && <Text style={styles.ratingText}> <Icon5 name="star" size={20} color={configs.colors.orange} /> {user.rating ? user.rating : 0}/5</Text>}
+                            {!is_patient && <Text style={styles.ratingText}> <Icon5 name="star" size={20} color={configs.colors.orange} /> {user.rating ? user.rating : 0}/5</Text>}
                         </View>
 
                         <View style={styles.cardContainer}>
-                            {user.is_patient &&
+                            {is_patient && <Fragment>
                                 <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalSpecialitiesList')}>
                                     <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
                                     <Text style={styles.subtitle}>Call Doctor</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                    <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Specialties</Text>
+                                </TouchableOpacity>
+                            </Fragment>
+
                             }
 
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MyAppointments')}>
                                 <Icon5 name="calendar-alt" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>My Appointments</Text>
+                                <Text style={styles.subtitle}>Appointments</Text>
                             </TouchableOpacity>
 
-                            {!user.is_patient &&
+                            {!is_patient &&
                                 <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
                                     <Icon name="calendar" size={iconSize} color={configs.colors.primary} />
                                     <Text style={styles.subtitle}>My Calendar</Text>
                                 </TouchableOpacity>
                             }
 
+                            {!is_patient &&
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('DoctorsCalendar')}>
+                                    <Icon5 name="dollar-sign" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Earnings</Text>
+                                </TouchableOpacity>
+                            }
                         </View>
 
-
                         <View style={styles.cardContainer}>
-                            {user.is_patient && <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
-                                <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Specialties</Text>
-                            </TouchableOpacity>
-                            }
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
                                 <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Medical History</Text>
                             </TouchableOpacity>
-                        </View>
-
-
-                        <View style={styles.cardContainer}>
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
-                                <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Help</Text>
+                                <Icon5 name={!is_patient ? "wallet" : "dollar-sign"} size={iconSize} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Transactions</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`MoreTabScreen`)}>
                                 <Icon name="gear" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Settings</Text>
                             </TouchableOpacity>
                         </View>
-                        {!user.patient && (!user.is_registered ? <Text style={styles.underReviewTxt}>In order to get started, Please complete your profile</Text> : null)}
-                        {!user.patient && (user.is_registered ? (!user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>) : null)}
-                    </View>
+                        {!is_patient && (!user.is_registered ? <Text style={styles.underReviewTxt}>In order to get started, Please complete your profile</Text> : null)}
+                        {!is_patient && (user.is_registered ? (!user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>) : null)}
 
+                    </View>
                 </ScrollView>
             </SafeAreaView>
             {(isLoading || loading) && <AppLoader />}
@@ -188,6 +195,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: configs.colors.primary,
     },
 
     scroll: {
@@ -200,19 +208,20 @@ const styles = StyleSheet.create({
     },
 
     header: {
+        top: 5,
         backgroundColor: configs.colors.primary,
-        flex: 2,
+        // flex: 2,
     },
 
     body: {
-        backgroundColor: '#f1f5ff',
+        backgroundColor: '#ffffff',
         flex: 4,
     },
 
     cardContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginHorizontal: 35,
+        marginHorizontal: 15,
 
     },
 
@@ -253,7 +262,6 @@ const styles = StyleSheet.create({
     centerText: {
         fontSize: 17,
         textAlign: 'center',
-        // fontWeight: 'bold',
         fontStyle: 'normal',
         textTransform: 'capitalize',
         color: configs.colors.darkBlue,
@@ -277,9 +285,8 @@ const styles = StyleSheet.create({
     },
 
     greeting: {
-        fontSize: 24,
+        fontSize: 18,
         textAlign: 'left',
-        // fontWeight: 'bold',
         fontStyle: 'normal',
         textTransform: 'capitalize',
         color: configs.colors.white,
@@ -328,6 +335,7 @@ const styles = StyleSheet.create({
     image: {
         top: 10,
         left: 20,
+        // height: 40,
     },
 
     underReviewTxt: {

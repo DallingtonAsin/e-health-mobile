@@ -1,14 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ImageBackground, Dimensions, Animated, TouchableOpacity, Image} from 'react-native';
-import * as configs from "../configs";
+import {View, Text, Dimensions, Animated, TouchableOpacity, Image} from 'react-native';
+import * as configs from "../../configs";
 import {Button} from "react-native-paper";
 
-import {AppStyle} from "../../assets/styles/Styles";
-import {DoctorsDetail, MedicalSpecialty} from "../interfaces";
+import {AppStyle} from "../../../assets/styles/Styles";
+import {DoctorsDetail} from "../../interfaces";
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {displayMessage} from "../components/common/SharedHelper";
-import {colors} from "../configs";
-import {Context as DoctorContext} from "../context/doctorContext";
+import {displayMessage} from "../../components/common/SharedHelper";
+import {colors} from "../../configs";
+import {Context as DoctorContext} from "../../context/doctorContext";
 const {width} = Dimensions.get('screen');
 const cardWidth = width / 1.8;
 const FeaturedSpecialists = ({ navigation }: { navigation: any }) => {
@@ -33,7 +33,7 @@ const FeaturedSpecialists = ({ navigation }: { navigation: any }) => {
     const bookMedicalDoctor = (item: DoctorsDetail) => {
         navigation.navigate('DoctorProfile', { doctor_id: item.id })
     }
-    const Card = ({data, index}) => {
+    const Card = ({data, index}: {data: any, index: number}) => {
         const inputRange = [
             (index - 1) * cardWidth,
             index * cardWidth,

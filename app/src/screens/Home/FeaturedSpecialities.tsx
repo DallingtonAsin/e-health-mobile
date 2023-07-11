@@ -6,16 +6,13 @@ import {
     Image,
     FlatList
 } from 'react-native';
+import {AppStyle} from "../../../assets/styles/Styles";
+import { MedicalSpecialty} from "../../interfaces";
+import {displayMessage} from "../../components/common/SharedHelper";
+import {colors} from "../../configs";
+import {Context as AppContext} from "../../context/appContext";
+import * as configs from "../../configs";
 
-
-import {AppStyle} from "../../assets/styles/Styles";
-import {DoctorsDetail, MedicalSpecialty} from "../interfaces";
-import Icon from 'react-native-vector-icons/FontAwesome'
-import {displayMessage} from "../components/common/SharedHelper";
-import {colors} from "../configs";
-import {Context as AppContext} from "../context/appContext";
-import * as configs from "../configs";
-const {width} = Dimensions.get('screen');
 const FeaturedSpecialities = ({ navigation }: { navigation: any }) => {
     const [medicalSpecialties, setMedicalSpecialties] = useState<MedicalSpecialty[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -32,7 +29,7 @@ const FeaturedSpecialities = ({ navigation }: { navigation: any }) => {
     const stopLoading = () => {
         setIsLoading(false)
     }
-    const SpecialityCard = ({data}) => {
+    const SpecialityCard = ({data}: {data: any }) => {
         return (
             <View style={AppStyle.topHotelCard}>
                 <View
