@@ -1,9 +1,13 @@
 import React from 'react'
-import { Text, View, StyleSheet, StatusBar, useWindowDimensions } from "react-native";
-import * as configs from '../../configs';
+import { View, StyleSheet, StatusBar, useWindowDimensions } from "react-native"
+import * as configs from '../../configs'
 import { TabView } from 'react-native-tab-view'
 import { renderTabBar } from '../../components/common/tabView'
-import CompletedCallsTabScreen from './CompletedCallsTabScreen';
+import CallsTabScreen from './CallsTabScreen'
+import LabTestsTabScreen from './LabTestsTabScreen'
+import DiagnosisTabScreen from './DiagnosisTabScreen'
+import TreatmentTabScreen from './TreatmentTabScreen'
+import { TabRoute } from '../../interfaces'
 
 const MedicalHistoryScreen = () => {
 
@@ -17,36 +21,12 @@ const MedicalHistoryScreen = () => {
         { key: 'treatment', title: 'Treatment' },
     ])
 
-    const LabTabScreen = () => {
-        return (
-            <View>
-                <Text>Lab Screen</Text>
-            </View>
-        )
-    }
-
-    const DiagnosisTabScreen = () => {
-        return (
-            <View>
-                <Text>Diagnosis Screen</Text>
-            </View>
-        )
-    }
-
-    const TreatmentTabScreen = () => {
-        return (
-            <View>
-                <Text>Treatment Screen</Text>
-            </View>
-        )
-    }
-
-    const CustomRenderScene = ({ route }: { route: any }) => {
+    const CustomRenderScene = ({ route }: { route: TabRoute }) => {
         switch (route.key) {
             case 'calls':
-                return <CompletedCallsTabScreen />
+                return <CallsTabScreen />
             case 'lab':
-                return <LabTabScreen />
+                return <LabTestsTabScreen />
             case 'diagnosis':
                 return <DiagnosisTabScreen />
             case 'treatment':
@@ -58,7 +38,6 @@ const MedicalHistoryScreen = () => {
 
     return (
         <View style={styles.container}>
-
             <StatusBar backgroundColor={configs.colors.primary} />
             <TabView
                 navigationState={{ index, routes }}
@@ -67,11 +46,10 @@ const MedicalHistoryScreen = () => {
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }} />
         </View>
-
-    );
+    )
 }
 
-export default MedicalHistoryScreen;
+export default MedicalHistoryScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -133,9 +111,9 @@ const styles = StyleSheet.create({
         paddingVertical: 1,
         paddingHorizontal: 1,
     },
+
     headerText: {
         fontSize: 14,
-        // fontWeight: 'bold',
         color: configs.colors.white,
         marginLeft: 10,
     },

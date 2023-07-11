@@ -370,13 +370,68 @@ const getHeldAppointments = () => {
     }
 }
 
+const getConductedTests = () => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.medical.history.patient.tests : routes.medical.history.doctor.tests
+        services.get(
+            endpoint
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
+const getConductedDiagnosis = () => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.medical.history.patient.diagnosis : routes.medical.history.doctor.diagnosis
+        services.get(
+            endpoint
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
+const getConductedTreatment = () => {
+    return ({ is_patient, onSuccess, onFailure, onCompletion }: { is_patient: number, onSuccess: any, onFailure: any, onCompletion: any }) => {
+        const endpoint = is_patient ? routes.medical.history.patient.treatment : routes.medical.history.doctor.treatment
+        services.get(
+            endpoint
+        ).then(async (res) => {
+            if (res && res.data) {
+                const data = res.data
+                onSuccess(data)
+            }
+        }).catch((error) => {
+            displayErrorMessage(error, onFailure)
+        }).finally(() => {
+            onCompletion()
+        })
+    }
+}
+
 
 export const { Provider, Context } = createDataContext(
     appReducer,
     {
         updateProfile, getMedicalSpecialties, getDoctorsBySpecialty, getDrugs, getPrescriptionDrugs, getMeetingDetails,
         getAppointmentTypes, getMyAppointments, deleteProfileImage, updateProfileImage, checkAppointmentStatus, getHeldAppointments,
-        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails, getCompanyInformation
+        getDoctorLanguages, getNotifications, markNotificationRead, getAppointmentDetails, postCallDetails, getCompanyInformation,
+        getConductedTests, getConductedDiagnosis, getConductedTreatment
     },
     { isAppLoading: true },
 )

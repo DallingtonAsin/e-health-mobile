@@ -415,6 +415,11 @@ interface DocAvailabilityWindow {
     schedule: any
 }
 
+interface TabRoute{
+    key: string,
+    title: string,
+}
+
 
 export type {
     AppAction,
@@ -457,5 +462,6 @@ export type {
     ITreatmentPlanData,
 
     UploadedFile,
-    DocAvailabilityWindow
+    DocAvailabilityWindow,
+    TabRoute
 }
