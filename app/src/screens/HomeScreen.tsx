@@ -115,10 +115,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <TopupCard balance={user.balance} />
+                        <TopupCard balance={user.balance} isPatient={is_patient} />
 
-
-                        {!is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: -15 }}>
+                        {!is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 10 }}>
                             <Switch value={isSwitchOn} onValueChange={changeOnlineStatus} color={configs.colors.success} style={{ top: 4 }} />
                             <Text style={{ color: configs.colors.silver }}>Switch to {isSwitchOn ? 'offline' : 'online'} mode</Text>
                         </View>}
@@ -130,7 +129,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                     <View style={styles.body}>
 
-                        <View style={styles.cardHeaderView}>
+                        <View style={styles.ratingView}>
                             {!is_patient && <Text style={styles.ratingText}> <Icon5 name="star" size={20} color={configs.colors.orange} /> {user.rating ? user.rating : 0}/5</Text>}
                         </View>
 
@@ -211,9 +210,9 @@ const styles = StyleSheet.create({
     },
 
     header: {
+        flex: 1,
         top: 5,
         backgroundColor: configs.colors.primary,
-        // flex: 2,
     },
 
     body: {
@@ -248,9 +247,9 @@ const styles = StyleSheet.create({
         elevation: 8
     },
 
-    cardHeaderView: {
+    ratingView: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
         paddingHorizontal: 16,
         marginVertical: 15,
@@ -273,10 +272,10 @@ const styles = StyleSheet.create({
 
     ratingText: {
         fontSize: 14,
-        textAlign: 'center',
         fontStyle: 'italic',
         color: configs.colors.darkBlue,
         opacity: 0.7,
+        right: 8
     },
 
     subtitle: {
@@ -337,8 +336,7 @@ const styles = StyleSheet.create({
 
     image: {
         top: 10,
-        left: 20,
-        // height: 40,
+        left: 20
     },
 
     underReviewTxt: {
