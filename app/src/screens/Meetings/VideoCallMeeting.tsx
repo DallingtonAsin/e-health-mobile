@@ -45,6 +45,7 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
                 appId: connectionData.appId
             })
         }
+        console.log(`connection data`, connectionData)
     }, [])
 
     useEffect(() => {
@@ -75,7 +76,9 @@ const VideoCallMeeting = ({ appointment_id }: { appointment_id: number }) => {
     // };
 
     const setMeetingDetails = (data: any) => {
+        console.log(`meeting connection data 1`, data.meeting_access)
         if (data && data.meeting_access) {
+            console.log(`meeting connection data 2`, data.meeting_access)
             setConnectionData(data.meeting_access)
         }
         if (data && data.patient) {
