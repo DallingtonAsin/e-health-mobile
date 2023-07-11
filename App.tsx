@@ -13,7 +13,6 @@ import { Provider } from 'react-redux'
 import AuthStack from './app/src/navigation/AuthStack'
 import AppStackScreen from './app/src/navigation/AppStack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Notification, Notifications, Registered, RegistrationError } from 'react-native-notifications'
 import { showLocalNotification } from './app/src/components/common/communications'
 import { useDispatch } from 'react-redux'
 import { fetchNotifications } from './app/src/redux/reducers/notificationSlice'
@@ -69,29 +68,9 @@ const App = () => {
 export default () => {
 
   useEffect(() => {
-
-    Notifications.registerRemoteNotifications()
-    const onRemoteNotificationReceived = Notifications.events().registerRemoteNotificationsRegistered((event: Registered) => {
-      // console.log("Device Token Received", event.deviceToken);
-    })
-
-    Notifications.events().registerRemoteNotificationsRegistrationFailed((event: RegistrationError) => {
-      console.error(event);
-    });
-
-    Notifications.events().registerNotificationReceivedForeground((notification: Notification, completion) => {
-      showLocalNotification(notification.title, notification.body)
-      completion({ alert: true, sound: true, badge: false })
-    })
-
-    Notifications.events().registerNotificationOpened((notification: Notification, completion) => {
-      completion()
-    })
-
     return () => {
       //  onRemoteNotificationReceived.remove(); // Unregister the event listener
     };
-
   }, [])
 
   return (
