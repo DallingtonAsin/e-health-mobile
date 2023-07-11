@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, {useState, useContext, Fragment} from 'react'
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, TouchableOpacity, Pressable, Alert } from 'react-native'
 import * as configs from '../configs'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -12,8 +12,13 @@ import { selectUnreadNotifications } from "../redux/reducers/notificationSlice"
 import AppLoader from '../components/AppLoader'
 import { RootState } from '../redux/store'
 import { Switch } from 'react-native-paper'
+import AccountBalanceCard from "./HeroCard";
+import HeroCard from "./HeroCard";
+import FeaturedSpecialists from "./FeaturedSpecialists";
+import FeaturedSpecialities from "./FeaturedSpecialities";
+import {colors} from "../configs";
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
+const HomeScreen2 = ({ navigation }: { navigation: any }) => {
 
     const { state, updateUserState } = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(false)
@@ -87,7 +92,19 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.header}>
                         <View style={styles.headerImageSection}>
                             <Pressable style={styles.image} onPress={() => navigateScreen('Profile')}>
-                                <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
+                                <View style={{flexDirection: 'row'}}>
+                                    <Avatar size={90} borderRadius={75} source={configs.images.logo} resizeMode={'contain'} isURL={false} />
+                                    <View style={{ top: 15 }}>
+                                        <View style={{ left: 20 }}>
+                                            <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
+                                            {user.is_patient && <Text style={styles.amazing}>Keep Healthy</Text>}
+                                            {!user.is_patient && <Text style={styles.amazing}>Status:
+                                                {!user.patient && (user.is_registered ? (user.is_verified === 0 && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
+                                                {!user.patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
+                                            </Text>}
+                                        </View>
+                                    </View>
+                                </View>
                             </Pressable>
                             <TouchableOpacity style={styles.notificationView} onPress={() => navigateScreen('Notifications')}>
                                 <Icon name="bell" size={25} color={configs.colors.white} style={styles.notificationIcon} />
@@ -97,18 +114,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                                     </View>}
                             </TouchableOpacity>
                         </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', top: 30 }}>
-                            <View style={{ left: 20 }}>
-                                <Text style={styles.greeting}>{getGreeting()} {user.first_name}</Text>
-                                {user.is_patient && <Text style={styles.amazing}>Today is amazing!</Text>}
-                                {!user.is_patient && <Text style={styles.amazing}>Status:
-                                    {!user.patient && (user.is_registered ? (user.is_verified === 0 && <Text style={styles.underReviewTxt}> Profile under review</Text>) : null)}
-                                    {!user.patient && (user.is_registered ? (user.is_verified === 1 && <Text style={user.is_online ? configs.styles.online : configs.styles.offline}> {user.is_online ? 'online' : 'offline'}</Text>) : null)}
-                                </Text>}
-                            </View>
-                        </View>
-
+                        <HeroCard/>
                         {!user.is_patient && <View style={{ flexDirection: 'row', alignItems: 'flex-end', left: 15, top: 40 }}>
                             <Switch value={isSwitchOn} onValueChange={changeOnlineStatus} color={configs.colors.success} style={{ top: 4 }} />
                             <Text style={{ color: configs.colors.silver }}>Switch to {isSwitchOn ? 'offline' : 'online'} mode</Text>
@@ -120,18 +126,21 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.body}>
 
                         <View style={styles.cardHeaderView}>
-                            <View style={styles.centerContainer}>
-                                <Text style={styles.centerText}>Quick Actions</Text>
-                            </View>
                             {!user.is_patient && <Text style={styles.ratingText}> <Icon5 name="star" size={20} color={configs.colors.orange} /> {user.rating ? user.rating : 0}/5</Text>}
                         </View>
 
                         <View style={styles.cardContainer}>
-                            {user.is_patient &&
+                            {user.is_patient && <Fragment>
                                 <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalSpecialitiesList')}>
                                     <Icon5 name="user-md" size={iconSize} color={configs.colors.primary} />
                                     <Text style={styles.subtitle}>Call Doctor</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
+                                    <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
+                                    <Text style={styles.subtitle}>Specialties</Text>
+                                </TouchableOpacity>
+                            </Fragment>
+
                             }
 
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MyAppointments')}>
@@ -150,19 +159,16 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
 
                         <View style={styles.cardContainer}>
-                            {user.is_patient && <TouchableOpacity style={styles.card} onPress={() => navigateScreen('SpecialityCategories')}>
-                                <Icon5 name="stethoscope" size={iconSize} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Specialties</Text>
-                            </TouchableOpacity>
-                            }
-                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
-                                <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
-                                <Text style={styles.subtitle}>Medical History</Text>
-                            </TouchableOpacity>
+
+
                         </View>
 
 
                         <View style={styles.cardContainer}>
+                            <TouchableOpacity style={styles.card} onPress={() => navigateScreen('MedicalHistory')}>
+                                <Icon name="hospital-o" size={iconSize * 0.8} color={configs.colors.primary} />
+                                <Text style={styles.subtitle}>Medical History</Text>
+                            </TouchableOpacity>
                             <TouchableOpacity style={styles.card} onPress={() => navigateScreen(`ContactUs`)}>
                                 <Icon5 name="question-circle" size={iconSize} color={configs.colors.primary} />
                                 <Text style={styles.subtitle}>Help</Text>
@@ -174,6 +180,42 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                         {!user.patient && (!user.is_registered ? <Text style={styles.underReviewTxt}>In order to get started, Please complete your profile</Text> : null)}
                         {!user.patient && (user.is_registered ? (!user.is_verified && <Text style={styles.underReviewTxt}>Your profile is currently undergoing  review</Text>) : null)}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                            }}>
+                            <Text style={{fontWeight: 'bold', color: colors.grey}}>
+                                Top Doctors
+                            </Text>
+                            <Text
+                                style={{color: colors.grey}}
+                                onPress={() =>
+                                    navigateScreen('MedicalSpecialitiesList')
+                                }>
+                                Show all
+                            </Text>
+                        </View>
+                        <FeaturedSpecialists navigation={navigation}/>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginHorizontal: 20,
+                            }}>
+                            <Text style={{fontWeight: 'bold', color: colors.grey}}>
+                                Top Specialities
+                            </Text>
+                            <Text
+                                style={{color: colors.grey}}
+                                onPress={() =>
+                                    navigateScreen('SpecialityCategories')
+                                }>
+                                Show all
+                            </Text>
+                        </View>
+                        <FeaturedSpecialities navigation={navigation}/>
                     </View>
 
                 </ScrollView>
@@ -183,7 +225,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     )
 }
 
-export default HomeScreen
+export default HomeScreen2
 
 const styles = StyleSheet.create({
     container: {
@@ -201,18 +243,18 @@ const styles = StyleSheet.create({
 
     header: {
         backgroundColor: configs.colors.primary,
-        flex: 2,
+        // flex: 2,
     },
 
     body: {
-        backgroundColor: '#f1f5ff',
+        backgroundColor: '#ffffff',
         flex: 4,
     },
 
     cardContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginHorizontal: 35,
+        marginHorizontal: 20,
 
     },
 
@@ -231,9 +273,9 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 8,
         shadowOpacity: 1.0,
-        backgroundColor: configs.colors.white,
+        backgroundColor: configs.colors.faded,
         padding: 20,
-        elevation: 8
+        // elevation: 8
     },
 
     cardHeaderView: {

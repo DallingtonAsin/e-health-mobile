@@ -1,6 +1,5 @@
 import { Linking } from "react-native";
 import Communications from 'react-native-communications';
-import { Notifications } from 'react-native-notifications'
 
 const callPhoneNumber = (phoneNumber: string) => {
     Communications.phonecall(phoneNumber, true);
@@ -24,8 +23,6 @@ const showLocalNotification = (title: string, body: string | any) => {
         body: body,
         sound: 'default',
     };
-
-    Notifications.postLocalNotification(notification);
 };
 
 export { callPhoneNumber, sendSms, inboxWhatsappNumber, sendEmail, showLocalNotification }
